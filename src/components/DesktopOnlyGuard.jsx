@@ -148,7 +148,7 @@ export default function DesktopOnlyGuard({ children }) {
             </button>
 
             <a
-              href="https://desktopalie.com"
+              href="https://desktopalie.my.id"
               target="_blank"
               rel="noreferrer"
               style={{
@@ -167,7 +167,7 @@ export default function DesktopOnlyGuard({ children }) {
                 transition: 'all 0.15s ease'
               }}
             >
-              <span>Kunjungi Website Utama</span>
+              <span>Kunjungi desktopalie.my.id</span>
               <FiExternalLink />
             </a>
           </div>
