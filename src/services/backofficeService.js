@@ -51,7 +51,25 @@ export const backofficeService = {
         .maybeSingle();
 
       if (data?.value) {
-        return data.value;
+        let val = typeof data.value === 'string' ? JSON.parse(data.value) : data.value;
+        const indonesianKeywords = ["situs", "pemeliharaan", "kami", "sedang", "melakukan", "peningkatan", "pembaruan", "beberapa", "saat", "kembali"];
+        let needsUpdate = false;
+
+        if (indonesianKeywords.some(kw => String(val?.title || '').toLowerCase().includes(kw))) {
+          val.title = 'System Under Maintenance';
+          needsUpdate = true;
+        }
+        if (indonesianKeywords.some(kw => String(val?.message || '').toLowerCase().includes(kw))) {
+          val.message = 'We are performing system upgrades and performance enhancements. Please check back shortly.';
+          needsUpdate = true;
+        }
+
+        if (needsUpdate) {
+          // Update DB record to English permanently
+          supabase.from('site_settings').upsert({ key: 'maintenance', value: val, updated_at: new Date().toISOString() }, { onConflict: 'key' }).then(() => {});
+        }
+
+        return val;
       }
     } catch (err) {
       console.warn('Supabase site_settings table not accessible:', err);
@@ -60,14 +78,21 @@ export const backofficeService = {
     const localData = localStorage.getItem('desktopalie_maintenance_settings');
     if (localData) {
       try {
-        return JSON.parse(localData);
+        let val = JSON.parse(localData);
+        if (val.title?.toLowerCase().includes('situs') || val.title?.toLowerCase().includes('pemeliharaan')) {
+          val.title = 'System Under Maintenance';
+        }
+        if (val.message?.toLowerCase().includes('kami') || val.message?.toLowerCase().includes('pembaruan')) {
+          val.message = 'We are performing system upgrades and performance enhancements. Please check back shortly.';
+        }
+        return val;
       } catch (e) {}
     }
 
     return {
       is_enabled: false,
-      title: 'Situs Sedang Dalam Pemeliharaan',
-      message: 'Kami sedang melakukan peningkatan performa dan pembaruan sistem. Kembali lagi dalam beberapa saat.',
+      title: 'System Under Maintenance',
+      message: 'We are performing system upgrades and performance enhancements. Please check back shortly.',
       end_time: new Date(Date.now() + 3 * 3600 * 1000).toISOString(),
       allow_admin_bypass: true
     };
