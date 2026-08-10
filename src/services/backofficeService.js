@@ -201,16 +201,135 @@ export const backofficeService = {
     }
 
     const defaultTodos = [
-      { id: '1', title: 'Mengenal struktur aplikasi Web (Nuxt.js)', status: 'Not started', priority: 'Medium', category: 'Research', created_at: new Date().toISOString() },
-      { id: '2', title: 'Mengenal struktur aplikasi Mobile (Flutter)', status: 'Not started', priority: 'Low', category: 'Research', created_at: new Date().toISOString() },
-      { id: '3', title: 'Mengenal struktur aplikasi Backoffice (Laravel/Vue)', status: 'Not started', priority: 'Medium', category: 'Research', created_at: new Date().toISOString() },
-      { id: '4', title: 'Memahami alur kerja Sprint Development', status: 'In progress', priority: 'High', category: 'Development', created_at: new Date().toISOString() },
-      { id: '5', title: 'Memahami role dan tanggung jawab QA', status: 'In progress', priority: 'Medium', category: 'Testing', created_at: new Date().toISOString() },
-      { id: '6', title: 'Mempelajari Manual Testing (UI, Functional, Exploratory)', status: 'Done', priority: 'High', category: 'Testing', created_at: new Date().toISOString() },
-      { id: '7', title: 'Membuat Test Scenario dan Test Case', status: 'Done', priority: 'Urgent', category: 'Testing', created_at: new Date().toISOString() },
-      { id: '8', title: 'Memahami Severity dan Priority', status: 'Done', priority: 'Medium', category: 'Documentation', created_at: new Date().toISOString() },
-      { id: '9', title: 'Membuat Bug Report', status: 'Done', priority: 'High', category: 'Testing', created_at: new Date().toISOString() },
-      { id: '10', title: 'Memahami Requirement, Product Backlog, User Story, Acceptance Criteria', status: 'Done', priority: 'Urgent', category: 'Documentation', created_at: new Date().toISOString() }
+      { 
+        id: '1', 
+        title: 'Mengenal struktur aplikasi Web (Nuxt.js)', 
+        status: 'Not started', 
+        priority: 'Medium', 
+        category: 'Research',
+        description: 'Pelajari arsitektur Nuxt 3, directory structure (pages, components, composables), dan SSR vs SPA mode.',
+        subtasks: [
+          { id: 'sub-101', title: 'Instalasi Nuxt 3 CLI', is_completed: true },
+          { id: 'sub-102', title: 'Memahami Routing File-based', is_completed: false },
+          { id: 'sub-103', title: 'Eksplorasi Composables & useState', is_completed: false }
+        ],
+        created_at: new Date().toISOString() 
+      },
+      { 
+        id: '2', 
+        title: 'Mengenal struktur aplikasi Mobile (Flutter)', 
+        status: 'Not started', 
+        priority: 'Low', 
+        category: 'Research',
+        description: 'Eksplorasi Widget Tree, State Management (Provider/Riverpod), dan struktur lib/ folder.',
+        subtasks: [
+          { id: 'sub-201', title: 'Setup Flutter SDK', is_completed: true },
+          { id: 'sub-202', title: 'Uji Coba Widget Stateless & Stateful', is_completed: false }
+        ],
+        created_at: new Date().toISOString() 
+      },
+      { 
+        id: '3', 
+        title: 'Mengenal struktur aplikasi Backoffice (Laravel/Vue)', 
+        status: 'Not started', 
+        priority: 'Medium', 
+        category: 'Research',
+        description: 'Struktur MVC Laravel, Blade vs Vue inertia integration, dan middleware authentication.',
+        subtasks: [],
+        created_at: new Date().toISOString() 
+      },
+      { 
+        id: '4', 
+        title: 'Memahami alur kerja Sprint Development', 
+        status: 'In progress', 
+        priority: 'High', 
+        category: 'Development',
+        description: 'Siklus 2 minggu Sprint: Planning, Daily Standup, Review, & Retrospective.',
+        subtasks: [
+          { id: 'sub-401', title: 'Sprint Planning Meeting', is_completed: true },
+          { id: 'sub-402', title: 'Task Estimation (Story Points)', is_completed: true },
+          { id: 'sub-403', title: 'Execution & Daily Standup', is_completed: false }
+        ],
+        created_at: new Date().toISOString() 
+      },
+      { 
+        id: '5', 
+        title: 'Memahami role dan tanggung jawab QA', 
+        status: 'In progress', 
+        priority: 'Medium', 
+        category: 'Testing',
+        description: 'Definisi QA Engineer vs QC, pencegahan bug vs pencarian bug, dan jaminan kualitas end-to-end.',
+        subtasks: [
+          { id: 'sub-501', title: 'Review Requirement Specification', is_completed: true },
+          { id: 'sub-502', title: 'Analisis Risk & Complexity', is_completed: false }
+        ],
+        created_at: new Date().toISOString() 
+      },
+      { 
+        id: '6', 
+        title: 'Mempelajari Manual Testing (UI, Functional, Exploratory)', 
+        status: 'Done', 
+        priority: 'High', 
+        category: 'Testing',
+        description: 'Metode verifikasi fitur secara manual sebelum dirilis ke lingkungan staging/production.',
+        subtasks: [
+          { id: 'sub-601', title: 'Testing Form Input & Validation', is_completed: true },
+          { id: 'sub-602', title: 'Testing Boundary Values & Negative Cases', is_completed: true },
+          { id: 'sub-603', title: 'Cross-browser Compatibility Check', is_completed: true }
+        ],
+        created_at: new Date().toISOString() 
+      },
+      { 
+        id: '7', 
+        title: 'Membuat Test Scenario dan Test Case', 
+        status: 'Done', 
+        priority: 'Urgent', 
+        category: 'Testing',
+        description: 'Dokumentasi langkah pengujian, precondition, expected result, dan actual result.',
+        subtasks: [
+          { id: 'sub-701', title: 'Penyusunan Test Matrix', is_completed: true },
+          { id: 'sub-702', title: 'Penulisan 15 High-Priority Test Cases', is_completed: true }
+        ],
+        created_at: new Date().toISOString() 
+      },
+      { 
+        id: '8', 
+        title: 'Memahami Severity dan Priority', 
+        status: 'Done', 
+        priority: 'Medium', 
+        category: 'Documentation',
+        description: 'Dampak teknis bug (Severity: Blocker/Critical/Major) vs Urgensi bisnis (Priority: P1/P2/P3).',
+        subtasks: [
+          { id: 'sub-801', title: 'Matriks Klasifikasi Bug Severity', is_completed: true }
+        ],
+        created_at: new Date().toISOString() 
+      },
+      { 
+        id: '9', 
+        title: 'Membuat Bug Report', 
+        status: 'Done', 
+        priority: 'High', 
+        category: 'Testing',
+        description: 'Laporan bug yang efektif dengan steps to reproduce, screenshot/video evidence, dan environment detail.',
+        subtasks: [
+          { id: 'sub-901', title: 'Template Standard Bug Report', is_completed: true },
+          { id: 'sub-902', title: 'Lampiran Console Log & Network Capture', is_completed: true }
+        ],
+        created_at: new Date().toISOString() 
+      },
+      { 
+        id: '10', 
+        title: 'Memahami Requirement, Product Backlog, User Story, Acceptance Criteria', 
+        status: 'Done', 
+        priority: 'Urgent', 
+        category: 'Documentation',
+        description: 'Format User Story (As a... I want to... So that...) dan Acceptance Criteria (Given... When... Then...).',
+        subtasks: [
+          { id: 'sub-1001', title: 'Bedah User Story Epic Auth', is_completed: true },
+          { id: 'sub-1002', title: 'Definisi Done (DoD) Criteria', is_completed: true }
+        ],
+        created_at: new Date().toISOString() 
+      }
     ];
 
     localStorage.setItem('desktopalie_todos_fallback', JSON.stringify(defaultTodos));

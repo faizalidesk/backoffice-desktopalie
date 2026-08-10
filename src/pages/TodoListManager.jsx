@@ -14,7 +14,9 @@ import {
   FiFilter, 
   FiChevronRight, 
   FiChevronLeft,
-  FiMoreHorizontal
+  FiCheckSquare,
+  FiSquare,
+  FiX
 } from 'react-icons/fi';
 import Header from '../components/Header';
 import Modal from '../components/Modal';
@@ -52,13 +54,17 @@ export default function TodoListManager() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
 
+  // Active Detail Form State (includes subtasks)
   const [formData, setFormData] = useState({
     title: '',
     description: '',
     status: 'Not started',
     priority: 'Medium',
-    category: 'Research'
+    category: 'Research',
+    subtasks: []
   });
+
+  const [newSubtaskTitle, setNewSubtaskTitle] = useState('');
 
   useEffect(() => {
     loadTodos();
@@ -106,7 +112,6 @@ export default function TodoListManager() {
 
     const task = todos.find(t => t.id === taskId);
     if (task && task.status !== targetStatus) {
-      // Optimistic update
       setTodos(prev => prev.map(t => t.id === taskId ? { ...t, status: targetStatus } : t));
       try {
         await backofficeService.updateTodo(taskId, { status: targetStatus });
@@ -128,7 +133,8 @@ export default function TodoListManager() {
         description: item.description || '',
         status: item.status || 'Not started',
         priority: item.priority || 'Medium',
-        category: item.category || 'Research'
+        category: item.category || 'Research',
+        subtasks: Array.isArray(item.subtasks) ? item.subtasks : []
       });
     } else {
       setEditingItem(null);
@@ -137,10 +143,45 @@ export default function TodoListManager() {
         description: '',
         status: defaultStatus,
         priority: 'Medium',
-        category: 'Research'
+        category: 'Research',
+        subtasks: []
       });
     }
+    setNewSubtaskTitle('');
     setIsModalOpen(true);
+  };
+
+  const handleAddSubtask = (e) => {
+    e.preventDefault();
+    if (!newSubtaskTitle.trim()) return;
+
+    const newSub = {
+      id: `sub-${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+      title: newSubtaskTitle.trim(),
+      is_completed: false
+    };
+
+    setFormData(prev => ({
+      ...prev,
+      subtasks: [...prev.subtasks, newSub]
+    }));
+    setNewSubtaskTitle('');
+  };
+
+  const handleToggleSubtask = (subId) => {
+    setFormData(prev => ({
+      ...prev,
+      subtasks: prev.subtasks.map(sub => 
+        sub.id === subId ? { ...sub, is_completed: !sub.is_completed } : sub
+      )
+    }));
+  };
+
+  const handleDeleteSubtask = (subId) => {
+    setFormData(prev => ({
+      ...prev,
+      subtasks: prev.subtasks.filter(sub => sub.id !== subId)
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -192,6 +233,7 @@ export default function TodoListManager() {
     try {
       await backofficeService.deleteTodo(id);
       toast.success('Tugas berhasil dihapus');
+      if (isModalOpen) setIsModalOpen(false);
       loadTodos();
     } catch (err) {
       console.error(err);
@@ -215,7 +257,7 @@ export default function TodoListManager() {
         <div className="page-header">
           <div className="page-title-group">
             <h1>To-Do List & Sprint Board</h1>
-            <p className="page-subtitle">Kelola tugas, alur kerja sprint, dan geser (drag & drop) tugas antar kolom secara visual seperti Notion & Jira.</p>
+            <p className="page-subtitle">Klik kartu untuk membuka popup detail, mengedit info, dan mencoret daftar checklist subtask yang sudah selesai!</p>
           </div>
 
           <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
@@ -413,11 +455,15 @@ export default function TodoListManager() {
                       columnTodos.map(task => {
                         const prioObj = PRIORITIES.find(p => p.key === task.priority) || PRIORITIES[0];
                         const isBeingDragged = draggedTaskId === task.id;
+                        const subtasks = Array.isArray(task.subtasks) ? task.subtasks : [];
+                        const completedSubtasks = subtasks.filter(s => s.is_completed).length;
+
                         return (
                           <div
                             key={task.id}
                             draggable={true}
                             onDragStart={(e) => handleDragStart(e, task.id)}
+                            onClick={() => handleOpenModal(task)}
                             style={{
                               backgroundColor: '#FFFFFF',
                               border: '1px solid var(--border-color)',
@@ -427,12 +473,10 @@ export default function TodoListManager() {
                               display: 'flex',
                               flexDirection: 'column',
                               gap: '0.5rem',
-                              cursor: 'grab',
+                              cursor: 'pointer',
                               opacity: isBeingDragged ? 0.4 : 1,
-                              transition: 'transform 0.15s ease, box-shadow 0.15s ease'
+                              transition: 'all 0.15s ease'
                             }}
-                            onMouseDown={(e) => e.currentTarget.style.cursor = 'grabbing'}
-                            onMouseUp={(e) => e.currentTarget.style.cursor = 'grab'}
                           >
                             <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
                               <FiFileText style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginTop: '3px', flexShrink: 0 }} />
@@ -442,9 +486,34 @@ export default function TodoListManager() {
                             </div>
 
                             {task.description && (
-                              <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', margin: 0, paddingLeft: '1.45rem' }}>
+                              <p style={{
+                                fontSize: '0.78rem',
+                                color: 'var(--text-muted)',
+                                margin: 0,
+                                paddingLeft: '1.45rem',
+                                display: '-webkit-box',
+                                WebkitLineClamp: 2,
+                                WebkitBoxOrient: 'vertical',
+                                overflow: 'hidden'
+                              }}>
                                 {task.description}
                               </p>
+                            )}
+
+                            {/* Subtask Progress Indicator */}
+                            {subtasks.length > 0 && (
+                              <div style={{
+                                paddingLeft: '1.45rem',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.4rem',
+                                fontSize: '0.725rem',
+                                fontWeight: '600',
+                                color: completedSubtasks === subtasks.length ? '#16A34A' : 'var(--text-muted)'
+                              }}>
+                                <FiCheckSquare style={{ fontSize: '0.8rem' }} />
+                                <span>{completedSubtasks}/{subtasks.length} subtask selesai</span>
+                              </div>
                             )}
 
                             {/* Tags & Action Row */}
@@ -481,7 +550,7 @@ export default function TodoListManager() {
                                 )}
                               </div>
 
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }} onClick={(e) => e.stopPropagation()}>
                                 <button
                                   type="button"
                                   className="btn btn-secondary btn-icon btn-sm"
@@ -498,7 +567,7 @@ export default function TodoListManager() {
                                   className="btn btn-secondary btn-icon btn-sm"
                                   style={{ padding: '0.2rem 0.4rem', height: 'auto' }}
                                   onClick={() => handleOpenModal(task)}
-                                  title="Edit"
+                                  title="Detail / Edit"
                                 >
                                   <FiEdit style={{ fontSize: '0.85rem' }} />
                                 </button>
@@ -569,6 +638,7 @@ export default function TodoListManager() {
                   <th>Judul Tugas</th>
                   <th>Kategori</th>
                   <th>Prioritas</th>
+                  <th>Subtask Check</th>
                   <th>Status Progres</th>
                   <th style={{ textAlign: 'right' }}>Aksi</th>
                 </tr>
@@ -577,8 +647,11 @@ export default function TodoListManager() {
                 {filteredTodos.map(task => {
                   const statusObj = STATUSES.find(s => s.key === task.status) || STATUSES[0];
                   const prioObj = PRIORITIES.find(p => p.key === task.priority) || PRIORITIES[0];
+                  const subtasks = Array.isArray(task.subtasks) ? task.subtasks : [];
+                  const completedSubtasks = subtasks.filter(s => s.is_completed).length;
+
                   return (
-                    <tr key={task.id}>
+                    <tr key={task.id} style={{ cursor: 'pointer' }} onClick={() => handleOpenModal(task)}>
                       <td>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
                           <FiFileText style={{ color: 'var(--text-muted)', fontSize: '1rem', flexShrink: 0 }} />
@@ -601,6 +674,11 @@ export default function TodoListManager() {
                         </span>
                       </td>
                       <td>
+                        <span style={{ fontSize: '0.78rem', fontWeight: '600', color: 'var(--text-muted)' }}>
+                          {subtasks.length > 0 ? `${completedSubtasks}/${subtasks.length} Selesai` : '-'}
+                        </span>
+                      </td>
+                      <td>
                         <span style={{
                           display: 'inline-flex',
                           alignItems: 'center',
@@ -617,12 +695,12 @@ export default function TodoListManager() {
                           {task.status}
                         </span>
                       </td>
-                      <td style={{ textAlign: 'right' }}>
+                      <td style={{ textAlign: 'right' }} onClick={(e) => e.stopPropagation()}>
                         <div style={{ display: 'inline-flex', gap: '0.35rem' }}>
                           <button
                             className="btn btn-secondary btn-icon btn-sm"
                             onClick={() => handleOpenModal(task)}
-                            title="Edit"
+                            title="Detail / Edit"
                           >
                             <FiEdit />
                           </button>
@@ -644,15 +722,15 @@ export default function TodoListManager() {
         )}
       </div>
 
-      {/* Modal Dialog */}
+      {/* Detail & Edit Modal Dialog with QA Subtask Checklist */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={editingItem ? 'Edit Tugas To-Do' : 'Tambah Tugas Baru'}
+        title={editingItem ? 'Detail & Informasi Tugas' : 'Tambah Tugas Baru'}
       >
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label className="form-label">Judul Tugas *</label>
+            <label className="form-label">Judul Utama Tugas *</label>
             <input
               type="text"
               className="form-control"
@@ -663,7 +741,7 @@ export default function TodoListManager() {
             />
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.75rem' }}>
             <div className="form-group">
               <label className="form-label">Status Progres</label>
               <select
@@ -678,7 +756,7 @@ export default function TodoListManager() {
             </div>
 
             <div className="form-group">
-              <label className="form-label">Tingkat Prioritas</label>
+              <label className="form-label">Prioritas</label>
               <select
                 className="form-control"
                 value={formData.priority}
@@ -689,39 +767,167 @@ export default function TodoListManager() {
                 ))}
               </select>
             </div>
+
+            <div className="form-group">
+              <label className="form-label">Kategori</label>
+              <select
+                className="form-control"
+                value={formData.category}
+                onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
+              >
+                {CATEGORIES.map(c => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
+            </div>
           </div>
 
           <div className="form-group">
-            <label className="form-label">Kategori</label>
-            <select
-              className="form-control"
-              value={formData.category}
-              onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
-            >
-              {CATEGORIES.map(c => (
-                <option key={c} value={c}>{c}</option>
-              ))}
-            </select>
-          </div>
-
-          <div className="form-group">
-            <label className="form-label">Catatan / Detail Tugas</label>
+            <label className="form-label">Catatan & Deskripsi Detail</label>
             <textarea
               className="form-control"
               rows="3"
-              placeholder="Tambahkan catatan detail atau kriteria penerimaan (optional)..."
+              placeholder="Tambahkan kriteria penerimaan, catatan QA, atau deskripsi detail..."
               value={formData.description}
               onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
             />
           </div>
 
-          <div className="modal-footer" style={{ margin: '1.5rem -1.5rem -1.5rem -1.5rem' }}>
-            <button type="button" className="btn btn-secondary" onClick={() => setIsModalOpen(false)}>
-              Batal
-            </button>
-            <button type="submit" className="btn btn-primary">
-              Simpan Tugas
-            </button>
+          {/* QA CHECKLIST / SUBTASKS SECTION WITH STRIKETHROUGH (CORET GARIS) */}
+          <div style={{
+            marginTop: '1.25rem',
+            padding: '1rem',
+            backgroundColor: '#F8FAFC',
+            border: '1px solid var(--border-color)',
+            borderRadius: 'var(--radius-sm)'
+          }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginBottom: '0.75rem'
+            }}>
+              <label className="form-label" style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <FiCheckSquare style={{ color: 'var(--primary)' }} />
+                <span>Checklist & Subtask QA ({formData.subtasks.filter(s => s.is_completed).length}/{formData.subtasks.length} Selesai)</span>
+              </label>
+            </div>
+
+            {/* Checklist items list */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', marginBottom: '0.875rem' }}>
+              {formData.subtasks.length === 0 ? (
+                <div style={{ fontSize: '0.8rem', color: 'var(--text-subtle)', fontStyle: 'italic', padding: '0.25rem 0' }}>
+                  Belum ada item checklist subtask. Tambahkan di bawah ini!
+                </div>
+              ) : (
+                formData.subtasks.map(sub => (
+                  <div key={sub.id} style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    backgroundColor: '#FFFFFF',
+                    border: '1px solid var(--border-color)',
+                    borderRadius: '6px',
+                    padding: '0.4rem 0.75rem',
+                    gap: '0.5rem'
+                  }}>
+                    <label style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.625rem',
+                      cursor: 'pointer',
+                      flex: 1,
+                      userSelect: 'none'
+                    }}>
+                      <input
+                        type="checkbox"
+                        checked={sub.is_completed}
+                        onChange={() => handleToggleSubtask(sub.id)}
+                        style={{ width: '16px', height: '16px', accentColor: 'var(--primary)', cursor: 'pointer' }}
+                      />
+                      <span style={{
+                        fontSize: '0.85rem',
+                        fontWeight: sub.is_completed ? '400' : '600',
+                        color: sub.is_completed ? '#94A3B8' : '#0F172A',
+                        textDecoration: sub.is_completed ? 'line-through' : 'none',
+                        transition: 'all 0.15s ease'
+                      }}>
+                        {sub.title}
+                      </span>
+                    </label>
+
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteSubtask(sub.id)}
+                      style={{
+                        background: 'transparent',
+                        border: 'none',
+                        color: '#94A3B8',
+                        cursor: 'pointer',
+                        padding: '0.2rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        fontSize: '0.85rem'
+                      }}
+                      onMouseOver={(e) => e.currentTarget.style.color = '#E11D48'}
+                      onMouseOut={(e) => e.currentTarget.style.color = '#94A3B8'}
+                      title="Hapus Subtask"
+                    >
+                      <FiX />
+                    </button>
+                  </div>
+                ))
+              )}
+            </div>
+
+            {/* Add Subtask Input Field */}
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <input
+                type="text"
+                className="form-control"
+                style={{ fontSize: '0.825rem', padding: '0.4rem 0.75rem' }}
+                placeholder="+ Tambah item checklist / pengujian..."
+                value={newSubtaskTitle}
+                onChange={(e) => setNewSubtaskTitle(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleAddSubtask(e);
+                  }
+                }}
+              />
+              <button
+                type="button"
+                className="btn btn-secondary btn-sm"
+                onClick={handleAddSubtask}
+                style={{ flexShrink: 0 }}
+              >
+                <FiPlus />
+                <span>Tambah</span>
+              </button>
+            </div>
+          </div>
+
+          <div className="modal-footer" style={{ margin: '1.5rem -1.5rem -1.5rem -1.5rem', justifyContent: 'space-between' }}>
+            {editingItem ? (
+              <button
+                type="button"
+                className="btn btn-danger btn-sm"
+                onClick={() => handleDelete(editingItem.id, editingItem.title)}
+              >
+                <FiTrash2 />
+                <span>Hapus Tugas</span>
+              </button>
+            ) : <div />}
+
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <button type="button" className="btn btn-secondary" onClick={() => setIsModalOpen(false)}>
+                Batal
+              </button>
+              <button type="submit" className="btn btn-primary">
+                Simpan Perubahan
+              </button>
+            </div>
           </div>
         </form>
       </Modal>
