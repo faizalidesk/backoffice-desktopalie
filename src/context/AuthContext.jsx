@@ -27,26 +27,40 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    if (error) throw error;
-    return data;
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (error) throw error;
+      return data;
+    } catch (err) {
+      if (err.message === 'Failed to fetch' || err.toString().includes('Failed to fetch')) {
+        throw new Error('Gagal menghubungkan ke Supabase (Failed to fetch). Pastikan VITE_SUPABASE_URL & VITE_SUPABASE_ANON_KEY sudah ditambahkan di Vercel Environment Variables dan sudah di-Redeploy!');
+      }
+      throw err;
+    }
   };
 
   const register = async (email, password, fullName) => {
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          full_name: fullName,
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: fullName,
+          },
         },
-      },
-    });
-    if (error) throw error;
-    return data;
+      });
+      if (error) throw error;
+      return data;
+    } catch (err) {
+      if (err.message === 'Failed to fetch' || err.toString().includes('Failed to fetch')) {
+        throw new Error('Gagal menghubungkan ke Supabase (Failed to fetch). Pastikan VITE_SUPABASE_URL & VITE_SUPABASE_ANON_KEY sudah ditambahkan di Vercel Environment Variables dan sudah di-Redeploy!');
+      }
+      throw err;
+    }
   };
 
   const logout = async () => {
