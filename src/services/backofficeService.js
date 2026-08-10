@@ -41,6 +41,61 @@ export const backofficeService = {
     }
   },
 
+  // MAINTENANCE SETTINGS
+  async getMaintenanceSettings() {
+    try {
+      const { data, error } = await supabase
+        .from('site_settings')
+        .select('*')
+        .eq('key', 'maintenance')
+        .maybeSingle();
+
+      if (data?.value) {
+        return data.value;
+      }
+    } catch (err) {
+      console.warn('Supabase site_settings table not accessible:', err);
+    }
+
+    const localData = localStorage.getItem('desktopalie_maintenance_settings');
+    if (localData) {
+      try {
+        return JSON.parse(localData);
+      } catch (e) {}
+    }
+
+    return {
+      is_enabled: false,
+      title: 'Situs Sedang Dalam Pemeliharaan',
+      message: 'Kami sedang melakukan peningkatan performa dan pembaruan sistem. Kembali lagi dalam beberapa saat.',
+      end_time: new Date(Date.now() + 3 * 3600 * 1000).toISOString(),
+      allow_admin_bypass: true
+    };
+  },
+
+  async updateMaintenanceSettings(settings) {
+    // Always save to LocalStorage first for instant reliability
+    localStorage.setItem('desktopalie_maintenance_settings', JSON.stringify(settings));
+
+    try {
+      const { data, error } = await supabase
+        .from('site_settings')
+        .upsert({
+          key: 'maintenance',
+          value: settings,
+          updated_at: new Date().toISOString()
+        });
+
+      if (error) {
+        console.warn('Supabase site_settings error, saved to LocalStorage:', error.message);
+      }
+      return settings;
+    } catch (err) {
+      console.warn('Saved to LocalStorage fallback:', err);
+      return settings;
+    }
+  },
+
   // PROJECTS CRUD
   async getProjects() {
     const { data, error } = await supabase
