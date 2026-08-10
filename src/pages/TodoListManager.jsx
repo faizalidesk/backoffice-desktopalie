@@ -820,7 +820,15 @@ export default function TodoListManager() {
                 )}
 
                 {/* Checklist Items */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', marginBottom: '0.875rem' }}>
+                <div style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.45rem',
+                  marginBottom: '0.875rem',
+                  maxHeight: '260px',
+                  overflowY: 'auto',
+                  paddingRight: '0.35rem'
+                }}>
                   {formData.subtasks.length === 0 ? (
                     <div style={{ fontSize: '0.8rem', color: 'var(--text-subtle)', fontStyle: 'italic', padding: '0.25rem 0' }}>
                       Belum ada item checklist. Tambahkan subtask baru di bawah!
