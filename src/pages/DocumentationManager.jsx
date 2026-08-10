@@ -113,7 +113,7 @@ export default function DocumentationManager() {
   const [hoveredFolder, setHoveredFolder] = useState(null);
   const [hoveredDocId, setHoveredDocId] = useState(null);
 
-  // Structural Folder State
+  // Structural Main Folder State (Core, Backend, Frontend, Devops, QA, etc.)
   const [folders, setFolders] = useState(() => {
     const local = localStorage.getItem('desktopalie_v3_folders');
     return local ? JSON.parse(local) : INITIAL_FOLDERS;
@@ -136,7 +136,7 @@ export default function DocumentationManager() {
   const [docAuthor, setDocAuthor] = useState('Admin');
   const [isSaving, setIsSaving] = useState(false);
 
-  // Modal State for adding new Folder or Doc
+  // Modal State for adding new Document
   const [isNewDocModalOpen, setIsNewDocModalOpen] = useState(false);
   const [newDocData, setNewDocData] = useState({
     title: '',
@@ -188,18 +188,14 @@ export default function DocumentationManager() {
     }));
   };
 
-  // STEP 1: CREATE NEW FOLDER OR NESTED SUBFOLDER
-  const handleCreateFolder = (parentFolder = null) => {
-    const promptMsg = parentFolder 
-      ? `Masukkan Nama Subfolder Baru di dalam "${parentFolder}":` 
-      : 'Masukkan Nama Folder Baru di bawah Docs v3:';
-
-    const name = window.prompt(promptMsg);
+  // CREATE MAIN FOLDER (Sejajar dengan Core, Backend, Frontend, Devops, QA, dll.)
+  const handleCreateMainFolder = () => {
+    const name = window.prompt('Masukkan Nama Main Folder Baru (Sejajar dengan Core, Backend, Frontend, dll):');
     if (!name || !name.trim()) return;
 
-    const folderName = parentFolder ? `${parentFolder} / ${name.trim()}` : name.trim();
+    const folderName = name.trim();
     if (folders.includes(folderName)) {
-      toast.error('Folder dengan nama ini sudah ada!');
+      toast.error('Main Folder dengan nama ini sudah ada!');
       return;
     }
 
@@ -207,10 +203,9 @@ export default function DocumentationManager() {
     setExpandedFolders(prev => ({ 
       ...prev, 
       'Docs v3': true, 
-      ...(parentFolder ? { [parentFolder]: true } : {}),
       [folderName]: true 
     }));
-    toast.success(`Folder "${folderName}" berhasil dibuat!`);
+    toast.success(`Main Folder "${folderName}" berhasil dibuat!`);
   };
 
   // RENAME FOLDER
@@ -259,11 +254,11 @@ export default function DocumentationManager() {
       await backofficeService.deleteDoc(doc.id);
     }
 
-    toast.success(`Folder "${folderName}" dan isinya berhasil dihapus!`);
+    toast.success(`Main Folder "${folderName}" dan isinya berhasil dihapus!`);
     loadDocs();
   };
 
-  // STEP 2: CREATE NEW DOCUMENT IN A SPECIFIC FOLDER
+  // CREATE NEW DOCUMENT IN A SPECIFIC MAIN FOLDER
   const handleOpenNewDocModal = (targetFolder = 'Core') => {
     setNewDocData({
       title: '',
@@ -302,7 +297,7 @@ export default function DocumentationManager() {
     }
   };
 
-  // STEP 3: SAVE CURRENT DOCUMENT EDITS
+  // SAVE CURRENT DOCUMENT EDITS
   const handleSaveCurrentDoc = async () => {
     if (!selectedDoc) return;
     setIsSaving(true);
@@ -355,7 +350,7 @@ export default function DocumentationManager() {
     }
   };
 
-  // Group Docs by Folder
+  // Group Docs by Main Folder
   const docsByFolder = useMemo(() => {
     const map = {};
     const filteredDocs = docs.filter(d => viewTab === 'archived' ? d.is_archived : !d.is_archived);
@@ -426,9 +421,9 @@ export default function DocumentationManager() {
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <button className="btn btn-secondary btn-sm" onClick={() => handleCreateFolder(null)}>
+              <button className="btn btn-secondary btn-sm" onClick={handleCreateMainFolder}>
                 <FiFolderPlus style={{ color: 'var(--primary)' }} />
-                <span>+ Create Folder</span>
+                <span>+ Create Main Folder</span>
               </button>
               <button className="btn btn-primary btn-sm" onClick={() => handleOpenNewDocModal()}>
                 <FiPlus />
@@ -480,14 +475,14 @@ export default function DocumentationManager() {
                   <span>Docs v3</span>
                 </div>
 
-                {/* Direct "+ Folder" button on the Docs v3 root row */}
+                {/* Direct "+ Main Folder" button on the Docs v3 root row */}
                 <button
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleCreateFolder(null);
+                    handleCreateMainFolder();
                   }}
-                  title="Buat Folder Baru di bawah Docs v3"
+                  title="Buat Main Folder Baru (Sejajar dengan Core, Backend, Frontend, dll)"
                   style={{
                     background: '#FFFFFF',
                     border: '1px solid var(--border-color)',
@@ -504,11 +499,11 @@ export default function DocumentationManager() {
                   }}
                 >
                   <FiFolderPlus />
-                  <span>+ Folder</span>
+                  <span>+ Main Folder</span>
                 </button>
               </div>
 
-              {/* INNER FOLDER & DOCS TREE */}
+              {/* INNER MAIN FOLDERS & DOCS TREE */}
               {expandedFolders['Docs v3'] && (
                 <div style={{ paddingLeft: '0.875rem', display: 'flex', flexDirection: 'column', gap: '0.25rem', marginTop: '0.25rem' }}>
                   {Object.keys(docsByFolder).map(folderName => {
@@ -518,7 +513,7 @@ export default function DocumentationManager() {
 
                     return (
                       <div key={folderName} style={{ display: 'flex', flexDirection: 'column' }}>
-                        {/* FOLDER ROW WITH HOVER-ONLY ACTION BUTTONS */}
+                        {/* MAIN FOLDER ROW WITH HOVER-ONLY ACTION BUTTONS */}
                         <div
                           onMouseEnter={() => setHoveredFolder(folderName)}
                           onMouseLeave={() => setHoveredFolder(null)}
@@ -557,7 +552,7 @@ export default function DocumentationManager() {
                                 <button
                                   type="button"
                                   onClick={() => handleRenameFolder(folderName)}
-                                  title={`Ubah Nama Folder "${folderName}"`}
+                                  title={`Ubah Nama Main Folder "${folderName}"`}
                                   style={{
                                     background: 'transparent',
                                     border: 'none',
@@ -574,7 +569,7 @@ export default function DocumentationManager() {
                                 <button
                                   type="button"
                                   onClick={() => handleDeleteFolder(folderName)}
-                                  title={`Hapus Folder "${folderName}"`}
+                                  title={`Hapus Main Folder "${folderName}"`}
                                   style={{
                                     background: 'transparent',
                                     border: 'none',
@@ -586,23 +581,6 @@ export default function DocumentationManager() {
                                   }}
                                 >
                                   <FiTrash2 />
-                                </button>
-
-                                <button
-                                  type="button"
-                                  onClick={() => handleCreateFolder(folderName)}
-                                  title={`+ Buat Subfolder di dalam "${folderName}"`}
-                                  style={{
-                                    background: 'transparent',
-                                    border: 'none',
-                                    color: '#D97706',
-                                    cursor: 'pointer',
-                                    padding: '0.1rem 0.2rem',
-                                    borderRadius: '4px',
-                                    fontSize: '0.75rem'
-                                  }}
-                                >
-                                  <FiFolderPlus />
                                 </button>
 
                                 <button
@@ -630,7 +608,7 @@ export default function DocumentationManager() {
                           </div>
                         </div>
 
-                        {/* DOCS INSIDE THIS FOLDER */}
+                        {/* DOCS INSIDE THIS MAIN FOLDER */}
                         {isFolderOpen && (
                           <div style={{
                             paddingLeft: '1.15rem',
@@ -803,10 +781,10 @@ export default function DocumentationManager() {
                       />
                     </div>
 
-                    {/* Metadata bar: Folder Selection & Author */}
+                    {/* Metadata bar: Main Folder Selection & Author */}
                     <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.25rem', backgroundColor: '#F8FAFC', padding: '0.75rem 1rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)' }}>
                       <div style={{ flex: 1 }}>
-                        <label style={{ fontSize: '0.725rem', fontWeight: '700', textTransform: 'uppercase', color: 'var(--text-muted)' }}>Folder</label>
+                        <label style={{ fontSize: '0.725rem', fontWeight: '700', textTransform: 'uppercase', color: 'var(--text-muted)' }}>Main Folder</label>
                         <select
                           className="form-control"
                           value={docFolder}
@@ -869,7 +847,7 @@ export default function DocumentationManager() {
                       lineHeight: '1.6'
                     }}>
                       <strong>Owner / Author:</strong> {docAuthor || 'Admin'}<br />
-                      <strong>Folder:</strong> {docFolder}
+                      <strong>Main Folder:</strong> {docFolder}
                     </div>
 
                     <div style={{
@@ -916,7 +894,7 @@ export default function DocumentationManager() {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Folder *</label>
+            <label className="form-label">Main Folder *</label>
             <select
               className="form-control"
               value={newDocData.folder}
