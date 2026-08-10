@@ -188,20 +188,29 @@ export default function DocumentationManager() {
     }));
   };
 
-  // STEP 1: CREATE NEW FOLDER
-  const handleCreateFolder = () => {
-    const name = window.prompt('Masukkan Nama Folder Baru di bawah Docs v3:');
+  // STEP 1: CREATE NEW FOLDER OR NESTED SUBFOLDER
+  const handleCreateFolder = (parentFolder = null) => {
+    const promptMsg = parentFolder 
+      ? `Masukkan Nama Subfolder Baru di dalam "${parentFolder}":` 
+      : 'Masukkan Nama Folder Baru di bawah Docs v3:';
+
+    const name = window.prompt(promptMsg);
     if (!name || !name.trim()) return;
 
-    const folderName = name.trim();
+    const folderName = parentFolder ? `${parentFolder} / ${name.trim()}` : name.trim();
     if (folders.includes(folderName)) {
       toast.error('Folder dengan nama ini sudah ada!');
       return;
     }
 
     setFolders(prev => [...prev, folderName]);
-    setExpandedFolders(prev => ({ ...prev, 'Docs v3': true, [folderName]: true }));
-    toast.success(`Folder "${folderName}" berhasil dibuat di bawah Docs v3!`);
+    setExpandedFolders(prev => ({ 
+      ...prev, 
+      'Docs v3': true, 
+      ...(parentFolder ? { [parentFolder]: true } : {}),
+      [folderName]: true 
+    }));
+    toast.success(`Folder "${folderName}" berhasil dibuat!`);
   };
 
   // RENAME FOLDER
@@ -417,7 +426,7 @@ export default function DocumentationManager() {
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <button className="btn btn-secondary btn-sm" onClick={handleCreateFolder}>
+              <button className="btn btn-secondary btn-sm" onClick={() => handleCreateFolder(null)}>
                 <FiFolderPlus style={{ color: 'var(--primary)' }} />
                 <span>+ Create Folder</span>
               </button>
@@ -476,7 +485,7 @@ export default function DocumentationManager() {
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleCreateFolder();
+                    handleCreateFolder(null);
                   }}
                   title="Buat Folder Baru di bawah Docs v3"
                   style={{
@@ -577,6 +586,23 @@ export default function DocumentationManager() {
                                   }}
                                 >
                                   <FiTrash2 />
+                                </button>
+
+                                <button
+                                  type="button"
+                                  onClick={() => handleCreateFolder(folderName)}
+                                  title={`+ Buat Subfolder di dalam "${folderName}"`}
+                                  style={{
+                                    background: 'transparent',
+                                    border: 'none',
+                                    color: '#D97706',
+                                    cursor: 'pointer',
+                                    padding: '0.1rem 0.2rem',
+                                    borderRadius: '4px',
+                                    fontSize: '0.75rem'
+                                  }}
+                                >
+                                  <FiFolderPlus />
                                 </button>
 
                                 <button
