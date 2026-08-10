@@ -15,8 +15,11 @@ import {
   FiChevronRight, 
   FiChevronLeft,
   FiCheckSquare,
-  FiSquare,
-  FiX
+  FiX,
+  FiTag,
+  FiAlertCircle,
+  FiLayers,
+  FiCalendar
 } from 'react-icons/fi';
 import Header from '../components/Header';
 import Modal from '../components/Modal';
@@ -250,6 +253,10 @@ export default function TodoListManager() {
     return matchesSearch && matchesPriority && matchesCategory;
   });
 
+  const totalSubtasks = formData.subtasks.length;
+  const completedSubtasks = formData.subtasks.filter(s => s.is_completed).length;
+  const progressPercent = totalSubtasks > 0 ? Math.round((completedSubtasks / totalSubtasks) * 100) : 0;
+
   return (
     <>
       <Header title="To-Do List & Board" />
@@ -257,7 +264,7 @@ export default function TodoListManager() {
         <div className="page-header">
           <div className="page-title-group">
             <h1>To-Do List & Sprint Board</h1>
-            <p className="page-subtitle">Klik kartu untuk membuka popup detail, mengedit info, dan mencoret daftar checklist subtask yang sudah selesai!</p>
+            <p className="page-subtitle">Klik kartu untuk membuka popup detail 2-section, mengedit info, dan mencoret daftar checklist subtask yang sudah selesai!</p>
           </div>
 
           <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
@@ -456,7 +463,7 @@ export default function TodoListManager() {
                         const prioObj = PRIORITIES.find(p => p.key === task.priority) || PRIORITIES[0];
                         const isBeingDragged = draggedTaskId === task.id;
                         const subtasks = Array.isArray(task.subtasks) ? task.subtasks : [];
-                        const completedSubtasks = subtasks.filter(s => s.is_completed).length;
+                        const completedSubCount = subtasks.filter(s => s.is_completed).length;
 
                         return (
                           <div
@@ -509,10 +516,10 @@ export default function TodoListManager() {
                                 gap: '0.4rem',
                                 fontSize: '0.725rem',
                                 fontWeight: '600',
-                                color: completedSubtasks === subtasks.length ? '#16A34A' : 'var(--text-muted)'
+                                color: completedSubCount === subtasks.length ? '#16A34A' : 'var(--text-muted)'
                               }}>
                                 <FiCheckSquare style={{ fontSize: '0.8rem' }} />
-                                <span>{completedSubtasks}/{subtasks.length} subtask selesai</span>
+                                <span>{completedSubCount}/{subtasks.length} subtask selesai</span>
                               </div>
                             )}
 
@@ -648,7 +655,7 @@ export default function TodoListManager() {
                   const statusObj = STATUSES.find(s => s.key === task.status) || STATUSES[0];
                   const prioObj = PRIORITIES.find(p => p.key === task.priority) || PRIORITIES[0];
                   const subtasks = Array.isArray(task.subtasks) ? task.subtasks : [];
-                  const completedSubtasks = subtasks.filter(s => s.is_completed).length;
+                  const completedSubCount = subtasks.filter(s => s.is_completed).length;
 
                   return (
                     <tr key={task.id} style={{ cursor: 'pointer' }} onClick={() => handleOpenModal(task)}>
@@ -675,7 +682,7 @@ export default function TodoListManager() {
                       </td>
                       <td>
                         <span style={{ fontSize: '0.78rem', fontWeight: '600', color: 'var(--text-muted)' }}>
-                          {subtasks.length > 0 ? `${completedSubtasks}/${subtasks.length} Selesai` : '-'}
+                          {subtasks.length > 0 ? `${completedSubCount}/${subtasks.length} Selesai` : '-'}
                         </span>
                       </td>
                       <td>
@@ -722,211 +729,310 @@ export default function TodoListManager() {
         )}
       </div>
 
-      {/* Detail & Edit Modal Dialog with QA Subtask Checklist */}
+      {/* WIDE 2-COLUMN TASK DETAIL MODAL (SECTION KIRI & SECTION KANAN) */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={editingItem ? 'Detail & Informasi Tugas' : 'Tambah Tugas Baru'}
+        title={editingItem ? 'Detail & Properti Tugas' : 'Tambah Tugas Baru'}
+        maxWidth="880px"
       >
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label className="form-label">Judul Utama Tugas *</label>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Contoh: Memahami alur kerja Sprint Development"
-              value={formData.title}
-              onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-              required
-            />
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.75rem' }}>
-            <div className="form-group">
-              <label className="form-label">Status Progres</label>
-              <select
-                className="form-control"
-                value={formData.status}
-                onChange={(e) => setFormData(prev => ({ ...prev, status: e.target.value }))}
-              >
-                {STATUSES.map(s => (
-                  <option key={s.key} value={s.key}>{s.label}</option>
-                ))}
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Prioritas</label>
-              <select
-                className="form-control"
-                value={formData.priority}
-                onChange={(e) => setFormData(prev => ({ ...prev, priority: e.target.value }))}
-              >
-                {PRIORITIES.map(p => (
-                  <option key={p.key} value={p.key}>{p.label}</option>
-                ))}
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Kategori</label>
-              <select
-                className="form-control"
-                value={formData.category}
-                onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
-              >
-                {CATEGORIES.map(c => (
-                  <option key={c} value={c}>{c}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          <div className="form-group">
-            <label className="form-label">Catatan & Deskripsi Detail</label>
-            <textarea
-              className="form-control"
-              rows="3"
-              placeholder="Tambahkan kriteria penerimaan, catatan QA, atau deskripsi detail..."
-              value={formData.description}
-              onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-            />
-          </div>
-
-          {/* QA CHECKLIST / SUBTASKS SECTION WITH STRIKETHROUGH (CORET GARIS) */}
           <div style={{
-            marginTop: '1.25rem',
-            padding: '1rem',
-            backgroundColor: '#F8FAFC',
-            border: '1px solid var(--border-color)',
-            borderRadius: 'var(--radius-sm)'
+            display: 'grid',
+            gridTemplateColumns: '1.6fr 1fr',
+            gap: '1.75rem',
+            alignItems: 'start'
           }}>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              marginBottom: '0.75rem'
-            }}>
-              <label className="form-label" style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                <FiCheckSquare style={{ color: 'var(--primary)' }} />
-                <span>Checklist & Subtask QA ({formData.subtasks.filter(s => s.is_completed).length}/{formData.subtasks.length} Selesai)</span>
-              </label>
-            </div>
+            {/* SECTION KIRI: KONTEN UTAMA & CHECKLIST */}
+            <div>
+              {/* Judul Tugas */}
+              <div className="form-group">
+                <label className="form-label" style={{ fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-muted)' }}>
+                  Judul Utama Tugas *
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  style={{ fontSize: '1.1rem', fontWeight: '700', padding: '0.75rem 0.875rem' }}
+                  placeholder="Judul tugas..."
+                  value={formData.title}
+                  onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                  required
+                />
+              </div>
 
-            {/* Checklist items list */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', marginBottom: '0.875rem' }}>
-              {formData.subtasks.length === 0 ? (
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-subtle)', fontStyle: 'italic', padding: '0.25rem 0' }}>
-                  Belum ada item checklist subtask. Tambahkan di bawah ini!
+              {/* Deskripsi */}
+              <div className="form-group">
+                <label className="form-label" style={{ fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-muted)' }}>
+                  Catatan & Deskripsi Detail
+                </label>
+                <textarea
+                  className="form-control"
+                  rows="4"
+                  placeholder="Tambahkan kriteria penerimaan, catatan QA, atau rincian pengujian..."
+                  value={formData.description}
+                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                />
+              </div>
+
+              {/* QA CHECKLIST SECTION (CORET GARIS STRIKETHROUGH) */}
+              <div style={{
+                marginTop: '1.25rem',
+                padding: '1.15rem',
+                backgroundColor: '#F8FAFC',
+                border: '1px solid var(--border-color)',
+                borderRadius: 'var(--radius-md)'
+              }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  marginBottom: '0.75rem'
+                }}>
+                  <label className="form-label" style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: '700' }}>
+                    <FiCheckSquare style={{ color: 'var(--primary)' }} />
+                    <span>Checklist & Subtask QA ({completedSubtasks}/{totalSubtasks})</span>
+                  </label>
+
+                  <span style={{ fontSize: '0.78rem', fontWeight: '700', color: progressPercent === 100 ? '#16A34A' : 'var(--text-muted)' }}>
+                    {progressPercent}% Selesai
+                  </span>
                 </div>
-              ) : (
-                formData.subtasks.map(sub => (
-                  <div key={sub.id} style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    backgroundColor: '#FFFFFF',
-                    border: '1px solid var(--border-color)',
-                    borderRadius: '6px',
-                    padding: '0.4rem 0.75rem',
-                    gap: '0.5rem'
-                  }}>
-                    <label style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.625rem',
-                      cursor: 'pointer',
-                      flex: 1,
-                      userSelect: 'none'
-                    }}>
-                      <input
-                        type="checkbox"
-                        checked={sub.is_completed}
-                        onChange={() => handleToggleSubtask(sub.id)}
-                        style={{ width: '16px', height: '16px', accentColor: 'var(--primary)', cursor: 'pointer' }}
-                      />
-                      <span style={{
-                        fontSize: '0.85rem',
-                        fontWeight: sub.is_completed ? '400' : '600',
-                        color: sub.is_completed ? '#94A3B8' : '#0F172A',
-                        textDecoration: sub.is_completed ? 'line-through' : 'none',
-                        transition: 'all 0.15s ease'
-                      }}>
-                        {sub.title}
-                      </span>
-                    </label>
 
-                    <button
-                      type="button"
-                      onClick={() => handleDeleteSubtask(sub.id)}
-                      style={{
-                        background: 'transparent',
-                        border: 'none',
-                        color: '#94A3B8',
-                        cursor: 'pointer',
-                        padding: '0.2rem',
+                {/* Progress bar */}
+                {totalSubtasks > 0 && (
+                  <div style={{
+                    width: '100%',
+                    height: '6px',
+                    backgroundColor: '#E2E8F0',
+                    borderRadius: '999px',
+                    overflow: 'hidden',
+                    marginBottom: '1rem'
+                  }}>
+                    <div style={{
+                      height: '100%',
+                      width: `${progressPercent}%`,
+                      backgroundColor: progressPercent === 100 ? '#16A34A' : 'var(--primary)',
+                      borderRadius: '999px',
+                      transition: 'width 0.3s ease, background-color 0.3s ease'
+                    }} />
+                  </div>
+                )}
+
+                {/* Checklist Items */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', marginBottom: '0.875rem' }}>
+                  {formData.subtasks.length === 0 ? (
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-subtle)', fontStyle: 'italic', padding: '0.25rem 0' }}>
+                      Belum ada item checklist. Tambahkan subtask baru di bawah!
+                    </div>
+                  ) : (
+                    formData.subtasks.map(sub => (
+                      <div key={sub.id} style={{
                         display: 'flex',
                         alignItems: 'center',
-                        fontSize: '0.85rem'
-                      }}
-                      onMouseOver={(e) => e.currentTarget.style.color = '#E11D48'}
-                      onMouseOut={(e) => e.currentTarget.style.color = '#94A3B8'}
-                      title="Hapus Subtask"
-                    >
-                      <FiX />
-                    </button>
-                  </div>
-                ))
-              )}
+                        justifyContent: 'space-between',
+                        backgroundColor: '#FFFFFF',
+                        border: '1px solid var(--border-color)',
+                        borderRadius: 'var(--radius-sm)',
+                        padding: '0.45rem 0.75rem',
+                        gap: '0.5rem',
+                        boxShadow: 'var(--shadow-sm)'
+                      }}>
+                        <label style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.625rem',
+                          cursor: 'pointer',
+                          flex: 1,
+                          userSelect: 'none'
+                        }}>
+                          <input
+                            type="checkbox"
+                            checked={sub.is_completed}
+                            onChange={() => handleToggleSubtask(sub.id)}
+                            style={{ width: '16px', height: '16px', accentColor: 'var(--primary)', cursor: 'pointer' }}
+                          />
+                          <span style={{
+                            fontSize: '0.85rem',
+                            fontWeight: sub.is_completed ? '400' : '600',
+                            color: sub.is_completed ? '#94A3B8' : '#0F172A',
+                            textDecoration: sub.is_completed ? 'line-through' : 'none',
+                            transition: 'all 0.15s ease'
+                          }}>
+                            {sub.title}
+                          </span>
+                        </label>
+
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteSubtask(sub.id)}
+                          style={{
+                            background: 'transparent',
+                            border: 'none',
+                            color: '#94A3B8',
+                            cursor: 'pointer',
+                            padding: '0.2rem',
+                            display: 'flex',
+                            alignItems: 'center',
+                            fontSize: '0.85rem'
+                          }}
+                          onMouseOver={(e) => e.currentTarget.style.color = '#E11D48'}
+                          onMouseOut={(e) => e.currentTarget.style.color = '#94A3B8'}
+                          title="Hapus Subtask"
+                        >
+                          <FiX />
+                        </button>
+                      </div>
+                    ))
+                  )}
+                </div>
+
+                {/* Input Add Subtask */}
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <input
+                    type="text"
+                    className="form-control"
+                    style={{ fontSize: '0.825rem', padding: '0.45rem 0.75rem' }}
+                    placeholder="+ Tambah item checklist / pengujian..."
+                    value={newSubtaskTitle}
+                    onChange={(e) => setNewSubtaskTitle(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        handleAddSubtask(e);
+                      }
+                    }}
+                  />
+                  <button
+                    type="button"
+                    className="btn btn-secondary btn-sm"
+                    onClick={handleAddSubtask}
+                    style={{ flexShrink: 0 }}
+                  >
+                    <FiPlus />
+                    <span>Tambah</span>
+                  </button>
+                </div>
+              </div>
             </div>
 
-            {/* Add Subtask Input Field */}
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
-              <input
-                type="text"
-                className="form-control"
-                style={{ fontSize: '0.825rem', padding: '0.4rem 0.75rem' }}
-                placeholder="+ Tambah item checklist / pengujian..."
-                value={newSubtaskTitle}
-                onChange={(e) => setNewSubtaskTitle(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault();
-                    handleAddSubtask(e);
-                  }
-                }}
-              />
-              <button
-                type="button"
-                className="btn btn-secondary btn-sm"
-                onClick={handleAddSubtask}
-                style={{ flexShrink: 0 }}
-              >
-                <FiPlus />
-                <span>Tambah</span>
-              </button>
-            </div>
-          </div>
+            {/* SECTION KANAN: PANEL PROPERTI & AKSI */}
+            <div style={{
+              backgroundColor: '#F8FAFC',
+              border: '1px solid var(--border-color)',
+              borderRadius: 'var(--radius-md)',
+              padding: '1.25rem',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '1.25rem'
+            }}>
+              <h4 style={{
+                fontSize: '0.85rem',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+                color: 'var(--text-muted)',
+                margin: 0,
+                paddingBottom: '0.5rem',
+                borderBottom: '1px solid var(--border-color)'
+              }}>
+                Properti & Status
+              </h4>
 
-          <div className="modal-footer" style={{ margin: '1.5rem -1.5rem -1.5rem -1.5rem', justifyContent: 'space-between' }}>
-            {editingItem ? (
-              <button
-                type="button"
-                className="btn btn-danger btn-sm"
-                onClick={() => handleDelete(editingItem.id, editingItem.title)}
-              >
-                <FiTrash2 />
-                <span>Hapus Tugas</span>
-              </button>
-            ) : <div />}
+              {/* Status Progres Selector */}
+              <div className="form-group" style={{ margin: 0 }}>
+                <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem' }}>
+                  <FiLayers style={{ color: 'var(--primary)' }} />
+                  <span>Status Progres</span>
+                </label>
+                <select
+                  className="form-control"
+                  style={{ fontWeight: '600' }}
+                  value={formData.status}
+                  onChange={(e) => setFormData(prev => ({ ...prev, status: e.target.value }))}
+                >
+                  {STATUSES.map(s => (
+                    <option key={s.key} value={s.key}>{s.label}</option>
+                  ))}
+                </select>
+              </div>
 
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
-              <button type="button" className="btn btn-secondary" onClick={() => setIsModalOpen(false)}>
-                Batal
-              </button>
-              <button type="submit" className="btn btn-primary">
-                Simpan Perubahan
-              </button>
+              {/* Prioritas Selector */}
+              <div className="form-group" style={{ margin: 0 }}>
+                <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem' }}>
+                  <FiAlertCircle style={{ color: '#D97706' }} />
+                  <span>Tingkat Prioritas</span>
+                </label>
+                <select
+                  className="form-control"
+                  style={{ fontWeight: '600' }}
+                  value={formData.priority}
+                  onChange={(e) => setFormData(prev => ({ ...prev, priority: e.target.value }))}
+                >
+                  {PRIORITIES.map(p => (
+                    <option key={p.key} value={p.key}>{p.label}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Kategori Selector */}
+              <div className="form-group" style={{ margin: 0 }}>
+                <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem' }}>
+                  <FiTag style={{ color: '#0D9488' }} />
+                  <span>Kategori Tugas</span>
+                </label>
+                <select
+                  className="form-control"
+                  style={{ fontWeight: '600' }}
+                  value={formData.category}
+                  onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
+                >
+                  {CATEGORIES.map(c => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Ringkasan Status Metadata */}
+              <div style={{
+                padding: '0.875rem',
+                backgroundColor: '#FFFFFF',
+                border: '1px solid var(--border-color)',
+                borderRadius: 'var(--radius-sm)',
+                fontSize: '0.78rem',
+                color: 'var(--text-muted)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.4rem'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                  <FiCalendar />
+                  <span>Dibuat: {editingItem?.created_at ? new Date(editingItem.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Baru'}</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                  <FiCheckCircle />
+                  <span>Subtask QA: {completedSubtasks} dari {totalSubtasks} Selesai</span>
+                </div>
+              </div>
+
+              {/* Action Buttons Panel */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem', marginTop: '0.5rem' }}>
+                <button type="submit" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
+                  <FiCheckCircle />
+                  <span>Simpan Perubahan</span>
+                </button>
+
+                {editingItem && (
+                  <button
+                    type="button"
+                    className="btn btn-danger btn-sm"
+                    onClick={() => handleDelete(editingItem.id, editingItem.title)}
+                    style={{ width: '100%', justifyContent: 'center' }}
+                  >
+                    <FiTrash2 />
+                    <span>Hapus Tugas Ini</span>
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </form>

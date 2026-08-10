@@ -1,11 +1,15 @@
 import { FiX } from 'react-icons/fi';
 
-export default function Modal({ isOpen, onClose, title, children }) {
+export default function Modal({ isOpen, onClose, title, children, maxWidth }) {
   if (!isOpen) return null;
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+      <div 
+        className="modal-content" 
+        onClick={(e) => e.stopPropagation()}
+        style={maxWidth ? { maxWidth } : undefined}
+      >
         <div className="modal-header">
           <h3>{title}</h3>
           <button 
