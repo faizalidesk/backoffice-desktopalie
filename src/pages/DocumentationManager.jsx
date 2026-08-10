@@ -109,6 +109,10 @@ export default function DocumentationManager() {
   // Right Editor view mode: 'editor' | 'preview'
   const [editorMode, setEditorMode] = useState('editor');
 
+  // Hover states to show action buttons ONLY on hover
+  const [hoveredFolder, setHoveredFolder] = useState(null);
+  const [hoveredDocId, setHoveredDocId] = useState(null);
+
   // Structural Folder State
   const [folders, setFolders] = useState(() => {
     const local = localStorage.getItem('desktopalie_v3_folders');
@@ -465,11 +469,14 @@ export default function DocumentationManager() {
                   {Object.keys(docsByFolder).map(folderName => {
                     const isFolderOpen = !!expandedFolders[folderName];
                     const folderDocs = docsByFolder[folderName] || [];
+                    const isFolderHovered = hoveredFolder === folderName;
 
                     return (
                       <div key={folderName} style={{ display: 'flex', flexDirection: 'column' }}>
-                        {/* FOLDER ROW WITH EDIT & DELETE ACTIONS */}
+                        {/* FOLDER ROW WITH HOVER-ONLY ACTION BUTTONS */}
                         <div
+                          onMouseEnter={() => setHoveredFolder(folderName)}
+                          onMouseLeave={() => setHoveredFolder(null)}
                           style={{
                             display: 'flex',
                             alignItems: 'center',
@@ -481,10 +488,9 @@ export default function DocumentationManager() {
                             fontSize: '0.825rem',
                             fontWeight: '600',
                             color: '#334155',
+                            backgroundColor: isFolderHovered ? '#F8FAFC' : 'transparent',
                             transition: 'all 0.15s ease'
                           }}
-                          onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#F8FAFC'}
-                          onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                         >
                           <div 
                             onClick={() => toggleFolder(folderName)}
@@ -499,58 +505,62 @@ export default function DocumentationManager() {
                             <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{folderName}</span>
                           </div>
 
-                          {/* Folder Action Buttons: Rename, Delete, Add Doc */}
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }} onClick={(e) => e.stopPropagation()}>
-                            <button
-                              type="button"
-                              onClick={() => handleRenameFolder(folderName)}
-                              title={`Ubah Nama Folder "${folderName}"`}
-                              style={{
-                                background: 'transparent',
-                                border: 'none',
-                                color: 'var(--text-muted)',
-                                cursor: 'pointer',
-                                padding: '0.1rem 0.25rem',
-                                borderRadius: '4px',
-                                fontSize: '0.75rem'
-                              }}
-                            >
-                              <FiEdit3 />
-                            </button>
+                          {/* Folder Action Buttons: Appears ONLY on Hover */}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }} onClick={(e) => e.stopPropagation()}>
+                            {isFolderHovered && (
+                              <>
+                                <button
+                                  type="button"
+                                  onClick={() => handleRenameFolder(folderName)}
+                                  title={`Ubah Nama Folder "${folderName}"`}
+                                  style={{
+                                    background: 'transparent',
+                                    border: 'none',
+                                    color: 'var(--text-muted)',
+                                    cursor: 'pointer',
+                                    padding: '0.1rem 0.2rem',
+                                    borderRadius: '4px',
+                                    fontSize: '0.75rem'
+                                  }}
+                                >
+                                  <FiEdit3 />
+                                </button>
 
-                            <button
-                              type="button"
-                              onClick={() => handleDeleteFolder(folderName)}
-                              title={`Hapus Folder "${folderName}"`}
-                              style={{
-                                background: 'transparent',
-                                border: 'none',
-                                color: '#E11D48',
-                                cursor: 'pointer',
-                                padding: '0.1rem 0.25rem',
-                                borderRadius: '4px',
-                                fontSize: '0.75rem'
-                              }}
-                            >
-                              <FiTrash2 />
-                            </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handleDeleteFolder(folderName)}
+                                  title={`Hapus Folder "${folderName}"`}
+                                  style={{
+                                    background: 'transparent',
+                                    border: 'none',
+                                    color: '#E11D48',
+                                    cursor: 'pointer',
+                                    padding: '0.1rem 0.2rem',
+                                    borderRadius: '4px',
+                                    fontSize: '0.75rem'
+                                  }}
+                                >
+                                  <FiTrash2 />
+                                </button>
 
-                            <button
-                              type="button"
-                              onClick={() => handleOpenNewDocModal(folderName)}
-                              title={`+ Add Doc to "${folderName}"`}
-                              style={{
-                                background: 'transparent',
-                                border: 'none',
-                                color: 'var(--primary)',
-                                cursor: 'pointer',
-                                padding: '0.1rem 0.25rem',
-                                borderRadius: '4px',
-                                fontSize: '0.75rem'
-                              }}
-                            >
-                              <FiPlus />
-                            </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handleOpenNewDocModal(folderName)}
+                                  title={`+ Add Doc to "${folderName}"`}
+                                  style={{
+                                    background: 'transparent',
+                                    border: 'none',
+                                    color: 'var(--primary)',
+                                    cursor: 'pointer',
+                                    padding: '0.1rem 0.2rem',
+                                    borderRadius: '4px',
+                                    fontSize: '0.75rem'
+                                  }}
+                                >
+                                  <FiPlus />
+                                </button>
+                              </>
+                            )}
 
                             <span style={{ fontSize: '0.7rem', color: 'var(--text-subtle)', fontWeight: '600', marginLeft: '0.15rem' }}>
                               {folderDocs.length}
@@ -576,9 +586,13 @@ export default function DocumentationManager() {
                             ) : (
                               folderDocs.map(doc => {
                                 const isSelected = selectedDoc?.id === doc.id;
+                                const isDocHovered = hoveredDocId === doc.id;
+
                                 return (
                                   <div
                                     key={doc.id}
+                                    onMouseEnter={() => setHoveredDocId(doc.id)}
+                                    onMouseLeave={() => setHoveredDocId(null)}
                                     onClick={() => setSelectedDoc(doc)}
                                     style={{
                                       display: 'flex',
@@ -586,18 +600,12 @@ export default function DocumentationManager() {
                                       justifyContent: 'space-between',
                                       padding: '0.35rem 0.5rem',
                                       borderRadius: 'var(--radius-sm)',
-                                      backgroundColor: isSelected ? '#EEF2FF' : 'transparent',
+                                      backgroundColor: isSelected ? '#EEF2FF' : isDocHovered ? '#F8FAFC' : 'transparent',
                                       color: isSelected ? 'var(--primary)' : 'var(--text-main)',
                                       fontWeight: isSelected ? '700' : '500',
                                       fontSize: '0.8rem',
                                       cursor: 'pointer',
                                       transition: 'all 0.15s ease'
-                                    }}
-                                    onMouseOver={(e) => {
-                                      if (!isSelected) e.currentTarget.style.backgroundColor = '#F8FAFC';
-                                    }}
-                                    onMouseOut={(e) => {
-                                      if (!isSelected) e.currentTarget.style.backgroundColor = 'transparent';
                                     }}
                                   >
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', overflow: 'hidden' }}>
@@ -608,9 +616,9 @@ export default function DocumentationManager() {
                                       </span>
                                     </div>
 
-                                    {/* Action Icons on Selected / Hover */}
-                                    {isSelected && (
-                                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }} onClick={(e) => e.stopPropagation()}>
+                                    {/* Action Icons on Selected / Hover ONLY */}
+                                    {(isDocHovered || isSelected) && (
+                                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }} onClick={(e) => e.stopPropagation()}>
                                         <button
                                           type="button"
                                           onClick={() => handleArchiveDoc(doc.id, doc.is_archived)}
