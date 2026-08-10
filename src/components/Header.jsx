@@ -5,7 +5,7 @@ export default function Header({ title = 'Dashboard Overview' }) {
     <header style={{
       height: '64px',
       borderBottom: '1px solid var(--border-color)',
-      backgroundColor: 'rgba(17, 24, 39, 0.7)',
+      backgroundColor: 'rgba(255, 255, 255, 0.85)',
       backdropFilter: 'blur(8px)',
       display: 'flex',
       alignItems: 'center',
@@ -29,7 +29,7 @@ export default function Header({ title = 'Dashboard Overview' }) {
           backgroundColor: 'rgba(20, 184, 166, 0.1)',
           border: '1px solid rgba(20, 184, 166, 0.2)',
           fontSize: '0.78rem',
-          color: '#2DD4BF'
+          color: '#0D9488'
         }}>
           <span style={{
             width: '6px',

@@ -85,7 +85,7 @@ export default function Sidebar() {
                 fontSize: '0.875rem',
                 fontWeight: '500',
                 textDecoration: 'none',
-                color: isActive ? '#FFFFFF' : 'var(--text-muted)',
+                color: isActive ? 'var(--primary)' : 'var(--text-muted)',
                 backgroundColor: isActive ? 'var(--primary-light)' : 'transparent',
                 borderLeft: isActive ? '3px solid var(--primary)' : '3px solid transparent',
                 transition: 'all 0.15s ease'
