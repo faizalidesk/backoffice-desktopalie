@@ -66,20 +66,7 @@ export default function Login() {
         backdropFilter: 'blur(10px)'
       }}>
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <div style={{
-            width: '52px',
-            height: '52px',
-            borderRadius: 'var(--radius-md)',
-            backgroundColor: '#0F172A',
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#FFFFFF',
-            marginBottom: '1rem',
-            boxShadow: '0 8px 16px rgba(15, 23, 42, 0.2)'
-          }}>
-            <DesktopalieMark size={32} />
-          </div>
+          <DesktopalieMark size={42} style={{ color: '#0F172A', marginBottom: '1rem' }} />
           <h2 style={{ fontSize: '1.5rem', marginBottom: '0.25rem' }}>Backoffice Login</h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>
             Masuk ke panel admin Desktopalie Workspace

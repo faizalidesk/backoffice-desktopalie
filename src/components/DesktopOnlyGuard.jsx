@@ -56,18 +56,8 @@ export default function DesktopOnlyGuard({ children }) {
           borderBottom: '1px solid #E2E8F0'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
-            <div style={{
-              width: '34px',
-              height: '34px',
-              borderRadius: '8px',
-              backgroundColor: '#0F172A',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#FFFFFF'
-            }}>
-              <DesktopalieMark size={20} />
-            </div>
+            {/* Pure black logo icon without badge wrapper */}
+            <DesktopalieMark size={28} style={{ color: '#0F172A', flexShrink: 0 }} />
             <span style={{ fontSize: '0.95rem', fontWeight: '800', letterSpacing: '0.08em', color: '#0F172A' }}>
               DESKTOPALIE
             </span>

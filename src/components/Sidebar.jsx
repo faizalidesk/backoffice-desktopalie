@@ -73,19 +73,8 @@ export default function Sidebar() {
         {/* Hide logo mark and text completely when sidebar is collapsed */}
         {!isCollapsed && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexShrink: 0 }}>
-            <div style={{
-              width: '36px',
-              height: '36px',
-              borderRadius: 'var(--radius-sm)',
-              backgroundColor: '#0F172A',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#FFFFFF',
-              flexShrink: 0
-            }}>
-              <DesktopalieMark size={22} />
-            </div>
+            {/* Pure black logo icon without any badge wrapper */}
+            <DesktopalieMark size={28} style={{ color: '#0F172A', flexShrink: 0 }} />
             <div style={{ flexShrink: 0 }}>
               <h2 style={{ fontSize: '0.95rem', fontWeight: '700', letterSpacing: '0.04em', textTransform: 'uppercase', lineHeight: '1.2', whiteSpace: 'nowrap' }}>
                 Desktopalie
