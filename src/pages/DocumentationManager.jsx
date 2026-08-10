@@ -13,7 +13,7 @@ import {
   FiTrash2, 
   FiUser, 
   FiBookOpen,
-  FiCornerDownRight
+  FiFilePlus
 } from 'react-icons/fi';
 import Header from '../components/Header';
 import Modal from '../components/Modal';
@@ -121,6 +121,23 @@ export default function DocumentationManager() {
     setIsModalOpen(true);
   };
 
+  const handleCreateLevel1Folder = () => {
+    const folderName = window.prompt('Masukkan Nama Level 1: Folder Utama baru:');
+    if (!folderName || !folderName.trim()) return;
+
+    const subfolderName = window.prompt(`Masukkan Nama Level 2: Subfolder awal untuk "${folderName.trim()}":`, 'General');
+    if (!subfolderName || !subfolderName.trim()) return;
+
+    handleOpenModal(null, folderName.trim(), subfolderName.trim());
+  };
+
+  const handleCreateLevel2Subfolder = (parentFolder) => {
+    const subfolderName = window.prompt(`Masukkan Nama Level 2: Subfolder baru di bawah "${parentFolder}":`);
+    if (!subfolderName || !subfolderName.trim()) return;
+
+    handleOpenModal(null, parentFolder, subfolderName.trim());
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.title.trim()) {
@@ -194,19 +211,26 @@ export default function DocumentationManager() {
         <div className="page-header">
           <div className="page-title-group">
             <h1>System Documentation & Knowledge Base</h1>
-            <p className="page-subtitle">Penjelajah folder & subfolder interaktif untuk mengelola dokumentasi teknis dan panduan operasional.</p>
+            <p className="page-subtitle">Buat hirarki mulai dari Level 1 (Folder Utama) ➔ Level 2 (Subfolder) ➔ Artikel Dokumen.</p>
           </div>
 
-          <button className="btn btn-primary" onClick={() => handleOpenModal()}>
-            <FiPlus />
-            <span>Tambah Dokumen Baru</span>
-          </button>
+          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+            <button className="btn btn-secondary" onClick={handleCreateLevel1Folder}>
+              <FiFolderPlus style={{ color: 'var(--primary)' }} />
+              <span>+ Level 1 Folder</span>
+            </button>
+
+            <button className="btn btn-primary" onClick={() => handleOpenModal()}>
+              <FiPlus />
+              <span>+ Tambah Dokumen</span>
+            </button>
+          </div>
         </div>
 
         {/* 2-Column Knowledge Base Layout */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: '340px 1fr',
+          gridTemplateColumns: '360px 1fr',
           gap: '1.5rem',
           alignItems: 'start'
         }}>
@@ -215,7 +239,7 @@ export default function DocumentationManager() {
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.875rem' }}>
               <div style={{ fontSize: '0.85rem', fontWeight: '700', color: '#0F172A', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                 <FiFolder style={{ color: 'var(--primary)' }} />
-                <span>Dokumen Explorer</span>
+                <span>Tree Explorer</span>
               </div>
               <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: '600' }}>
                 {docs.length} Artikel
@@ -260,7 +284,6 @@ export default function DocumentationManager() {
                     <div key={folderName} style={{ display: 'flex', flexDirection: 'column' }}>
                       {/* LEVEL 1: MAIN FOLDER ROW */}
                       <div
-                        onClick={() => toggleFolder(folderName)}
                         style={{
                           display: 'flex',
                           alignItems: 'center',
@@ -276,7 +299,10 @@ export default function DocumentationManager() {
                           transition: 'all 0.15s ease'
                         }}
                       >
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', overflow: 'hidden' }}>
+                        <div 
+                          onClick={() => toggleFolder(folderName)}
+                          style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', overflow: 'hidden', flex: 1 }}
+                        >
                           {isFolderExpanded ? (
                             <FiChevronDown style={{ color: 'var(--primary)', flexShrink: 0 }} />
                           ) : (
@@ -285,9 +311,39 @@ export default function DocumentationManager() {
                           <FiFolder style={{ color: 'var(--primary)', flexShrink: 0 }} />
                           <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{folderName}</span>
                         </div>
-                        <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: '600', backgroundColor: '#FFFFFF', padding: '0.1rem 0.4rem', borderRadius: '4px' }}>
-                          {totalDocsInFolder}
-                        </span>
+
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleCreateLevel2Subfolder(folderName);
+                            }}
+                            title={`+ Tambah Level 2 Subfolder di bawah "${folderName}"`}
+                            style={{
+                              background: 'transparent',
+                              border: 'none',
+                              color: 'var(--primary)',
+                              cursor: 'pointer',
+                              padding: '0.15rem 0.35rem',
+                              borderRadius: '4px',
+                              fontSize: '0.75rem',
+                              fontWeight: '700',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '0.2rem'
+                            }}
+                            onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#E2E8F0'}
+                            onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                          >
+                            <FiPlus />
+                            <span>Subfolder</span>
+                          </button>
+
+                          <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: '600', backgroundColor: '#FFFFFF', padding: '0.1rem 0.4rem', borderRadius: '4px' }}>
+                            {totalDocsInFolder}
+                          </span>
+                        </div>
                       </div>
 
                       {/* SUBFOLDERS & DOCUMENTS UNDER THIS FOLDER */}
@@ -309,7 +365,6 @@ export default function DocumentationManager() {
                               <div key={subfolderName} style={{ display: 'flex', flexDirection: 'column' }}>
                                 {/* LEVEL 2: SUBFOLDER ROW */}
                                 <div
-                                  onClick={() => toggleSubfolder(subfolderName)}
                                   style={{
                                     display: 'flex',
                                     alignItems: 'center',
@@ -326,7 +381,10 @@ export default function DocumentationManager() {
                                   onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#F8FAFC'}
                                   onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                                 >
-                                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                                  <div 
+                                    onClick={() => toggleSubfolder(subfolderName)}
+                                    style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flex: 1 }}
+                                  >
                                     {isSubExpanded ? (
                                       <FiChevronDown style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }} />
                                     ) : (
@@ -335,9 +393,38 @@ export default function DocumentationManager() {
                                     <FiFolder style={{ color: '#D97706', fontSize: '0.85rem' }} />
                                     <span>{subfolderName}</span>
                                   </div>
-                                  <span style={{ fontSize: '0.68rem', color: 'var(--text-subtle)' }}>
-                                    ({docList.length})
-                                  </span>
+
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                                    <button
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleOpenModal(null, folderName, subfolderName);
+                                      }}
+                                      title={`+ Tambah Dokumen Baru di "${subfolderName}"`}
+                                      style={{
+                                        background: 'transparent',
+                                        border: 'none',
+                                        color: '#D97706',
+                                        cursor: 'pointer',
+                                        padding: '0.1rem 0.3rem',
+                                        borderRadius: '4px',
+                                        fontSize: '0.725rem',
+                                        fontWeight: '700',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '0.2rem'
+                                      }}
+                                      onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#FEF3C7'}
+                                      onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                                    >
+                                      <FiFilePlus />
+                                      <span>Doc</span>
+                                    </button>
+                                    <span style={{ fontSize: '0.68rem', color: 'var(--text-subtle)' }}>
+                                      ({docList.length})
+                                    </span>
+                                  </div>
                                 </div>
 
                                 {/* LEVEL 3: DOCUMENT ITEMS UNDER SUBFOLDER */}
@@ -416,10 +503,10 @@ export default function DocumentationManager() {
                   width: 'fit-content'
                 }}>
                   <FiFolder style={{ color: 'var(--primary)' }} />
-                  <span>{selectedDoc.folder || 'Root'}</span>
+                  <span>Level 1: {selectedDoc.folder || 'Root'}</span>
                   <FiChevronRight style={{ fontSize: '0.7rem' }} />
                   <FiFolder style={{ color: '#D97706' }} />
-                  <span>{selectedDoc.subfolder || 'General'}</span>
+                  <span>Level 2: {selectedDoc.subfolder || 'General'}</span>
                   <FiChevronRight style={{ fontSize: '0.7rem' }} />
                   <FiFileText style={{ color: 'var(--primary)' }} />
                   <span style={{ color: 'var(--text-main)', fontWeight: '700' }}>{selectedDoc.title}</span>
@@ -514,12 +601,12 @@ export default function DocumentationManager() {
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
             <div className="form-group">
-              <label className="form-label">Folder Utama</label>
+              <label className="form-label">Level 1: Folder Utama *</label>
               <input
                 type="text"
                 className="form-control"
                 list="folder-options"
-                placeholder="Pilih / Tulis Folder..."
+                placeholder="Misal: 1. Arsitektur System & Core"
                 value={formData.folder}
                 onChange={(e) => setFormData(prev => ({ ...prev, folder: e.target.value }))}
                 required
@@ -532,12 +619,12 @@ export default function DocumentationManager() {
             </div>
 
             <div className="form-group">
-              <label className="form-label">Subfolder</label>
+              <label className="form-label">Level 2: Subfolder *</label>
               <input
                 type="text"
                 className="form-control"
                 list="subfolder-options"
-                placeholder="Pilih / Tulis Subfolder..."
+                placeholder="Misal: Backend & Database"
                 value={formData.subfolder}
                 onChange={(e) => setFormData(prev => ({ ...prev, subfolder: e.target.value }))}
                 required
