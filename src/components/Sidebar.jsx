@@ -14,15 +14,18 @@ import {
   FiBookOpen,
   FiMenu,
   FiMoon,
-  FiSun
+  FiSun,
+  FiGlobe
 } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
+import { useLanguage } from '../context/LanguageContext';
 import DesktopalieMark from './DesktopalieMark';
 
 export default function Sidebar() {
   const { logout, user } = useAuth();
   const { isDarkMode, toggleTheme } = useTheme();
+  const { language, toggleLanguage, t } = useLanguage();
   const [isCollapsed, setIsCollapsed] = useState(() => {
     return localStorage.getItem('desktopalie_sidebar_collapsed') === 'true';
   });
@@ -36,16 +39,16 @@ export default function Sidebar() {
   };
 
   const navItems = [
-    { label: 'Dashboard Overview', path: '/', icon: FiGrid },
-    { label: 'To-Do & Board', path: '/todos', icon: FiCheckSquare },
-    { label: 'Documentation', path: '/documentation', icon: FiBookOpen },
-    { label: 'Landing Manager', path: '/landing-manager', icon: FiLayout },
-    { label: 'Projects Manager', path: '/projects', icon: FiFolder },
-    { label: 'Experiments Lab', path: '/experiments', icon: FiCpu },
-    { label: 'Notes & Journal', path: '/notes', icon: FiFileText },
-    { label: 'Bookmarks', path: '/bookmarks', icon: FiBookmark },
-    { label: 'Maintenance Mode', path: '/maintenance', icon: FiTool },
-    { label: 'Profile & Settings', path: '/profile', icon: FiUser },
+    { label: t('dashboard'), path: '/', icon: FiGrid },
+    { label: t('todos'), path: '/todos', icon: FiCheckSquare },
+    { label: t('documentation'), path: '/documentation', icon: FiBookOpen },
+    { label: t('landingManager'), path: '/landing-manager', icon: FiLayout },
+    { label: t('projects'), path: '/projects', icon: FiFolder },
+    { label: t('experiments'), path: '/experiments', icon: FiCpu },
+    { label: t('notes'), path: '/notes', icon: FiFileText },
+    { label: t('bookmarks'), path: '/bookmarks', icon: FiBookmark },
+    { label: t('maintenance'), path: '/maintenance', icon: FiTool },
+    { label: t('profile'), path: '/profile', icon: FiUser },
   ];
 
   return (
@@ -163,7 +166,7 @@ export default function Sidebar() {
         })}
       </nav>
 
-      {/* Footer Profile, Theme Switcher & Logout */}
+      {/* Footer Controls: Language Switcher, Theme Switcher & Logout */}
       <div style={{
         paddingTop: '1rem',
         borderTop: '1px solid var(--border-color)',
@@ -172,6 +175,32 @@ export default function Sidebar() {
         gap: '0.5rem',
         alignItems: isCollapsed ? 'center' : 'stretch'
       }}>
+        {/* Language Switcher Quick Button */}
+        <button
+          type="button"
+          onClick={toggleLanguage}
+          title="Switch Language (Indonesia / English)"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: isCollapsed ? 'center' : 'space-between',
+            padding: isCollapsed ? '0.5rem 0' : '0.45rem 0.75rem',
+            borderRadius: 'var(--radius-sm)',
+            border: '1px solid var(--border-color)',
+            backgroundColor: 'var(--bg-card)',
+            color: 'var(--text-main)',
+            cursor: 'pointer',
+            fontSize: '0.825rem',
+            fontWeight: '600'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '1.1rem', lineHeight: 1 }}>{language === 'id' ? '🇮🇩' : '🇬🇧'}</span>
+            {!isCollapsed && <span>{language === 'id' ? 'Bahasa Indonesia' : 'English'}</span>}
+          </div>
+        </button>
+
+        {/* Dark Mode Switcher Button */}
         <button
           type="button"
           onClick={toggleTheme}
@@ -180,7 +209,7 @@ export default function Sidebar() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: isCollapsed ? 'center' : 'space-between',
-            padding: isCollapsed ? '0.5rem 0' : '0.5rem 0.75rem',
+            padding: isCollapsed ? '0.5rem 0' : '0.45rem 0.75rem',
             borderRadius: 'var(--radius-sm)',
             border: '1px solid var(--border-color)',
             backgroundColor: 'var(--bg-card)',
@@ -192,7 +221,7 @@ export default function Sidebar() {
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             {isDarkMode ? <FiSun style={{ color: '#F59E0B' }} /> : <FiMoon style={{ color: 'var(--primary)' }} />}
-            {!isCollapsed && <span>{isDarkMode ? 'Light Mode' : 'Dark Mode'}</span>}
+            {!isCollapsed && <span>{isDarkMode ? t('lightMode') : t('darkMode')}</span>}
           </div>
         </button>
 
@@ -231,15 +260,15 @@ export default function Sidebar() {
         <button
           onClick={logout}
           className="btn btn-secondary btn-sm"
-          title={isCollapsed ? 'Sign Out' : undefined}
+          title={isCollapsed ? t('signOut') : undefined}
           style={{
             width: '100%',
-            justify: 'center',
+            justifyContent: 'center',
             padding: isCollapsed ? '0.5rem 0' : '0.4rem 0.75rem'
           }}
         >
           <FiLogOut style={{ fontSize: '1.1rem' }} />
-          {!isCollapsed && <span>Sign Out</span>}
+          {!isCollapsed && <span>{t('signOut')}</span>}
         </button>
       </div>
     </aside>

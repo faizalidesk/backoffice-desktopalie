@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import { backofficeService } from '../services/backofficeService';
 import { toast } from 'react-hot-toast';
-import { FiGlobe, FiMapPin, FiSave } from 'react-icons/fi';
+import { FiGlobe, FiMapPin, FiSave, FiCheckCircle } from 'react-icons/fi';
 import Header from '../components/Header';
 import ImageUploader from '../components/ImageUploader';
 
 export default function ProfileSettings() {
   const { user } = useAuth();
+  const { language, setLanguage, t } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -56,10 +58,10 @@ export default function ProfileSettings() {
     setSaving(true);
     try {
       await backofficeService.updateProfile(user.id, profile);
-      toast.success('Profile updated successfully!');
+      toast.success(t('profileUpdated'));
     } catch (err) {
       console.error(err);
-      toast.error('Failed to update profile');
+      toast.error(t('profileFailed'));
     } finally {
       setSaving(false);
     }
@@ -67,16 +69,95 @@ export default function ProfileSettings() {
 
   return (
     <>
-      <Header title="Profile & Settings" />
+      <Header title={t('profile')} />
       <div className="page-body">
         <div className="page-header">
           <div className="page-title-group">
-            <h1>Account & Profile Settings</h1>
-            <p className="page-subtitle">Manage your public profile and developer details.</p>
+            <h1>{t('accountSettings')}</h1>
+            <p className="page-subtitle">{t('subtitleSettings')}</p>
           </div>
         </div>
 
-        <div style={{ maxWidth: '750px' }}>
+        <div style={{ maxWidth: '750px', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          
+          {/* LANGUAGE SELECTION CARD */}
+          <div className="card" style={{ padding: '1.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.35rem' }}>
+              <FiGlobe style={{ color: 'var(--primary)', fontSize: '1.25rem' }} />
+              <h3 style={{ fontSize: '1.1rem', fontWeight: '800', margin: 0 }}>
+                {t('langPreference')}
+              </h3>
+            </div>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '1.25rem' }}>
+              {t('langSubtitle')}
+            </p>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              {/* Bahasa Indonesia Option */}
+              <div
+                onClick={() => setLanguage('id')}
+                style={{
+                  border: `2px solid ${language === 'id' ? 'var(--primary)' : 'var(--border-color)'}`,
+                  backgroundColor: language === 'id' ? 'var(--primary-light)' : 'var(--bg-card)',
+                  borderRadius: 'var(--radius-md)',
+                  padding: '1rem 1.25rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  transition: 'all 0.2s ease shadow'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                  <span style={{ fontSize: '1.75rem', lineHeight: 1 }}>🇮🇩</span>
+                  <div>
+                    <div style={{ fontWeight: '700', fontSize: '0.95rem', color: 'var(--text-main)' }}>
+                      Bahasa Indonesia
+                    </div>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                      Bahasa Resmi Indonesia
+                    </span>
+                  </div>
+                </div>
+                {language === 'id' && (
+                  <FiCheckCircle style={{ color: 'var(--primary)', fontSize: '1.25rem' }} />
+                )}
+              </div>
+
+              {/* English Option */}
+              <div
+                onClick={() => setLanguage('en')}
+                style={{
+                  border: `2px solid ${language === 'en' ? 'var(--primary)' : 'var(--border-color)'}`,
+                  backgroundColor: language === 'en' ? 'var(--primary-light)' : 'var(--bg-card)',
+                  borderRadius: 'var(--radius-md)',
+                  padding: '1rem 1.25rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                  <span style={{ fontSize: '1.75rem', lineHeight: 1 }}>🇬🇧</span>
+                  <div>
+                    <div style={{ fontWeight: '700', fontSize: '0.95rem', color: 'var(--text-main)' }}>
+                      English
+                    </div>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                      English International
+                    </span>
+                  </div>
+                </div>
+                {language === 'en' && (
+                  <FiCheckCircle style={{ color: 'var(--primary)', fontSize: '1.25rem' }} />
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* PROFILE DETAILS CARD */}
           <div className="card">
             {loading ? (
               <p style={{ color: 'var(--text-muted)' }}>Loading profile...</p>
@@ -129,7 +210,7 @@ export default function ProfileSettings() {
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
                   <div className="form-group">
-                    <label className="form-label">Full Name</label>
+                    <label className="form-label">{t('fullName')}</label>
                     <input
                       type="text"
                       className="form-control"
@@ -140,7 +221,7 @@ export default function ProfileSettings() {
                   </div>
 
                   <div className="form-group">
-                    <label className="form-label">Username</label>
+                    <label className="form-label">{t('username')}</label>
                     <input
                       type="text"
                       className="form-control"
@@ -152,7 +233,7 @@ export default function ProfileSettings() {
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Short Bio</label>
+                  <label className="form-label">{t('shortBio')}</label>
                   <textarea
                     className="form-control"
                     placeholder="Independent designer & developer"
@@ -163,7 +244,7 @@ export default function ProfileSettings() {
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
                   <div className="form-group">
-                    <label className="form-label">Location</label>
+                    <label className="form-label">{t('location')}</label>
                     <div style={{ position: 'relative' }}>
                       <FiMapPin style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
                       <input
@@ -178,7 +259,7 @@ export default function ProfileSettings() {
                   </div>
 
                   <div className="form-group">
-                    <label className="form-label">Portfolio Website</label>
+                    <label className="form-label">{t('portfolioWebsite')}</label>
                     <div style={{ position: 'relative' }}>
                       <FiGlobe style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
                       <input
@@ -196,7 +277,7 @@ export default function ProfileSettings() {
                 <div style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'flex-end' }}>
                   <button type="submit" className="btn btn-primary" disabled={saving}>
                     <FiSave />
-                    <span>{saving ? 'Saving...' : 'Save Changes'}</span>
+                    <span>{saving ? t('saving') : t('saveChanges')}</span>
                   </button>
                 </div>
               </form>
