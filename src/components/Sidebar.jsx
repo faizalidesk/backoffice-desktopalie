@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { 
   FiGrid, 
@@ -9,13 +10,27 @@ import {
   FiLogOut,
   FiTool,
   FiLayout,
-  FiCheckSquare
+  FiCheckSquare,
+  FiMenu,
+  FiChevronsLeft,
+  FiChevronsRight
 } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 import DesktopalieMark from './DesktopalieMark';
 
 export default function Sidebar() {
   const { logout, user } = useAuth();
+  const [isCollapsed, setIsCollapsed] = useState(() => {
+    return localStorage.getItem('desktopalie_sidebar_collapsed') === 'true';
+  });
+
+  const toggleCollapse = () => {
+    setIsCollapsed(prev => {
+      const next = !prev;
+      localStorage.setItem('desktopalie_sidebar_collapsed', String(next));
+      return next;
+    });
+  };
 
   const navItems = [
     { label: 'Dashboard Overview', path: '/', icon: FiGrid },
@@ -31,7 +46,7 @@ export default function Sidebar() {
 
   return (
     <aside style={{
-      width: '260px',
+      width: isCollapsed ? '80px' : '260px',
       backgroundColor: 'var(--bg-sidebar)',
       borderRight: '1px solid var(--border-color)',
       display: 'flex',
@@ -41,47 +56,78 @@ export default function Sidebar() {
       top: 0,
       left: 0,
       zIndex: 200,
-      padding: '1.25rem 1rem',
+      padding: isCollapsed ? '1.25rem 0.5rem' : '1.25rem 1rem',
       overflowY: 'auto',
-      flexShrink: 0
+      flexShrink: 0,
+      transition: 'width 0.25s cubic-bezier(0.4, 0, 0.2, 1), padding 0.25s cubic-bezier(0.4, 0, 0.2, 1)'
     }}>
+      {/* Sidebar Header & Hamburger Button */}
       <div style={{
         display: 'flex',
         alignItems: 'center',
-        gap: '0.75rem',
-        padding: '0.5rem 0.75rem 1.5rem 0.75rem',
+        justifyContent: isCollapsed ? 'center' : 'space-between',
+        padding: isCollapsed ? '0.5rem 0 1.5rem 0' : '0.5rem 0.5rem 1.5rem 0.5rem',
         borderBottom: '1px solid var(--border-color)',
         marginBottom: '1.25rem'
       }}>
-        <div style={{
-          width: '36px',
-          height: '36px',
-          borderRadius: 'var(--radius-sm)',
-          backgroundColor: '#0F172A',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: '#FFFFFF',
-          flexShrink: 0
-        }}>
-          <DesktopalieMark size={22} />
-        </div>
-        <div>
-          <h2 style={{ fontSize: '0.95rem', fontWeight: '700', letterSpacing: '0.04em', textTransform: 'uppercase', lineHeight: '1.2' }}>
-            Desktopalie
-          </h2>
-          <span style={{ 
-            fontSize: '0.7rem', 
-            color: 'var(--primary)', 
-            fontWeight: '600',
-            textTransform: 'uppercase',
-            letterSpacing: '0.05em'
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', overflow: 'hidden' }}>
+          <div style={{
+            width: '36px',
+            height: '36px',
+            borderRadius: 'var(--radius-sm)',
+            backgroundColor: '#0F172A',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#FFFFFF',
+            flexShrink: 0
           }}>
-            Backoffice Admin
-          </span>
+            <DesktopalieMark size={22} />
+          </div>
+          {!isCollapsed && (
+            <div>
+              <h2 style={{ fontSize: '0.95rem', fontWeight: '700', letterSpacing: '0.04em', textTransform: 'uppercase', lineHeight: '1.2', whiteSpace: 'nowrap' }}>
+                Desktopalie
+              </h2>
+              <span style={{ 
+                fontSize: '0.7rem', 
+                color: 'var(--primary)', 
+                fontWeight: '600',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+                whiteSpace: 'nowrap'
+              }}>
+                Backoffice Admin
+              </span>
+            </div>
+          )}
         </div>
+
+        {/* Hamburger / Collapse Toggle Button */}
+        <button
+          onClick={toggleCollapse}
+          title={isCollapsed ? 'Perluas Sidebar (Expand)' : 'Ciutkan Sidebar (Collapse)'}
+          style={{
+            background: 'transparent',
+            border: 'none',
+            color: 'var(--text-muted)',
+            cursor: 'pointer',
+            padding: '0.35rem',
+            borderRadius: 'var(--radius-sm)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '1.15rem',
+            transition: 'all 0.15s ease'
+          }}
+          onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#F1F5F9'}
+          onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+        >
+          {isCollapsed ? <FiChevronsRight /> : <FiChevronsLeft />}
+        </button>
       </div>
 
+      {/* Nav List */}
       <nav style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
         {navItems.map((item) => {
           const Icon = item.icon;
@@ -90,40 +136,45 @@ export default function Sidebar() {
               key={item.path}
               to={item.path}
               end={item.path === '/'}
+              title={isCollapsed ? item.label : undefined}
               style={({ isActive }) => ({
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.75rem',
-                padding: '0.75rem 1rem',
+                justifyContent: isCollapsed ? 'center' : 'flex-start',
+                gap: isCollapsed ? 0 : '0.75rem',
+                padding: isCollapsed ? '0.75rem 0' : '0.75rem 1rem',
                 borderRadius: 'var(--radius-sm)',
                 fontSize: '0.875rem',
                 fontWeight: '500',
                 textDecoration: 'none',
                 color: isActive ? 'var(--primary)' : 'var(--text-muted)',
                 backgroundColor: isActive ? 'var(--primary-light)' : 'transparent',
-                borderLeft: isActive ? '3px solid var(--primary)' : '3px solid transparent',
+                borderLeft: !isCollapsed && isActive ? '3px solid var(--primary)' : '3px solid transparent',
                 transition: 'all 0.15s ease'
               })}
             >
-              <Icon style={{ fontSize: '1.1rem' }} />
-              <span>{item.label}</span>
+              <Icon style={{ fontSize: '1.2rem', flexShrink: 0 }} />
+              {!isCollapsed && <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.label}</span>}
             </NavLink>
           );
         })}
       </nav>
 
+      {/* Footer Profile & Logout */}
       <div style={{
         paddingTop: '1rem',
         borderTop: '1px solid var(--border-color)',
         display: 'flex',
         flexDirection: 'column',
-        gap: '0.75rem'
+        gap: '0.75rem',
+        alignItems: isCollapsed ? 'center' : 'stretch'
       }}>
         <div style={{
           display: 'flex',
           alignItems: 'center',
-          gap: '0.75rem',
-          padding: '0.5rem 0.75rem'
+          justifyContent: isCollapsed ? 'center' : 'flex-start',
+          gap: isCollapsed ? 0 : '0.75rem',
+          padding: isCollapsed ? '0.5rem 0' : '0.5rem 0.75rem'
         }}>
           <div style={{
             width: '32px',
@@ -135,25 +186,33 @@ export default function Sidebar() {
             justifyContent: 'center',
             fontWeight: '600',
             fontSize: '0.85rem',
-            color: 'var(--primary)'
-          }}>
+            color: 'var(--primary)',
+            flexShrink: 0
+          }} title={isCollapsed ? (user?.email || 'Admin User') : undefined}>
             {user?.email?.charAt(0).toUpperCase() || 'A'}
           </div>
-          <div style={{ overflow: 'hidden' }}>
-            <div style={{ fontSize: '0.85rem', fontWeight: '600', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
-              {user?.email || 'Admin User'}
+          {!isCollapsed && (
+            <div style={{ overflow: 'hidden' }}>
+              <div style={{ fontSize: '0.85rem', fontWeight: '600', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
+                {user?.email || 'Admin User'}
+              </div>
+              <span style={{ fontSize: '0.7rem', color: 'var(--text-subtle)' }}>Administrator</span>
             </div>
-            <span style={{ fontSize: '0.7rem', color: 'var(--text-subtle)' }}>Administrator</span>
-          </div>
+          )}
         </div>
 
         <button
           onClick={logout}
           className="btn btn-secondary btn-sm"
-          style={{ width: '100%', justifyContent: 'center' }}
+          title={isCollapsed ? 'Keluar (Logout)' : undefined}
+          style={{
+            width: '100%',
+            justifyContent: 'center',
+            padding: isCollapsed ? '0.5rem 0' : '0.4rem 0.75rem'
+          }}
         >
-          <FiLogOut />
-          <span>Keluar (Logout)</span>
+          <FiLogOut style={{ fontSize: '1.1rem' }} />
+          {!isCollapsed && <span>Keluar (Logout)</span>}
         </button>
       </div>
     </aside>
