@@ -7,10 +7,10 @@ import {
   FiBookmark, 
   FiUser, 
   FiLogOut,
-  FiCommand,
   FiTool
 } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
+import DesktopalieMark from './DesktopalieMark';
 
 export default function Sidebar() {
   const { logout, user } = useAuth();
@@ -47,20 +47,22 @@ export default function Sidebar() {
           width: '36px',
           height: '36px',
           borderRadius: 'var(--radius-sm)',
-          background: 'linear-gradient(135deg, var(--primary), var(--accent-violet))',
+          backgroundColor: '#0F172A',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           color: '#FFFFFF',
-          fontSize: '1.2rem'
+          flexShrink: 0
         }}>
-          <FiCommand />
+          <DesktopalieMark size={22} />
         </div>
         <div>
-          <h2 style={{ fontSize: '1rem', lineHeight: '1.2' }}>Desktopalie</h2>
+          <h2 style={{ fontSize: '0.95rem', fontWeight: '700', letterSpacing: '0.04em', textTransform: 'uppercase', lineHeight: '1.2' }}>
+            Desktopalie
+          </h2>
           <span style={{ 
-            fontSize: '0.72rem', 
-            color: 'var(--accent-teal)', 
+            fontSize: '0.7rem', 
+            color: 'var(--primary)', 
             fontWeight: '600',
             textTransform: 'uppercase',
             letterSpacing: '0.05em'

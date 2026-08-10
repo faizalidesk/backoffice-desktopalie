@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
-import { FiCommand, FiLock, FiMail, FiUser, FiArrowRight, FiAlertCircle } from 'react-icons/fi';
+import { FiLock, FiMail, FiUser, FiArrowRight, FiAlertCircle } from 'react-icons/fi';
+import DesktopalieMark from '../components/DesktopalieMark';
 
 export default function Register() {
   const [fullName, setFullName] = useState('');
@@ -84,19 +85,18 @@ export default function Register() {
       }}>
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <div style={{
-            width: '48px',
-            height: '48px',
+            width: '52px',
+            height: '52px',
             borderRadius: 'var(--radius-md)',
-            background: 'linear-gradient(135deg, var(--accent-violet), var(--primary))',
+            backgroundColor: '#0F172A',
             display: 'inline-flex',
             alignItems: 'center',
             justifyContent: 'center',
             color: '#FFFFFF',
-            fontSize: '1.5rem',
             marginBottom: '1rem',
-            boxShadow: '0 8px 16px rgba(139, 92, 246, 0.3)'
+            boxShadow: '0 8px 16px rgba(15, 23, 42, 0.2)'
           }}>
-            <FiCommand />
+            <DesktopalieMark size={32} />
           </div>
           <h2 style={{ fontSize: '1.5rem', marginBottom: '0.25rem' }}>Daftar Akun Backoffice</h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>

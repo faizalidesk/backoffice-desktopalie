@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
-import { FiCommand, FiLock, FiMail, FiArrowRight, FiAlertCircle } from 'react-icons/fi';
+import { FiLock, FiMail, FiArrowRight, FiAlertCircle } from 'react-icons/fi';
+import DesktopalieMark from '../components/DesktopalieMark';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -66,19 +67,18 @@ export default function Login() {
       }}>
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <div style={{
-            width: '48px',
-            height: '48px',
+            width: '52px',
+            height: '52px',
             borderRadius: 'var(--radius-md)',
-            background: 'linear-gradient(135deg, var(--primary), var(--accent-violet))',
+            backgroundColor: '#0F172A',
             display: 'inline-flex',
             alignItems: 'center',
             justifyContent: 'center',
             color: '#FFFFFF',
-            fontSize: '1.5rem',
             marginBottom: '1rem',
-            boxShadow: '0 8px 16px rgba(99, 102, 241, 0.3)'
+            boxShadow: '0 8px 16px rgba(15, 23, 42, 0.2)'
           }}>
-            <FiCommand />
+            <DesktopalieMark size={32} />
           </div>
           <h2 style={{ fontSize: '1.5rem', marginBottom: '0.25rem' }}>Backoffice Login</h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>
@@ -158,7 +158,7 @@ export default function Login() {
             disabled={submitting}
             style={{
               width: '100%',
-              justify: 'center',
+              justifyContent: 'center',
               padding: '0.75rem',
               fontSize: '0.95rem'
             }}
