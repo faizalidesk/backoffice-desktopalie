@@ -30,116 +30,117 @@ export default function DesktopOnlyGuard({ children }) {
       <div style={{
         minHeight: '100vh',
         width: '100vw',
-        backgroundColor: '#0F172A',
-        color: '#F8FAFC',
+        backgroundColor: '#F8FAFC',
+        color: '#0F172A',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '2rem 1.5rem',
+        padding: '2rem 1.25rem',
         textAlign: 'center',
         position: 'fixed',
         top: 0,
         left: 0,
         zIndex: 999999,
-        fontFamily: "'Plus Jakarta Sans', sans-serif"
+        fontFamily: "'Plus Jakarta Sans', -apple-system, sans-serif"
       }}>
-        {/* Subtle background glow */}
+        {/* Ambient Top Glow with Main Primary Color */}
         <div style={{
           position: 'absolute',
-          width: '300px',
-          height: '300px',
+          width: '350px',
+          height: '350px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(99,102,241,0.25) 0%, rgba(0,0,0,0) 70%)',
-          top: '20%',
+          background: 'radial-gradient(circle, rgba(79, 70, 229, 0.12) 0%, rgba(248, 250, 252, 0) 70%)',
+          top: '10%',
           pointerEvents: 'none'
         }} />
 
         <div style={{
-          maxWidth: '440px',
+          maxWidth: '420px',
           width: '100%',
-          backgroundColor: '#1E293B',
-          border: '1px solid #334155',
-          borderRadius: '24px',
-          padding: '2.5rem 1.75rem',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+          backgroundColor: '#FFFFFF',
+          border: '1px solid #E2E8F0',
+          borderRadius: '20px',
+          padding: '2.25rem 1.5rem',
+          boxShadow: '0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04)',
           position: 'relative',
           zIndex: 2
         }}>
-          {/* Logo Mark Header */}
+          {/* Logo Mark Header Badge */}
           <div style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '0.625rem',
-            padding: '0.4rem 1rem',
+            gap: '0.5rem',
+            padding: '0.35rem 0.875rem',
             borderRadius: '99px',
-            backgroundColor: 'rgba(99, 102, 241, 0.15)',
-            border: '1px solid rgba(99, 102, 241, 0.3)',
-            color: '#818CF8',
-            fontSize: '0.75rem',
+            backgroundColor: '#EEF2FF',
+            border: '1px solid #C7D2FE',
+            color: '#4F46E5',
+            fontSize: '0.725rem',
             fontWeight: '700',
-            letterSpacing: '0.08em',
+            letterSpacing: '0.06em',
             textTransform: 'uppercase',
-            marginBottom: '1.75rem'
+            marginBottom: '1.5rem'
           }}>
             <DesktopalieMark size={16} />
-            <span>DESKTOP EXPERIENCE ONLY</span>
+            <span>DESKTOPALIE BACKOFFICE</span>
           </div>
 
-          {/* Monitor Icon Container */}
+          {/* Icon Container in Main Primary Indigo */}
           <div style={{
-            width: '72px',
-            height: '72px',
-            borderRadius: '20px',
-            background: 'linear-gradient(135deg, #4F46E5, #8B5CF6)',
+            width: '68px',
+            height: '68px',
+            borderRadius: '16px',
+            background: 'linear-gradient(135deg, #4F46E5, #6366F1)',
             display: 'inline-flex',
             alignItems: 'center',
             justifyContent: 'center',
             color: '#FFFFFF',
-            fontSize: '2.25rem',
-            marginBottom: '1.5rem',
-            boxShadow: '0 12px 24px rgba(79, 70, 229, 0.35)'
+            fontSize: '2rem',
+            marginBottom: '1.25rem',
+            boxShadow: '0 8px 20px rgba(79, 70, 229, 0.28)'
           }}>
             <FiMonitor />
           </div>
 
           <h2 style={{
-            fontSize: '1.35rem',
+            fontSize: '1.3rem',
             fontWeight: '800',
-            lineHeight: '1.3',
-            color: '#FFFFFF',
-            marginBottom: '0.75rem',
+            lineHeight: '1.35',
+            color: '#0F172A',
+            marginBottom: '0.625rem',
             letterSpacing: '-0.02em'
           }}>
             Buka Melalui Laptop atau Komputer
           </h2>
 
           <p style={{
-            fontSize: '0.875rem',
+            fontSize: '0.85rem',
             lineHeight: '1.6',
-            color: '#94A3B8',
-            marginBottom: '2rem'
+            color: '#64748B',
+            marginBottom: '1.75rem'
           }}>
-            Panel Administrasi <strong>Desktopalie Backoffice</strong> didesain secara khusus untuk layar lebar (Desktop/Laptop). Silakan buka tautan ini di Komputer Anda.
+            Panel Administrasi <strong>Desktopalie Backoffice</strong> dirancang khusus untuk resolusi layar lebar (Desktop/Laptop). Silakan salin tautan dan buka di Perangkat Komputer Anda.
           </p>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
             <button
               onClick={handleCopyLink}
               style={{
                 width: '100%',
-                padding: '0.875rem 1.25rem',
-                borderRadius: '12px',
+                padding: '0.75rem 1.25rem',
+                borderRadius: '8px',
                 backgroundColor: '#4F46E5',
                 color: '#FFFFFF',
                 border: 'none',
                 fontWeight: '600',
-                fontSize: '0.9rem',
+                fontSize: '0.875rem',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '0.5rem',
                 cursor: 'pointer',
+                boxShadow: '0 4px 12px rgba(79, 70, 229, 0.25)',
                 transition: 'all 0.15s ease'
               }}
             >
@@ -153,17 +154,19 @@ export default function DesktopOnlyGuard({ children }) {
               rel="noreferrer"
               style={{
                 width: '100%',
-                padding: '0.875rem 1.25rem',
-                borderRadius: '12px',
-                backgroundColor: '#334155',
-                color: '#F1F5F9',
+                padding: '0.75rem 1.25rem',
+                borderRadius: '8px',
+                backgroundColor: '#FFFFFF',
+                color: '#0F172A',
+                border: '1px solid #E2E8F0',
                 textDecoration: 'none',
                 fontWeight: '600',
-                fontSize: '0.9rem',
+                fontSize: '0.875rem',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '0.5rem',
+                boxShadow: '0 1px 3px 0 rgba(15, 23, 42, 0.05)',
                 transition: 'all 0.15s ease'
               }}
             >
@@ -173,7 +176,7 @@ export default function DesktopOnlyGuard({ children }) {
           </div>
         </div>
 
-        <div style={{ marginTop: '2rem', fontSize: '0.75rem', color: '#64748B' }}>
+        <div style={{ marginTop: '1.75rem', fontSize: '0.75rem', color: '#94A3B8' }}>
           © {new Date().getFullYear()} Desktopalie Backoffice Workspace
         </div>
       </div>
