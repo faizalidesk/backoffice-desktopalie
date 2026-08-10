@@ -4,6 +4,7 @@ import { backofficeService } from '../services/backofficeService';
 import { toast } from 'react-hot-toast';
 import { FiUser, FiGlobe, FiMapPin, FiSave } from 'react-icons/fi';
 import Header from '../components/Header';
+import ImageUploader from '../components/ImageUploader';
 
 export default function ProfileSettings() {
   const { user } = useAuth();
@@ -90,18 +91,26 @@ export default function ProfileSettings() {
                   borderBottom: '1px solid var(--border-color)'
                 }}>
                   <div style={{
-                    width: '64px',
-                    height: '64px',
+                    width: '72px',
+                    height: '72px',
                     borderRadius: '50%',
                     background: 'linear-gradient(135deg, var(--primary), var(--accent-violet))',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     color: '#FFFFFF',
-                    fontSize: '1.75rem',
-                    fontWeight: '700'
+                    fontSize: '1.85rem',
+                    fontWeight: '700',
+                    overflow: 'hidden',
+                    flexShrink: 0,
+                    border: '2px solid #FFFFFF',
+                    boxShadow: 'var(--shadow-sm)'
                   }}>
-                    {profile.full_name ? profile.full_name.charAt(0) : (user?.email?.charAt(0).toUpperCase() || 'A')}
+                    {profile.avatar_url ? (
+                      <img src={profile.avatar_url} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    ) : (
+                      profile.full_name ? profile.full_name.charAt(0) : (user?.email?.charAt(0).toUpperCase() || 'A')
+                    )}
                   </div>
                   <div>
                     <h3 style={{ fontSize: '1.2rem', marginBottom: '0.2rem' }}>
@@ -110,6 +119,13 @@ export default function ProfileSettings() {
                     <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{user?.email}</span>
                   </div>
                 </div>
+
+                <ImageUploader
+                  value={profile.avatar_url}
+                  onChange={(url) => setProfile(prev => ({ ...prev, avatar_url: url }))}
+                  folder="avatars"
+                  label="Foto Avatar Profil Admin"
+                />
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
                   <div className="form-group">

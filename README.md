@@ -196,10 +196,12 @@ CREATE POLICY "Allow delete bookmarks" ON public.bookmarks FOR DELETE USING (tru
 - [x] **Bookmarks Manager**: CRUD link referensi web (`title`, `url`, `source`).
 - [x] **Profile Settings**: Pengaturan detail profil admin (`full_name`, `username`, `bio`, `location`, `website`).
 
-### 🚀 Phase 3: Media Upload & Supabase Storage (*Tahap Selanjutnya*)
-- [ ] Pembuatan Supabase Storage Bucket `workspace-media` untuk upload gambar proyek & foto avatar.
-- [ ] Komponen Upload Drag-and-Drop di Modal Projects, Experiments, & Profile.
-- [ ] Fitur preview gambar sebelum simpan dan opsi hapus gambar media.
+### ✅ Phase 3: Media Upload & Supabase Storage (*Selesai*)
+- [x] Metode `uploadMedia(file, folder)` di `backofficeService.js` untuk Supabase Storage dengan fallback otomatis.
+- [x] Komponen Reusable **ImageUploader Drag-and-Drop** (`ImageUploader.jsx`).
+- [x] Integrasi upload cover & preview di **Projects Manager** (`ProjectsManager.jsx`).
+- [x] Integrasi upload thumbnail & preview di **Experiments Lab** (`ExperimentsManager.jsx`).
+- [x] Integrasi upload Foto Avatar Profil di **Profile Settings** (`ProfileSettings.jsx`).
 
 ### 🚀 Phase 4: Rich Text Editor & Pinned Notes (*Pengembangan*)
 - [ ] Integrasi Rich Text Editor (Tiptap / Quill) pada Catatan (`NotesManager.jsx`).

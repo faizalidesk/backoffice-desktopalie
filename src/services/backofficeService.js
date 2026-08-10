@@ -1,6 +1,46 @@
 import { supabase } from '../lib/supabase';
 
 export const backofficeService = {
+  // STORAGE MEDIA UPLOAD
+  async uploadMedia(file, folder = 'general') {
+    if (!file) return null;
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${folder}/${Date.now()}_${Math.random().toString(36).substring(2, 8)}.${fileExt}`;
+    
+    try {
+      const { data, error } = await supabase.storage
+        .from('workspace-media')
+        .upload(fileName, file, {
+          cacheControl: '3600',
+          upsert: true
+        });
+
+      if (error) {
+        console.warn('Supabase storage bucket missing or error, using Data URL fallback:', error.message);
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      }
+
+      const { data: publicUrlData } = supabase.storage
+        .from('workspace-media')
+        .getPublicUrl(fileName);
+
+      return publicUrlData?.publicUrl || null;
+    } catch (err) {
+      console.warn('Using Data URL fallback for media upload:', err);
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+  },
+
   // PROJECTS CRUD
   async getProjects() {
     const { data, error } = await supabase

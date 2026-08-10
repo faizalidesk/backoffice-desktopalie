@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { backofficeService } from '../services/backofficeService';
 import { toast } from 'react-hot-toast';
-import { FiPlus, FiSearch, FiEdit, FiTrash2 } from 'react-icons/fi';
+import { FiPlus, FiSearch, FiEdit, FiTrash2, FiImage } from 'react-icons/fi';
 import Header from '../components/Header';
 import Modal from '../components/Modal';
+import ImageUploader from '../components/ImageUploader';
 
 export default function ExperimentsManager() {
   const [experiments, setExperiments] = useState([]);
@@ -18,7 +19,8 @@ export default function ExperimentsManager() {
     type: 'Motion',
     description: '',
     status: 'Draft',
-    tone: 'teal'
+    tone: 'teal',
+    image_url: ''
   });
 
   useEffect(() => {
@@ -47,7 +49,8 @@ export default function ExperimentsManager() {
         type: item.type || 'Motion',
         description: item.description || '',
         status: item.status || 'Draft',
-        tone: item.tone || 'teal'
+        tone: item.tone || 'teal',
+        image_url: item.image_url || ''
       });
     } else {
       setEditingItem(null);
@@ -57,7 +60,8 @@ export default function ExperimentsManager() {
         type: 'Motion',
         description: '',
         status: 'Draft',
-        tone: 'teal'
+        tone: 'teal',
+        image_url: ''
       });
     }
     setIsModalOpen(true);
@@ -158,7 +162,7 @@ export default function ExperimentsManager() {
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Judul & Slug</th>
+                  <th>Preview & Judul</th>
                   <th>Tipe</th>
                   <th>Status & Tone</th>
                   <th>Deskripsi</th>
@@ -169,9 +173,31 @@ export default function ExperimentsManager() {
                 {filteredExperiments.map((item) => (
                   <tr key={item.id}>
                     <td>
-                      <div style={{ fontWeight: '600', color: '#FFFFFF' }}>{item.title}</div>
-                      <div style={{ fontSize: '0.75rem', fontFamily: 'var(--font-mono)', color: 'var(--text-subtle)' }}>
-                        {item.slug}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.875rem' }}>
+                        <div style={{
+                          width: '44px',
+                          height: '44px',
+                          borderRadius: 'var(--radius-sm)',
+                          backgroundColor: '#F1F5F9',
+                          overflow: 'hidden',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          flexShrink: 0,
+                          border: '1px solid var(--border-color)'
+                        }}>
+                          {item.image_url ? (
+                            <img src={item.image_url} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                          ) : (
+                            <FiImage style={{ color: 'var(--text-subtle)', fontSize: '1.2rem' }} />
+                          )}
+                        </div>
+                        <div>
+                          <div style={{ fontWeight: '600', color: 'var(--text-main)' }}>{item.title}</div>
+                          <div style={{ fontSize: '0.75rem', fontFamily: 'var(--font-mono)', color: 'var(--text-subtle)' }}>
+                            {item.slug}
+                          </div>
+                        </div>
                       </div>
                     </td>
                     <td>{item.type}</td>
@@ -215,6 +241,13 @@ export default function ExperimentsManager() {
         title={editingItem ? 'Edit Eksperimen' : 'Tambah Eksperimen Baru'}
       >
         <form onSubmit={handleSubmit}>
+          <ImageUploader 
+            value={formData.image_url} 
+            onChange={(url) => setFormData(prev => ({ ...prev, image_url: url }))} 
+            folder="experiments"
+            label="Gambar Preview / Thumbnail Eksperimen"
+          />
+
           <div className="form-group">
             <label className="form-label">Judul Eksperimen *</label>
             <input

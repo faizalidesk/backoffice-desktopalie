@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { backofficeService } from '../services/backofficeService';
 import { toast } from 'react-hot-toast';
-import { FiPlus, FiSearch, FiEdit, FiTrash2 } from 'react-icons/fi';
+import { FiPlus, FiSearch, FiEdit, FiTrash2, FiImage } from 'react-icons/fi';
 import Header from '../components/Header';
 import Modal from '../components/Modal';
+import ImageUploader from '../components/ImageUploader';
 
 export default function ProjectsManager() {
   const [projects, setProjects] = useState([]);
@@ -19,7 +20,8 @@ export default function ProjectsManager() {
     description: '',
     progress: 50,
     status: 'In progress',
-    tone: 'violet'
+    tone: 'violet',
+    image_url: ''
   });
 
   useEffect(() => {
@@ -49,7 +51,8 @@ export default function ProjectsManager() {
         description: item.description || '',
         progress: item.progress || 0,
         status: item.status || 'In progress',
-        tone: item.tone || 'violet'
+        tone: item.tone || 'violet',
+        image_url: item.image_url || ''
       });
     } else {
       setEditingItem(null);
@@ -60,7 +63,8 @@ export default function ProjectsManager() {
         description: '',
         progress: 0,
         status: 'In progress',
-        tone: 'violet'
+        tone: 'violet',
+        image_url: ''
       });
     }
     setIsModalOpen(true);
@@ -161,7 +165,7 @@ export default function ProjectsManager() {
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Judul & Slug</th>
+                  <th>Cover & Judul</th>
                   <th>Tipe</th>
                   <th>Status & Tone</th>
                   <th>Progress</th>
@@ -172,9 +176,31 @@ export default function ProjectsManager() {
                 {filteredProjects.map((p) => (
                   <tr key={p.id}>
                     <td>
-                      <div style={{ fontWeight: '600', color: '#FFFFFF' }}>{p.title}</div>
-                      <div style={{ fontSize: '0.75rem', fontFamily: 'var(--font-mono)', color: 'var(--text-subtle)' }}>
-                        {p.slug}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.875rem' }}>
+                        <div style={{
+                          width: '44px',
+                          height: '44px',
+                          borderRadius: 'var(--radius-sm)',
+                          backgroundColor: '#F1F5F9',
+                          overflow: 'hidden',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          flexShrink: 0,
+                          border: '1px solid var(--border-color)'
+                        }}>
+                          {p.image_url ? (
+                            <img src={p.image_url} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                          ) : (
+                            <FiImage style={{ color: 'var(--text-subtle)', fontSize: '1.2rem' }} />
+                          )}
+                        </div>
+                        <div>
+                          <div style={{ fontWeight: '600', color: 'var(--text-main)' }}>{p.title}</div>
+                          <div style={{ fontSize: '0.75rem', fontFamily: 'var(--font-mono)', color: 'var(--text-subtle)' }}>
+                            {p.slug}
+                          </div>
+                        </div>
                       </div>
                     </td>
                     <td>{p.type}</td>
@@ -185,7 +211,7 @@ export default function ProjectsManager() {
                     </td>
                     <td>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', width: '140px' }}>
-                        <div style={{ flex: 1, height: '6px', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '999px', overflow: 'hidden' }}>
+                        <div style={{ flex: 1, height: '6px', backgroundColor: '#E2E8F0', borderRadius: '999px', overflow: 'hidden' }}>
                           <div style={{ width: `${p.progress || 0}%`, height: '100%', backgroundColor: 'var(--primary)', borderRadius: '999px' }} />
                         </div>
                         <span style={{ fontSize: '0.75rem', fontWeight: '600' }}>{p.progress}%</span>
@@ -223,6 +249,13 @@ export default function ProjectsManager() {
         title={editingItem ? 'Edit Data Project' : 'Tambah Project Baru'}
       >
         <form onSubmit={handleSubmit}>
+          <ImageUploader 
+            value={formData.image_url} 
+            onChange={(url) => setFormData(prev => ({ ...prev, image_url: url }))} 
+            folder="projects"
+            label="Gambar Cover / Thumbnail Project"
+          />
+
           <div className="form-group">
             <label className="form-label">Judul Project *</label>
             <input
