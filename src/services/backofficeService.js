@@ -12,9 +12,11 @@ export const backofficeService = {
   },
 
   async createProject(project) {
+    const { data: { user } } = await supabase.auth.getUser();
+    const payload = user ? { ...project, user_id: user.id } : project;
     const { data, error } = await supabase
       .from('projects')
-      .insert([project])
+      .insert([payload])
       .select()
       .single();
     if (error) throw error;
@@ -49,9 +51,11 @@ export const backofficeService = {
   },
 
   async createExperiment(experiment) {
+    const { data: { user } } = await supabase.auth.getUser();
+    const payload = user ? { ...experiment, user_id: user.id } : experiment;
     const { data, error } = await supabase
       .from('experiments')
-      .insert([experiment])
+      .insert([payload])
       .select()
       .single();
     if (error) throw error;
@@ -61,7 +65,7 @@ export const backofficeService = {
   async updateExperiment(id, updates) {
     const { data, error } = await supabase
       .from('experiments')
-      .update(updates)
+      .update({ ...updates, updated_at: new Date().toISOString() })
       .eq('id', id)
       .select()
       .single();
@@ -86,9 +90,11 @@ export const backofficeService = {
   },
 
   async createNote(note) {
+    const { data: { user } } = await supabase.auth.getUser();
+    const payload = user ? { ...note, user_id: user.id } : note;
     const { data, error } = await supabase
       .from('notes')
-      .insert([note])
+      .insert([payload])
       .select()
       .single();
     if (error) throw error;
@@ -98,7 +104,7 @@ export const backofficeService = {
   async updateNote(id, updates) {
     const { data, error } = await supabase
       .from('notes')
-      .update(updates)
+      .update({ ...updates, updated_at: new Date().toISOString() })
       .eq('id', id)
       .select()
       .single();
@@ -123,9 +129,11 @@ export const backofficeService = {
   },
 
   async createBookmark(bookmark) {
+    const { data: { user } } = await supabase.auth.getUser();
+    const payload = user ? { ...bookmark, user_id: user.id } : bookmark;
     const { data, error } = await supabase
       .from('bookmarks')
-      .insert([bookmark])
+      .insert([payload])
       .select()
       .single();
     if (error) throw error;
