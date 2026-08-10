@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
-import { FiCommand, FiLock, FiMail, FiUser, FiArrowRight } from 'react-icons/fi';
+import { FiCommand, FiLock, FiMail, FiUser, FiArrowRight, FiAlertCircle } from 'react-icons/fi';
 
 export default function Register() {
   const [fullName, setFullName] = useState('');
@@ -10,23 +10,26 @@ export default function Register() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const { register } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMessage('');
+
     if (!fullName || !email || !password || !confirmPassword) {
-      toast.error('Harap isi semua kolom formulir');
+      setErrorMessage('Harap isi semua kolom formulir');
       return;
     }
 
     if (password !== confirmPassword) {
-      toast.error('Konfirmasi kata sandi tidak cocok!');
+      setErrorMessage('Konfirmasi kata sandi tidak cocok!');
       return;
     }
 
     if (password.length < 6) {
-      toast.error('Kata sandi minimal 6 karakter');
+      setErrorMessage('Kata sandi minimal 6 karakter');
       return;
     }
 
@@ -37,12 +40,14 @@ export default function Register() {
         toast.success('Pendaftaran berhasil! Selamat datang.');
         navigate('/');
       } else {
-        toast.success('Pendaftaran berhasil! Silakan periksa email Anda untuk verifikasi.');
+        toast.success('Pendaftaran berhasil! Silakan periksa email Anda atau langsung login.');
         navigate('/login');
       }
     } catch (err) {
-      console.error(err);
-      toast.error(err.message || 'Gagal mendaftar. Coba lagi.');
+      console.error('Register error:', err);
+      const msg = err.message || err.error_description || 'Gagal mendaftar. Coba lagi.';
+      setErrorMessage(msg);
+      toast.error(msg);
     } finally {
       setSubmitting(false);
     }
@@ -98,6 +103,27 @@ export default function Register() {
             Buat akun admin baru untuk mengelola workspace
           </p>
         </div>
+
+        {errorMessage && (
+          <div style={{
+            backgroundColor: 'rgba(244, 63, 94, 0.12)',
+            border: '1px solid rgba(244, 63, 94, 0.3)',
+            color: '#FB7185',
+            padding: '0.875rem 1rem',
+            borderRadius: 'var(--radius-sm)',
+            fontSize: '0.85rem',
+            marginBottom: '1.5rem',
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: '0.625rem'
+          }}>
+            <FiAlertCircle style={{ fontSize: '1.1rem', flexShrink: 0, marginTop: '2px' }} />
+            <div>
+              <strong>Gagal Pendaftaran:</strong>
+              <div style={{ marginTop: '0.15rem' }}>{errorMessage}</div>
+            </div>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
@@ -194,7 +220,7 @@ export default function Register() {
             disabled={submitting}
             style={{
               width: '100%',
-              justifyContent: 'center',
+              justify: 'center',
               padding: '0.75rem',
               fontSize: '0.95rem'
             }}

@@ -2,17 +2,19 @@ import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
-import { FiCommand, FiLock, FiMail, FiArrowRight } from 'react-icons/fi';
+import { FiCommand, FiLock, FiMail, FiArrowRight, FiAlertCircle } from 'react-icons/fi';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMessage('');
     if (!email || !password) {
       toast.error('Silakan isi email dan kata sandi');
       return;
@@ -24,8 +26,10 @@ export default function Login() {
       toast.success('Berhasil masuk ke Backoffice!');
       navigate('/');
     } catch (err) {
-      console.error(err);
-      toast.error(err.message || 'Gagal login. Periksa kredensial Anda.');
+      console.error('Login error:', err);
+      const msg = err.message || err.error_description || 'Gagal login. Periksa kembali email & kata sandi Anda.';
+      setErrorMessage(msg);
+      toast.error(msg);
     } finally {
       setSubmitting(false);
     }
@@ -81,6 +85,27 @@ export default function Login() {
             Masuk ke panel admin Desktopalie Workspace
           </p>
         </div>
+
+        {errorMessage && (
+          <div style={{
+            backgroundColor: 'rgba(244, 63, 94, 0.12)',
+            border: '1px solid rgba(244, 63, 94, 0.3)',
+            color: '#FB7185',
+            padding: '0.875rem 1rem',
+            borderRadius: 'var(--radius-sm)',
+            fontSize: '0.85rem',
+            marginBottom: '1.5rem',
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: '0.625rem'
+          }}>
+            <FiAlertCircle style={{ fontSize: '1.1rem', flexShrink: 0, marginTop: '2px' }} />
+            <div>
+              <strong>Gagal Login:</strong>
+              <div style={{ marginTop: '0.15rem' }}>{errorMessage}</div>
+            </div>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
