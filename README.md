@@ -175,6 +175,19 @@ ALTER TABLE public.bookmarks ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Allow select bookmarks" ON public.bookmarks FOR SELECT USING (true);
 CREATE POLICY "Allow insert bookmarks" ON public.bookmarks FOR INSERT WITH CHECK (true);
 CREATE POLICY "Allow delete bookmarks" ON public.bookmarks FOR DELETE USING (true);
+
+-- ---------------------------------------------------
+-- 6. TABEL SITE SETTINGS (Maintenance Mode)
+-- ---------------------------------------------------
+CREATE TABLE IF NOT EXISTS public.site_settings (
+  key TEXT PRIMARY KEY,
+  value JSONB NOT NULL,
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE public.site_settings ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow select site_settings" ON public.site_settings FOR SELECT USING (true);
+CREATE POLICY "Allow all site_settings" ON public.site_settings FOR ALL USING (true);
 ```
 
 ---

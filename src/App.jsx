@@ -11,6 +11,7 @@ import ExperimentsManager from './pages/ExperimentsManager';
 import NotesManager from './pages/NotesManager';
 import BookmarksManager from './pages/BookmarksManager';
 import ProfileSettings from './pages/ProfileSettings';
+import MaintenanceManager from './pages/MaintenanceManager';
 
 function ProtectedLayout({ children }) {
   const { user, loading } = useAuth();
@@ -52,9 +53,9 @@ export default function App() {
           position="top-right" 
           toastOptions={{
             style: {
-              background: 'var(--bg-card)',
-              color: '#FFFFFF',
-              border: '1px solid var(--border-highlight)',
+              background: '#FFFFFF',
+              color: '#0F172A',
+              border: '1px solid var(--border-color)',
               borderRadius: 'var(--radius-sm)'
             }
           }} 
@@ -68,6 +69,7 @@ export default function App() {
           <Route path="/experiments" element={<ProtectedLayout><ExperimentsManager /></ProtectedLayout>} />
           <Route path="/notes" element={<ProtectedLayout><NotesManager /></ProtectedLayout>} />
           <Route path="/bookmarks" element={<ProtectedLayout><BookmarksManager /></ProtectedLayout>} />
+          <Route path="/maintenance" element={<ProtectedLayout><MaintenanceManager /></ProtectedLayout>} />
           <Route path="/profile" element={<ProtectedLayout><ProfileSettings /></ProtectedLayout>} />
 
           <Route path="*" element={<Navigate to="/" replace />} />

@@ -7,7 +7,8 @@ import {
   FiBookmark, 
   FiUser, 
   FiLogOut,
-  FiCommand
+  FiCommand,
+  FiTool
 } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 
@@ -20,6 +21,7 @@ export default function Sidebar() {
     { label: 'Experiments Lab', path: '/experiments', icon: FiCpu },
     { label: 'Notes & Journal', path: '/notes', icon: FiFileText },
     { label: 'Bookmarks', path: '/bookmarks', icon: FiBookmark },
+    { label: 'Maintenance Mode', path: '/maintenance', icon: FiTool },
     { label: 'Profile & Settings', path: '/profile', icon: FiUser },
   ];
 
