@@ -7,7 +7,8 @@ import {
   FiBookmark, 
   FiUser, 
   FiLogOut,
-  FiTool
+  FiTool,
+  FiLayout
 } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 import DesktopalieMark from './DesktopalieMark';
@@ -17,6 +18,7 @@ export default function Sidebar() {
 
   const navItems = [
     { label: 'Dashboard Overview', path: '/', icon: FiGrid },
+    { label: 'Landing Manager', path: '/landing-manager', icon: FiLayout },
     { label: 'Projects Manager', path: '/projects', icon: FiFolder },
     { label: 'Experiments Lab', path: '/experiments', icon: FiCpu },
     { label: 'Notes & Journal', path: '/notes', icon: FiFileText },

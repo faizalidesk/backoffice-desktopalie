@@ -12,6 +12,7 @@ import NotesManager from './pages/NotesManager';
 import BookmarksManager from './pages/BookmarksManager';
 import ProfileSettings from './pages/ProfileSettings';
 import MaintenanceManager from './pages/MaintenanceManager';
+import LandingPageManager from './pages/LandingPageManager';
 
 function ProtectedLayout({ children }) {
   const { user, loading } = useAuth();
@@ -65,6 +66,7 @@ export default function App() {
           <Route path="/register" element={<Register />} />
 
           <Route path="/" element={<ProtectedLayout><Dashboard /></ProtectedLayout>} />
+          <Route path="/landing-manager" element={<ProtectedLayout><LandingPageManager /></ProtectedLayout>} />
           <Route path="/projects" element={<ProtectedLayout><ProjectsManager /></ProtectedLayout>} />
           <Route path="/experiments" element={<ProtectedLayout><ExperimentsManager /></ProtectedLayout>} />
           <Route path="/notes" element={<ProtectedLayout><NotesManager /></ProtectedLayout>} />

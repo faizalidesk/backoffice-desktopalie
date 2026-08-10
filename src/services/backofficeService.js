@@ -101,6 +101,81 @@ export const backofficeService = {
     }
   },
 
+  // LANDING PAGE CONTENT SETTINGS
+  async getLandingPageSettings() {
+    try {
+      const { data, error } = await supabase
+        .from('site_settings')
+        .select('*')
+        .eq('key', 'landing_page')
+        .maybeSingle();
+
+      if (data?.value) {
+        const val = typeof data.value === 'string' ? JSON.parse(data.value) : data.value;
+        return val;
+      }
+    } catch (err) {
+      console.warn('Supabase site_settings table not accessible:', err);
+    }
+
+    const localData = localStorage.getItem('desktopalie_landing_settings');
+    if (localData) {
+      try {
+        return JSON.parse(localData);
+      } catch (e) {}
+    }
+
+    return {
+      hero_badge: 'Independent designer & developer',
+      hero_title: 'Ideas, crafted into digital experiences.',
+      hero_description: 'Desktopalie is my personal space for projects, experiments, and digital creations—documenting my journey through web development, UI/UX design, and modern technology.',
+      hero_cta_text: 'Explore my work',
+      hero_secondary_cta_text: 'More about me',
+      hero_note: 'Currently exploring creative interfaces, thoughtful motion, and useful AI.',
+      about_title: 'I build to learn, and share what I discover.',
+      about_large_copy: 'I am Ali, a designer and developer interested in the space between technology and human experience.',
+      about_description: 'Desktopalie is where I collect the projects, lessons, and experiments that shape my creative journey. I care about simple ideas, precise details, and digital work with a clear reason to exist.',
+      about_location: 'Based in Indonesia • Working worldwide',
+      stat_1_value: '4+',
+      stat_1_label: 'Years exploring the web',
+      stat_2_value: '20+',
+      stat_2_label: 'Projects & experiments',
+      stat_3_value: '∞',
+      stat_3_label: 'Ideas still in progress',
+      contact_title: "Let's make something worth remembering.",
+      contact_email: 'hello@desktopalie.my.id',
+      github_url: 'https://github.com',
+      linkedin_url: 'https://linkedin.com',
+      instagram_url: 'https://instagram.com'
+    };
+  },
+
+  async updateLandingPageSettings(settings) {
+    localStorage.setItem('desktopalie_landing_settings', JSON.stringify(settings));
+    window.dispatchEvent(new Event('storage'));
+
+    try {
+      const { data, error } = await supabase
+        .from('site_settings')
+        .upsert(
+          {
+            key: 'landing_page',
+            value: settings,
+            updated_at: new Date().toISOString()
+          },
+          { onConflict: 'key' }
+        )
+        .select();
+
+      if (error) {
+        console.warn('Supabase site_settings error, saved to LocalStorage:', error.message);
+      }
+      return settings;
+    } catch (err) {
+      console.warn('Saved to LocalStorage fallback:', err);
+      return settings;
+    }
+  },
 
   // PROJECTS CRUD
   async getProjects() {
