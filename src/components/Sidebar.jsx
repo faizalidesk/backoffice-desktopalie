@@ -72,19 +72,30 @@ export default function Sidebar() {
       }}>
         {/* Hide logo mark and text completely when sidebar is collapsed */}
         {!isCollapsed && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexShrink: 0 }}>
-            {/* Pure black logo icon without any badge wrapper */}
-            <DesktopalieMark size={28} style={{ color: '#0F172A', flexShrink: 0 }} />
-            <div style={{ flexShrink: 0 }}>
-              <h2 style={{ fontSize: '0.95rem', fontWeight: '700', letterSpacing: '0.04em', textTransform: 'uppercase', lineHeight: '1.2', whiteSpace: 'nowrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexShrink: 0 }}>
+            {/* Pure black logo icon aligned seamlessly with brand title */}
+            <DesktopalieMark size={30} style={{ color: '#0F172A', flexShrink: 0, marginTop: '-1px' }} />
+            <div style={{ display: 'flex', flexDirection: 'column', flexShrink: 0 }}>
+              <h2 style={{
+                fontSize: '0.95rem',
+                fontWeight: '800',
+                letterSpacing: '0.06em',
+                textTransform: 'uppercase',
+                color: '#0F172A',
+                lineHeight: '1.1',
+                margin: 0,
+                whiteSpace: 'nowrap'
+              }}>
                 Desktopalie
               </h2>
-              <span style={{ 
-                fontSize: '0.7rem', 
-                color: 'var(--primary)', 
-                fontWeight: '600',
+              <span style={{
+                fontSize: '0.65rem',
+                color: 'var(--primary)',
+                fontWeight: '700',
                 textTransform: 'uppercase',
-                letterSpacing: '0.05em',
+                letterSpacing: '0.08em',
+                lineHeight: '1.2',
+                marginTop: '0.15rem',
                 whiteSpace: 'nowrap'
               }}>
                 Backoffice Admin
