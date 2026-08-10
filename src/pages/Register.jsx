@@ -2,30 +2,47 @@ import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
-import { FiCommand, FiLock, FiMail, FiArrowRight } from 'react-icons/fi';
+import { FiCommand, FiLock, FiMail, FiUser, FiArrowRight } from 'react-icons/fi';
 
-export default function Login() {
+export default function Register() {
+  const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [submitting, setSubmitting] = useState(false);
-  const { login } = useAuth();
+  const { register } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!email || !password) {
-      toast.error('Silakan isi email dan kata sandi');
+    if (!fullName || !email || !password || !confirmPassword) {
+      toast.error('Harap isi semua kolom formulir');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      toast.error('Konfirmasi kata sandi tidak cocok!');
+      return;
+    }
+
+    if (password.length < 6) {
+      toast.error('Kata sandi minimal 6 karakter');
       return;
     }
 
     setSubmitting(true);
     try {
-      await login(email, password);
-      toast.success('Berhasil masuk ke Backoffice!');
-      navigate('/');
+      const res = await register(email, password, fullName);
+      if (res?.session) {
+        toast.success('Pendaftaran berhasil! Selamat datang.');
+        navigate('/');
+      } else {
+        toast.success('Pendaftaran berhasil! Silakan periksa email Anda untuk verifikasi.');
+        navigate('/login');
+      }
     } catch (err) {
       console.error(err);
-      toast.error(err.message || 'Gagal login. Periksa kredensial Anda.');
+      toast.error(err.message || 'Gagal mendaftar. Coba lagi.');
     } finally {
       setSubmitting(false);
     }
@@ -46,15 +63,15 @@ export default function Login() {
         width: '350px',
         height: '350px',
         borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(99,102,241,0.15) 0%, rgba(0,0,0,0) 70%)',
+        background: 'radial-gradient(circle, rgba(139,92,246,0.15) 0%, rgba(0,0,0,0) 70%)',
         top: '20%',
-        left: '30%',
+        right: '30%',
         pointerEvents: 'none'
       }} />
 
       <div className="card" style={{
         width: '100%',
-        maxWidth: '420px',
+        maxWidth: '440px',
         padding: '2.5rem',
         borderRadius: 'var(--radius-lg)',
         boxShadow: 'var(--shadow-md)',
@@ -65,24 +82,46 @@ export default function Login() {
             width: '48px',
             height: '48px',
             borderRadius: 'var(--radius-md)',
-            background: 'linear-gradient(135deg, var(--primary), var(--accent-violet))',
+            background: 'linear-gradient(135deg, var(--accent-violet), var(--primary))',
             display: 'inline-flex',
             alignItems: 'center',
             justifyContent: 'center',
             color: '#FFFFFF',
             fontSize: '1.5rem',
             marginBottom: '1rem',
-            boxShadow: '0 8px 16px rgba(99, 102, 241, 0.3)'
+            boxShadow: '0 8px 16px rgba(139, 92, 246, 0.3)'
           }}>
             <FiCommand />
           </div>
-          <h2 style={{ fontSize: '1.5rem', marginBottom: '0.25rem' }}>Backoffice Login</h2>
+          <h2 style={{ fontSize: '1.5rem', marginBottom: '0.25rem' }}>Daftar Akun Backoffice</h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>
-            Masuk ke panel admin Desktopalie Workspace
+            Buat akun admin baru untuk mengelola workspace
           </p>
         </div>
 
         <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label className="form-label">Nama Lengkap</label>
+            <div style={{ position: 'relative' }}>
+              <FiUser style={{
+                position: 'absolute',
+                left: '0.875rem',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                color: 'var(--text-muted)'
+              }} />
+              <input
+                type="text"
+                className="form-control"
+                style={{ paddingLeft: '2.5rem' }}
+                placeholder="Nama Anda"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                required
+              />
+            </div>
+          </div>
+
           <div className="form-group">
             <label className="form-label">Email Admin</label>
             <div style={{ position: 'relative' }}>
@@ -105,7 +144,7 @@ export default function Login() {
             </div>
           </div>
 
-          <div className="form-group" style={{ marginBottom: '1.75rem' }}>
+          <div className="form-group">
             <label className="form-label">Kata Sandi</label>
             <div style={{ position: 'relative' }}>
               <FiLock style={{
@@ -119,9 +158,31 @@ export default function Login() {
                 type="password"
                 className="form-control"
                 style={{ paddingLeft: '2.5rem' }}
-                placeholder="••••••••"
+                placeholder="Minimal 6 karakter"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+          </div>
+
+          <div className="form-group" style={{ marginBottom: '1.75rem' }}>
+            <label className="form-label">Konfirmasi Kata Sandi</label>
+            <div style={{ position: 'relative' }}>
+              <FiLock style={{
+                position: 'absolute',
+                left: '0.875rem',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                color: 'var(--text-muted)'
+              }} />
+              <input
+                type="password"
+                className="form-control"
+                style={{ paddingLeft: '2.5rem' }}
+                placeholder="Ulangi kata sandi"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
                 required
               />
             </div>
@@ -133,14 +194,14 @@ export default function Login() {
             disabled={submitting}
             style={{
               width: '100%',
-              justify: 'center',
+              justifyContent: 'center',
               padding: '0.75rem',
               fontSize: '0.95rem'
             }}
           >
-            {submitting ? 'Memproses...' : (
+            {submitting ? 'Memproses Registrasi...' : (
               <>
-                <span>Masuk ke Backoffice</span>
+                <span>Daftar Akun Baru</span>
                 <FiArrowRight />
               </>
             )}
@@ -148,9 +209,9 @@ export default function Login() {
         </form>
 
         <div style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.875rem', color: 'var(--text-muted)' }}>
-          Belum punya akun?{' '}
-          <Link to="/register" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: '600' }}>
-            Daftar Akun Baru
+          Sudah punya akun?{' '}
+          <Link to="/login" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: '600' }}>
+            Masuk di sini
           </Link>
         </div>
       </div>

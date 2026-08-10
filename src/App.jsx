@@ -4,6 +4,7 @@ import { Toaster } from 'react-hot-toast';
 
 import Sidebar from './components/Sidebar';
 import Login from './pages/Login';
+import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import ProjectsManager from './pages/ProjectsManager';
 import ExperimentsManager from './pages/ExperimentsManager';
@@ -60,6 +61,7 @@ export default function App() {
         />
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
           <Route path="/" element={<ProtectedLayout><Dashboard /></ProtectedLayout>} />
           <Route path="/projects" element={<ProtectedLayout><ProjectsManager /></ProtectedLayout>} />
