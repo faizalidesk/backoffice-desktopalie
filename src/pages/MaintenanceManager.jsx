@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { backofficeService } from '../services/backofficeService';
 import { toast } from 'react-hot-toast';
-import { FiTool, FiClock, FiAlertTriangle, FiCheckCircle, FiSave, FiRefreshCw, FiZap } from 'react-icons/fi';
+import { FiTool, FiClock, FiAlertTriangle, FiCheckCircle, FiSave, FiRefreshCw, FiZap, FiShield } from 'react-icons/fi';
 import Header from '../components/Header';
 
 export default function MaintenanceManager() {
@@ -94,151 +94,181 @@ export default function MaintenanceManager() {
     <>
       <Header title="Maintenance & Countdown Manager" />
       <div className="page-body" style={{ paddingBottom: '4rem' }}>
-        {/* CENTERED CONTAINER */}
-        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-          
-          {/* Centered Page Header */}
-          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+        {/* Page Header */}
+        <div className="page-header" style={{ marginBottom: '1.75rem' }}>
+          <div className="page-title-group">
             <div style={{
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.5rem',
-              padding: '0.35rem 0.85rem',
+              padding: '0.3rem 0.75rem',
               borderRadius: '99px',
               backgroundColor: '#EEF2FF',
               color: 'var(--primary)',
-              fontSize: '0.75rem',
+              fontSize: '0.725rem',
               fontWeight: '700',
               textTransform: 'uppercase',
               letterSpacing: '0.06em',
-              marginBottom: '0.75rem'
+              marginBottom: '0.5rem'
             }}>
               <FiTool />
               <span>SYSTEM MAINTENANCE CONTROL</span>
             </div>
-
-            <h1 style={{ fontSize: '1.85rem', fontWeight: '800', color: '#0F172A', marginBottom: '0.5rem', letterSpacing: '-0.02em' }}>
+            <h1 style={{ fontSize: '1.75rem', fontWeight: '800', color: '#0F172A', marginBottom: '0.25rem' }}>
               Maintenance & Countdown Manager
             </h1>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.925rem', maxWidth: '560px', margin: '0 auto', lineHeight: '1.6' }}>
+            <p className="page-subtitle" style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
               Atur status pemeliharaan situs web utama dan hitung mundur (*countdown*) secara real-time.
             </p>
           </div>
+        </div>
 
-          {/* Centered Status Indicator Banner */}
-          <div className="card" style={{
-            backgroundColor: settings.is_enabled ? '#FFFBEB' : '#F0FDF4',
-            borderColor: settings.is_enabled ? '#FDE68A' : '#BBF7D0',
-            marginBottom: '1.75rem',
-            padding: '1.5rem',
-            textAlign: 'center'
-          }}>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.875rem' }}>
-              <div style={{
-                width: '54px',
-                height: '54px',
-                borderRadius: '50%',
-                backgroundColor: settings.is_enabled ? '#FEF3C7' : '#DCFCE7',
-                color: settings.is_enabled ? '#D97706' : '#16A34A',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '1.65rem',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
-              }}>
-                {settings.is_enabled ? <FiAlertTriangle /> : <FiCheckCircle />}
-              </div>
-
-              <div>
-                <h3 style={{ fontSize: '1.2rem', fontWeight: '800', color: settings.is_enabled ? '#92400E' : '#166534', marginBottom: '0.25rem' }}>
-                  Status: {settings.is_enabled ? 'AKTIF (Situs Dikunci)' : 'NONAKTIF (Situs Online)'}
-                </h3>
-                <p style={{ fontSize: '0.875rem', color: settings.is_enabled ? '#B45309' : '#15803D', margin: 0, maxWidth: '540px' }}>
-                  {settings.is_enabled 
-                    ? 'Pengunjung biasa akan melihat layar Maintenance & Hitung Mundur.' 
-                    : 'Situs web utama dapat diakses publik secara normal tanpa hambatan.'}
-                </p>
-              </div>
-
-              <button
-                type="button"
-                onClick={async () => {
-                  const newStatus = !settings.is_enabled;
-                  const updated = { ...settings, is_enabled: newStatus };
-                  setSettings(updated);
-                  try {
-                    await backofficeService.updateMaintenanceSettings(updated);
-                    toast.success(newStatus ? 'Mode Maintenance DIAKTIFKAN!' : 'Mode Maintenance DIMATIKAN!');
-                  } catch (err) {
-                    toast.error('Gagal memperbarui status maintenance');
-                  }
-                }}
-                className={`btn ${settings.is_enabled ? 'btn-secondary' : 'btn-primary'}`}
-                style={{
-                  marginTop: '0.25rem',
-                  padding: '0.6rem 1.5rem',
-                  fontWeight: '700',
-                  borderRadius: '99px',
-                  backgroundColor: settings.is_enabled ? '#FFFFFF' : '#4F46E5',
-                  color: settings.is_enabled ? '#92400E' : '#FFFFFF',
-                  borderColor: settings.is_enabled ? '#FDE68A' : 'transparent',
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.08)'
-                }}
-              >
-                {settings.is_enabled ? 'Matikan Maintenance (Kembali Online)' : 'Aktifkan Maintenance Mode'}
-              </button>
-            </div>
-          </div>
-
-          {/* Centered Live Countdown Preview Box */}
-          <div className="card" style={{
-            marginBottom: '1.75rem',
-            textAlign: 'center',
-            backgroundColor: '#F5F3FF',
-            borderColor: '#DDD6FE',
-            padding: '2rem 1.5rem',
-            boxShadow: '0 4px 20px rgba(124, 58, 237, 0.05)'
-          }}>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.25rem' }}>
-              <FiClock style={{ color: '#7C3AED', fontSize: '1.35rem' }} />
-              <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: '#4C1D95', margin: 0 }}>
-                Live Countdown Preview (Hitung Mundur)
-              </h3>
-            </div>
-
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-              {[
-                { label: 'HARI', value: timeLeft.days },
-                { label: 'JAM', value: timeLeft.hours },
-                { label: 'MENIT', value: timeLeft.minutes },
-                { label: 'DETIK', value: timeLeft.seconds }
-              ].map((item, i) => (
-                <div key={i} style={{
-                  backgroundColor: '#FFFFFF',
-                  border: '1px solid #DDD6FE',
-                  borderRadius: '16px',
-                  padding: '1.15rem 1.5rem',
-                  minWidth: '105px',
-                  boxShadow: '0 4px 12px rgba(124, 58, 237, 0.08)'
-                }}>
-                  <div style={{ fontSize: '2.25rem', fontWeight: '800', color: '#6D28D9', fontFamily: "'JetBrains Mono', monospace", lineHeight: '1.1' }}>
-                    {String(item.value).padStart(2, '0')}
+        {/* 2-COLUMN SIDE-BY-SIDE GRID LAYOUT (KIRI & KANAN) */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))',
+          gap: '1.5rem',
+          alignItems: 'start'
+        }}>
+          {/* LEFT COLUMN: STATUS BANNER & LIVE COUNTDOWN CLOCK */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            
+            {/* 1. Status Indicator Card */}
+            <div className="card" style={{
+              backgroundColor: settings.is_enabled ? '#FFFBEB' : '#F0FDF4',
+              borderColor: settings.is_enabled ? '#FDE68A' : '#BBF7D0',
+              padding: '1.5rem'
+            }}>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '1rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                  <div style={{
+                    width: '48px',
+                    height: '48px',
+                    borderRadius: '50%',
+                    backgroundColor: settings.is_enabled ? '#FEF3C7' : '#DCFCE7',
+                    color: settings.is_enabled ? '#D97706' : '#16A34A',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '1.5rem',
+                    flexShrink: 0,
+                    boxShadow: '0 4px 10px rgba(0,0,0,0.04)'
+                  }}>
+                    {settings.is_enabled ? <FiAlertTriangle /> : <FiCheckCircle />}
                   </div>
-                  <div style={{ fontSize: '0.725rem', fontWeight: '800', color: '#7C3AED', letterSpacing: '0.08em', marginTop: '0.4rem', textTransform: 'uppercase' }}>
-                    {item.label}
+
+                  <div>
+                    <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: settings.is_enabled ? '#92400E' : '#166534', marginBottom: '0.2rem' }}>
+                      {settings.is_enabled ? 'AKTIF (Situs Dikunci)' : 'NONAKTIF (Situs Online)'}
+                    </h3>
+                    <span style={{ fontSize: '0.78rem', fontWeight: '600', color: settings.is_enabled ? '#B45309' : '#15803D' }}>
+                      {settings.is_enabled ? 'Mode Pemeliharaan Sedang Berjalan' : 'Situs Utama Bebas Diakses'}
+                    </span>
                   </div>
                 </div>
-              ))}
+
+                <p style={{ fontSize: '0.85rem', color: settings.is_enabled ? '#B45309' : '#15803D', margin: 0, lineHeight: '1.55' }}>
+                  {settings.is_enabled 
+                    ? 'Pengunjung biasa akan melihat halaman Maintenance & Hitung Mundur.' 
+                    : 'Situs web utama dapat diakses publik secara normal tanpa hambatan.'}
+                </p>
+
+                <button
+                  type="button"
+                  onClick={async () => {
+                    const newStatus = !settings.is_enabled;
+                    const updated = { ...settings, is_enabled: newStatus };
+                    setSettings(updated);
+                    try {
+                      await backofficeService.updateMaintenanceSettings(updated);
+                      toast.success(newStatus ? 'Mode Maintenance DIAKTIFKAN!' : 'Mode Maintenance DIMATIKAN!');
+                    } catch (err) {
+                      toast.error('Gagal memperbarui status maintenance');
+                    }
+                  }}
+                  className={`btn ${settings.is_enabled ? 'btn-secondary' : 'btn-primary'}`}
+                  style={{
+                    width: '100%',
+                    justifyContent: 'center',
+                    padding: '0.65rem 1.25rem',
+                    fontWeight: '700',
+                    borderRadius: 'var(--radius-sm)',
+                    backgroundColor: settings.is_enabled ? '#FFFFFF' : '#4F46E5',
+                    color: settings.is_enabled ? '#92400E' : '#FFFFFF',
+                    borderColor: settings.is_enabled ? '#FDE68A' : 'transparent',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.06)'
+                  }}
+                >
+                  {settings.is_enabled ? 'Matikan Maintenance (Kembali Online)' : 'Aktifkan Maintenance Mode'}
+                </button>
+              </div>
             </div>
+
+            {/* 2. Live Countdown Preview Clock Box */}
+            <div className="card" style={{
+              backgroundColor: '#F5F3FF',
+              borderColor: '#DDD6FE',
+              padding: '1.75rem 1.5rem',
+              boxShadow: '0 4px 20px rgba(124, 58, 237, 0.05)'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.25rem' }}>
+                <FiClock style={{ color: '#7C3AED', fontSize: '1.35rem' }} />
+                <h3 style={{ fontSize: '1.05rem', fontWeight: '800', color: '#4C1D95', margin: 0 }}>
+                  Live Countdown Preview
+                </h3>
+              </div>
+
+              {/* 4 Clock Boxes Grid */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.625rem' }}>
+                {[
+                  { label: 'HARI', value: timeLeft.days },
+                  { label: 'JAM', value: timeLeft.hours },
+                  { label: 'MENIT', value: timeLeft.minutes },
+                  { label: 'DETIK', value: timeLeft.seconds }
+                ].map((item, i) => (
+                  <div key={i} style={{
+                    backgroundColor: '#FFFFFF',
+                    border: '1px solid #DDD6FE',
+                    borderRadius: '12px',
+                    padding: '0.875rem 0.5rem',
+                    textAlign: 'center',
+                    boxShadow: '0 4px 10px rgba(124, 58, 237, 0.06)'
+                  }}>
+                    <div style={{ fontSize: '1.65rem', fontWeight: '800', color: '#6D28D9', fontFamily: "'JetBrains Mono', monospace", lineHeight: '1.1' }}>
+                      {String(item.value).padStart(2, '0')}
+                    </div>
+                    <div style={{ fontSize: '0.65rem', fontWeight: '800', color: '#7C3AED', letterSpacing: '0.06em', marginTop: '0.35rem', textTransform: 'uppercase' }}>
+                      {item.label}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* 3. System Admin Bypass Info Box */}
+            <div className="card" style={{ padding: '1.25rem', backgroundColor: '#F8FAFC' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem', color: '#0F172A', fontWeight: '700', fontSize: '0.875rem' }}>
+                <FiShield style={{ color: 'var(--primary)' }} />
+                <span>Status Akses Administrator</span>
+              </div>
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: 0, lineHeight: '1.5' }}>
+                Mode Bypass Admin memungkinkan Anda sebagai administrator untuk tetap mengakses seluruh antarmuka dan API Backoffice tanpa terhalang layar pemeliharaan.
+              </p>
+            </div>
+
           </div>
 
-          {/* Centered Form Settings */}
-          <div className="card" style={{ padding: '2rem' }}>
+          {/* RIGHT COLUMN: MAINTENANCE SETTINGS FORM */}
+          <div className="card" style={{ padding: '1.75rem' }}>
+            <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: '#0F172A', marginBottom: '1.25rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.75rem' }}>
+              Pengaturan Tampilan & Waktu Selesai
+            </h3>
+
             {loading ? (
               <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>Memuat pengaturan...</div>
             ) : (
               <form onSubmit={handleSubmit}>
-                <div className="form-group" style={{ marginBottom: '1.5rem' }}>
+                <div className="form-group" style={{ marginBottom: '1.25rem' }}>
                   <label className="form-label">Judul Tampilan Maintenance *</label>
                   <input
                     type="text"
@@ -250,7 +280,7 @@ export default function MaintenanceManager() {
                   />
                 </div>
 
-                <div className="form-group" style={{ marginBottom: '1.5rem' }}>
+                <div className="form-group" style={{ marginBottom: '1.25rem' }}>
                   <label className="form-label">Pesan Deskripsi Pengumuman *</label>
                   <textarea
                     className="form-control"
@@ -262,7 +292,7 @@ export default function MaintenanceManager() {
                   />
                 </div>
 
-                <div className="form-group" style={{ marginBottom: '1.5rem' }}>
+                <div className="form-group" style={{ marginBottom: '1.25rem' }}>
                   <label className="form-label">Waktu Target Selesai (Countdown End Time) *</label>
                   <input
                     type="datetime-local"
@@ -273,13 +303,13 @@ export default function MaintenanceManager() {
                   />
                 </div>
 
-                {/* Preset Fast Duration Selection Buttons */}
-                <div className="form-group" style={{ marginBottom: '1.75rem' }}>
+                {/* Fast Duration Selection Buttons */}
+                <div className="form-group" style={{ marginBottom: '1.5rem' }}>
                   <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
                     <FiZap style={{ color: 'var(--accent-amber)' }} />
                     <span>Pintasan Durasi Cepat:</span>
                   </label>
-                  <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '0.4rem' }}>
+                  <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', marginTop: '0.35rem' }}>
                     <button type="button" className="btn btn-secondary btn-sm" onClick={() => handlePreset(1)}>+1 Jam</button>
                     <button type="button" className="btn btn-secondary btn-sm" onClick={() => handlePreset(3)}>+3 Jam</button>
                     <button type="button" className="btn btn-secondary btn-sm" onClick={() => handlePreset(12)}>+12 Jam</button>
@@ -288,35 +318,32 @@ export default function MaintenanceManager() {
                   </div>
                 </div>
 
-                <div className="form-group" style={{ marginTop: '1.5rem', borderTop: '1px solid var(--border-color)', paddingTop: '1.25rem', marginBottom: '2rem' }}>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer' }}>
+                <div className="form-group" style={{ marginTop: '1.25rem', borderTop: '1px solid var(--border-color)', paddingTop: '1rem', marginBottom: '1.5rem' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', cursor: 'pointer' }}>
                     <input
                       type="checkbox"
                       checked={settings.allow_admin_bypass}
                       onChange={(e) => setSettings(prev => ({ ...prev, allow_admin_bypass: e.target.checked }))}
                       style={{ width: '18px', height: '18px', accentColor: 'var(--primary)', cursor: 'pointer' }}
                     />
-                    <span style={{ fontSize: '0.875rem', fontWeight: '600', color: '#0F172A' }}>
-                      Izinkan Administrator Login/Bypass tampilan maintenance (Admin tetap dapat mengakses situs)
+                    <span style={{ fontSize: '0.825rem', fontWeight: '600', color: '#0F172A' }}>
+                      Izinkan Administrator Login/Bypass tampilan maintenance (Admin tetap bisa mengakses situs)
                     </span>
                   </label>
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'center' }}>
-                  <button
-                    type="submit"
-                    className="btn btn-primary"
-                    disabled={saving}
-                    style={{ padding: '0.75rem 2.5rem', fontSize: '0.95rem', borderRadius: 'var(--radius-sm)' }}
-                  >
-                    <FiSave />
-                    <span>{saving ? 'Menyimpan...' : 'Simpan Pengaturan Maintenance'}</span>
-                  </button>
-                </div>
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={saving}
+                  style={{ width: '100%', justifyContent: 'center', padding: '0.75rem 1.25rem', fontSize: '0.9rem', borderRadius: 'var(--radius-sm)' }}
+                >
+                  <FiSave />
+                  <span>{saving ? 'Menyimpan...' : 'Simpan Pengaturan Maintenance'}</span>
+                </button>
               </form>
             )}
           </div>
-
         </div>
       </div>
     </>
