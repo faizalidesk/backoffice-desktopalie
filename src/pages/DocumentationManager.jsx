@@ -17,7 +17,7 @@ import {
   FiSave,
   FiEye,
   FiEdit,
-  FiMoreVertical
+  FiAlertTriangle
 } from 'react-icons/fi';
 import Header from '../components/Header';
 import Modal from '../components/Modal';
@@ -113,7 +113,7 @@ export default function DocumentationManager() {
   const [hoveredFolder, setHoveredFolder] = useState(null);
   const [hoveredDocId, setHoveredDocId] = useState(null);
 
-  // Structural Main Folder State (Core, Backend, Frontend, Devops, QA, etc.)
+  // Structural Main Folder State
   const [folders, setFolders] = useState(() => {
     const local = localStorage.getItem('desktopalie_v3_folders');
     return local ? JSON.parse(local) : INITIAL_FOLDERS;
@@ -136,7 +136,18 @@ export default function DocumentationManager() {
   const [docAuthor, setDocAuthor] = useState('Admin');
   const [isSaving, setIsSaving] = useState(false);
 
-  // Modal State for adding new Document
+  // MODAL STATES (REPLACING BROWSER PROMPT & CONFIRM POPUPS)
+  const [isFolderModalOpen, setIsFolderModalOpen] = useState(false);
+  const [folderModalMode, setFolderModalMode] = useState('create'); // 'create' | 'rename'
+  const [folderInput, setFolderInput] = useState('');
+  const [targetOldFolderName, setTargetOldFolderName] = useState('');
+
+  const [isDeleteFolderModalOpen, setIsDeleteFolderModalOpen] = useState(false);
+  const [folderToDelete, setFolderToDelete] = useState('');
+
+  const [isDeleteDocModalOpen, setIsDeleteDocModalOpen] = useState(false);
+  const [docToDelete, setDocToDelete] = useState(null);
+
   const [isNewDocModalOpen, setIsNewDocModalOpen] = useState(false);
   const [newDocData, setNewDocData] = useState({
     title: '',
@@ -188,74 +199,115 @@ export default function DocumentationManager() {
     }));
   };
 
-  // CREATE MAIN FOLDER (Sejajar dengan Core, Backend, Frontend, Devops, QA, dll.)
-  const handleCreateMainFolder = () => {
-    const name = window.prompt('Masukkan Nama Main Folder Baru (Sejajar dengan Core, Backend, Frontend, dll):');
-    if (!name || !name.trim()) return;
-
-    const folderName = name.trim();
-    if (folders.includes(folderName)) {
-      toast.error('Main Folder dengan nama ini sudah ada!');
-      return;
-    }
-
-    setFolders(prev => [...prev, folderName]);
-    setExpandedFolders(prev => ({ 
-      ...prev, 
-      'Docs v3': true, 
-      [folderName]: true 
-    }));
-    toast.success(`Main Folder "${folderName}" berhasil dibuat!`);
+  // OPEN CREATE MAIN FOLDER MODAL
+  const handleOpenCreateFolderModal = () => {
+    setFolderModalMode('create');
+    setFolderInput('');
+    setTargetOldFolderName('');
+    setIsFolderModalOpen(true);
   };
 
-  // RENAME FOLDER
-  const handleRenameFolder = async (oldName) => {
-    const name = window.prompt('Ubah Nama Folder:', oldName);
-    if (!name || !name.trim() || name.trim() === oldName) return;
+  // OPEN RENAME FOLDER MODAL
+  const handleOpenRenameFolderModal = (oldName) => {
+    setFolderModalMode('rename');
+    setFolderInput(oldName);
+    setTargetOldFolderName(oldName);
+    setIsFolderModalOpen(true);
+  };
 
-    const newName = name.trim();
-    if (folders.includes(newName)) {
-      toast.error('Folder dengan nama ini sudah ada!');
+  // SUBMIT CREATE OR RENAME FOLDER
+  const handleSubmitFolderForm = async (e) => {
+    e.preventDefault();
+    const name = folderInput.trim();
+    if (!name) {
+      toast.error('Nama folder wajib diisi!');
       return;
     }
 
-    setFolders(prev => prev.map(f => f === oldName ? newName : f));
-
-    setExpandedFolders(prev => {
-      const next = { ...prev };
-      if (next[oldName]) {
-        next[newName] = true;
-        delete next[oldName];
+    if (folderModalMode === 'create') {
+      if (folders.includes(name)) {
+        toast.error('Folder dengan nama ini sudah ada!');
+        return;
       }
-      return next;
-    });
+      setFolders(prev => [...prev, name]);
+      setExpandedFolders(prev => ({ ...prev, 'Docs v3': true, [name]: true }));
+      toast.success(`Main Folder "${name}" berhasil dibuat!`);
+    } else {
+      if (name !== targetOldFolderName && folders.includes(name)) {
+        toast.error('Folder dengan nama ini sudah ada!');
+        return;
+      }
+      setFolders(prev => prev.map(f => f === targetOldFolderName ? name : f));
+      setExpandedFolders(prev => {
+        const next = { ...prev };
+        if (next[targetOldFolderName]) {
+          next[name] = true;
+          delete next[targetOldFolderName];
+        }
+        return next;
+      });
 
-    const docsToUpdate = docs.filter(d => (d.folder || 'Core') === oldName);
-    for (const doc of docsToUpdate) {
-      await backofficeService.updateDoc(doc.id, { folder: newName });
+      const docsToUpdate = docs.filter(d => (d.folder || 'Core') === targetOldFolderName);
+      for (const doc of docsToUpdate) {
+        await backofficeService.updateDoc(doc.id, { folder: name });
+      }
+
+      if (docFolder === targetOldFolderName) {
+        setDocFolder(name);
+      }
+
+      toast.success(`Folder "${targetOldFolderName}" diubah menjadi "${name}"!`);
+      loadDocs();
     }
 
-    if (docFolder === oldName) {
-      setDocFolder(newName);
-    }
-
-    toast.success(`Folder "${oldName}" berhasil diubah menjadi "${newName}"!`);
-    loadDocs();
+    setIsFolderModalOpen(false);
   };
 
-  // DELETE FOLDER
-  const handleDeleteFolder = async (folderName) => {
-    const folderDocs = docs.filter(d => (d.folder || 'Core') === folderName);
-    if (!window.confirm(`Apakah Anda yakin ingin menghapus folder "${folderName}" beserta ${folderDocs.length} dokumen di dalamnya?`)) return;
+  // OPEN DELETE FOLDER MODAL
+  const handleOpenDeleteFolderModal = (folderName) => {
+    setFolderToDelete(folderName);
+    setIsDeleteFolderModalOpen(true);
+  };
 
-    setFolders(prev => prev.filter(f => f !== folderName));
+  // CONFIRM DELETE FOLDER
+  const handleConfirmDeleteFolder = async () => {
+    if (!folderToDelete) return;
+    const folderDocs = docs.filter(d => (d.folder || 'Core') === folderToDelete);
+
+    setFolders(prev => prev.filter(f => f !== folderToDelete));
 
     for (const doc of folderDocs) {
       await backofficeService.deleteDoc(doc.id);
     }
 
-    toast.success(`Main Folder "${folderName}" dan isinya berhasil dihapus!`);
+    toast.success(`Folder "${folderToDelete}" dan isinya berhasil dihapus!`);
+    setIsDeleteFolderModalOpen(false);
+    setFolderToDelete('');
     loadDocs();
+  };
+
+  // OPEN DELETE DOCUMENT MODAL
+  const handleOpenDeleteDocModal = (doc) => {
+    setDocToDelete(doc);
+    setIsDeleteDocModalOpen(true);
+  };
+
+  // CONFIRM DELETE DOCUMENT
+  const handleConfirmDeleteDoc = async () => {
+    if (!docToDelete) return;
+    try {
+      await backofficeService.deleteDoc(docToDelete.id);
+      toast.success(`Dokumen "${docToDelete.title}" dihapus`);
+      if (selectedDoc?.id === docToDelete.id) {
+        const remaining = docs.filter(d => d.id !== docToDelete.id);
+        setSelectedDoc(remaining.length > 0 ? remaining[0] : null);
+      }
+      setIsDeleteDocModalOpen(false);
+      setDocToDelete(null);
+      loadDocs();
+    } catch (err) {
+      toast.error('Gagal menghapus dokumen');
+    }
   };
 
   // CREATE NEW DOCUMENT IN A SPECIFIC MAIN FOLDER
@@ -335,21 +387,6 @@ export default function DocumentationManager() {
     }
   };
 
-  const handleDeleteDoc = async (id, title) => {
-    if (!window.confirm(`Apakah Anda yakin ingin menghapus "${title}"?`)) return;
-    try {
-      await backofficeService.deleteDoc(id);
-      toast.success('Dokumen dihapus');
-      if (selectedDoc?.id === id) {
-        const remaining = docs.filter(d => d.id !== id);
-        setSelectedDoc(remaining.length > 0 ? remaining[0] : null);
-      }
-      loadDocs();
-    } catch (err) {
-      toast.error('Gagal menghapus dokumen');
-    }
-  };
-
   // Group Docs by Main Folder
   const docsByFolder = useMemo(() => {
     const map = {};
@@ -421,7 +458,7 @@ export default function DocumentationManager() {
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <button className="btn btn-secondary btn-sm" onClick={handleCreateMainFolder}>
+              <button className="btn btn-secondary btn-sm" onClick={handleOpenCreateFolderModal}>
                 <FiFolderPlus style={{ color: 'var(--primary)' }} />
                 <span>+ Create Main Folder</span>
               </button>
@@ -480,9 +517,9 @@ export default function DocumentationManager() {
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleCreateMainFolder();
+                    handleOpenCreateFolderModal();
                   }}
-                  title="Buat Main Folder Baru (Sejajar dengan Core, Backend, Frontend, dll)"
+                  title="Buat Main Folder Baru"
                   style={{
                     background: '#FFFFFF',
                     border: '1px solid var(--border-color)',
@@ -551,7 +588,7 @@ export default function DocumentationManager() {
                               <>
                                 <button
                                   type="button"
-                                  onClick={() => handleRenameFolder(folderName)}
+                                  onClick={() => handleOpenRenameFolderModal(folderName)}
                                   title={`Ubah Nama Main Folder "${folderName}"`}
                                   style={{
                                     background: 'transparent',
@@ -568,7 +605,7 @@ export default function DocumentationManager() {
 
                                 <button
                                   type="button"
-                                  onClick={() => handleDeleteFolder(folderName)}
+                                  onClick={() => handleOpenDeleteFolderModal(folderName)}
                                   title={`Hapus Main Folder "${folderName}"`}
                                   style={{
                                     background: 'transparent',
@@ -669,7 +706,7 @@ export default function DocumentationManager() {
                                         </button>
                                         <button
                                           type="button"
-                                          onClick={() => handleDeleteDoc(doc.id, doc.title)}
+                                          onClick={() => handleOpenDeleteDocModal(doc)}
                                           title="Delete Doc"
                                           style={{ background: 'transparent', border: 'none', color: '#E11D48', cursor: 'pointer', padding: '0.1rem' }}
                                         >
@@ -873,7 +910,93 @@ export default function DocumentationManager() {
         </div>
       </div>
 
-      {/* CREATE NEW DOCUMENT MODAL */}
+      {/* 1. CREATE / RENAME FOLDER MODAL (REPLACES BROWSER PROMPT) */}
+      <Modal
+        isOpen={isFolderModalOpen}
+        onClose={() => setIsFolderModalOpen(false)}
+        title={folderModalMode === 'create' ? 'Create Main Folder' : 'Rename Folder'}
+        maxWidth="500px"
+      >
+        <form onSubmit={handleSubmitFolderForm}>
+          <div className="form-group">
+            <label className="form-label">
+              {folderModalMode === 'create' ? 'Nama Main Folder Baru *' : 'Nama Folder Baru *'}
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Contoh: Infrastructure, Marketing, SOP"
+              value={folderInput}
+              onChange={(e) => setFolderInput(e.target.value)}
+              required
+              autoFocus
+            />
+          </div>
+
+          <div className="modal-footer" style={{ margin: '1.5rem -1.5rem -1.5rem -1.5rem' }}>
+            <button type="button" className="btn btn-secondary" onClick={() => setIsFolderModalOpen(false)}>
+              Batal
+            </button>
+            <button type="submit" className="btn btn-primary">
+              {folderModalMode === 'create' ? 'Buat Folder' : 'Simpan Perubahan'}
+            </button>
+          </div>
+        </form>
+      </Modal>
+
+      {/* 2. CONFIRM DELETE FOLDER MODAL (REPLACES BROWSER CONFIRM) */}
+      <Modal
+        isOpen={isDeleteFolderModalOpen}
+        onClose={() => setIsDeleteFolderModalOpen(false)}
+        title="Hapus Main Folder"
+        maxWidth="480px"
+      >
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem', color: '#E11D48' }}>
+            <FiAlertTriangle style={{ fontSize: '2rem', flexShrink: 0 }} />
+            <p style={{ fontSize: '0.9rem', color: '#0F172A', margin: 0 }}>
+              Apakah Anda yakin ingin menghapus folder <strong>"{folderToDelete}"</strong> beserta seluruh dokumen di dalamnya?
+            </p>
+          </div>
+
+          <div className="modal-footer" style={{ margin: '1.5rem -1.5rem -1.5rem -1.5rem' }}>
+            <button type="button" className="btn btn-secondary" onClick={() => setIsDeleteFolderModalOpen(false)}>
+              Batal
+            </button>
+            <button type="button" className="btn btn-danger" onClick={handleConfirmDeleteFolder}>
+              Hapus Folder
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* 3. CONFIRM DELETE DOCUMENT MODAL (REPLACES BROWSER CONFIRM) */}
+      <Modal
+        isOpen={isDeleteDocModalOpen}
+        onClose={() => setIsDeleteDocModalOpen(false)}
+        title="Hapus Dokumen"
+        maxWidth="480px"
+      >
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem', color: '#E11D48' }}>
+            <FiAlertTriangle style={{ fontSize: '2rem', flexShrink: 0 }} />
+            <p style={{ fontSize: '0.9rem', color: '#0F172A', margin: 0 }}>
+              Apakah Anda yakin ingin menghapus dokumen <strong>"{docToDelete?.title}"</strong>?
+            </p>
+          </div>
+
+          <div className="modal-footer" style={{ margin: '1.5rem -1.5rem -1.5rem -1.5rem' }}>
+            <button type="button" className="btn btn-secondary" onClick={() => setIsDeleteDocModalOpen(false)}>
+              Batal
+            </button>
+            <button type="button" className="btn btn-danger" onClick={handleConfirmDeleteDoc}>
+              Hapus Dokumen
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* 4. CREATE NEW DOCUMENT MODAL */}
       <Modal
         isOpen={isNewDocModalOpen}
         onClose={() => setIsNewDocModalOpen(false)}
