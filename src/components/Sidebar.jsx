@@ -11,9 +11,7 @@ import {
   FiTool,
   FiLayout,
   FiCheckSquare,
-  FiMenu,
-  FiChevronsLeft,
-  FiChevronsRight
+  FiMenu
 } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 import DesktopalieMark from './DesktopalieMark';
@@ -66,11 +64,11 @@ export default function Sidebar() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: isCollapsed ? 'center' : 'space-between',
-        padding: isCollapsed ? '0.5rem 0 1.5rem 0' : '0.5rem 0.5rem 1.5rem 0.5rem',
+        padding: isCollapsed ? '0.5rem 0 1.5rem 0' : '0.5rem 0.25rem 1.5rem 0.25rem',
         borderBottom: '1px solid var(--border-color)',
         marginBottom: '1.25rem'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', overflow: 'hidden' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexShrink: 0 }}>
           <div style={{
             width: '36px',
             height: '36px',
@@ -85,7 +83,7 @@ export default function Sidebar() {
             <DesktopalieMark size={22} />
           </div>
           {!isCollapsed && (
-            <div>
+            <div style={{ flexShrink: 0 }}>
               <h2 style={{ fontSize: '0.95rem', fontWeight: '700', letterSpacing: '0.04em', textTransform: 'uppercase', lineHeight: '1.2', whiteSpace: 'nowrap' }}>
                 Desktopalie
               </h2>
@@ -103,7 +101,7 @@ export default function Sidebar() {
           )}
         </div>
 
-        {/* Hamburger / Collapse Toggle Button */}
+        {/* Official 3-Line Hamburger Menu Toggle Button */}
         <button
           onClick={toggleCollapse}
           title={isCollapsed ? 'Perluas Sidebar (Expand)' : 'Ciutkan Sidebar (Collapse)'}
@@ -112,18 +110,19 @@ export default function Sidebar() {
             border: 'none',
             color: 'var(--text-muted)',
             cursor: 'pointer',
-            padding: '0.35rem',
+            padding: '0.4rem',
             borderRadius: 'var(--radius-sm)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: '1.15rem',
+            fontSize: '1.25rem',
+            flexShrink: 0,
             transition: 'all 0.15s ease'
           }}
           onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#F1F5F9'}
           onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
         >
-          {isCollapsed ? <FiChevronsRight /> : <FiChevronsLeft />}
+          <FiMenu />
         </button>
       </div>
 
@@ -153,7 +152,7 @@ export default function Sidebar() {
                 transition: 'all 0.15s ease'
               })}
             >
-              <Icon style={{ fontSize: '1.2rem', flexShrink: 0 }} />
+              <Icon style={{ fontSize: '1.25rem', flexShrink: 0 }} />
               {!isCollapsed && <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.label}</span>}
             </NavLink>
           );
