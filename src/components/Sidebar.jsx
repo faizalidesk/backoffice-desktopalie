@@ -7,25 +7,18 @@ import {
   FiFileText, 
   FiBookmark, 
   FiUser, 
-  FiLogOut,
   FiTool,
   FiLayout,
   FiCheckSquare,
   FiBookOpen,
   FiMenu,
-  FiMoon,
-  FiSun,
-  FiGlobe
+  FiInfo
 } from 'react-icons/fi';
-import { useAuth } from '../context/AuthContext';
-import { useTheme } from '../context/ThemeContext';
 import { useLanguage } from '../context/LanguageContext';
 import DesktopalieMark from './DesktopalieMark';
 
 export default function Sidebar() {
-  const { logout, user } = useAuth();
-  const { isDarkMode, toggleTheme } = useTheme();
-  const { language, toggleLanguage, t } = useLanguage();
+  const { t } = useLanguage();
   const [isCollapsed, setIsCollapsed] = useState(() => {
     return localStorage.getItem('desktopalie_sidebar_collapsed') === 'true';
   });
@@ -166,110 +159,66 @@ export default function Sidebar() {
         })}
       </nav>
 
-      {/* Footer Controls: Language Switcher, Theme Switcher & Logout */}
+      {/* FOOTER: APP WEBSITE VERSION INFORMATION ONLY */}
       <div style={{
         paddingTop: '1rem',
         borderTop: '1px solid var(--border-color)',
         display: 'flex',
         flexDirection: 'column',
-        gap: '0.5rem',
         alignItems: isCollapsed ? 'center' : 'stretch'
       }}>
-        {/* Language Switcher Quick Button */}
-        <button
-          type="button"
-          onClick={toggleLanguage}
-          title="Switch Language (Indonesia / English)"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: isCollapsed ? 'center' : 'space-between',
-            padding: isCollapsed ? '0.5rem 0' : '0.45rem 0.75rem',
-            borderRadius: 'var(--radius-sm)',
-            border: '1px solid var(--border-color)',
-            backgroundColor: 'var(--bg-card)',
-            color: 'var(--text-main)',
-            cursor: 'pointer',
-            fontSize: '0.825rem',
-            fontWeight: '600'
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span style={{ fontSize: '1.1rem', lineHeight: 1 }}>{language === 'id' ? '🇮🇩' : '🇬🇧'}</span>
-            {!isCollapsed && <span>{language === 'id' ? 'Bahasa Indonesia' : 'English'}</span>}
-          </div>
-        </button>
-
-        {/* Dark Mode Switcher Button */}
-        <button
-          type="button"
-          onClick={toggleTheme}
-          title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: isCollapsed ? 'center' : 'space-between',
-            padding: isCollapsed ? '0.5rem 0' : '0.45rem 0.75rem',
-            borderRadius: 'var(--radius-sm)',
-            border: '1px solid var(--border-color)',
-            backgroundColor: 'var(--bg-card)',
-            color: 'var(--text-main)',
-            cursor: 'pointer',
-            fontSize: '0.825rem',
-            fontWeight: '600'
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            {isDarkMode ? <FiSun style={{ color: '#F59E0B' }} /> : <FiMoon style={{ color: 'var(--primary)' }} />}
-            {!isCollapsed && <span>{isDarkMode ? t('lightMode') : t('darkMode')}</span>}
-          </div>
-        </button>
-
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: isCollapsed ? 'center' : 'flex-start',
-          gap: isCollapsed ? 0 : '0.75rem',
-          padding: isCollapsed ? '0.5rem 0' : '0.5rem 0.75rem'
-        }}>
+        {!isCollapsed ? (
           <div style={{
-            width: '32px',
-            height: '32px',
-            borderRadius: '50%',
+            padding: '0.75rem',
+            borderRadius: 'var(--radius-sm)',
             backgroundColor: 'var(--bg-card-hover)',
+            border: '1px solid var(--border-color)',
             display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontWeight: '600',
-            fontSize: '0.85rem',
-            color: 'var(--primary)',
-            flexShrink: 0
-          }} title={isCollapsed ? (user?.email || 'Admin User') : undefined}>
-            {user?.email?.charAt(0).toUpperCase() || 'A'}
-          </div>
-          {!isCollapsed && (
-            <div style={{ overflow: 'hidden' }}>
-              <div style={{ fontSize: '0.85rem', fontWeight: '600', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
-                {user?.email || 'Admin User'}
-              </div>
-              <span style={{ fontSize: '0.7rem', color: 'var(--text-subtle)' }}>Administrator</span>
+            flexDirection: 'column',
+            gap: '0.35rem'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <span style={{ fontSize: '0.7rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--primary)' }}>
+                SYSTEM VERSION
+              </span>
+              <span style={{
+                fontSize: '0.65rem',
+                fontWeight: '700',
+                padding: '0.1rem 0.4rem',
+                borderRadius: '99px',
+                backgroundColor: 'rgba(34, 197, 94, 0.15)',
+                color: '#16A34A'
+              }}>
+                v2.5.0
+              </span>
             </div>
-          )}
-        </div>
 
-        <button
-          onClick={logout}
-          className="btn btn-secondary btn-sm"
-          title={isCollapsed ? t('signOut') : undefined}
-          style={{
-            width: '100%',
-            justifyContent: 'center',
-            padding: isCollapsed ? '0.5rem 0' : '0.4rem 0.75rem'
-          }}
-        >
-          <FiLogOut style={{ fontSize: '1.1rem' }} />
-          {!isCollapsed && <span>{t('signOut')}</span>}
-        </button>
+            <div style={{ fontSize: '0.775rem', fontWeight: '700', color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+              <FiInfo style={{ color: 'var(--primary)', flexShrink: 0 }} />
+              <span>Desktopalie Workspace</span>
+            </div>
+
+            <div style={{ fontSize: '0.675rem', color: 'var(--text-subtle)', lineHeight: '1.4' }}>
+              Built for Desktop Experience • Synced
+            </div>
+          </div>
+        ) : (
+          <div 
+            title="Desktopalie Backoffice v2.5.0"
+            style={{
+              padding: '0.35rem 0.5rem',
+              borderRadius: '99px',
+              backgroundColor: 'var(--bg-card-hover)',
+              border: '1px solid var(--border-color)',
+              fontSize: '0.65rem',
+              fontWeight: '800',
+              color: 'var(--primary)',
+              fontFamily: "'JetBrains Mono', monospace"
+            }}
+          >
+            v2.5
+          </div>
+        )}
       </div>
     </aside>
   );
