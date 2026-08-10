@@ -920,12 +920,12 @@ export default function DocumentationManager() {
         <form onSubmit={handleSubmitFolderForm}>
           <div className="form-group">
             <label className="form-label">
-              {folderModalMode === 'create' ? 'Nama Main Folder Baru *' : 'Nama Folder Baru *'}
+              {folderModalMode === 'create' ? 'New Main Folder Name *' : 'New Folder Name *'}
             </label>
             <input
               type="text"
               className="form-control"
-              placeholder="Contoh: Infrastructure, Marketing, SOP"
+              placeholder="e.g. Infrastructure, Marketing, SOP"
               value={folderInput}
               onChange={(e) => setFolderInput(e.target.value)}
               required
@@ -935,10 +935,10 @@ export default function DocumentationManager() {
 
           <div className="modal-footer" style={{ margin: '1.5rem -1.5rem -1.5rem -1.5rem' }}>
             <button type="button" className="btn btn-secondary" onClick={() => setIsFolderModalOpen(false)}>
-              Batal
+              Cancel
             </button>
             <button type="submit" className="btn btn-primary">
-              {folderModalMode === 'create' ? 'Buat Folder' : 'Simpan Perubahan'}
+              {folderModalMode === 'create' ? 'Create Folder' : 'Save Changes'}
             </button>
           </div>
         </form>
@@ -948,23 +948,23 @@ export default function DocumentationManager() {
       <Modal
         isOpen={isDeleteFolderModalOpen}
         onClose={() => setIsDeleteFolderModalOpen(false)}
-        title="Hapus Main Folder"
+        title="Delete Main Folder"
         maxWidth="480px"
       >
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem', color: '#E11D48' }}>
             <FiAlertTriangle style={{ fontSize: '2rem', flexShrink: 0 }} />
             <p style={{ fontSize: '0.9rem', color: '#0F172A', margin: 0 }}>
-              Apakah Anda yakin ingin menghapus folder <strong>"{folderToDelete}"</strong> beserta seluruh dokumen di dalamnya?
+              Are you sure you want to delete folder <strong>"{folderToDelete}"</strong> and all documents inside?
             </p>
           </div>
 
           <div className="modal-footer" style={{ margin: '1.5rem -1.5rem -1.5rem -1.5rem' }}>
             <button type="button" className="btn btn-secondary" onClick={() => setIsDeleteFolderModalOpen(false)}>
-              Batal
+              Cancel
             </button>
             <button type="button" className="btn btn-danger" onClick={handleConfirmDeleteFolder}>
-              Hapus Folder
+              Delete Folder
             </button>
           </div>
         </div>
@@ -974,23 +974,23 @@ export default function DocumentationManager() {
       <Modal
         isOpen={isDeleteDocModalOpen}
         onClose={() => setIsDeleteDocModalOpen(false)}
-        title="Hapus Dokumen"
+        title="Delete Document"
         maxWidth="480px"
       >
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem', color: '#E11D48' }}>
             <FiAlertTriangle style={{ fontSize: '2rem', flexShrink: 0 }} />
             <p style={{ fontSize: '0.9rem', color: '#0F172A', margin: 0 }}>
-              Apakah Anda yakin ingin menghapus dokumen <strong>"{docToDelete?.title}"</strong>?
+              Are you sure you want to delete document <strong>"{docToDelete?.title}"</strong>?
             </p>
           </div>
 
           <div className="modal-footer" style={{ margin: '1.5rem -1.5rem -1.5rem -1.5rem' }}>
             <button type="button" className="btn btn-secondary" onClick={() => setIsDeleteDocModalOpen(false)}>
-              Batal
+              Cancel
             </button>
             <button type="button" className="btn btn-danger" onClick={handleConfirmDeleteDoc}>
-              Hapus Dokumen
+              Delete Document
             </button>
           </div>
         </div>

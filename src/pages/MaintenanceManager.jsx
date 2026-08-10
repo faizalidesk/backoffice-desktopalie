@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { backofficeService } from '../services/backofficeService';
 import { toast } from 'react-hot-toast';
-import { FiTool, FiClock, FiAlertTriangle, FiCheckCircle, FiSave, FiRefreshCw, FiZap, FiShield } from 'react-icons/fi';
+import { FiTool, FiClock, FiAlertTriangle, FiCheckCircle, FiSave, FiZap, FiShield } from 'react-icons/fi';
 import Header from '../components/Header';
 
 export default function MaintenanceManager() {
@@ -10,8 +10,8 @@ export default function MaintenanceManager() {
 
   const [settings, setSettings] = useState({
     is_enabled: false,
-    title: 'Situs Sedang Dalam Pemeliharaan',
-    message: 'Kami sedang melakukan pembaruan sistem dan peningkatan performa. Kembali lagi dalam beberapa saat.',
+    title: 'System Under Maintenance',
+    message: 'We are performing system upgrades and performance enhancements. Please check back shortly.',
     end_time: new Date(Date.now() + 3 * 3600 * 1000).toISOString().slice(0, 16),
     allow_admin_bypass: true
   });
@@ -36,8 +36,8 @@ export default function MaintenanceManager() {
       if (data) {
         setSettings({
           is_enabled: !!data.is_enabled,
-          title: data.title || 'Situs Sedang Dalam Pemeliharaan',
-          message: data.message || 'Kami sedang melakukan pembaruan sistem. Kembali lagi nanti.',
+          title: data.title || 'System Under Maintenance',
+          message: data.message || 'We are performing system upgrades and performance enhancements. Please check back shortly.',
           end_time: data.end_time ? new Date(data.end_time).toISOString().slice(0, 16) : new Date(Date.now() + 3 * 3600 * 1000).toISOString().slice(0, 16),
           allow_admin_bypass: data.allow_admin_bypass !== false
         });
@@ -73,7 +73,7 @@ export default function MaintenanceManager() {
     const tzOffset = newTarget.getTimezoneOffset() * 60000;
     const localISOTime = new Date(newTarget.getTime() - tzOffset).toISOString().slice(0, 16);
     setSettings(prev => ({ ...prev, end_time: localISOTime }));
-    toast.success(`Countdown diatur +${hoursToAdd} jam dari sekarang`);
+    toast.success(`Countdown set to +${hoursToAdd} hours from now`);
   };
 
   const handleSubmit = async (e) => {
@@ -81,10 +81,10 @@ export default function MaintenanceManager() {
     setSaving(true);
     try {
       await backofficeService.updateMaintenanceSettings(settings);
-      toast.success('Pengaturan Maintenance Mode berhasil disimpan!');
+      toast.success('Maintenance Mode settings saved successfully!');
     } catch (err) {
       console.error(err);
-      toast.error('Gagal menyimpan pengaturan maintenance');
+      toast.error('Failed to save maintenance settings');
     } finally {
       setSaving(false);
     }
@@ -118,12 +118,12 @@ export default function MaintenanceManager() {
               Maintenance & Countdown Manager
             </h1>
             <p className="page-subtitle" style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-              Atur status pemeliharaan situs web utama dan hitung mundur (*countdown*) secara real-time.
+              Configure main website maintenance status and live countdown in real-time.
             </p>
           </div>
         </div>
 
-        {/* 2-COLUMN SIDE-BY-SIDE GRID LAYOUT (KIRI & KANAN) */}
+        {/* 2-COLUMN SIDE-BY-SIDE GRID LAYOUT */}
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))',
@@ -159,18 +159,18 @@ export default function MaintenanceManager() {
 
                   <div>
                     <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: settings.is_enabled ? '#92400E' : '#166534', marginBottom: '0.2rem' }}>
-                      {settings.is_enabled ? 'AKTIF (Situs Dikunci)' : 'NONAKTIF (Situs Online)'}
+                      {settings.is_enabled ? 'ACTIVE (Site Locked)' : 'INACTIVE (Site Online)'}
                     </h3>
                     <span style={{ fontSize: '0.78rem', fontWeight: '600', color: settings.is_enabled ? '#B45309' : '#15803D' }}>
-                      {settings.is_enabled ? 'Mode Pemeliharaan Sedang Berjalan' : 'Situs Utama Bebas Diakses'}
+                      {settings.is_enabled ? 'Maintenance Mode Is Active' : 'Main Website Is Fully Accessible'}
                     </span>
                   </div>
                 </div>
 
                 <p style={{ fontSize: '0.85rem', color: settings.is_enabled ? '#B45309' : '#15803D', margin: 0, lineHeight: '1.55' }}>
                   {settings.is_enabled 
-                    ? 'Pengunjung biasa akan melihat halaman Maintenance & Hitung Mundur.' 
-                    : 'Situs web utama dapat diakses publik secara normal tanpa hambatan.'}
+                    ? 'Public visitors will see the Maintenance & Countdown screen.' 
+                    : 'Main website is fully accessible to the public without restrictions.'}
                 </p>
 
                 <button
@@ -181,9 +181,9 @@ export default function MaintenanceManager() {
                     setSettings(updated);
                     try {
                       await backofficeService.updateMaintenanceSettings(updated);
-                      toast.success(newStatus ? 'Mode Maintenance DIAKTIFKAN!' : 'Mode Maintenance DIMATIKAN!');
+                      toast.success(newStatus ? 'Maintenance Mode ENABLED!' : 'Maintenance Mode DISABLED!');
                     } catch (err) {
-                      toast.error('Gagal memperbarui status maintenance');
+                      toast.error('Failed to update maintenance status');
                     }
                   }}
                   className={`btn ${settings.is_enabled ? 'btn-secondary' : 'btn-primary'}`}
@@ -199,7 +199,7 @@ export default function MaintenanceManager() {
                     boxShadow: '0 4px 12px rgba(0,0,0,0.06)'
                   }}
                 >
-                  {settings.is_enabled ? 'Matikan Maintenance (Kembali Online)' : 'Aktifkan Maintenance Mode'}
+                  {settings.is_enabled ? 'Disable Maintenance (Bring Online)' : 'Enable Maintenance Mode'}
                 </button>
               </div>
             </div>
@@ -221,10 +221,10 @@ export default function MaintenanceManager() {
               {/* 4 Clock Boxes Grid */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.625rem' }}>
                 {[
-                  { label: 'HARI', value: timeLeft.days },
-                  { label: 'JAM', value: timeLeft.hours },
-                  { label: 'MENIT', value: timeLeft.minutes },
-                  { label: 'DETIK', value: timeLeft.seconds }
+                  { label: 'DAYS', value: timeLeft.days },
+                  { label: 'HOURS', value: timeLeft.hours },
+                  { label: 'MINUTES', value: timeLeft.minutes },
+                  { label: 'SECONDS', value: timeLeft.seconds }
                 ].map((item, i) => (
                   <div key={i} style={{
                     backgroundColor: '#FFFFFF',
@@ -249,10 +249,10 @@ export default function MaintenanceManager() {
             <div className="card" style={{ padding: '1.25rem', backgroundColor: '#F8FAFC' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem', color: '#0F172A', fontWeight: '700', fontSize: '0.875rem' }}>
                 <FiShield style={{ color: 'var(--primary)' }} />
-                <span>Status Akses Administrator</span>
+                <span>Administrator Access Status</span>
               </div>
               <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: 0, lineHeight: '1.5' }}>
-                Mode Bypass Admin memungkinkan Anda sebagai administrator untuk tetap mengakses seluruh antarmuka dan API Backoffice tanpa terhalang layar pemeliharaan.
+                Admin Bypass Mode allows workspace administrators to access all Backoffice interfaces and APIs without interruption.
               </p>
             </div>
 
@@ -261,19 +261,19 @@ export default function MaintenanceManager() {
           {/* RIGHT COLUMN: MAINTENANCE SETTINGS FORM */}
           <div className="card" style={{ padding: '1.75rem' }}>
             <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: '#0F172A', marginBottom: '1.25rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.75rem' }}>
-              Pengaturan Tampilan & Waktu Selesai
+              Display Settings & End Time
             </h3>
 
             {loading ? (
-              <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>Memuat pengaturan...</div>
+              <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>Loading settings...</div>
             ) : (
               <form onSubmit={handleSubmit}>
                 <div className="form-group" style={{ marginBottom: '1.25rem' }}>
-                  <label className="form-label">Judul Tampilan Maintenance *</label>
+                  <label className="form-label">Maintenance Display Title *</label>
                   <input
                     type="text"
                     className="form-control"
-                    placeholder="Situs Sedang Dalam Pemeliharaan"
+                    placeholder="System Under Maintenance"
                     value={settings.title}
                     onChange={(e) => setSettings(prev => ({ ...prev, title: e.target.value }))}
                     required
@@ -281,11 +281,11 @@ export default function MaintenanceManager() {
                 </div>
 
                 <div className="form-group" style={{ marginBottom: '1.25rem' }}>
-                  <label className="form-label">Pesan Deskripsi Pengumuman *</label>
+                  <label className="form-label">Announcement Message *</label>
                   <textarea
                     className="form-control"
                     rows="4"
-                    placeholder="Tuliskan pesan penjelasan untuk pengunjung..."
+                    placeholder="Write an explanatory message for visitors..."
                     value={settings.message}
                     onChange={(e) => setSettings(prev => ({ ...prev, message: e.target.value }))}
                     required
@@ -293,7 +293,7 @@ export default function MaintenanceManager() {
                 </div>
 
                 <div className="form-group" style={{ marginBottom: '1.25rem' }}>
-                  <label className="form-label">Waktu Target Selesai (Countdown End Time) *</label>
+                  <label className="form-label">Target End Time (Countdown End Time) *</label>
                   <input
                     type="datetime-local"
                     className="form-control"
@@ -307,14 +307,14 @@ export default function MaintenanceManager() {
                 <div className="form-group" style={{ marginBottom: '1.5rem' }}>
                   <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
                     <FiZap style={{ color: 'var(--accent-amber)' }} />
-                    <span>Pintasan Durasi Cepat:</span>
+                    <span>Quick Duration Shortcuts:</span>
                   </label>
                   <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', marginTop: '0.35rem' }}>
-                    <button type="button" className="btn btn-secondary btn-sm" onClick={() => handlePreset(1)}>+1 Jam</button>
-                    <button type="button" className="btn btn-secondary btn-sm" onClick={() => handlePreset(3)}>+3 Jam</button>
-                    <button type="button" className="btn btn-secondary btn-sm" onClick={() => handlePreset(12)}>+12 Jam</button>
-                    <button type="button" className="btn btn-secondary btn-sm" onClick={() => handlePreset(24)}>+24 Jam (1 Hari)</button>
-                    <button type="button" className="btn btn-secondary btn-sm" onClick={() => handlePreset(72)}>+3 Hari</button>
+                    <button type="button" className="btn btn-secondary btn-sm" onClick={() => handlePreset(1)}>+1 Hour</button>
+                    <button type="button" className="btn btn-secondary btn-sm" onClick={() => handlePreset(3)}>+3 Hours</button>
+                    <button type="button" className="btn btn-secondary btn-sm" onClick={() => handlePreset(12)}>+12 Hours</button>
+                    <button type="button" className="btn btn-secondary btn-sm" onClick={() => handlePreset(24)}>+24 Hours (1 Day)</button>
+                    <button type="button" className="btn btn-secondary btn-sm" onClick={() => handlePreset(72)}>+3 Days</button>
                   </div>
                 </div>
 
@@ -327,7 +327,7 @@ export default function MaintenanceManager() {
                       style={{ width: '18px', height: '18px', accentColor: 'var(--primary)', cursor: 'pointer' }}
                     />
                     <span style={{ fontSize: '0.825rem', fontWeight: '600', color: '#0F172A' }}>
-                      Izinkan Administrator Login/Bypass tampilan maintenance (Admin tetap bisa mengakses situs)
+                      Allow Administrator Login/Bypass during maintenance
                     </span>
                   </label>
                 </div>
@@ -339,7 +339,7 @@ export default function MaintenanceManager() {
                   style={{ width: '100%', justifyContent: 'center', padding: '0.75rem 1.25rem', fontSize: '0.9rem', borderRadius: 'var(--radius-sm)' }}
                 >
                   <FiSave />
-                  <span>{saving ? 'Menyimpan...' : 'Simpan Pengaturan Maintenance'}</span>
+                  <span>{saving ? 'Saving...' : 'Save Maintenance Settings'}</span>
                 </button>
               </form>
             )}

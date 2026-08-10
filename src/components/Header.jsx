@@ -49,7 +49,7 @@ export default function Header({ title = 'Dashboard Overview' }) {
           className="btn btn-secondary btn-sm"
         >
           <FiGlobe />
-          <span>Buka Website Utama</span>
+          <span>View Main Website</span>
           <FiExternalLink style={{ fontSize: '0.75rem' }} />
         </a>
       </div>

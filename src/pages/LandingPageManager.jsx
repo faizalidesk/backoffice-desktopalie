@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { backofficeService } from '../services/backofficeService';
 import { toast } from 'react-hot-toast';
-import { FiLayout, FiSave, FiGlobe, FiInfo, FiMail, FiGithub, FiLinkedin, FiInstagram, FiType } from 'react-icons/fi';
+import { FiLayout, FiSave, FiInfo, FiMail, FiGithub, FiLinkedin, FiInstagram } from 'react-icons/fi';
 import Header from '../components/Header';
 
 export default function LandingPageManager() {
@@ -56,10 +56,10 @@ export default function LandingPageManager() {
     setSaving(true);
     try {
       await backofficeService.updateLandingPageSettings(settings);
-      toast.success('Konten Landing Page berhasil disimpan!');
+      toast.success('Landing Page content saved successfully!');
     } catch (err) {
       console.error(err);
-      toast.error('Gagal menyimpan konten Landing Page');
+      toast.error('Failed to save Landing Page content');
     } finally {
       setSaving(false);
     }
@@ -71,8 +71,8 @@ export default function LandingPageManager() {
       <div className="page-body">
         <div className="page-header">
           <div className="page-title-group">
-            <h1>Manajemen Konten Landing Page</h1>
-            <p className="page-subtitle">Kelola teks, headline, narasi hero, tentang saya, dan tautan kontak di website utama.</p>
+            <h1>Landing Page Content Manager</h1>
+            <p className="page-subtitle">Manage text, headlines, hero copy, about section, and contact links on the main website.</p>
           </div>
         </div>
 
@@ -121,18 +121,18 @@ export default function LandingPageManager() {
 
           <div className="card">
             {loading ? (
-              <p style={{ color: 'var(--text-muted)' }}>Memuat konten landing page...</p>
+              <p style={{ color: 'var(--text-muted)' }}>Loading landing page content...</p>
             ) : (
               <form onSubmit={handleSubmit}>
                 {/* TAB 1: HERO SECTION */}
                 {activeTab === 'hero' && (
                   <div>
                     <h3 style={{ fontSize: '1.1rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <FiLayout style={{ color: 'var(--primary)' }} /> Pengaturan Hero Section (Beranda)
+                      <FiLayout style={{ color: 'var(--primary)' }} /> Hero Section Settings (Home)
                     </h3>
 
                     <div className="form-group">
-                      <label className="form-label">Badge Label Status</label>
+                      <label className="form-label">Status Badge Label</label>
                       <input
                         type="text"
                         className="form-control"
@@ -144,7 +144,7 @@ export default function LandingPageManager() {
                     </div>
 
                     <div className="form-group">
-                      <label className="form-label">Judul Utama (Hero Headline)</label>
+                      <label className="form-label">Main Title (Hero Headline)</label>
                       <input
                         type="text"
                         className="form-control"
@@ -156,7 +156,7 @@ export default function LandingPageManager() {
                     </div>
 
                     <div className="form-group">
-                      <label className="form-label">Deskripsi Utama (Hero Subtitle)</label>
+                      <label className="form-label">Main Description (Hero Subtitle)</label>
                       <textarea
                         className="form-control"
                         rows="3"
@@ -169,7 +169,7 @@ export default function LandingPageManager() {
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                       <div className="form-group">
-                        <label className="form-label">Teks Tombol Utama (CTA Utama)</label>
+                        <label className="form-label">Primary Button Text (Main CTA)</label>
                         <input
                           type="text"
                           className="form-control"
@@ -180,7 +180,7 @@ export default function LandingPageManager() {
                       </div>
 
                       <div className="form-group">
-                        <label className="form-label">Teks Tombol Kedua (CTA Sekunder)</label>
+                        <label className="form-label">Secondary Button Text (Secondary CTA)</label>
                         <input
                           type="text"
                           className="form-control"
@@ -192,7 +192,7 @@ export default function LandingPageManager() {
                     </div>
 
                     <div className="form-group">
-                      <label className="form-label">Catatan Singkat (Hero Status Note)</label>
+                      <label className="form-label">Short Note (Hero Status Note)</label>
                       <input
                         type="text"
                         className="form-control"
@@ -208,11 +208,11 @@ export default function LandingPageManager() {
                 {activeTab === 'about' && (
                   <div>
                     <h3 style={{ fontSize: '1.1rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <FiInfo style={{ color: 'var(--primary)' }} /> Pengaturan Section Tentang Saya & Statistik
+                      <FiInfo style={{ color: 'var(--primary)' }} /> About Section & Stats Settings
                     </h3>
 
                     <div className="form-group">
-                      <label className="form-label">Judul Section About</label>
+                      <label className="form-label">About Section Title</label>
                       <input
                         type="text"
                         className="form-control"
@@ -224,7 +224,7 @@ export default function LandingPageManager() {
                     </div>
 
                     <div className="form-group">
-                      <label className="form-label">Paragraf Pembuka Utama (Large Copy)</label>
+                      <label className="form-label">Opening Paragraph (Large Copy)</label>
                       <textarea
                         className="form-control"
                         rows="2"
@@ -236,7 +236,7 @@ export default function LandingPageManager() {
                     </div>
 
                     <div className="form-group">
-                      <label className="form-label">Deskripsi Lengkap About</label>
+                      <label className="form-label">Full About Description</label>
                       <textarea
                         className="form-control"
                         rows="3"
@@ -248,7 +248,7 @@ export default function LandingPageManager() {
                     </div>
 
                     <div className="form-group">
-                      <label className="form-label">Teks Lokasi & Jangkauan Kerja</label>
+                      <label className="form-label">Location & Work Radius Text</label>
                       <input
                         type="text"
                         className="form-control"
@@ -259,20 +259,20 @@ export default function LandingPageManager() {
                     </div>
 
                     <div style={{ marginTop: '1.5rem', borderTop: '1px solid var(--border-color)', paddingTop: '1.25rem' }}>
-                      <h4 style={{ fontSize: '0.95rem', marginBottom: '1rem' }}>Statistik Pencapaian (Stats Counter)</h4>
+                      <h4 style={{ fontSize: '0.95rem', marginBottom: '1rem' }}>Achievement Statistics (Stats Counter)</h4>
                       
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '0.75rem' }}>
                         <input
                           type="text"
                           className="form-control"
-                          placeholder="Nilai Stat 1 (e.g. 4+)"
+                          placeholder="Stat 1 Value (e.g. 4+)"
                           value={settings.stat_1_value}
                           onChange={(e) => setSettings(prev => ({ ...prev, stat_1_value: e.target.value }))}
                         />
                         <input
                           type="text"
                           className="form-control"
-                          placeholder="Label Stat 1 (e.g. Years exploring the web)"
+                          placeholder="Stat 1 Label (e.g. Years exploring the web)"
                           value={settings.stat_1_label}
                           onChange={(e) => setSettings(prev => ({ ...prev, stat_1_label: e.target.value }))}
                         />
@@ -282,14 +282,14 @@ export default function LandingPageManager() {
                         <input
                           type="text"
                           className="form-control"
-                          placeholder="Nilai Stat 2 (e.g. 20+)"
+                          placeholder="Stat 2 Value (e.g. 20+)"
                           value={settings.stat_2_value}
                           onChange={(e) => setSettings(prev => ({ ...prev, stat_2_value: e.target.value }))}
                         />
                         <input
                           type="text"
                           className="form-control"
-                          placeholder="Label Stat 2 (e.g. Projects & experiments)"
+                          placeholder="Stat 2 Label (e.g. Projects & experiments)"
                           value={settings.stat_2_label}
                           onChange={(e) => setSettings(prev => ({ ...prev, stat_2_label: e.target.value }))}
                         />
@@ -299,14 +299,14 @@ export default function LandingPageManager() {
                         <input
                           type="text"
                           className="form-control"
-                          placeholder="Nilai Stat 3 (e.g. ∞)"
+                          placeholder="Stat 3 Value (e.g. ∞)"
                           value={settings.stat_3_value}
                           onChange={(e) => setSettings(prev => ({ ...prev, stat_3_value: e.target.value }))}
                         />
                         <input
                           type="text"
                           className="form-control"
-                          placeholder="Label Stat 3 (e.g. Ideas still in progress)"
+                          placeholder="Stat 3 Label (e.g. Ideas still in progress)"
                           value={settings.stat_3_label}
                           onChange={(e) => setSettings(prev => ({ ...prev, stat_3_label: e.target.value }))}
                         />
@@ -319,11 +319,11 @@ export default function LandingPageManager() {
                 {activeTab === 'contact' && (
                   <div>
                     <h3 style={{ fontSize: '1.1rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <FiMail style={{ color: 'var(--primary)' }} /> Pengaturan Kontak & Tautan Sosial Media
+                      <FiMail style={{ color: 'var(--primary)' }} /> Contact & Social Media Links Settings
                     </h3>
 
                     <div className="form-group">
-                      <label className="form-label">Judul Kontak (Contact Headline)</label>
+                      <label className="form-label">Contact Title (Contact Headline)</label>
                       <input
                         type="text"
                         className="form-control"
@@ -335,7 +335,7 @@ export default function LandingPageManager() {
                     </div>
 
                     <div className="form-group">
-                      <label className="form-label">Alamat Email Publik Kontak</label>
+                      <label className="form-label">Public Contact Email Address</label>
                       <input
                         type="email"
                         className="form-control"
@@ -347,11 +347,11 @@ export default function LandingPageManager() {
                     </div>
 
                     <div style={{ marginTop: '1.5rem', borderTop: '1px solid var(--border-color)', paddingTop: '1.25rem' }}>
-                      <h4 style={{ fontSize: '0.95rem', marginBottom: '1rem' }}>Tautan Sosial Media Footer</h4>
+                      <h4 style={{ fontSize: '0.95rem', marginBottom: '1rem' }}>Footer Social Media Links</h4>
 
                       <div className="form-group">
                         <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                          <FiGithub /> URL Profil GitHub
+                          <FiGithub /> GitHub Profile URL
                         </label>
                         <input
                           type="url"
@@ -364,7 +364,7 @@ export default function LandingPageManager() {
 
                       <div className="form-group">
                         <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                          <FiLinkedin /> URL Profil LinkedIn
+                          <FiLinkedin /> LinkedIn Profile URL
                         </label>
                         <input
                           type="url"
@@ -377,7 +377,7 @@ export default function LandingPageManager() {
 
                       <div className="form-group">
                         <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                          <FiInstagram /> URL Profil Instagram
+                          <FiInstagram /> Instagram Profile URL
                         </label>
                         <input
                           type="url"
@@ -394,7 +394,7 @@ export default function LandingPageManager() {
                 <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'flex-end', borderTop: '1px solid var(--border-color)', paddingTop: '1.25rem' }}>
                   <button type="submit" className="btn btn-primary" disabled={saving}>
                     <FiSave />
-                    <span>{saving ? 'Menyimpan...' : 'Simpan Konten Landing Page'}</span>
+                    <span>{saving ? 'Saving...' : 'Save Landing Page Content'}</span>
                   </button>
                 </div>
               </form>

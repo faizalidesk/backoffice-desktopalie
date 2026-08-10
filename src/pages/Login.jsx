@@ -19,18 +19,18 @@ export default function Login() {
     e.preventDefault();
     setErrorMessage('');
     if (!email || !password) {
-      toast.error('Silakan isi email dan kata sandi');
+      toast.error('Please enter email and password');
       return;
     }
 
     setSubmitting(true);
     try {
       await login(email, password);
-      toast.success('Berhasil masuk ke Backoffice!');
+      toast.success('Successfully signed in to Backoffice!');
       navigate('/');
     } catch (err) {
       console.error('Login error:', err);
-      const msg = err.message || err.error_description || 'Gagal login. Periksa kembali email & kata sandi Anda.';
+      const msg = err.message || err.error_description || 'Sign in failed. Please check your email & password.';
       setErrorMessage(msg);
       toast.error(msg);
     } finally {
@@ -186,7 +186,6 @@ export default function Login() {
             <span>BACKOFFICE ADMIN WORKSPACE</span>
           </div>
 
-          {/* Display Hero Title */}
           <h1 style={{
             fontSize: '3.5rem',
             fontWeight: '800',
@@ -198,7 +197,6 @@ export default function Login() {
             Ideas, crafted into digital experiences.
           </h1>
 
-          {/* Subtitle */}
           <p style={{
             fontSize: '1rem',
             lineHeight: '1.65',
@@ -209,7 +207,6 @@ export default function Login() {
             Desktopalie is my personal space for projects, experiments, and digital creations—documenting my journey through web development, UI/UX design, and modern technology.
           </p>
 
-          {/* LOGIN FORM CONTAINER */}
           <div style={{
             backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
             border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
@@ -220,7 +217,7 @@ export default function Login() {
             maxWidth: '480px'
           }}>
             <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: isDarkMode ? '#F8FAFC' : '#0F172A', marginBottom: '1.25rem' }}>
-              Masuk ke Backoffice Admin
+              Sign In to Backoffice Admin
             </h3>
 
             {errorMessage && (
@@ -244,7 +241,7 @@ export default function Login() {
             <form onSubmit={handleSubmit}>
               <div style={{ marginBottom: '1.15rem' }}>
                 <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', color: isDarkMode ? '#94A3B8' : '#64748B', marginBottom: '0.4rem' }}>
-                  Email Administrator
+                  Administrator Email
                 </label>
                 <div style={{ position: 'relative' }}>
                   <FiMail style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: isDarkMode ? '#64748B' : '#94A3B8' }} />
@@ -252,7 +249,7 @@ export default function Login() {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="nama@email.com"
+                    placeholder="admin@email.com"
                     required
                     style={{
                       width: '100%',
@@ -270,7 +267,7 @@ export default function Login() {
 
               <div style={{ marginBottom: '1.5rem' }}>
                 <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', color: isDarkMode ? '#94A3B8' : '#64748B', marginBottom: '0.4rem' }}>
-                  Kata Sandi
+                  Password
                 </label>
                 <div style={{ position: 'relative' }}>
                   <FiLock style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: isDarkMode ? '#64748B' : '#94A3B8' }} />
@@ -314,12 +311,12 @@ export default function Login() {
                     transition: 'all 0.15s ease'
                   }}
                 >
-                  <span>{submitting ? 'Memproses...' : 'Masuk ke Backoffice'}</span>
+                  <span>{submitting ? 'Processing...' : 'Sign In to Backoffice'}</span>
                   <FiArrowRight />
                 </button>
 
                 <Link to="/register" style={{ fontSize: '0.85rem', fontWeight: '600', color: isDarkMode ? '#818CF8' : '#64748B', textDecoration: 'none' }}>
-                  Daftar Akun Baru ➔
+                  Register Account ➔
                 </Link>
               </div>
             </form>

@@ -33,7 +33,7 @@ export default function ExperimentsManager() {
       const data = await backofficeService.getExperiments();
       setExperiments(data);
     } catch (err) {
-      toast.error('Gagal memuat eksperimen');
+      toast.error('Failed to load experiments');
       console.error(err);
     } finally {
       setLoading(false);
@@ -80,35 +80,35 @@ export default function ExperimentsManager() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.title || !formData.slug) {
-      toast.error('Judul dan Slug wajib diisi');
+      toast.error('Title and Slug are required');
       return;
     }
 
     try {
       if (editingItem) {
         await backofficeService.updateExperiment(editingItem.id, formData);
-        toast.success('Eksperimen berhasil diperbarui!');
+        toast.success('Experiment updated successfully!');
       } else {
         await backofficeService.createExperiment(formData);
-        toast.success('Eksperimen baru berhasil ditambahkan!');
+        toast.success('New experiment added successfully!');
       }
       setIsModalOpen(false);
       loadExperiments();
     } catch (err) {
       console.error(err);
-      toast.error(err.message || 'Gagal menyimpan data eksperimen');
+      toast.error(err.message || 'Failed to save experiment data');
     }
   };
 
   const handleDelete = async (id, title) => {
-    if (!window.confirm(`Apakah Anda yakin ingin menghapus eksperimen "${title}"?`)) return;
+    if (!window.confirm(`Are you sure you want to delete experiment "${title}"?`)) return;
     try {
       await backofficeService.deleteExperiment(id);
-      toast.success('Eksperimen berhasil dihapus');
+      toast.success('Experiment deleted successfully');
       loadExperiments();
     } catch (err) {
       console.error(err);
-      toast.error('Gagal menghapus eksperimen');
+      toast.error('Failed to delete experiment');
     }
   };
 
@@ -124,12 +124,12 @@ export default function ExperimentsManager() {
       <div className="page-body">
         <div className="page-header">
           <div className="page-title-group">
-            <h1>Manajemen Experiments Lab</h1>
-            <p className="page-subtitle">Kelola prototipe UI/UX, animasi interaktif, dan studi teknologi.</p>
+            <h1>Experiments Lab Manager</h1>
+            <p className="page-subtitle">Manage UI/UX prototypes, interactive motion, and tech explorations.</p>
           </div>
           <button className="btn btn-primary" onClick={() => handleOpenModal()}>
             <FiPlus />
-            <span>Tambah Eksperimen Baru</span>
+            <span>Add New Experiment</span>
           </button>
         </div>
 
@@ -140,33 +140,33 @@ export default function ExperimentsManager() {
               <input
                 type="text"
                 className="search-input"
-                placeholder="Cari eksperimen..."
+                placeholder="Search experiments..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
             </div>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-              Total: <strong>{filteredExperiments.length}</strong> eksperimen
+              Total: <strong>{filteredExperiments.length}</strong> experiments
             </div>
           </div>
 
           {loading ? (
             <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>
-              Memuat data eksperimen...
+              Loading experiments data...
             </div>
           ) : filteredExperiments.length === 0 ? (
             <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>
-              Belum ada eksperimen yang ditemukan.
+              No experiments found.
             </div>
           ) : (
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Preview & Judul</th>
-                  <th>Tipe</th>
+                  <th>Preview & Title</th>
+                  <th>Type</th>
                   <th>Status & Tone</th>
-                  <th>Deskripsi</th>
-                  <th style={{ textAlign: 'right' }}>Aksi</th>
+                  <th>Description</th>
+                  <th style={{ textAlign: 'right' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -221,7 +221,7 @@ export default function ExperimentsManager() {
                         <button 
                           className="btn btn-danger btn-icon btn-sm"
                           onClick={() => handleDelete(item.id, item.title)}
-                          title="Hapus"
+                          title="Delete"
                         >
                           <FiTrash2 />
                         </button>
@@ -238,22 +238,22 @@ export default function ExperimentsManager() {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={editingItem ? 'Edit Eksperimen' : 'Tambah Eksperimen Baru'}
+        title={editingItem ? 'Edit Experiment' : 'Add New Experiment'}
       >
         <form onSubmit={handleSubmit}>
           <ImageUploader 
             value={formData.image_url} 
             onChange={(url) => setFormData(prev => ({ ...prev, image_url: url }))} 
             folder="experiments"
-            label="Gambar Preview / Thumbnail Eksperimen"
+            label="Experiment Preview / Thumbnail Image"
           />
 
           <div className="form-group">
-            <label className="form-label">Judul Eksperimen *</label>
+            <label className="form-label">Experiment Title *</label>
             <input
               type="text"
               className="form-control"
-              placeholder="Contoh: Kinetic type studies"
+              placeholder="e.g. Kinetic type studies"
               value={formData.title}
               onChange={handleTitleChange}
               required
@@ -261,7 +261,7 @@ export default function ExperimentsManager() {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Slug URL *</label>
+            <label className="form-label">URL Slug *</label>
             <input
               type="text"
               className="form-control"
@@ -274,7 +274,7 @@ export default function ExperimentsManager() {
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
             <div className="form-group">
-              <label className="form-label">Tipe Eksperimen</label>
+              <label className="form-label">Experiment Type</label>
               <select
                 className="form-control"
                 value={formData.type}
@@ -288,7 +288,7 @@ export default function ExperimentsManager() {
             </div>
 
             <div className="form-group">
-              <label className="form-label">Warna Tone</label>
+              <label className="form-label">Tone Color</label>
               <select
                 className="form-control"
                 value={formData.tone}
@@ -316,10 +316,10 @@ export default function ExperimentsManager() {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Deskripsi</label>
+            <label className="form-label">Description</label>
             <textarea
               className="form-control"
-              placeholder="Jelaskan tujuan eksperimen atau studi animasi ini..."
+              placeholder="Describe the purpose of this experiment or motion study..."
               value={formData.description}
               onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
             />
@@ -327,10 +327,10 @@ export default function ExperimentsManager() {
 
           <div className="modal-footer" style={{ margin: '1.5rem -1.5rem -1.5rem -1.5rem' }}>
             <button type="button" className="btn btn-secondary" onClick={() => setIsModalOpen(false)}>
-              Batal
+              Cancel
             </button>
             <button type="submit" className="btn btn-primary">
-              Simpan Data
+              Save Experiment
             </button>
           </div>
         </form>

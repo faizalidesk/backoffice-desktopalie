@@ -74,10 +74,8 @@ export default function Sidebar() {
         borderBottom: '1px solid var(--border-color)',
         marginBottom: '1.25rem'
       }}>
-        {/* Hide logo mark and text completely when sidebar is collapsed */}
         {!isCollapsed && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexShrink: 0 }}>
-            {/* Pure logo icon aligned seamlessly with brand title */}
             <DesktopalieMark size={30} style={{ color: 'var(--text-main)', flexShrink: 0, marginTop: '-1px' }} />
             <div style={{ display: 'flex', flexDirection: 'column', flexShrink: 0 }}>
               <h2 style={{
@@ -108,10 +106,9 @@ export default function Sidebar() {
           </div>
         )}
 
-        {/* Official 3-Line Hamburger Menu Toggle Button */}
         <button
           onClick={toggleCollapse}
-          title={isCollapsed ? 'Perluas Sidebar (Expand)' : 'Ciutkan Sidebar (Collapse)'}
+          title={isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
           style={{
             background: 'transparent',
             border: 'none',
@@ -166,7 +163,7 @@ export default function Sidebar() {
         })}
       </nav>
 
-      {/* Footer Profile, Dark Mode Toggle & Logout */}
+      {/* Footer Profile, Theme Switcher & Logout */}
       <div style={{
         paddingTop: '1rem',
         borderTop: '1px solid var(--border-color)',
@@ -175,11 +172,10 @@ export default function Sidebar() {
         gap: '0.5rem',
         alignItems: isCollapsed ? 'center' : 'stretch'
       }}>
-        {/* Dark Mode Switcher Button */}
         <button
           type="button"
           onClick={toggleTheme}
-          title={isDarkMode ? "Ganti ke Mode Terang" : "Ganti ke Mode Gelap"}
+          title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -196,7 +192,7 @@ export default function Sidebar() {
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             {isDarkMode ? <FiSun style={{ color: '#F59E0B' }} /> : <FiMoon style={{ color: 'var(--primary)' }} />}
-            {!isCollapsed && <span>{isDarkMode ? 'Mode Terang' : 'Mode Gelap'}</span>}
+            {!isCollapsed && <span>{isDarkMode ? 'Light Mode' : 'Dark Mode'}</span>}
           </div>
         </button>
 
@@ -235,15 +231,15 @@ export default function Sidebar() {
         <button
           onClick={logout}
           className="btn btn-secondary btn-sm"
-          title={isCollapsed ? 'Keluar (Logout)' : undefined}
+          title={isCollapsed ? 'Sign Out' : undefined}
           style={{
             width: '100%',
-            justifyContent: 'center',
+            justify: 'center',
             padding: isCollapsed ? '0.5rem 0' : '0.4rem 0.75rem'
           }}
         >
           <FiLogOut style={{ fontSize: '1.1rem' }} />
-          {!isCollapsed && <span>Keluar (Logout)</span>}
+          {!isCollapsed && <span>Sign Out</span>}
         </button>
       </div>
     </aside>

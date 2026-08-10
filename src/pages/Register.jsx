@@ -20,17 +20,17 @@ export default function Register() {
     setErrorMessage('');
 
     if (!fullName || !email || !password || !confirmPassword) {
-      setErrorMessage('Harap isi semua kolom formulir');
+      setErrorMessage('Please fill in all required fields');
       return;
     }
 
     if (password !== confirmPassword) {
-      setErrorMessage('Konfirmasi kata sandi tidak cocok!');
+      setErrorMessage('Password confirmation does not match!');
       return;
     }
 
     if (password.length < 6) {
-      setErrorMessage('Kata sandi minimal 6 karakter');
+      setErrorMessage('Password must be at least 6 characters');
       return;
     }
 
@@ -38,15 +38,15 @@ export default function Register() {
     try {
       const res = await register(email, password, fullName);
       if (res?.session) {
-        toast.success('Pendaftaran berhasil! Selamat datang.');
+        toast.success('Registration successful! Welcome.');
         navigate('/');
       } else {
-        toast.success('Pendaftaran berhasil! Silakan periksa email Anda atau langsung login.');
+        toast.success('Registration successful! Please sign in.');
         navigate('/login');
       }
     } catch (err) {
       console.error('Register error:', err);
-      const msg = err.message || err.error_description || 'Gagal mendaftar. Coba lagi.';
+      const msg = err.message || err.error_description || 'Registration failed. Please try again.';
       setErrorMessage(msg);
       toast.error(msg);
     } finally {
@@ -85,9 +85,9 @@ export default function Register() {
       }}>
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <DesktopalieMark size={42} style={{ color: '#0F172A', marginBottom: '1rem' }} />
-          <h2 style={{ fontSize: '1.5rem', marginBottom: '0.25rem' }}>Daftar Akun Backoffice</h2>
+          <h2 style={{ fontSize: '1.5rem', marginBottom: '0.25rem' }}>Register Backoffice Account</h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>
-            Buat akun admin baru untuk mengelola workspace
+            Create a new admin account to manage your workspace
           </p>
         </div>
 
@@ -106,7 +106,7 @@ export default function Register() {
           }}>
             <FiAlertCircle style={{ fontSize: '1.1rem', flexShrink: 0, marginTop: '2px' }} />
             <div>
-              <strong>Gagal Pendaftaran:</strong>
+              <strong>Registration Error:</strong>
               <div style={{ marginTop: '0.15rem' }}>{errorMessage}</div>
             </div>
           </div>
@@ -114,7 +114,7 @@ export default function Register() {
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label className="form-label">Nama Lengkap</label>
+            <label className="form-label">Full Name</label>
             <div style={{ position: 'relative' }}>
               <FiUser style={{
                 position: 'absolute',
@@ -127,7 +127,7 @@ export default function Register() {
                 type="text"
                 className="form-control"
                 style={{ paddingLeft: '2.5rem' }}
-                placeholder="Nama Anda"
+                placeholder="Your Full Name"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 required
@@ -136,7 +136,7 @@ export default function Register() {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Email Admin</label>
+            <label className="form-label">Admin Email</label>
             <div style={{ position: 'relative' }}>
               <FiMail style={{
                 position: 'absolute',
@@ -149,7 +149,7 @@ export default function Register() {
                 type="email"
                 className="form-control"
                 style={{ paddingLeft: '2.5rem' }}
-                placeholder="nama@email.com"
+                placeholder="admin@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -158,7 +158,7 @@ export default function Register() {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Kata Sandi</label>
+            <label className="form-label">Password</label>
             <div style={{ position: 'relative' }}>
               <FiLock style={{
                 position: 'absolute',
@@ -171,7 +171,7 @@ export default function Register() {
                 type="password"
                 className="form-control"
                 style={{ paddingLeft: '2.5rem' }}
-                placeholder="Minimal 6 karakter"
+                placeholder="Minimum 6 characters"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -180,7 +180,7 @@ export default function Register() {
           </div>
 
           <div className="form-group" style={{ marginBottom: '1.75rem' }}>
-            <label className="form-label">Konfirmasi Kata Sandi</label>
+            <label className="form-label">Confirm Password</label>
             <div style={{ position: 'relative' }}>
               <FiLock style={{
                 position: 'absolute',
@@ -193,7 +193,7 @@ export default function Register() {
                 type="password"
                 className="form-control"
                 style={{ paddingLeft: '2.5rem' }}
-                placeholder="Ulangi kata sandi"
+                placeholder="Re-enter password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
@@ -212,9 +212,9 @@ export default function Register() {
               fontSize: '0.95rem'
             }}
           >
-            {submitting ? 'Memproses Registrasi...' : (
+            {submitting ? 'Processing Registration...' : (
               <>
-                <span>Daftar Akun Baru</span>
+                <span>Register Account</span>
                 <FiArrowRight />
               </>
             )}
@@ -222,9 +222,9 @@ export default function Register() {
         </form>
 
         <div style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.875rem', color: 'var(--text-muted)' }}>
-          Sudah punya akun?{' '}
+          Already have an account?{' '}
           <Link to="/login" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: '600' }}>
-            Masuk di sini
+            Sign in here
           </Link>
         </div>
       </div>

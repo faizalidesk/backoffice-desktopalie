@@ -27,7 +27,7 @@ export default function BookmarksManager() {
       const data = await backofficeService.getBookmarks();
       setBookmarks(data);
     } catch (err) {
-      toast.error('Gagal memuat bookmarks');
+      toast.error('Failed to load bookmarks');
       console.error(err);
     } finally {
       setLoading(false);
@@ -42,30 +42,30 @@ export default function BookmarksManager() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.title || !formData.url) {
-      toast.error('Judul dan URL wajib diisi');
+      toast.error('Title and URL are required');
       return;
     }
 
     try {
       await backofficeService.createBookmark(formData);
-      toast.success('Bookmark baru berhasil disimpan!');
+      toast.success('New bookmark saved successfully!');
       setIsModalOpen(false);
       loadBookmarks();
     } catch (err) {
       console.error(err);
-      toast.error(err.message || 'Gagal menyimpan bookmark');
+      toast.error(err.message || 'Failed to save bookmark');
     }
   };
 
   const handleDelete = async (id, title) => {
-    if (!window.confirm(`Apakah Anda yakin ingin menghapus bookmark "${title}"?`)) return;
+    if (!window.confirm(`Are you sure you want to delete bookmark "${title}"?`)) return;
     try {
       await backofficeService.deleteBookmark(id);
-      toast.success('Bookmark berhasil dihapus');
+      toast.success('Bookmark deleted successfully');
       loadBookmarks();
     } catch (err) {
       console.error(err);
-      toast.error('Gagal menghapus bookmark');
+      toast.error('Failed to delete bookmark');
     }
   };
 
@@ -81,12 +81,12 @@ export default function BookmarksManager() {
       <div className="page-body">
         <div className="page-header">
           <div className="page-title-group">
-            <h1>Manajemen Bookmarks & Referensi</h1>
-            <p className="page-subtitle">Koleksi referensi web, inspirasi desain, dan dokumentasi penting.</p>
+            <h1>Bookmarks & References Manager</h1>
+            <p className="page-subtitle">Collection of web references, design inspiration, and key documentation.</p>
           </div>
           <button className="btn btn-primary" onClick={handleOpenModal}>
             <FiPlus />
-            <span>Tambah Bookmark Baru</span>
+            <span>Add New Bookmark</span>
           </button>
         </div>
 
@@ -97,39 +97,39 @@ export default function BookmarksManager() {
               <input
                 type="text"
                 className="search-input"
-                placeholder="Cari bookmark..."
+                placeholder="Search bookmarks..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
             </div>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-              Total: <strong>{filteredBookmarks.length}</strong> link
+              Total: <strong>{filteredBookmarks.length}</strong> links
             </div>
           </div>
 
           {loading ? (
             <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>
-              Memuat data bookmark...
+              Loading bookmarks data...
             </div>
           ) : filteredBookmarks.length === 0 ? (
             <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>
-              Belum ada bookmark yang disimpan.
+              No bookmarks saved yet.
             </div>
           ) : (
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Judul Bookmark</th>
-                  <th>Sumber / Domain</th>
-                  <th>Link Target</th>
-                  <th style={{ textAlign: 'right' }}>Aksi</th>
+                  <th>Bookmark Title</th>
+                  <th>Source / Domain</th>
+                  <th>Target Link</th>
+                  <th style={{ textAlign: 'right' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredBookmarks.map((item) => (
                   <tr key={item.id}>
                     <td>
-                      <div style={{ fontWeight: '600', color: '#FFFFFF' }}>{item.title}</div>
+                      <div style={{ fontWeight: '600', color: 'var(--text-main)' }}>{item.title}</div>
                     </td>
                     <td>
                       <span className="badge badge-rose">{item.source || 'Web'}</span>
@@ -149,7 +149,7 @@ export default function BookmarksManager() {
                       <button 
                         className="btn btn-danger btn-icon btn-sm"
                         onClick={() => handleDelete(item.id, item.title)}
-                        title="Hapus"
+                        title="Delete"
                       >
                         <FiTrash2 />
                       </button>
@@ -165,15 +165,15 @@ export default function BookmarksManager() {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title="Tambah Bookmark Baru"
+        title="Add New Bookmark"
       >
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label className="form-label">Judul Bookmark *</label>
+            <label className="form-label">Bookmark Title *</label>
             <input
               type="text"
               className="form-control"
-              placeholder="Contoh: React Documentation"
+              placeholder="e.g. React Documentation"
               value={formData.title}
               onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
               required
@@ -181,7 +181,7 @@ export default function BookmarksManager() {
           </div>
 
           <div className="form-group">
-            <label className="form-label">URL Web Link *</label>
+            <label className="form-label">Web URL Link *</label>
             <input
               type="url"
               className="form-control"
@@ -193,11 +193,11 @@ export default function BookmarksManager() {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Sumber / Kategori (Opsional)</label>
+            <label className="form-label">Source / Category (Optional)</label>
             <input
               type="text"
               className="form-control"
-              placeholder="Contoh: Design Better, W3C, Official Docs"
+              placeholder="e.g. Design Better, W3C, Official Docs"
               value={formData.source}
               onChange={(e) => setFormData(prev => ({ ...prev, source: e.target.value }))}
             />
@@ -205,10 +205,10 @@ export default function BookmarksManager() {
 
           <div className="modal-footer" style={{ margin: '1.5rem -1.5rem -1.5rem -1.5rem' }}>
             <button type="button" className="btn btn-secondary" onClick={() => setIsModalOpen(false)}>
-              Batal
+              Cancel
             </button>
             <button type="submit" className="btn btn-primary">
-              Simpan Bookmark
+              Save Bookmark
             </button>
           </div>
         </form>

@@ -34,7 +34,7 @@ export default function ProjectsManager() {
       const data = await backofficeService.getProjects();
       setProjects(data);
     } catch (err) {
-      toast.error('Gagal memuat daftar projects');
+      toast.error('Failed to load projects list');
       console.error(err);
     } finally {
       setLoading(false);
@@ -83,35 +83,35 @@ export default function ProjectsManager() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.title || !formData.slug) {
-      toast.error('Judul dan Slug wajib diisi');
+      toast.error('Title and Slug are required');
       return;
     }
 
     try {
       if (editingItem) {
         await backofficeService.updateProject(editingItem.id, formData);
-        toast.success('Project berhasil diperbarui!');
+        toast.success('Project updated successfully!');
       } else {
         await backofficeService.createProject(formData);
-        toast.success('Project baru berhasil ditambahkan!');
+        toast.success('New project added successfully!');
       }
       setIsModalOpen(false);
       loadProjects();
     } catch (err) {
       console.error(err);
-      toast.error(err.message || 'Gagal menyimpan data project');
+      toast.error(err.message || 'Failed to save project data');
     }
   };
 
   const handleDelete = async (id, title) => {
-    if (!window.confirm(`Apakah Anda yakin ingin menghapus project "${title}"?`)) return;
+    if (!window.confirm(`Are you sure you want to delete project "${title}"?`)) return;
     try {
       await backofficeService.deleteProject(id);
-      toast.success('Project berhasil dihapus');
+      toast.success('Project deleted successfully');
       loadProjects();
     } catch (err) {
       console.error(err);
-      toast.error('Gagal menghapus project');
+      toast.error('Failed to delete project');
     }
   };
 
@@ -127,12 +127,12 @@ export default function ProjectsManager() {
       <div className="page-body">
         <div className="page-header">
           <div className="page-title-group">
-            <h1>Manajemen Projects</h1>
-            <p className="page-subtitle">Kelola karya portofolio, aplikasi web, dan case studies.</p>
+            <h1>Projects Manager</h1>
+            <p className="page-subtitle">Manage portfolio work, web applications, and case studies.</p>
           </div>
           <button className="btn btn-primary" onClick={() => handleOpenModal()}>
             <FiPlus />
-            <span>Tambah Project Baru</span>
+            <span>Add New Project</span>
           </button>
         </div>
 
@@ -143,33 +143,33 @@ export default function ProjectsManager() {
               <input
                 type="text"
                 className="search-input"
-                placeholder="Cari berdasarkan judul, slug, atau tipe..."
+                placeholder="Search by title, slug, or type..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
             </div>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-              Total: <strong>{filteredProjects.length}</strong> project
+              Total: <strong>{filteredProjects.length}</strong> projects
             </div>
           </div>
 
           {loading ? (
             <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>
-              Memuat data projects...
+              Loading projects data...
             </div>
           ) : filteredProjects.length === 0 ? (
             <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>
-              Tidak ada project yang ditemukan.
+              No projects found.
             </div>
           ) : (
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Cover & Judul</th>
-                  <th>Tipe</th>
+                  <th>Cover & Title</th>
+                  <th>Type</th>
                   <th>Status & Tone</th>
                   <th>Progress</th>
-                  <th style={{ textAlign: 'right' }}>Aksi</th>
+                  <th style={{ textAlign: 'right' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -229,7 +229,7 @@ export default function ProjectsManager() {
                         <button 
                           className="btn btn-danger btn-icon btn-sm"
                           onClick={() => handleDelete(p.id, p.title)}
-                          title="Hapus"
+                          title="Delete"
                         >
                           <FiTrash2 />
                         </button>
@@ -246,22 +246,22 @@ export default function ProjectsManager() {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={editingItem ? 'Edit Data Project' : 'Tambah Project Baru'}
+        title={editingItem ? 'Edit Project Details' : 'Add New Project'}
       >
         <form onSubmit={handleSubmit}>
           <ImageUploader 
             value={formData.image_url} 
             onChange={(url) => setFormData(prev => ({ ...prev, image_url: url }))} 
             folder="projects"
-            label="Gambar Cover / Thumbnail Project"
+            label="Project Cover / Thumbnail Image"
           />
 
           <div className="form-group">
-            <label className="form-label">Judul Project *</label>
+            <label className="form-label">Project Title *</label>
             <input
               type="text"
               className="form-control"
-              placeholder="Contoh: Orbit Analytics"
+              placeholder="e.g. Orbit Analytics"
               value={formData.title}
               onChange={handleTitleChange}
               required
@@ -269,7 +269,7 @@ export default function ProjectsManager() {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Slug URL *</label>
+            <label className="form-label">URL Slug *</label>
             <input
               type="text"
               className="form-control"
@@ -282,7 +282,7 @@ export default function ProjectsManager() {
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
             <div className="form-group">
-              <label className="form-label">Tipe Project</label>
+              <label className="form-label">Project Type</label>
               <select
                 className="form-control"
                 value={formData.type}
@@ -296,7 +296,7 @@ export default function ProjectsManager() {
             </div>
 
             <div className="form-group">
-              <label className="form-label">Warna Tone (Badge)</label>
+              <label className="form-label">Tone Color (Badge)</label>
               <select
                 className="form-control"
                 value={formData.tone}
@@ -339,10 +339,10 @@ export default function ProjectsManager() {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Deskripsi</label>
+            <label className="form-label">Description</label>
             <textarea
               className="form-control"
-              placeholder="Jelaskan ringkasan karya atau aplikasi web ini..."
+              placeholder="Describe the project or web application summary..."
               value={formData.description}
               onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
             />
@@ -350,10 +350,10 @@ export default function ProjectsManager() {
 
           <div className="modal-footer" style={{ margin: '1.5rem -1.5rem -1.5rem -1.5rem' }}>
             <button type="button" className="btn btn-secondary" onClick={() => setIsModalOpen(false)}>
-              Batal
+              Cancel
             </button>
             <button type="submit" className="btn btn-primary">
-              Simpan Data
+              Save Project
             </button>
           </div>
         </form>

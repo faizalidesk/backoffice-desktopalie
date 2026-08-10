@@ -264,7 +264,7 @@ export default function TodoListManager() {
         <div className="page-header">
           <div className="page-title-group">
             <h1>To-Do List & Sprint Board</h1>
-            <p className="page-subtitle">Klik kartu untuk membuka popup detail 2-section, mengedit info, dan mencoret daftar checklist subtask yang sudah selesai!</p>
+            <p className="page-subtitle">Click any card to open the 2-section detail modal, edit info, and check off completed subtasks!</p>
           </div>
 
           <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
@@ -321,7 +321,7 @@ export default function TodoListManager() {
 
             <button className="btn btn-primary" onClick={() => handleOpenModal()}>
               <FiPlus />
-              <span>Tambah Tugas (New)</span>
+              <span>Add New Task</span>
             </button>
           </div>
         </div>
@@ -335,7 +335,7 @@ export default function TodoListManager() {
                 <input
                   type="text"
                   className="search-input"
-                  placeholder="Cari tugas atau deskripsi..."
+                  placeholder="Search tasks or description..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />
@@ -345,14 +345,14 @@ export default function TodoListManager() {
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
               {/* Priority Filter */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontWeight: '600' }}>Prioritas:</span>
+                <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontWeight: '600' }}>Priority:</span>
                 <select
                   className="form-control"
                   style={{ width: 'auto', padding: '0.35rem 0.75rem', fontSize: '0.825rem' }}
                   value={priorityFilter}
                   onChange={(e) => setPriorityFilter(e.target.value)}
                 >
-                  <option value="ALL">Semua Prioritas</option>
+                  <option value="ALL">All Priorities</option>
                   {PRIORITIES.map(p => (
                     <option key={p.key} value={p.key}>{p.label}</option>
                   ))}
@@ -361,14 +361,14 @@ export default function TodoListManager() {
 
               {/* Category Filter */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontWeight: '600' }}>Kategori:</span>
+                <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontWeight: '600' }}>Category:</span>
                 <select
                   className="form-control"
                   style={{ width: 'auto', padding: '0.35rem 0.75rem', fontSize: '0.825rem' }}
                   value={categoryFilter}
                   onChange={(e) => setCategoryFilter(e.target.value)}
                 >
-                  <option value="ALL">Semua Kategori</option>
+                  <option value="ALL">All Categories</option>
                   {CATEGORIES.map(c => (
                     <option key={c} value={c}>{c}</option>
                   ))}
@@ -831,7 +831,7 @@ export default function TodoListManager() {
                 }}>
                   {formData.subtasks.length === 0 ? (
                     <div style={{ fontSize: '0.8rem', color: 'var(--text-subtle)', fontStyle: 'italic', padding: '0.25rem 0' }}>
-                      Belum ada item checklist. Tambahkan subtask baru di bawah!
+                      No checklist items yet. Add a new subtask below!
                     </div>
                   ) : (
                     formData.subtasks.map(sub => (
@@ -886,7 +886,7 @@ export default function TodoListManager() {
                           }}
                           onMouseOver={(e) => e.currentTarget.style.color = '#E11D48'}
                           onMouseOut={(e) => e.currentTarget.style.color = '#94A3B8'}
-                          title="Hapus Subtask"
+                          title="Delete Subtask"
                         >
                           <FiX />
                         </button>
@@ -901,7 +901,7 @@ export default function TodoListManager() {
                     type="text"
                     className="form-control"
                     style={{ fontSize: '0.825rem', padding: '0.45rem 0.75rem' }}
-                    placeholder="+ Tambah item checklist / pengujian..."
+                    placeholder="+ Add checklist / testing item..."
                     value={newSubtaskTitle}
                     onChange={(e) => setNewSubtaskTitle(e.target.value)}
                     onKeyDown={(e) => {
@@ -918,13 +918,13 @@ export default function TodoListManager() {
                     style={{ flexShrink: 0 }}
                   >
                     <FiPlus />
-                    <span>Tambah</span>
+                    <span>Add</span>
                   </button>
                 </div>
               </div>
             </div>
 
-            {/* SECTION KANAN: PANEL PROPERTI & AKSI */}
+            {/* RIGHT SECTION: PROPERTY & ACTIONS PANEL */}
             <div style={{
               backgroundColor: '#F8FAFC',
               border: '1px solid var(--border-color)',
@@ -943,14 +943,14 @@ export default function TodoListManager() {
                 paddingBottom: '0.5rem',
                 borderBottom: '1px solid var(--border-color)'
               }}>
-                Properti & Status
+                Properties & Status
               </h4>
 
-              {/* Status Progres Selector */}
+              {/* Status Progress Selector */}
               <div className="form-group" style={{ margin: 0 }}>
                 <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem' }}>
                   <FiLayers style={{ color: 'var(--primary)' }} />
-                  <span>Status Progres</span>
+                  <span>Progress Status</span>
                 </label>
                 <select
                   className="form-control"
@@ -964,11 +964,11 @@ export default function TodoListManager() {
                 </select>
               </div>
 
-              {/* Prioritas Selector */}
+              {/* Priority Selector */}
               <div className="form-group" style={{ margin: 0 }}>
                 <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem' }}>
                   <FiAlertCircle style={{ color: '#D97706' }} />
-                  <span>Tingkat Prioritas</span>
+                  <span>Priority Level</span>
                 </label>
                 <select
                   className="form-control"
@@ -982,11 +982,11 @@ export default function TodoListManager() {
                 </select>
               </div>
 
-              {/* Kategori Selector */}
+              {/* Category Selector */}
               <div className="form-group" style={{ margin: 0 }}>
                 <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem' }}>
                   <FiTag style={{ color: '#0D9488' }} />
-                  <span>Kategori Tugas</span>
+                  <span>Task Category</span>
                 </label>
                 <select
                   className="form-control"
@@ -1000,7 +1000,7 @@ export default function TodoListManager() {
                 </select>
               </div>
 
-              {/* Ringkasan Status Metadata */}
+              {/* Status Metadata Summary */}
               <div style={{
                 padding: '0.875rem',
                 backgroundColor: '#FFFFFF',
@@ -1014,11 +1014,11 @@ export default function TodoListManager() {
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                   <FiCalendar />
-                  <span>Dibuat: {editingItem?.created_at ? new Date(editingItem.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Baru'}</span>
+                  <span>Created: {editingItem?.created_at ? new Date(editingItem.created_at).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) : 'New'}</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                   <FiCheckCircle />
-                  <span>Subtask QA: {completedSubtasks} dari {totalSubtasks} Selesai</span>
+                  <span>QA Subtasks: {completedSubtasks} of {totalSubtasks} Completed</span>
                 </div>
               </div>
 
@@ -1026,7 +1026,7 @@ export default function TodoListManager() {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem', marginTop: '0.5rem' }}>
                 <button type="submit" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
                   <FiCheckCircle />
-                  <span>Simpan Perubahan</span>
+                  <span>Save Changes</span>
                 </button>
 
                 {editingItem && (
@@ -1037,7 +1037,7 @@ export default function TodoListManager() {
                     style={{ width: '100%', justifyContent: 'center' }}
                   >
                     <FiTrash2 />
-                    <span>Hapus Tugas Ini</span>
+                    <span>Delete This Task</span>
                   </button>
                 )}
               </div>

@@ -31,7 +31,7 @@ export default function NotesManager() {
       const data = await backofficeService.getNotes();
       setNotes(data);
     } catch (err) {
-      toast.error('Gagal memuat catatan');
+      toast.error('Failed to load notes');
       console.error(err);
     } finally {
       setLoading(false);
@@ -76,35 +76,35 @@ export default function NotesManager() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.title || !formData.slug) {
-      toast.error('Judul dan Slug wajib diisi');
+      toast.error('Title and Slug are required');
       return;
     }
 
     try {
       if (editingItem) {
         await backofficeService.updateNote(editingItem.id, formData);
-        toast.success('Catatan berhasil diperbarui!');
+        toast.success('Note updated successfully!');
       } else {
         await backofficeService.createNote(formData);
-        toast.success('Catatan baru berhasil ditambahkan!');
+        toast.success('New note added successfully!');
       }
       setIsModalOpen(false);
       loadNotes();
     } catch (err) {
       console.error(err);
-      toast.error(err.message || 'Gagal menyimpan catatan');
+      toast.error(err.message || 'Failed to save note');
     }
   };
 
   const handleDelete = async (id, title) => {
-    if (!window.confirm(`Apakah Anda yakin ingin menghapus catatan "${title}"?`)) return;
+    if (!window.confirm(`Are you sure you want to delete note "${title}"?`)) return;
     try {
       await backofficeService.deleteNote(id);
-      toast.success('Catatan berhasil dihapus');
+      toast.success('Note deleted successfully');
       loadNotes();
     } catch (err) {
       console.error(err);
-      toast.error('Gagal menghapus catatan');
+      toast.error('Failed to delete note');
     }
   };
 
@@ -120,12 +120,12 @@ export default function NotesManager() {
       <div className="page-body">
         <div className="page-header">
           <div className="page-title-group">
-            <h1>Manajemen Catatan & Journal</h1>
-            <p className="page-subtitle">Kelola jurnal pembelajaran, prinsip desain, dan ide pemikiran.</p>
+            <h1>Notes & Journal Manager</h1>
+            <p className="page-subtitle">Manage learning journals, design principles, and creative thoughts.</p>
           </div>
           <button className="btn btn-primary" onClick={() => handleOpenModal()}>
             <FiPlus />
-            <span>Tambah Catatan Baru</span>
+            <span>Add New Note</span>
           </button>
         </div>
 
@@ -136,40 +136,40 @@ export default function NotesManager() {
               <input
                 type="text"
                 className="search-input"
-                placeholder="Cari catatan..."
+                placeholder="Search notes..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
             </div>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-              Total: <strong>{filteredNotes.length}</strong> catatan
+              Total: <strong>{filteredNotes.length}</strong> notes
             </div>
           </div>
 
           {loading ? (
             <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>
-              Memuat data catatan...
+              Loading notes data...
             </div>
           ) : filteredNotes.length === 0 ? (
             <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>
-              Belum ada catatan yang ditemukan.
+              No notes found.
             </div>
           ) : (
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Judul & Slug</th>
-                  <th>Kategori / Tipe</th>
+                  <th>Title & Slug</th>
+                  <th>Category / Type</th>
                   <th>Status & Tone</th>
-                  <th>Deskripsi</th>
-                  <th style={{ textAlign: 'right' }}>Aksi</th>
+                  <th>Description</th>
+                  <th style={{ textAlign: 'right' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredNotes.map((item) => (
                   <tr key={item.id}>
                     <td>
-                      <div style={{ fontWeight: '600', color: '#FFFFFF' }}>{item.title}</div>
+                      <div style={{ fontWeight: '600', color: 'var(--text-main)' }}>{item.title}</div>
                       <div style={{ fontSize: '0.75rem', fontFamily: 'var(--font-mono)', color: 'var(--text-subtle)' }}>
                         {item.slug}
                       </div>
@@ -195,7 +195,7 @@ export default function NotesManager() {
                         <button 
                           className="btn btn-danger btn-icon btn-sm"
                           onClick={() => handleDelete(item.id, item.title)}
-                          title="Hapus"
+                          title="Delete"
                         >
                           <FiTrash2 />
                         </button>
@@ -212,15 +212,15 @@ export default function NotesManager() {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={editingItem ? 'Edit Catatan' : 'Tambah Catatan Baru'}
+        title={editingItem ? 'Edit Note' : 'Add New Note'}
       >
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label className="form-label">Judul Catatan *</label>
+            <label className="form-label">Note Title *</label>
             <input
               type="text"
               className="form-control"
-              placeholder="Contoh: Designing with constraints"
+              placeholder="e.g. Designing with constraints"
               value={formData.title}
               onChange={handleTitleChange}
               required
@@ -228,7 +228,7 @@ export default function NotesManager() {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Slug URL *</label>
+            <label className="form-label">URL Slug *</label>
             <input
               type="text"
               className="form-control"
@@ -241,7 +241,7 @@ export default function NotesManager() {
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
             <div className="form-group">
-              <label className="form-label">Tipe Catatan</label>
+              <label className="form-label">Note Type</label>
               <select
                 className="form-control"
                 value={formData.type}
@@ -255,7 +255,7 @@ export default function NotesManager() {
             </div>
 
             <div className="form-group">
-              <label className="form-label">Warna Tone</label>
+              <label className="form-label">Tone Color</label>
               <select
                 className="form-control"
                 value={formData.tone}
@@ -270,21 +270,21 @@ export default function NotesManager() {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Status / Tag Tanggal</label>
+            <label className="form-label">Status / Date Tag</label>
             <input
               type="text"
               className="form-control"
-              placeholder="Contoh: Draft, Published, atau May 20"
+              placeholder="e.g. Draft, Published, or May 20"
               value={formData.status}
               onChange={(e) => setFormData(prev => ({ ...prev, status: e.target.value }))}
             />
           </div>
 
           <div className="form-group">
-            <label className="form-label">Isi Catatan / Ringkasan</label>
+            <label className="form-label">Note Content / Summary</label>
             <textarea
               className="form-control"
-              placeholder="Tulis ringkasan atau isi utama catatan di sini..."
+              placeholder="Write summary or main content of the note here..."
               value={formData.description}
               onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
             />
@@ -292,10 +292,10 @@ export default function NotesManager() {
 
           <div className="modal-footer" style={{ margin: '1.5rem -1.5rem -1.5rem -1.5rem' }}>
             <button type="button" className="btn btn-secondary" onClick={() => setIsModalOpen(false)}>
-              Batal
+              Cancel
             </button>
             <button type="submit" className="btn btn-primary">
-              Simpan Data
+              Save Note
             </button>
           </div>
         </form>

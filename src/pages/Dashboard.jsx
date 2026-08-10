@@ -12,11 +12,8 @@ import {
   FiTool, 
   FiLayout, 
   FiActivity, 
-  FiCheckCircle, 
   FiClock, 
-  FiShield, 
-  FiExternalLink,
-  FiTrendingUp
+  FiExternalLink
 } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
@@ -109,7 +106,6 @@ export default function Dashboard() {
           position: 'relative',
           overflow: 'hidden'
         }}>
-          {/* Subtle Ambient Background Gradient */}
           <div style={{
             position: 'absolute',
             right: '-50px',
@@ -125,15 +121,15 @@ export default function Dashboard() {
             <div>
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', backgroundColor: 'rgba(79, 70, 229, 0.25)', border: '1px solid rgba(129, 140, 248, 0.3)', padding: '0.3rem 0.75rem', borderRadius: '99px', fontSize: '0.75rem', color: '#818CF8', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '1rem' }}>
                 <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#22C55E' }} />
-                <span>Ekosistem Real-Time Synced</span>
+                <span>Real-Time Synced Ecosystem</span>
               </div>
 
               <h1 style={{ fontSize: '1.85rem', fontWeight: '800', color: '#FFFFFF', marginBottom: '0.5rem', letterSpacing: '-0.02em' }}>
-                Selamat Datang Kembali, Administrator Workspace 👋
+                Welcome Back, Workspace Administrator 👋
               </h1>
 
               <p style={{ color: '#94A3B8', fontSize: '0.925rem', maxWidth: '620px', lineHeight: '1.6' }}>
-                Kelola seluruh portofolio publik, pembaruan konten landing page, papan tugas sprint QA, serta dokumentasi sistem dalam satu kontrol terpusat.
+                Manage your public portfolio, landing page updates, QA sprint tasks, and system documentation in one centralized workspace.
               </p>
             </div>
 
@@ -145,7 +141,7 @@ export default function Dashboard() {
               </Link>
               <Link to="/documentation" className="btn btn-secondary" style={{ backgroundColor: '#1E293B', color: '#F8FAFC', borderColor: '#334155' }}>
                 <FiBookOpen />
-                <span>Dokumentasi</span>
+                <span>Documentation</span>
               </Link>
             </div>
           </div>
@@ -214,7 +210,7 @@ export default function Dashboard() {
           <Link to="/notes" style={{ textDecoration: 'none' }}>
             <div className="stat-card" style={{ height: '100%' }}>
               <div className="stat-info">
-                <div className="stat-label">Catatan & Ideas</div>
+                <div className="stat-label">Notes & Ideas</div>
                 <div className="stat-value">{loading ? '...' : stats.notesCount}</div>
               </div>
               <div className="stat-icon rose">
@@ -249,10 +245,10 @@ export default function Dashboard() {
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <FiCheckSquare style={{ color: 'var(--primary)', fontSize: '1.25rem' }} />
-                <h3 style={{ fontSize: '1.1rem' }}>Progres Sprint & Tugas QA</h3>
+                <h3 style={{ fontSize: '1.1rem' }}>Sprint Progress & QA Tasks</h3>
               </div>
               <Link to="/todos" style={{ color: 'var(--primary)', fontSize: '0.85rem', fontWeight: '600', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                <span>Buka Board</span>
+                <span>Open Task Board</span>
                 <FiArrowRight />
               </Link>
             </div>
@@ -260,7 +256,7 @@ export default function Dashboard() {
             {/* Progress Bar & Badges */}
             <div style={{ backgroundColor: '#F8FAFC', padding: '1rem 1.25rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', marginBottom: '1.25rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.85rem', fontWeight: '700' }}>
-                <span>Tingkat Penyelesaian Skenario QA</span>
+                <span>QA Scenario Completion Rate</span>
                 <span style={{ color: 'var(--primary)' }}>{taskProgressPercent}% Completed</span>
               </div>
 
@@ -278,7 +274,7 @@ export default function Dashboard() {
             {/* Task Items Preview */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
               {recentTodos.length === 0 ? (
-                <div style={{ color: 'var(--text-subtle)', fontSize: '0.85rem' }}>Belum ada tugas di papan Sprint.</div>
+                <div style={{ color: 'var(--text-subtle)', fontSize: '0.85rem' }}>No tasks on the Sprint board yet.</div>
               ) : (
                 recentTodos.map(todo => (
                   <div key={todo.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.65rem 0.85rem', borderRadius: 'var(--radius-sm)', backgroundColor: '#FFFFFF', border: '1px solid var(--border-color)' }}>
@@ -310,16 +306,16 @@ export default function Dashboard() {
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   <FiTool style={{ color: 'var(--accent-teal)', fontSize: '1.25rem' }} />
-                  <h3 style={{ fontSize: '1.1rem' }}>Status Mode Maintenance</h3>
+                  <h3 style={{ fontSize: '1.1rem' }}>Maintenance Mode Status</h3>
                 </div>
                 <span className={`badge badge-${maintenance?.is_enabled ? 'rose' : 'teal'}`}>
-                  {maintenance?.is_enabled ? 'Mode Pemeliharaan Aktif' : 'Situs Utama Live'}
+                  {maintenance?.is_enabled ? 'Maintenance Active' : 'Main Website Live'}
                 </span>
               </div>
 
               <div style={{ backgroundColor: maintenance?.is_enabled ? '#FFF1F2' : '#F0FDFA', border: `1px solid ${maintenance?.is_enabled ? '#FECDD3' : '#CCFBF1'}`, padding: '1.15rem', borderRadius: 'var(--radius-sm)', marginBottom: '1.25rem' }}>
                 <div style={{ fontWeight: '700', fontSize: '0.95rem', color: maintenance?.is_enabled ? '#BE123C' : '#0F766E', marginBottom: '0.35rem' }}>
-                  {maintenance?.title || 'Situs Utama Sedang Berjalan Normal'}
+                  {maintenance?.title || 'Main Website Running Normally'}
                 </div>
                 <p style={{ fontSize: '0.825rem', color: '#475569', margin: 0, lineHeight: '1.5' }}>
                   {maintenance?.message}
@@ -328,7 +324,7 @@ export default function Dashboard() {
                 {maintenance?.is_enabled && (
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginTop: '0.75rem', fontSize: '0.78rem', fontWeight: '700', color: '#BE123C' }}>
                     <FiClock />
-                    <span>Target Selesai: {new Date(maintenance.end_time).toLocaleString()}</span>
+                    <span>Estimated Completion: {new Date(maintenance.end_time).toLocaleString()}</span>
                   </div>
                 )}
               </div>
@@ -336,7 +332,7 @@ export default function Dashboard() {
 
             <Link to="/maintenance" className="btn btn-secondary" style={{ width: '100%', justifyContent: 'center' }}>
               <FiTool />
-              <span>Kelola Pengaturan Pemeliharaan</span>
+              <span>Manage Maintenance Settings</span>
             </Link>
           </div>
         </div>
@@ -346,10 +342,10 @@ export default function Dashboard() {
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <FiBookOpen style={{ color: 'var(--primary)', fontSize: '1.25rem' }} />
-              <h3 style={{ fontSize: '1.1rem' }}>Panduan & Dokumentasi Sistem Terpopuler</h3>
+              <h3 style={{ fontSize: '1.1rem' }}>Popular System Guides & Documentation</h3>
             </div>
             <Link to="/documentation" style={{ color: 'var(--primary)', fontSize: '0.85rem', fontWeight: '600', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-              <span>Kelola Dokumentasi</span>
+              <span>Manage Documentation</span>
               <FiArrowRight />
             </Link>
           </div>
@@ -381,7 +377,7 @@ export default function Dashboard() {
                   </div>
 
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '1rem', paddingTop: '0.5rem', borderTop: '1px solid #F1F5F9', fontSize: '0.725rem', color: 'var(--text-subtle)' }}>
-                    <span>Penulis: {doc.author || 'Admin'}</span>
+                    <span>Author: {doc.author || 'Admin'}</span>
                     <FiArrowRight style={{ color: 'var(--primary)' }} />
                   </div>
                 </div>
@@ -395,27 +391,27 @@ export default function Dashboard() {
           <div className="table-toolbar">
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <FiFolder style={{ color: 'var(--primary)' }} />
-              <h3 style={{ fontSize: '1.05rem', margin: 0 }}>Project Portofolio Terbaru</h3>
+              <h3 style={{ fontSize: '1.05rem', margin: 0 }}>Recent Portfolio Projects</h3>
             </div>
             <Link to="/projects" className="btn btn-secondary btn-sm">
               <FiPlus />
-              <span>Kelola Projects</span>
+              <span>Manage Projects</span>
             </Link>
           </div>
 
           {loading ? (
-            <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)' }}>Memuat project...</div>
+            <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)' }}>Loading projects...</div>
           ) : recentProjects.length === 0 ? (
-            <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-subtle)' }}>Belum ada project yang ditambahkan.</div>
+            <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-subtle)' }}>No projects added yet.</div>
           ) : (
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Judul Project</th>
-                  <th>Kategori / Type</th>
-                  <th>Progres Pengerjaan</th>
+                  <th>Project Title</th>
+                  <th>Category / Type</th>
+                  <th>Completion Progress</th>
                   <th>Status</th>
-                  <th style={{ textAlign: 'right' }}>Aksi</th>
+                  <th style={{ textAlign: 'right' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -443,7 +439,7 @@ export default function Dashboard() {
                     </td>
                     <td style={{ textAlign: 'right' }}>
                       <Link to="/projects" className="btn btn-secondary btn-sm">
-                        Detail
+                        Details
                       </Link>
                     </td>
                   </tr>
@@ -460,7 +456,7 @@ export default function Dashboard() {
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <FiLayout style={{ color: 'var(--accent-teal)', fontSize: '1.25rem' }} />
-                <h3 style={{ fontSize: '1.1rem' }}>Konten Landing Page</h3>
+                <h3 style={{ fontSize: '1.1rem' }}>Landing Page Content</h3>
               </div>
               <Link to="/landing-manager" className="btn btn-secondary btn-sm">
                 Edit Content
@@ -480,7 +476,7 @@ export default function Dashboard() {
             </div>
 
             <a href="https://desktopalie.my.id" target="_blank" rel="noreferrer" className="btn btn-secondary" style={{ width: '100%', justifyContent: 'center' }}>
-              <span>Buka Website Utama (desktopalie.my.id)</span>
+              <span>View Main Website (desktopalie.my.id)</span>
               <FiExternalLink />
             </a>
           </div>
@@ -489,31 +485,31 @@ export default function Dashboard() {
           <div className="card">
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
               <FiActivity style={{ color: 'var(--primary)', fontSize: '1.25rem' }} />
-              <h3 style={{ fontSize: '1.1rem' }}>Aktivitas Backoffice Terakhir</h3>
+              <h3 style={{ fontSize: '1.1rem' }}>Recent Backoffice Activity</h3>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
               <div style={{ display: 'flex', gap: '0.75rem' }}>
                 <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#22C55E', marginTop: '6px', flexShrink: 0 }} />
                 <div>
-                  <div style={{ fontSize: '0.85rem', fontWeight: '600', color: '#0F172A' }}>Tugas QA Board Dikonfigurasi</div>
-                  <span style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>Papan Jira/Notion Kanban aktif dengan Grab & Drop.</span>
+                  <div style={{ fontSize: '0.85rem', fontWeight: '600', color: '#0F172A' }}>QA Task Board Configured</div>
+                  <span style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>Jira/Notion Kanban board active with drag & drop.</span>
                 </div>
               </div>
 
               <div style={{ display: 'flex', gap: '0.75rem' }}>
                 <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#4F46E5', marginTop: '6px', flexShrink: 0 }} />
                 <div>
-                  <div style={{ fontSize: '0.85rem', fontWeight: '600', color: '#0F172A' }}>Dokumentasi Sistem Diperbarui</div>
-                  <span style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>GitBook/Obsidian Explorer dengan mode Editor & Live Preview.</span>
+                  <div style={{ fontSize: '0.85rem', fontWeight: '600', color: '#0F172A' }}>System Documentation Updated</div>
+                  <span style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>GitBook/Obsidian Explorer with Editor & Live Preview modes.</span>
                 </div>
               </div>
 
               <div style={{ display: 'flex', gap: '0.75rem' }}>
                 <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#0D9488', marginTop: '6px', flexShrink: 0 }} />
                 <div>
-                  <div style={{ fontSize: '0.85rem', fontWeight: '600', color: '#0F172A' }}>Mode Maintenance Guard Aktif</div>
-                  <span style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>Countdown otomatis & bypass Admin cookie disinkronkan.</span>
+                  <div style={{ fontSize: '0.85rem', fontWeight: '600', color: '#0F172A' }}>Maintenance Mode Guard Active</div>
+                  <span style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>Automated countdown & Admin bypass synced.</span>
                 </div>
               </div>
             </div>

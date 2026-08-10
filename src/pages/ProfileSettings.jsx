@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { backofficeService } from '../services/backofficeService';
 import { toast } from 'react-hot-toast';
-import { FiUser, FiGlobe, FiMapPin, FiSave } from 'react-icons/fi';
+import { FiGlobe, FiMapPin, FiSave } from 'react-icons/fi';
 import Header from '../components/Header';
 import ImageUploader from '../components/ImageUploader';
 
@@ -56,10 +56,10 @@ export default function ProfileSettings() {
     setSaving(true);
     try {
       await backofficeService.updateProfile(user.id, profile);
-      toast.success('Profil berhasil diperbarui!');
+      toast.success('Profile updated successfully!');
     } catch (err) {
       console.error(err);
-      toast.error('Gagal memperbarui profil');
+      toast.error('Failed to update profile');
     } finally {
       setSaving(false);
     }
@@ -71,15 +71,15 @@ export default function ProfileSettings() {
       <div className="page-body">
         <div className="page-header">
           <div className="page-title-group">
-            <h1>Pengaturan Akun & Profil</h1>
-            <p className="page-subtitle">Kelola profil publik dan informasi pengembang Anda.</p>
+            <h1>Account & Profile Settings</h1>
+            <p className="page-subtitle">Manage your public profile and developer details.</p>
           </div>
         </div>
 
         <div style={{ maxWidth: '750px' }}>
           <div className="card">
             {loading ? (
-              <p style={{ color: 'var(--text-muted)' }}>Memuat profil...</p>
+              <p style={{ color: 'var(--text-muted)' }}>Loading profile...</p>
             ) : (
               <form onSubmit={handleSubmit}>
                 <div style={{
@@ -114,7 +114,7 @@ export default function ProfileSettings() {
                   </div>
                   <div>
                     <h3 style={{ fontSize: '1.2rem', marginBottom: '0.2rem' }}>
-                      {profile.full_name || user?.email || 'Admin Workspace'}
+                      {profile.full_name || user?.email || 'Workspace Admin'}
                     </h3>
                     <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{user?.email}</span>
                   </div>
@@ -124,12 +124,12 @@ export default function ProfileSettings() {
                   value={profile.avatar_url}
                   onChange={(url) => setProfile(prev => ({ ...prev, avatar_url: url }))}
                   folder="avatars"
-                  label="Foto Avatar Profil Admin"
+                  label="Admin Profile Avatar Image"
                 />
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
                   <div className="form-group">
-                    <label className="form-label">Nama Lengkap</label>
+                    <label className="form-label">Full Name</label>
                     <input
                       type="text"
                       className="form-control"
@@ -152,7 +152,7 @@ export default function ProfileSettings() {
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Bio singkat</label>
+                  <label className="form-label">Short Bio</label>
                   <textarea
                     className="form-control"
                     placeholder="Independent designer & developer"
@@ -163,7 +163,7 @@ export default function ProfileSettings() {
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
                   <div className="form-group">
-                    <label className="form-label">Lokasi</label>
+                    <label className="form-label">Location</label>
                     <div style={{ position: 'relative' }}>
                       <FiMapPin style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
                       <input
@@ -178,14 +178,14 @@ export default function ProfileSettings() {
                   </div>
 
                   <div className="form-group">
-                    <label className="form-label">Website Portfolio</label>
+                    <label className="form-label">Portfolio Website</label>
                     <div style={{ position: 'relative' }}>
                       <FiGlobe style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
                       <input
                         type="url"
                         className="form-control"
                         style={{ paddingLeft: '2.5rem' }}
-                        placeholder="https://desktopalie.com"
+                        placeholder="https://desktopalie.my.id"
                         value={profile.website}
                         onChange={(e) => setProfile(prev => ({ ...prev, website: e.target.value }))}
                       />
@@ -196,7 +196,7 @@ export default function ProfileSettings() {
                 <div style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'flex-end' }}>
                   <button type="submit" className="btn btn-primary" disabled={saving}>
                     <FiSave />
-                    <span>{saving ? 'Menyimpan...' : 'Simpan Perubahan'}</span>
+                    <span>{saving ? 'Saving...' : 'Save Changes'}</span>
                   </button>
                 </div>
               </form>
