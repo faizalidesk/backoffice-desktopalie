@@ -3,6 +3,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { Toaster } from 'react-hot-toast';
 
 import Sidebar from './components/Sidebar';
+import DesktopOnlyGuard from './components/DesktopOnlyGuard';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
@@ -49,34 +50,36 @@ function ProtectedLayout({ children }) {
 export default function App() {
   return (
     <AuthProvider>
-      <Router>
-        <Toaster 
-          position="top-right" 
-          toastOptions={{
-            style: {
-              background: '#FFFFFF',
-              color: '#0F172A',
-              border: '1px solid var(--border-color)',
-              borderRadius: 'var(--radius-sm)'
-            }
-          }} 
-        />
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+      <DesktopOnlyGuard>
+        <Router>
+          <Toaster 
+            position="top-right" 
+            toastOptions={{
+              style: {
+                background: '#FFFFFF',
+                color: '#0F172A',
+                border: '1px solid var(--border-color)',
+                borderRadius: 'var(--radius-sm)'
+              }
+            }} 
+          />
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
-          <Route path="/" element={<ProtectedLayout><Dashboard /></ProtectedLayout>} />
-          <Route path="/landing-manager" element={<ProtectedLayout><LandingPageManager /></ProtectedLayout>} />
-          <Route path="/projects" element={<ProtectedLayout><ProjectsManager /></ProtectedLayout>} />
-          <Route path="/experiments" element={<ProtectedLayout><ExperimentsManager /></ProtectedLayout>} />
-          <Route path="/notes" element={<ProtectedLayout><NotesManager /></ProtectedLayout>} />
-          <Route path="/bookmarks" element={<ProtectedLayout><BookmarksManager /></ProtectedLayout>} />
-          <Route path="/maintenance" element={<ProtectedLayout><MaintenanceManager /></ProtectedLayout>} />
-          <Route path="/profile" element={<ProtectedLayout><ProfileSettings /></ProtectedLayout>} />
+            <Route path="/" element={<ProtectedLayout><Dashboard /></ProtectedLayout>} />
+            <Route path="/landing-manager" element={<ProtectedLayout><LandingPageManager /></ProtectedLayout>} />
+            <Route path="/projects" element={<ProtectedLayout><ProjectsManager /></ProtectedLayout>} />
+            <Route path="/experiments" element={<ProtectedLayout><ExperimentsManager /></ProtectedLayout>} />
+            <Route path="/notes" element={<ProtectedLayout><NotesManager /></ProtectedLayout>} />
+            <Route path="/bookmarks" element={<ProtectedLayout><BookmarksManager /></ProtectedLayout>} />
+            <Route path="/maintenance" element={<ProtectedLayout><MaintenanceManager /></ProtectedLayout>} />
+            <Route path="/profile" element={<ProtectedLayout><ProfileSettings /></ProtectedLayout>} />
 
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </Router>
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Router>
+      </DesktopOnlyGuard>
     </AuthProvider>
   );
 }
