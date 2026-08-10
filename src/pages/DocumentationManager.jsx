@@ -1,41 +1,63 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { backofficeService } from '../services/backofficeService';
 import { toast } from 'react-hot-toast';
 import { 
-  FiBookOpen, 
+  FiFolder, 
+  FiFolderPlus, 
+  FiFileText, 
+  FiChevronRight, 
+  FiChevronDown, 
   FiPlus, 
   FiSearch, 
   FiEdit, 
   FiTrash2, 
-  FiTag, 
   FiUser, 
-  FiCalendar, 
-  FiFileText, 
-  FiCheckCircle, 
-  FiCode, 
-  FiInfo,
-  FiChevronRight
+  FiBookOpen,
+  FiCornerDownRight
 } from 'react-icons/fi';
 import Header from '../components/Header';
 import Modal from '../components/Modal';
 
-const CATEGORIES = ['All', 'Architecture', 'Guides', 'QA & Testing', 'APIs & Services', 'Deployment'];
+const DEFAULT_FOLDERS = [
+  '1. Arsitektur System & Core',
+  '2. Panduan Operasional (SOP)',
+  '3. QA & Quality Assurance',
+  '4. API & Integration Guides'
+];
+
+const DEFAULT_SUBFOLDERS = {
+  '1. Arsitektur System & Core': ['Backend & Database', 'Frontend & Platform'],
+  '2. Panduan Operasional (SOP)': ['Maintenance & Security', 'Content Management'],
+  '3. QA & Quality Assurance': ['Testing & Bug Management', 'Checklist & Task Board'],
+  '4. API & Integration Guides': ['Supabase Webhooks', 'External APIs']
+};
 
 export default function DocumentationManager() {
   const [docs, setDocs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedDoc, setSelectedDoc] = useState(null);
 
-  // Filters
+  // Search & Expansion States
   const [search, setSearch] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [expandedFolders, setExpandedFolders] = useState({
+    '1. Arsitektur System & Core': true,
+    '2. Panduan Operasional (SOP)': true,
+    '3. QA & Quality Assurance': true
+  });
+  const [expandedSubfolders, setExpandedSubfolders] = useState({
+    'Backend & Database': true,
+    'Maintenance & Security': true,
+    'Testing & Bug Management': true
+  });
 
-  // Modal
+  // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingDoc, setEditingDoc] = useState(null);
   const [formData, setFormData] = useState({
     title: '',
-    category: 'Guides',
+    folder: '1. Arsitektur System & Core',
+    subfolder: 'Backend & Database',
+    category: 'Architecture',
     author: 'Admin',
     content: ''
   });
@@ -60,11 +82,27 @@ export default function DocumentationManager() {
     }
   };
 
-  const handleOpenModal = (doc = null) => {
+  const toggleFolder = (folderName) => {
+    setExpandedFolders(prev => ({
+      ...prev,
+      [folderName]: !prev[folderName]
+    }));
+  };
+
+  const toggleSubfolder = (subfolderName) => {
+    setExpandedSubfolders(prev => ({
+      ...prev,
+      [subfolderName]: !prev[subfolderName]
+    }));
+  };
+
+  const handleOpenModal = (doc = null, defaultFolder = '1. Arsitektur System & Core', defaultSubfolder = 'Backend & Database') => {
     if (doc) {
       setEditingDoc(doc);
       setFormData({
         title: doc.title || '',
+        folder: doc.folder || '1. Arsitektur System & Core',
+        subfolder: doc.subfolder || 'Backend & Database',
         category: doc.category || 'Guides',
         author: doc.author || 'Admin',
         content: doc.content || ''
@@ -73,6 +111,8 @@ export default function DocumentationManager() {
       setEditingDoc(null);
       setFormData({
         title: '',
+        folder: defaultFolder,
+        subfolder: defaultSubfolder,
         category: 'Guides',
         author: 'Admin',
         content: ''
@@ -122,13 +162,30 @@ export default function DocumentationManager() {
     }
   };
 
-  // Filter Logic
-  const filteredDocs = docs.filter(d => {
-    const matchesSearch = d.title.toLowerCase().includes(search.toLowerCase()) ||
-                          d.content.toLowerCase().includes(search.toLowerCase());
-    const matchesCat = selectedCategory === 'All' || d.category === selectedCategory;
-    return matchesSearch && matchesCat;
-  });
+  // Grouping Docs into Folder -> Subfolder Tree
+  const folderTree = useMemo(() => {
+    const tree = {};
+
+    docs.forEach(doc => {
+      const folderName = doc.folder || 'Uncategorized Folder';
+      const subfolderName = doc.subfolder || 'General Subfolder';
+
+      const matchesSearch = !search || 
+        doc.title.toLowerCase().includes(search.toLowerCase()) || 
+        doc.content.toLowerCase().includes(search.toLowerCase()) ||
+        folderName.toLowerCase().includes(search.toLowerCase()) ||
+        subfolderName.toLowerCase().includes(search.toLowerCase());
+
+      if (!matchesSearch) return;
+
+      if (!tree[folderName]) tree[folderName] = {};
+      if (!tree[folderName][subfolderName]) tree[folderName][subfolderName] = [];
+
+      tree[folderName][subfolderName].push(doc);
+    });
+
+    return tree;
+  }, [docs, search]);
 
   return (
     <>
@@ -137,7 +194,7 @@ export default function DocumentationManager() {
         <div className="page-header">
           <div className="page-title-group">
             <h1>System Documentation & Knowledge Base</h1>
-            <p className="page-subtitle">Pusat dokumentasi arsitektur, panduan operasional, dan modul sistem ekosistem Desktopalie.</p>
+            <p className="page-subtitle">Penjelajah folder & subfolder interaktif untuk mengelola dokumentasi teknis dan panduan operasional.</p>
           </div>
 
           <button className="btn btn-primary" onClick={() => handleOpenModal()}>
@@ -149,107 +206,189 @@ export default function DocumentationManager() {
         {/* 2-Column Knowledge Base Layout */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: '320px 1fr',
+          gridTemplateColumns: '340px 1fr',
           gap: '1.5rem',
           alignItems: 'start'
         }}>
-          {/* LEFT SIDEBAR: INDEX & FILTERS */}
+          {/* LEFT SIDEBAR: FOLDER & SUBFOLDER TREE SYSTEM */}
           <div className="table-container" style={{ padding: '1rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.875rem' }}>
+              <div style={{ fontSize: '0.85rem', fontWeight: '700', color: '#0F172A', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <FiFolder style={{ color: 'var(--primary)' }} />
+                <span>Dokumen Explorer</span>
+              </div>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: '600' }}>
+                {docs.length} Artikel
+              </span>
+            </div>
+
             <div className="search-input-wrapper" style={{ marginBottom: '1rem', width: '100%', minWidth: 'auto' }}>
               <FiSearch />
               <input
                 type="text"
                 className="search-input"
-                placeholder="Cari dokumentasi..."
+                placeholder="Cari di folder / dokumen..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
             </div>
 
-            {/* Category Pills Filter */}
+            {/* Folder & Subfolder Tree Container */}
             <div style={{
               display: 'flex',
+              flexDirection: 'column',
               gap: '0.35rem',
-              flexWrap: 'wrap',
-              marginBottom: '1.25rem',
-              paddingBottom: '0.875rem',
-              borderBottom: '1px solid var(--border-color)'
+              maxHeight: '620px',
+              overflowY: 'auto',
+              paddingRight: '0.2rem'
             }}>
-              {CATEGORIES.map(cat => (
-                <button
-                  key={cat}
-                  type="button"
-                  onClick={() => setSelectedCategory(cat)}
-                  style={{
-                    padding: '0.25rem 0.6rem',
-                    borderRadius: '999px',
-                    fontSize: '0.725rem',
-                    fontWeight: '600',
-                    border: '1px solid',
-                    cursor: 'pointer',
-                    backgroundColor: selectedCategory === cat ? 'var(--primary)' : 'var(--bg-main)',
-                    color: selectedCategory === cat ? '#FFFFFF' : 'var(--text-muted)',
-                    borderColor: selectedCategory === cat ? 'var(--primary)' : 'var(--border-color)',
-                    transition: 'all 0.15s ease'
-                  }}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-
-            {/* Article Index List */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', maxHeight: '600px', overflowY: 'auto' }}>
               {loading ? (
                 <div style={{ padding: '2rem 1rem', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
-                  Memuat indeks dokumen...
+                  Memuat struktur folder...
                 </div>
-              ) : filteredDocs.length === 0 ? (
+              ) : Object.keys(folderTree).length === 0 ? (
                 <div style={{ padding: '2rem 1rem', textAlign: 'center', color: 'var(--text-subtle)', fontSize: '0.85rem' }}>
-                  Tidak ada dokumentasi ditemukan.
+                  Tidak ada dokumen atau folder ditemukan.
                 </div>
               ) : (
-                filteredDocs.map(doc => {
-                  const isSelected = selectedDoc?.id === doc.id;
+                Object.keys(folderTree).map(folderName => {
+                  const isFolderExpanded = search ? true : !!expandedFolders[folderName];
+                  const subfoldersObj = folderTree[folderName];
+                  const totalDocsInFolder = Object.values(subfoldersObj).reduce((acc, arr) => acc + arr.length, 0);
+
                   return (
-                    <div
-                      key={doc.id}
-                      onClick={() => setSelectedDoc(doc)}
-                      style={{
-                        padding: '0.75rem 0.875rem',
-                        borderRadius: 'var(--radius-sm)',
-                        border: '1px solid',
-                        borderColor: isSelected ? 'var(--primary)' : 'var(--border-color)',
-                        backgroundColor: isSelected ? 'var(--primary-light)' : '#FFFFFF',
-                        cursor: 'pointer',
-                        transition: 'all 0.15s ease',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '0.35rem'
-                      }}
-                    >
-                      <div style={{
-                        fontSize: '0.875rem',
-                        fontWeight: '700',
-                        color: isSelected ? 'var(--primary)' : 'var(--text-main)',
-                        lineHeight: '1.3'
-                      }}>
-                        {doc.title}
+                    <div key={folderName} style={{ display: 'flex', flexDirection: 'column' }}>
+                      {/* LEVEL 1: MAIN FOLDER ROW */}
+                      <div
+                        onClick={() => toggleFolder(folderName)}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          padding: '0.45rem 0.6rem',
+                          borderRadius: 'var(--radius-sm)',
+                          backgroundColor: '#F1F5F9',
+                          cursor: 'pointer',
+                          userSelect: 'none',
+                          fontWeight: '700',
+                          fontSize: '0.825rem',
+                          color: '#0F172A',
+                          transition: 'all 0.15s ease'
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', overflow: 'hidden' }}>
+                          {isFolderExpanded ? (
+                            <FiChevronDown style={{ color: 'var(--primary)', flexShrink: 0 }} />
+                          ) : (
+                            <FiChevronRight style={{ color: 'var(--text-muted)', flexShrink: 0 }} />
+                          )}
+                          <FiFolder style={{ color: 'var(--primary)', flexShrink: 0 }} />
+                          <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{folderName}</span>
+                        </div>
+                        <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: '600', backgroundColor: '#FFFFFF', padding: '0.1rem 0.4rem', borderRadius: '4px' }}>
+                          {totalDocsInFolder}
+                        </span>
                       </div>
 
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.2rem' }}>
-                        <span style={{
-                          fontSize: '0.68rem',
-                          fontWeight: '700',
-                          padding: '0.15rem 0.45rem',
-                          borderRadius: '4px',
-                          backgroundColor: isSelected ? '#FFFFFF' : '#F1F5F9',
-                          color: isSelected ? 'var(--primary)' : 'var(--text-muted)'
+                      {/* SUBFOLDERS & DOCUMENTS UNDER THIS FOLDER */}
+                      {isFolderExpanded && (
+                        <div style={{
+                          paddingLeft: '0.75rem',
+                          marginTop: '0.25rem',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '0.25rem',
+                          borderLeft: '2px dashed var(--border-color)',
+                          marginLeft: '0.75rem'
                         }}>
-                          {doc.category || 'Guides'}
-                        </span>
-                        <FiChevronRight style={{ color: isSelected ? 'var(--primary)' : 'var(--text-subtle)', fontSize: '0.85rem' }} />
-                      </div>
+                          {Object.keys(subfoldersObj).map(subfolderName => {
+                            const isSubExpanded = search ? true : !!expandedSubfolders[subfolderName];
+                            const docList = subfoldersObj[subfolderName];
+
+                            return (
+                              <div key={subfolderName} style={{ display: 'flex', flexDirection: 'column' }}>
+                                {/* LEVEL 2: SUBFOLDER ROW */}
+                                <div
+                                  onClick={() => toggleSubfolder(subfolderName)}
+                                  style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    padding: '0.35rem 0.5rem',
+                                    borderRadius: 'var(--radius-sm)',
+                                    backgroundColor: 'transparent',
+                                    cursor: 'pointer',
+                                    userSelect: 'none',
+                                    fontWeight: '600',
+                                    fontSize: '0.8rem',
+                                    color: '#334155'
+                                  }}
+                                  onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#F8FAFC'}
+                                  onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                                >
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                                    {isSubExpanded ? (
+                                      <FiChevronDown style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }} />
+                                    ) : (
+                                      <FiChevronRight style={{ color: 'var(--text-subtle)', fontSize: '0.75rem' }} />
+                                    )}
+                                    <FiFolder style={{ color: '#D97706', fontSize: '0.85rem' }} />
+                                    <span>{subfolderName}</span>
+                                  </div>
+                                  <span style={{ fontSize: '0.68rem', color: 'var(--text-subtle)' }}>
+                                    ({docList.length})
+                                  </span>
+                                </div>
+
+                                {/* LEVEL 3: DOCUMENT ITEMS UNDER SUBFOLDER */}
+                                {isSubExpanded && (
+                                  <div style={{
+                                    paddingLeft: '1.25rem',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '0.2rem',
+                                    marginTop: '0.15rem'
+                                  }}>
+                                    {docList.map(doc => {
+                                      const isSelected = selectedDoc?.id === doc.id;
+                                      return (
+                                        <div
+                                          key={doc.id}
+                                          onClick={() => setSelectedDoc(doc)}
+                                          style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '0.4rem',
+                                            padding: '0.35rem 0.5rem',
+                                            borderRadius: 'var(--radius-sm)',
+                                            backgroundColor: isSelected ? 'var(--primary-light)' : 'transparent',
+                                            color: isSelected ? 'var(--primary)' : 'var(--text-main)',
+                                            fontWeight: isSelected ? '700' : '500',
+                                            fontSize: '0.78rem',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.15s ease'
+                                          }}
+                                          onMouseOver={(e) => {
+                                            if (!isSelected) e.currentTarget.style.backgroundColor = '#F1F5F9';
+                                          }}
+                                          onMouseOut={(e) => {
+                                            if (!isSelected) e.currentTarget.style.backgroundColor = 'transparent';
+                                          }}
+                                        >
+                                          <FiFileText style={{ color: isSelected ? 'var(--primary)' : 'var(--text-muted)', fontSize: '0.85rem', flexShrink: 0 }} />
+                                          <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                            {doc.title}
+                                          </span>
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
                     </div>
                   );
                 })
@@ -258,9 +397,34 @@ export default function DocumentationManager() {
           </div>
 
           {/* RIGHT SIDE: DOCUMENT READER & VIEWER */}
-          <div className="card" style={{ minHeight: '620px', padding: '2rem' }}>
+          <div className="card" style={{ minHeight: '640px', padding: '2rem' }}>
             {selectedDoc ? (
               <div>
+                {/* Path Breadcrumb Header */}
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  fontSize: '0.75rem',
+                  color: 'var(--text-muted)',
+                  fontWeight: '600',
+                  marginBottom: '1rem',
+                  backgroundColor: '#F8FAFC',
+                  padding: '0.4rem 0.75rem',
+                  borderRadius: 'var(--radius-sm)',
+                  border: '1px solid var(--border-color)',
+                  width: 'fit-content'
+                }}>
+                  <FiFolder style={{ color: 'var(--primary)' }} />
+                  <span>{selectedDoc.folder || 'Root'}</span>
+                  <FiChevronRight style={{ fontSize: '0.7rem' }} />
+                  <FiFolder style={{ color: '#D97706' }} />
+                  <span>{selectedDoc.subfolder || 'General'}</span>
+                  <FiChevronRight style={{ fontSize: '0.7rem' }} />
+                  <FiFileText style={{ color: 'var(--primary)' }} />
+                  <span style={{ color: 'var(--text-main)', fontWeight: '700' }}>{selectedDoc.title}</span>
+                </div>
+
                 {/* Article Header & Action Bar */}
                 <div style={{
                   display: 'flex',
@@ -320,15 +484,15 @@ export default function DocumentationManager() {
             ) : (
               <div style={{ padding: '5rem 2rem', textAlign: 'center', color: 'var(--text-muted)' }}>
                 <FiBookOpen style={{ fontSize: '3rem', color: 'var(--text-subtle)', marginBottom: '1rem' }} />
-                <h3>Pilih Dokumen dari Indeks</h3>
-                <p style={{ fontSize: '0.875rem' }}>Silakan pilih artikel dokumentasi dari daftar di sebelah kiri atau buat dokumen baru.</p>
+                <h3>Pilih Dokumen dari Penjelajah Folder</h3>
+                <p style={{ fontSize: '0.875rem' }}>Silakan pilih artikel dari indeks folder di sebelah kiri atau buat dokumen baru.</p>
               </div>
             )}
           </div>
         </div>
       </div>
 
-      {/* CREATE / EDIT DOCUMENTATION MODAL */}
+      {/* CREATE / EDIT DOCUMENTATION MODAL WITH FOLDER & SUBFOLDER SELECTORS */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -348,26 +512,49 @@ export default function DocumentationManager() {
             />
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
             <div className="form-group">
-              <label className="form-label">Kategori Dokumentasi</label>
-              <select
-                className="form-control"
-                value={formData.category}
-                onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
-              >
-                {CATEGORIES.filter(c => c !== 'All').map(c => (
-                  <option key={c} value={c}>{c}</option>
-                ))}
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Penulis / Author</label>
+              <label className="form-label">Folder Utama</label>
               <input
                 type="text"
                 className="form-control"
-                placeholder="Contoh: System Admin / Tech Lead"
+                list="folder-options"
+                placeholder="Pilih / Tulis Folder..."
+                value={formData.folder}
+                onChange={(e) => setFormData(prev => ({ ...prev, folder: e.target.value }))}
+                required
+              />
+              <datalist id="folder-options">
+                {DEFAULT_FOLDERS.map(f => (
+                  <option key={f} value={f} />
+                ))}
+              </datalist>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Subfolder</label>
+              <input
+                type="text"
+                className="form-control"
+                list="subfolder-options"
+                placeholder="Pilih / Tulis Subfolder..."
+                value={formData.subfolder}
+                onChange={(e) => setFormData(prev => ({ ...prev, subfolder: e.target.value }))}
+                required
+              />
+              <datalist id="subfolder-options">
+                {(DEFAULT_SUBFOLDERS[formData.folder] || ['General']).map(sf => (
+                  <option key={sf} value={sf} />
+                ))}
+              </datalist>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Penulis (Author)</label>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Admin / Dev"
                 value={formData.author}
                 onChange={(e) => setFormData(prev => ({ ...prev, author: e.target.value }))}
               />

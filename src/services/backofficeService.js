@@ -177,7 +177,7 @@ export const backofficeService = {
     }
   },
 
-  // SYSTEM DOCUMENTATION & KNOWLEDGE BASE
+  // SYSTEM DOCUMENTATION & KNOWLEDGE BASE WITH FOLDER & SUBFOLDER TREE
   async getDocs() {
     try {
       const { data, error } = await supabase
@@ -204,6 +204,8 @@ export const backofficeService = {
       {
         id: 'doc-1',
         title: 'Arsitektur Sistem & Integrasi Real-Time Supabase',
+        folder: '1. Arsitektur System & Core',
+        subfolder: 'Backend & Database',
         category: 'Architecture',
         author: 'Lead Architect',
         content: `### Overview Arsitektur Ekosistem Desktopalie
@@ -221,7 +223,23 @@ Sistem **Desktopalie** terdiri dari 2 aplikasi utama yang berinteroperasi secara
       },
       {
         id: 'doc-2',
+        title: 'Alur Interoperasi Public Platform & Backoffice Workspace',
+        folder: '1. Arsitektur System & Core',
+        subfolder: 'Frontend & Platform',
+        category: 'Architecture',
+        author: 'Frontend Lead',
+        content: `### Alur Kerja Interoperasi
+
+1. **Backoffice Workspace** memperbarui data di Supabase (misalnya mengubah teks landing page atau status maintenance).
+2. Supabase memancarkan event websocket realtime.
+3. Aplikasi publik (\`desktop-alie\`) menerima payload baru dan langsung memperbarui DOM tanpa perlu reload halaman manual.`,
+        created_at: new Date().toISOString()
+      },
+      {
+        id: 'doc-3',
         title: 'Panduan Operasional Maintenance Mode & Countdown',
+        folder: '2. Panduan Operasional (SOP)',
+        subfolder: 'Maintenance & Security',
         category: 'Guides',
         author: 'DevOps & Admin',
         content: `### Panduan Mengaktifkan Pemeliharaan Sistem
@@ -235,8 +253,25 @@ Sistem **Desktopalie** terdiri dari 2 aplikasi utama yang berinteroperasi secara
         created_at: new Date().toISOString()
       },
       {
-        id: 'doc-3',
+        id: 'doc-4',
+        title: 'Pengelolaan Konten Landing Page & Assets',
+        folder: '2. Panduan Operasional (SOP)',
+        subfolder: 'Content Management',
+        category: 'Guides',
+        author: 'Content Admin',
+        content: `### Panduan Mengelola Konten Beranda
+
+Gunakan menu **Landing Manager** di Backoffice untuk menyesuaikan:
+- **Hero Section**: Badge label, headline judul, dan subtitle.
+- **About Section**: Narasi profil, lokasi, dan statistik counter.
+- **Contact & Socials**: Email publik dan tautan sosial media footer.`,
+        created_at: new Date().toISOString()
+      },
+      {
+        id: 'doc-5',
         title: 'Standar Operasional QA & Pengujian Sistem (Test Case & Sprint)',
+        folder: '3. QA & Quality Assurance',
+        subfolder: 'Testing & Bug Management',
         category: 'QA & Testing',
         author: 'QA Lead',
         content: `### Standar Prosedur Pengujian Aplikasi
@@ -250,6 +285,20 @@ Sistem **Desktopalie** terdiri dari 2 aplikasi utama yang berinteroperasi secara
 - Setiap item pengujian memiliki subtask checklist.
 - Centang checkbox untuk memberikan efek **coret garis (strikethrough)** pada item yang lolos pengujian.`,
         created_at: new Date().toISOString()
+      },
+      {
+        id: 'doc-6',
+        title: 'Penggunaan Subtask Checklist & Dynamic Strikethrough',
+        folder: '3. QA & Quality Assurance',
+        subfolder: 'Checklist & Task Board',
+        category: 'QA & Testing',
+        author: 'QA Tester',
+        content: `### Panduan Checklist QA
+
+Dalam modal Popup 2-Section pada To-Do Board:
+- Tambahkan rincian poin pengujian di bagian **Checklist & Subtask QA**.
+- Mengklik checkbox akan mengaktifkan teks coret garis (\`line-through\`) untuk memberikan konfirmasi visual bahwa skenario testing telah lulus.`,
+        created_at: new Date().toISOString()
       }
     ];
 
@@ -262,6 +311,8 @@ Sistem **Desktopalie** terdiri dari 2 aplikasi utama yang berinteroperasi secara
     const payload = {
       id: crypto.randomUUID(),
       title: doc.title,
+      folder: doc.folder || '1. Arsitektur System & Core',
+      subfolder: doc.subfolder || 'General',
       category: doc.category || 'Guides',
       content: doc.content || '',
       author: doc.author || user?.email || 'Admin',
