@@ -15,6 +15,7 @@ import ProfileSettings from './pages/ProfileSettings';
 import MaintenanceManager from './pages/MaintenanceManager';
 import LandingPageManager from './pages/LandingPageManager';
 import TodoListManager from './pages/TodoListManager';
+import DocumentationManager from './pages/DocumentationManager';
 
 function ProtectedLayout({ children }) {
   const { user, loading } = useAuth();
@@ -70,6 +71,7 @@ export default function App() {
 
             <Route path="/" element={<ProtectedLayout><Dashboard /></ProtectedLayout>} />
             <Route path="/todos" element={<ProtectedLayout><TodoListManager /></ProtectedLayout>} />
+            <Route path="/documentation" element={<ProtectedLayout><DocumentationManager /></ProtectedLayout>} />
             <Route path="/landing-manager" element={<ProtectedLayout><LandingPageManager /></ProtectedLayout>} />
             <Route path="/projects" element={<ProtectedLayout><ProjectsManager /></ProtectedLayout>} />
             <Route path="/experiments" element={<ProtectedLayout><ExperimentsManager /></ProtectedLayout>} />

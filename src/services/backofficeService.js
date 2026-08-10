@@ -177,6 +177,149 @@ export const backofficeService = {
     }
   },
 
+  // SYSTEM DOCUMENTATION & KNOWLEDGE BASE
+  async getDocs() {
+    try {
+      const { data, error } = await supabase
+        .from('documentation')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (!error && data && data.length > 0) {
+        localStorage.setItem('desktopalie_docs_fallback', JSON.stringify(data));
+        return data;
+      }
+    } catch (err) {
+      console.warn('Supabase documentation table error, reading fallback:', err);
+    }
+
+    const localData = localStorage.getItem('desktopalie_docs_fallback');
+    if (localData) {
+      try {
+        return JSON.parse(localData);
+      } catch (e) {}
+    }
+
+    const defaultDocs = [
+      {
+        id: 'doc-1',
+        title: 'Arsitektur Sistem & Integrasi Real-Time Supabase',
+        category: 'Architecture',
+        author: 'Lead Architect',
+        content: `### Overview Arsitektur Ekosistem Desktopalie
+
+Sistem **Desktopalie** terdiri dari 2 aplikasi utama yang berinteroperasi secara real-time via Supabase:
+1. **Public Website Platform** (\`desktop-alie\`): Aplikasi utama publik untuk pengunjung situs.
+2. **Backoffice Admin Workspace** (\`backoffice-desktopalie\`): Panel kontrol untuk mengelola konten, portofolio, mode maintenance, dan tugas QA.
+
+---
+
+### Supabase Synchronisation Protocol
+- **Tabel \`site_settings\`**: Menyimpan konfigurasi global seperti *Maintenance Mode* dan *Landing Page Copy*.
+- **Realtime Channels**: Public platform berlangganan real-time postgres_changes dari Supabase dengan fallback polling interval 2 detik jika koneksi terputus.`,
+        created_at: new Date().toISOString()
+      },
+      {
+        id: 'doc-2',
+        title: 'Panduan Operasional Maintenance Mode & Countdown',
+        category: 'Guides',
+        author: 'DevOps & Admin',
+        content: `### Panduan Mengaktifkan Pemeliharaan Sistem
+
+1. Buka menu **Maintenance Mode** di sidebar Backoffice.
+2. Pilih durasi cepat (+1 Jam, +3 Jam, +12 Jam, +24 Jam) atau atur tanggal & jam secara manual.
+3. Centang **"Izinkan Akses Bypass untuk Admin (Bypass Checkbox)"** untuk tetap menguji situs utama saat mode pemeliharaan aktif.
+4. Klik **Aktifkan & Simpan Pengaturan**.
+
+> **Catatan Penting**: Semua pengunjung tanpa cookie admin akan langsung diarahkan ke layar Countdown Pemeliharaan Interaktif.`,
+        created_at: new Date().toISOString()
+      },
+      {
+        id: 'doc-3',
+        title: 'Standar Operasional QA & Pengujian Sistem (Test Case & Sprint)',
+        category: 'QA & Testing',
+        author: 'QA Lead',
+        content: `### Standar Prosedur Pengujian Aplikasi
+
+#### 1. Klasifikasi Severity Bug
+- **Blocker / Critical**: Bug yang menyebabkan sistem tidak bisa diakses (misal: 404 Refresh Error).
+- **Major**: Fitur utama tidak berjalan sesuai kriteria penerimaan.
+- **Minor / Cosmetic**: Masalah penataan tata letak UI atau typo teks.
+
+#### 2. Siklus Pengujian di To-Do Board
+- Setiap item pengujian memiliki subtask checklist.
+- Centang checkbox untuk memberikan efek **coret garis (strikethrough)** pada item yang lolos pengujian.`,
+        created_at: new Date().toISOString()
+      }
+    ];
+
+    localStorage.setItem('desktopalie_docs_fallback', JSON.stringify(defaultDocs));
+    return defaultDocs;
+  },
+
+  async createDoc(doc) {
+    const { data: { user } } = await supabase.auth.getUser();
+    const payload = {
+      id: crypto.randomUUID(),
+      title: doc.title,
+      category: doc.category || 'Guides',
+      content: doc.content || '',
+      author: doc.author || user?.email || 'Admin',
+      created_at: new Date().toISOString(),
+      ...(user ? { user_id: user.id } : {})
+    };
+
+    try {
+      const { data, error } = await supabase
+        .from('documentation')
+        .insert([payload])
+        .select()
+        .single();
+
+      if (!error && data) return data;
+    } catch (err) {
+      console.warn('Supabase insert documentation error, saved locally:', err);
+    }
+
+    const currentLocal = JSON.parse(localStorage.getItem('desktopalie_docs_fallback') || '[]');
+    const updated = [payload, ...currentLocal];
+    localStorage.setItem('desktopalie_docs_fallback', JSON.stringify(updated));
+    return payload;
+  },
+
+  async updateDoc(id, updates) {
+    try {
+      const { data, error } = await supabase
+        .from('documentation')
+        .update({ ...updates, updated_at: new Date().toISOString() })
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (!error && data) return data;
+    } catch (err) {
+      console.warn('Supabase update documentation error, updated locally:', err);
+    }
+
+    const currentLocal = JSON.parse(localStorage.getItem('desktopalie_docs_fallback') || '[]');
+    const updated = currentLocal.map(d => d.id === id ? { ...d, ...updates } : d);
+    localStorage.setItem('desktopalie_docs_fallback', JSON.stringify(updated));
+    return { id, ...updates };
+  },
+
+  async deleteDoc(id) {
+    try {
+      await supabase.from('documentation').delete().eq('id', id);
+    } catch (err) {
+      console.warn('Supabase delete documentation error:', err);
+    }
+
+    const currentLocal = JSON.parse(localStorage.getItem('desktopalie_docs_fallback') || '[]');
+    const updated = currentLocal.filter(d => d.id !== id);
+    localStorage.setItem('desktopalie_docs_fallback', JSON.stringify(updated));
+    return true;
+  },
+
   // TODOS CRUD (Notion / Jira style Task Board)
   async getTodos() {
     try {

@@ -192,11 +192,25 @@ CREATE TABLE IF NOT EXISTS public.todos (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-ALTER TABLE public.todos ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Allow select todos" ON public.todos FOR SELECT USING (true);
-CREATE POLICY "Allow insert todos" ON public.todos FOR INSERT WITH CHECK (true);
-CREATE POLICY "Allow update todos" ON public.todos FOR UPDATE USING (true);
-CREATE POLICY "Allow delete todos" ON public.todos FOR DELETE USING (true);
+-- ---------------------------------------------------
+-- 8. TABEL DOCUMENTATION (System Knowledge Base)
+-- ---------------------------------------------------
+CREATE TABLE IF NOT EXISTS public.documentation (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE DEFAULT auth.uid(),
+  title TEXT NOT NULL,
+  category TEXT DEFAULT 'Guides',
+  content TEXT NOT NULL,
+  author TEXT DEFAULT 'Admin',
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE public.documentation ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow select documentation" ON public.documentation FOR SELECT USING (true);
+CREATE POLICY "Allow insert documentation" ON public.documentation FOR INSERT WITH CHECK (true);
+CREATE POLICY "Allow update documentation" ON public.documentation FOR UPDATE USING (true);
+CREATE POLICY "Allow delete documentation" ON public.documentation FOR DELETE USING (true);
 ```
 
 ---
