@@ -12,13 +12,17 @@ import {
   FiLayout,
   FiCheckSquare,
   FiBookOpen,
-  FiMenu
+  FiMenu,
+  FiMoon,
+  FiSun
 } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import DesktopalieMark from './DesktopalieMark';
 
 export default function Sidebar() {
   const { logout, user } = useAuth();
+  const { isDarkMode, toggleTheme } = useTheme();
   const [isCollapsed, setIsCollapsed] = useState(() => {
     return localStorage.getItem('desktopalie_sidebar_collapsed') === 'true';
   });
@@ -73,15 +77,15 @@ export default function Sidebar() {
         {/* Hide logo mark and text completely when sidebar is collapsed */}
         {!isCollapsed && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexShrink: 0 }}>
-            {/* Pure black logo icon aligned seamlessly with brand title */}
-            <DesktopalieMark size={30} style={{ color: '#0F172A', flexShrink: 0, marginTop: '-1px' }} />
+            {/* Pure logo icon aligned seamlessly with brand title */}
+            <DesktopalieMark size={30} style={{ color: 'var(--text-main)', flexShrink: 0, marginTop: '-1px' }} />
             <div style={{ display: 'flex', flexDirection: 'column', flexShrink: 0 }}>
               <h2 style={{
                 fontSize: '0.95rem',
                 fontWeight: '800',
                 letterSpacing: '0.06em',
                 textTransform: 'uppercase',
-                color: '#0F172A',
+                color: 'var(--text-main)',
                 lineHeight: '1.1',
                 margin: 0,
                 whiteSpace: 'nowrap'
@@ -122,7 +126,7 @@ export default function Sidebar() {
             flexShrink: 0,
             transition: 'all 0.15s ease'
           }}
-          onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#F1F5F9'}
+          onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'var(--bg-card-hover)'}
           onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
         >
           <FiMenu />
@@ -162,15 +166,40 @@ export default function Sidebar() {
         })}
       </nav>
 
-      {/* Footer Profile & Logout */}
+      {/* Footer Profile, Dark Mode Toggle & Logout */}
       <div style={{
         paddingTop: '1rem',
         borderTop: '1px solid var(--border-color)',
         display: 'flex',
         flexDirection: 'column',
-        gap: '0.75rem',
+        gap: '0.5rem',
         alignItems: isCollapsed ? 'center' : 'stretch'
       }}>
+        {/* Dark Mode Switcher Button */}
+        <button
+          type="button"
+          onClick={toggleTheme}
+          title={isDarkMode ? "Ganti ke Mode Terang" : "Ganti ke Mode Gelap"}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: isCollapsed ? 'center' : 'space-between',
+            padding: isCollapsed ? '0.5rem 0' : '0.5rem 0.75rem',
+            borderRadius: 'var(--radius-sm)',
+            border: '1px solid var(--border-color)',
+            backgroundColor: 'var(--bg-card)',
+            color: 'var(--text-main)',
+            cursor: 'pointer',
+            fontSize: '0.825rem',
+            fontWeight: '600'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            {isDarkMode ? <FiSun style={{ color: '#F59E0B' }} /> : <FiMoon style={{ color: 'var(--primary)' }} />}
+            {!isCollapsed && <span>{isDarkMode ? 'Mode Terang' : 'Mode Gelap'}</span>}
+          </div>
+        </button>
+
         <div style={{
           display: 'flex',
           alignItems: 'center',

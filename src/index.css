@@ -28,6 +28,23 @@
   --font-mono: 'JetBrains Mono', monospace;
 }
 
+[data-theme="dark"] {
+  --bg-main: #0B0F17;
+  --bg-sidebar: #111827;
+  --bg-card: #111827;
+  --bg-card-hover: #1F2937;
+  --border-color: #1F2937;
+  --border-highlight: #374151;
+  
+  --primary: #6366F1;
+  --primary-hover: #4F46E5;
+  --primary-light: rgba(99, 102, 241, 0.15);
+  
+  --text-main: #F9FAFB;
+  --text-muted: #9CA3AF;
+  --text-subtle: #6B7280;
+}
+
 * {
   margin: 0;
   padding: 0;
