@@ -74,17 +74,22 @@ export const backofficeService = {
   },
 
   async updateMaintenanceSettings(settings) {
-    // Always save to LocalStorage first for instant reliability
+    // Always save to LocalStorage for instant local tab sync
     localStorage.setItem('desktopalie_maintenance_settings', JSON.stringify(settings));
+    window.dispatchEvent(new Event('storage'));
 
     try {
       const { data, error } = await supabase
         .from('site_settings')
-        .upsert({
-          key: 'maintenance',
-          value: settings,
-          updated_at: new Date().toISOString()
-        });
+        .upsert(
+          {
+            key: 'maintenance',
+            value: settings,
+            updated_at: new Date().toISOString()
+          },
+          { onConflict: 'key' }
+        )
+        .select();
 
       if (error) {
         console.warn('Supabase site_settings error, saved to LocalStorage:', error.message);
@@ -95,6 +100,7 @@ export const backofficeService = {
       return settings;
     }
   },
+
 
   // PROJECTS CRUD
   async getProjects() {

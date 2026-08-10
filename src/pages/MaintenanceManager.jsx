@@ -143,7 +143,22 @@ export default function MaintenanceManager() {
                 <input
                   type="checkbox"
                   checked={settings.is_enabled}
-                  onChange={(e) => setSettings(prev => ({ ...prev, is_enabled: e.target.checked }))}
+                  onChange={async (e) => {
+                    const newStatus = e.target.checked;
+                    const updated = { ...settings, is_enabled: newStatus };
+                    setSettings(updated);
+                    try {
+                      await backofficeService.updateMaintenanceSettings(updated);
+                      if (newStatus) {
+                        toast.success('Mode Maintenance DIAKTIFKAN! Situs dikunci.');
+                      } else {
+                        toast.success('Mode Maintenance DIMATIKAN! Situs kembali online.');
+                      }
+                    } catch (err) {
+                      console.error(err);
+                      toast.error('Gagal memperbarui status maintenance');
+                    }
+                  }}
                   style={{ width: '22px', height: '22px', accentColor: 'var(--primary)', cursor: 'pointer' }}
                 />
               </label>
