@@ -36,8 +36,14 @@ export default function Sidebar() {
       borderRight: '1px solid var(--border-color)',
       display: 'flex',
       flexDirection: 'column',
-      minHeight: '100vh',
-      padding: '1.25rem 1rem'
+      height: '100vh',
+      position: 'sticky',
+      top: 0,
+      left: 0,
+      zIndex: 200,
+      padding: '1.25rem 1rem',
+      overflowY: 'auto',
+      flexShrink: 0
     }}>
       <div style={{
         display: 'flex',
