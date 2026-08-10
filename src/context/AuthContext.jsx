@@ -33,6 +33,22 @@ export const AuthProvider = ({ children }) => {
         password,
       });
       if (error) throw error;
+
+      // Validasi Role di tabel profiles
+      if (data?.user?.id) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', data.user.id)
+          .maybeSingle();
+
+        // Jika profil ada dan role bukan Administrator/Admin, tolak login
+        if (profile && profile.role && !['Administrator', 'Admin'].includes(profile.role)) {
+          await supabase.auth.signOut();
+          throw new Error('Akses Ditolak: Akun Anda terdaftar sebagai Pengguna Biasa, bukan Administrator Backoffice.');
+        }
+      }
+
       return data;
     } catch (err) {
       if (err.message === 'Failed to fetch' || err.toString().includes('Failed to fetch')) {
@@ -50,10 +66,22 @@ export const AuthProvider = ({ children }) => {
         options: {
           data: {
             full_name: fullName,
+            role: 'Administrator',
           },
         },
       });
       if (error) throw error;
+
+      // Upsert profile dengan role Administrator
+      if (data?.user?.id) {
+        await supabase.from('profiles').upsert({
+          id: data.user.id,
+          full_name: fullName,
+          role: 'Administrator',
+          updated_at: new Date().toISOString(),
+        });
+      }
+
       return data;
     } catch (err) {
       if (err.message === 'Failed to fetch' || err.toString().includes('Failed to fetch')) {
