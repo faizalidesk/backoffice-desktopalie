@@ -177,17 +177,26 @@ CREATE POLICY "Allow insert bookmarks" ON public.bookmarks FOR INSERT WITH CHECK
 CREATE POLICY "Allow delete bookmarks" ON public.bookmarks FOR DELETE USING (true);
 
 -- ---------------------------------------------------
--- 6. TABEL SITE SETTINGS (Maintenance Mode)
+-- 7. TABEL TODOS (To-Do & Sprint Board)
 -- ---------------------------------------------------
-CREATE TABLE IF NOT EXISTS public.site_settings (
-  key TEXT PRIMARY KEY,
-  value JSONB NOT NULL,
+CREATE TABLE IF NOT EXISTS public.todos (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE DEFAULT auth.uid(),
+  title TEXT NOT NULL,
+  description TEXT,
+  status TEXT DEFAULT 'Not started',
+  priority TEXT DEFAULT 'Medium',
+  category TEXT DEFAULT 'General',
+  due_date TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-ALTER TABLE public.site_settings ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Allow select site_settings" ON public.site_settings FOR SELECT USING (true);
-CREATE POLICY "Allow all site_settings" ON public.site_settings FOR ALL USING (true);
+ALTER TABLE public.todos ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow select todos" ON public.todos FOR SELECT USING (true);
+CREATE POLICY "Allow insert todos" ON public.todos FOR INSERT WITH CHECK (true);
+CREATE POLICY "Allow update todos" ON public.todos FOR UPDATE USING (true);
+CREATE POLICY "Allow delete todos" ON public.todos FOR DELETE USING (true);
 ```
 
 ---

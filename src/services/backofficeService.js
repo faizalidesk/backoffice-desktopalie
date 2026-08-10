@@ -177,6 +177,110 @@ export const backofficeService = {
     }
   },
 
+  // TODOS CRUD (Notion / Jira style Task Board)
+  async getTodos() {
+    try {
+      const { data, error } = await supabase
+        .from('todos')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (!error && data && data.length > 0) {
+        localStorage.setItem('desktopalie_todos_fallback', JSON.stringify(data));
+        return data;
+      }
+    } catch (err) {
+      console.warn('Supabase todos table error, reading fallback:', err);
+    }
+
+    const localData = localStorage.getItem('desktopalie_todos_fallback');
+    if (localData) {
+      try {
+        return JSON.parse(localData);
+      } catch (e) {}
+    }
+
+    const defaultTodos = [
+      { id: '1', title: 'Mengenal struktur aplikasi Web (Nuxt.js)', status: 'Not started', priority: 'Medium', category: 'Research', created_at: new Date().toISOString() },
+      { id: '2', title: 'Mengenal struktur aplikasi Mobile (Flutter)', status: 'Not started', priority: 'Low', category: 'Research', created_at: new Date().toISOString() },
+      { id: '3', title: 'Mengenal struktur aplikasi Backoffice (Laravel/Vue)', status: 'Not started', priority: 'Medium', category: 'Research', created_at: new Date().toISOString() },
+      { id: '4', title: 'Memahami alur kerja Sprint Development', status: 'In progress', priority: 'High', category: 'Development', created_at: new Date().toISOString() },
+      { id: '5', title: 'Memahami role dan tanggung jawab QA', status: 'In progress', priority: 'Medium', category: 'Testing', created_at: new Date().toISOString() },
+      { id: '6', title: 'Mempelajari Manual Testing (UI, Functional, Exploratory)', status: 'Done', priority: 'High', category: 'Testing', created_at: new Date().toISOString() },
+      { id: '7', title: 'Membuat Test Scenario dan Test Case', status: 'Done', priority: 'Urgent', category: 'Testing', created_at: new Date().toISOString() },
+      { id: '8', title: 'Memahami Severity dan Priority', status: 'Done', priority: 'Medium', category: 'Documentation', created_at: new Date().toISOString() },
+      { id: '9', title: 'Membuat Bug Report', status: 'Done', priority: 'High', category: 'Testing', created_at: new Date().toISOString() },
+      { id: '10', title: 'Memahami Requirement, Product Backlog, User Story, Acceptance Criteria', status: 'Done', priority: 'Urgent', category: 'Documentation', created_at: new Date().toISOString() }
+    ];
+
+    localStorage.setItem('desktopalie_todos_fallback', JSON.stringify(defaultTodos));
+    return defaultTodos;
+  },
+
+  async createTodo(todo) {
+    const { data: { user } } = await supabase.auth.getUser();
+    const payload = {
+      id: crypto.randomUUID(),
+      title: todo.title,
+      description: todo.description || '',
+      status: todo.status || 'Not started',
+      priority: todo.priority || 'Medium',
+      category: todo.category || 'General',
+      created_at: new Date().toISOString(),
+      ...(user ? { user_id: user.id } : {})
+    };
+
+    try {
+      const { data, error } = await supabase
+        .from('todos')
+        .insert([payload])
+        .select()
+        .single();
+
+      if (!error && data) return data;
+    } catch (err) {
+      console.warn('Supabase insert todo error, saved to local state fallback:', err);
+    }
+
+    const currentLocal = JSON.parse(localStorage.getItem('desktopalie_todos_fallback') || '[]');
+    const updated = [payload, ...currentLocal];
+    localStorage.setItem('desktopalie_todos_fallback', JSON.stringify(updated));
+    return payload;
+  },
+
+  async updateTodo(id, updates) {
+    try {
+      const { data, error } = await supabase
+        .from('todos')
+        .update({ ...updates, updated_at: new Date().toISOString() })
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (!error && data) return data;
+    } catch (err) {
+      console.warn('Supabase update todo error, updated locally:', err);
+    }
+
+    const currentLocal = JSON.parse(localStorage.getItem('desktopalie_todos_fallback') || '[]');
+    const updated = currentLocal.map(t => t.id === id ? { ...t, ...updates } : t);
+    localStorage.setItem('desktopalie_todos_fallback', JSON.stringify(updated));
+    return { id, ...updates };
+  },
+
+  async deleteTodo(id) {
+    try {
+      await supabase.from('todos').delete().eq('id', id);
+    } catch (err) {
+      console.warn('Supabase delete todo error:', err);
+    }
+
+    const currentLocal = JSON.parse(localStorage.getItem('desktopalie_todos_fallback') || '[]');
+    const updated = currentLocal.filter(t => t.id !== id);
+    localStorage.setItem('desktopalie_todos_fallback', JSON.stringify(updated));
+    return true;
+  },
+
   // PROJECTS CRUD
   async getProjects() {
     const { data, error } = await supabase
