@@ -39,6 +39,10 @@ export default function TodoListManager() {
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState('board'); // 'board' | 'table'
 
+  // Drag and Drop States
+  const [draggedTaskId, setDraggedTaskId] = useState(null);
+  const [dragOverColumn, setDragOverColumn] = useState(null);
+
   // Filter States
   const [search, setSearch] = useState('');
   const [priorityFilter, setPriorityFilter] = useState('ALL');
@@ -71,6 +75,49 @@ export default function TodoListManager() {
     } finally {
       setLoading(false);
     }
+  };
+
+  // HTML5 Drag and Drop Handlers
+  const handleDragStart = (e, id) => {
+    setDraggedTaskId(id);
+    e.dataTransfer.setData('text/plain', id);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDragOver = (e, colKey) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    if (dragOverColumn !== colKey) {
+      setDragOverColumn(colKey);
+    }
+  };
+
+  const handleDragLeave = (e, colKey) => {
+    if (dragOverColumn === colKey) {
+      setDragOverColumn(null);
+    }
+  };
+
+  const handleDrop = async (e, targetStatus) => {
+    e.preventDefault();
+    setDragOverColumn(null);
+    const taskId = draggedTaskId || e.dataTransfer.getData('text/plain');
+    if (!taskId) return;
+
+    const task = todos.find(t => t.id === taskId);
+    if (task && task.status !== targetStatus) {
+      // Optimistic update
+      setTodos(prev => prev.map(t => t.id === taskId ? { ...t, status: targetStatus } : t));
+      try {
+        await backofficeService.updateTodo(taskId, { status: targetStatus });
+        toast.success(`Tugas dipindahkan ke "${targetStatus}"`);
+      } catch (err) {
+        console.error(err);
+        toast.error('Gagal memindahkan tugas');
+        loadTodos();
+      }
+    }
+    setDraggedTaskId(null);
   };
 
   const handleOpenModal = (item = null, defaultStatus = 'Not started') => {
@@ -168,7 +215,7 @@ export default function TodoListManager() {
         <div className="page-header">
           <div className="page-title-group">
             <h1>To-Do List & Sprint Board</h1>
-            <p className="page-subtitle">Kelola tugas, alur kerja sprint, dan status progres secara visual seperti Notion & Jira.</p>
+            <p className="page-subtitle">Kelola tugas, alur kerja sprint, dan geser (drag & drop) tugas antar kolom secara visual seperti Notion & Jira.</p>
           </div>
 
           <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
@@ -291,7 +338,7 @@ export default function TodoListManager() {
             Memuat To-Do board...
           </div>
         ) : viewMode === 'board' ? (
-          /* NOTION / JIRA KANBAN BOARD VIEW */
+          /* NOTION / JIRA KANBAN BOARD VIEW WITH NATIVE DRAG & DROP */
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(3, 1fr)',
@@ -300,17 +347,25 @@ export default function TodoListManager() {
           }}>
             {STATUSES.map(col => {
               const columnTodos = filteredTodos.filter(t => t.status === col.key);
+              const isOver = dragOverColumn === col.key;
               return (
-                <div key={col.key} style={{
-                  backgroundColor: '#F8FAFC',
-                  border: '1px solid var(--border-color)',
-                  borderRadius: 'var(--radius-md)',
-                  padding: '1rem',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '0.75rem',
-                  minHeight: '480px'
-                }}>
+                <div
+                  key={col.key}
+                  onDragOver={(e) => handleDragOver(e, col.key)}
+                  onDragLeave={(e) => handleDragLeave(e, col.key)}
+                  onDrop={(e) => handleDrop(e, col.key)}
+                  style={{
+                    backgroundColor: isOver ? col.bg : '#F8FAFC',
+                    border: isOver ? `2px dashed ${col.color}` : '1px solid var(--border-color)',
+                    borderRadius: 'var(--radius-md)',
+                    padding: '1rem',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.75rem',
+                    minHeight: '480px',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
                   {/* Column Header Badge */}
                   <div style={{
                     display: 'flex',
@@ -352,23 +407,33 @@ export default function TodoListManager() {
                         border: '1px dashed var(--border-color)',
                         borderRadius: 'var(--radius-sm)'
                       }}>
-                        Tidak ada tugas {col.label.toLowerCase()}
+                        Tarik & lepas tugas ke sini
                       </div>
                     ) : (
                       columnTodos.map(task => {
                         const prioObj = PRIORITIES.find(p => p.key === task.priority) || PRIORITIES[0];
+                        const isBeingDragged = draggedTaskId === task.id;
                         return (
-                          <div key={task.id} style={{
-                            backgroundColor: '#FFFFFF',
-                            border: '1px solid var(--border-color)',
-                            borderRadius: 'var(--radius-sm)',
-                            padding: '0.875rem 1rem',
-                            boxShadow: 'var(--shadow-sm)',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: '0.5rem',
-                            transition: 'all 0.15s ease'
-                          }}>
+                          <div
+                            key={task.id}
+                            draggable={true}
+                            onDragStart={(e) => handleDragStart(e, task.id)}
+                            style={{
+                              backgroundColor: '#FFFFFF',
+                              border: '1px solid var(--border-color)',
+                              borderRadius: 'var(--radius-sm)',
+                              padding: '0.875rem 1rem',
+                              boxShadow: isBeingDragged ? 'var(--shadow-md)' : 'var(--shadow-sm)',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              gap: '0.5rem',
+                              cursor: 'grab',
+                              opacity: isBeingDragged ? 0.4 : 1,
+                              transition: 'transform 0.15s ease, box-shadow 0.15s ease'
+                            }}
+                            onMouseDown={(e) => e.currentTarget.style.cursor = 'grabbing'}
+                            onMouseUp={(e) => e.currentTarget.style.cursor = 'grab'}
+                          >
                             <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
                               <FiFileText style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginTop: '3px', flexShrink: 0 }} />
                               <div style={{ flex: 1, fontSize: '0.875rem', fontWeight: '600', color: 'var(--text-main)', lineHeight: '1.35' }}>
