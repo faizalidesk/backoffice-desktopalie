@@ -200,6 +200,56 @@ export default function DocumentationManager() {
     toast.success(`Folder "${folderName}" berhasil dibuat!`);
   };
 
+  // RENAME FOLDER
+  const handleRenameFolder = async (oldName) => {
+    const name = window.prompt('Ubah Nama Folder:', oldName);
+    if (!name || !name.trim() || name.trim() === oldName) return;
+
+    const newName = name.trim();
+    if (folders.includes(newName)) {
+      toast.error('Folder dengan nama ini sudah ada!');
+      return;
+    }
+
+    setFolders(prev => prev.map(f => f === oldName ? newName : f));
+
+    setExpandedFolders(prev => {
+      const next = { ...prev };
+      if (next[oldName]) {
+        next[newName] = true;
+        delete next[oldName];
+      }
+      return next;
+    });
+
+    const docsToUpdate = docs.filter(d => (d.folder || 'Core') === oldName);
+    for (const doc of docsToUpdate) {
+      await backofficeService.updateDoc(doc.id, { folder: newName });
+    }
+
+    if (docFolder === oldName) {
+      setDocFolder(newName);
+    }
+
+    toast.success(`Folder "${oldName}" berhasil diubah menjadi "${newName}"!`);
+    loadDocs();
+  };
+
+  // DELETE FOLDER
+  const handleDeleteFolder = async (folderName) => {
+    const folderDocs = docs.filter(d => (d.folder || 'Core') === folderName);
+    if (!window.confirm(`Apakah Anda yakin ingin menghapus folder "${folderName}" beserta ${folderDocs.length} dokumen di dalamnya?`)) return;
+
+    setFolders(prev => prev.filter(f => f !== folderName));
+
+    for (const doc of folderDocs) {
+      await backofficeService.deleteDoc(doc.id);
+    }
+
+    toast.success(`Folder "${folderName}" dan isinya berhasil dihapus!`);
+    loadDocs();
+  };
+
   // STEP 2: CREATE NEW DOCUMENT IN A SPECIFIC FOLDER
   const handleOpenNewDocModal = (targetFolder = 'Core') => {
     setNewDocData({
@@ -301,7 +351,6 @@ export default function DocumentationManager() {
       map[f] = filteredDocs.filter(d => (d.folder || 'Core') === f);
     });
 
-    // Capture uncategorized
     const remaining = filteredDocs.filter(d => !folders.includes(d.folder || 'Core'));
     if (remaining.length > 0) {
       map['Other'] = remaining;
@@ -379,7 +428,7 @@ export default function DocumentationManager() {
         {/* 2-Column GitBook/Obsidian Explorer Layout */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: '280px 1fr',
+          gridTemplateColumns: '300px 1fr',
           gap: '1.5rem',
           alignItems: 'start'
         }}>
@@ -419,7 +468,7 @@ export default function DocumentationManager() {
 
                     return (
                       <div key={folderName} style={{ display: 'flex', flexDirection: 'column' }}>
-                        {/* FOLDER ROW */}
+                        {/* FOLDER ROW WITH EDIT & DELETE ACTIONS */}
                         <div
                           style={{
                             display: 'flex',
@@ -450,7 +499,42 @@ export default function DocumentationManager() {
                             <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{folderName}</span>
                           </div>
 
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                          {/* Folder Action Buttons: Rename, Delete, Add Doc */}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }} onClick={(e) => e.stopPropagation()}>
+                            <button
+                              type="button"
+                              onClick={() => handleRenameFolder(folderName)}
+                              title={`Ubah Nama Folder "${folderName}"`}
+                              style={{
+                                background: 'transparent',
+                                border: 'none',
+                                color: 'var(--text-muted)',
+                                cursor: 'pointer',
+                                padding: '0.1rem 0.25rem',
+                                borderRadius: '4px',
+                                fontSize: '0.75rem'
+                              }}
+                            >
+                              <FiEdit3 />
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteFolder(folderName)}
+                              title={`Hapus Folder "${folderName}"`}
+                              style={{
+                                background: 'transparent',
+                                border: 'none',
+                                color: '#E11D48',
+                                cursor: 'pointer',
+                                padding: '0.1rem 0.25rem',
+                                borderRadius: '4px',
+                                fontSize: '0.75rem'
+                              }}
+                            >
+                              <FiTrash2 />
+                            </button>
+
                             <button
                               type="button"
                               onClick={() => handleOpenNewDocModal(folderName)}
@@ -462,14 +546,13 @@ export default function DocumentationManager() {
                                 cursor: 'pointer',
                                 padding: '0.1rem 0.25rem',
                                 borderRadius: '4px',
-                                fontSize: '0.7rem',
-                                display: 'flex',
-                                alignItems: 'center'
+                                fontSize: '0.75rem'
                               }}
                             >
                               <FiPlus />
                             </button>
-                            <span style={{ fontSize: '0.7rem', color: 'var(--text-subtle)', fontWeight: '600' }}>
+
+                            <span style={{ fontSize: '0.7rem', color: 'var(--text-subtle)', fontWeight: '600', marginLeft: '0.15rem' }}>
                               {folderDocs.length}
                             </span>
                           </div>
