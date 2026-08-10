@@ -190,7 +190,7 @@ export default function DocumentationManager() {
 
   // STEP 1: CREATE NEW FOLDER
   const handleCreateFolder = () => {
-    const name = window.prompt('Masukkan Nama Folder Baru:');
+    const name = window.prompt('Masukkan Nama Folder Baru di bawah Docs v3:');
     if (!name || !name.trim()) return;
 
     const folderName = name.trim();
@@ -200,8 +200,8 @@ export default function DocumentationManager() {
     }
 
     setFolders(prev => [...prev, folderName]);
-    setExpandedFolders(prev => ({ ...prev, [folderName]: true }));
-    toast.success(`Folder "${folderName}" berhasil dibuat!`);
+    setExpandedFolders(prev => ({ ...prev, 'Docs v3': true, [folderName]: true }));
+    toast.success(`Folder "${folderName}" berhasil dibuat di bawah Docs v3!`);
   };
 
   // RENAME FOLDER
@@ -432,7 +432,7 @@ export default function DocumentationManager() {
         {/* 2-Column GitBook/Obsidian Explorer Layout */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: '300px 1fr',
+          gridTemplateColumns: '310px 1fr',
           gap: '1.5rem',
           alignItems: 'start'
         }}>
@@ -441,26 +441,62 @@ export default function DocumentationManager() {
             {/* Root Folder: Docs v3 */}
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <div
-                onClick={() => toggleFolder('Docs v3')}
+                onMouseEnter={() => setHoveredFolder('Docs v3')}
+                onMouseLeave={() => setHoveredFolder(null)}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '0.4rem',
-                  padding: '0.4rem 0.5rem',
+                  justifyContent: 'space-between',
+                  padding: '0.45rem 0.5rem',
                   fontSize: '0.85rem',
                   fontWeight: '700',
                   color: '#0F172A',
                   cursor: 'pointer',
-                  userSelect: 'none'
+                  userSelect: 'none',
+                  borderRadius: 'var(--radius-sm)',
+                  backgroundColor: hoveredFolder === 'Docs v3' ? '#F8FAFC' : 'transparent',
+                  transition: 'all 0.15s ease'
                 }}
               >
-                {expandedFolders['Docs v3'] ? (
-                  <FiChevronDown style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }} />
-                ) : (
-                  <FiChevronRight style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }} />
-                )}
-                <FiFolder style={{ color: 'var(--primary)', fontSize: '0.95rem' }} />
-                <span>Docs v3</span>
+                <div 
+                  onClick={() => toggleFolder('Docs v3')}
+                  style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flex: 1 }}
+                >
+                  {expandedFolders['Docs v3'] ? (
+                    <FiChevronDown style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }} />
+                  ) : (
+                    <FiChevronRight style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }} />
+                  )}
+                  <FiFolder style={{ color: 'var(--primary)', fontSize: '0.95rem' }} />
+                  <span>Docs v3</span>
+                </div>
+
+                {/* Direct "+ Folder" button on the Docs v3 root row */}
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleCreateFolder();
+                  }}
+                  title="Buat Folder Baru di bawah Docs v3"
+                  style={{
+                    background: '#FFFFFF',
+                    border: '1px solid var(--border-color)',
+                    color: 'var(--primary)',
+                    cursor: 'pointer',
+                    padding: '0.15rem 0.45rem',
+                    borderRadius: '4px',
+                    fontSize: '0.725rem',
+                    fontWeight: '700',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.25rem',
+                    boxShadow: 'var(--shadow-sm)'
+                  }}
+                >
+                  <FiFolderPlus />
+                  <span>+ Folder</span>
+                </button>
               </div>
 
               {/* INNER FOLDER & DOCS TREE */}
