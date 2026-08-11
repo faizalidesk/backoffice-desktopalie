@@ -50,7 +50,7 @@ export default function ExperimentsManager() {
         description: item.description || '',
         status: item.status || 'Draft',
         tone: item.tone || 'teal',
-        image_url: item.image_url || ''
+        image_url: item.image_url || item.cover_url || item.image || ''
       });
     } else {
       setEditingItem(null);

@@ -631,25 +631,96 @@ Dalam modal Popup 2-Section pada To-Do Board:
 
   async createProject(project) {
     const { data: { user } } = await supabase.auth.getUser();
-    const payload = user ? { ...project, user_id: user.id } : project;
-    const { data, error } = await supabase
-      .from('projects')
-      .insert([payload])
-      .select()
-      .single();
-    if (error) throw error;
-    return data;
+    const payload = { ...project };
+    if (payload.cover_url !== undefined) {
+      if (!payload.image_url) payload.image_url = payload.cover_url;
+      delete payload.cover_url;
+    }
+    if (payload.image !== undefined) {
+      if (!payload.image_url) payload.image_url = payload.image;
+      delete payload.image;
+    }
+    if (user) payload.user_id = user.id;
+
+    try {
+      const { data, error } = await supabase
+        .from('projects')
+        .insert([payload])
+        .select()
+        .single();
+      if (!error && data) return data;
+      if (error) {
+        console.warn('Supabase insert project error, retrying clean payload:', error.message);
+        const cleanPayload = {
+          slug: payload.slug,
+          title: payload.title,
+          type: payload.type,
+          description: payload.description,
+          progress: payload.progress,
+          status: payload.status,
+          tone: payload.tone,
+          image_url: payload.image_url || '',
+          ...(user ? { user_id: user.id } : {})
+        };
+        const { data: retryData, error: retryError } = await supabase
+          .from('projects')
+          .insert([cleanPayload])
+          .select()
+          .single();
+        if (!retryError && retryData) return retryData;
+        throw error;
+      }
+    } catch (err) {
+      console.error('Error creating project:', err);
+      throw err;
+    }
   },
 
   async updateProject(id, updates) {
-    const { data, error } = await supabase
-      .from('projects')
-      .update({ ...updates, updated_at: new Date().toISOString() })
-      .eq('id', id)
-      .select()
-      .single();
-    if (error) throw error;
-    return data;
+    const payload = { ...updates, updated_at: new Date().toISOString() };
+    if (payload.cover_url !== undefined) {
+      if (!payload.image_url) payload.image_url = payload.cover_url;
+      delete payload.cover_url;
+    }
+    if (payload.image !== undefined) {
+      if (!payload.image_url) payload.image_url = payload.image;
+      delete payload.image;
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('projects')
+        .update(payload)
+        .eq('id', id)
+        .select()
+        .single();
+      if (!error && data) return data;
+      if (error) {
+        console.warn('Supabase update project error, retrying clean payload:', error.message);
+        const cleanPayload = {
+          slug: payload.slug,
+          title: payload.title,
+          type: payload.type,
+          description: payload.description,
+          progress: payload.progress,
+          status: payload.status,
+          tone: payload.tone,
+          image_url: payload.image_url || '',
+          updated_at: payload.updated_at
+        };
+        const { data: retryData, error: retryError } = await supabase
+          .from('projects')
+          .update(cleanPayload)
+          .eq('id', id)
+          .select()
+          .single();
+        if (!retryError && retryData) return retryData;
+        throw error;
+      }
+    } catch (err) {
+      console.error('Error updating project:', err);
+      throw err;
+    }
   },
 
   async deleteProject(id) {
@@ -670,25 +741,94 @@ Dalam modal Popup 2-Section pada To-Do Board:
 
   async createExperiment(experiment) {
     const { data: { user } } = await supabase.auth.getUser();
-    const payload = user ? { ...experiment, user_id: user.id } : experiment;
-    const { data, error } = await supabase
-      .from('experiments')
-      .insert([payload])
-      .select()
-      .single();
-    if (error) throw error;
-    return data;
+    const payload = { ...experiment };
+    if (payload.cover_url !== undefined) {
+      if (!payload.image_url) payload.image_url = payload.cover_url;
+      delete payload.cover_url;
+    }
+    if (payload.image !== undefined) {
+      if (!payload.image_url) payload.image_url = payload.image;
+      delete payload.image;
+    }
+    if (user) payload.user_id = user.id;
+
+    try {
+      const { data, error } = await supabase
+        .from('experiments')
+        .insert([payload])
+        .select()
+        .single();
+      if (!error && data) return data;
+      if (error) {
+        console.warn('Supabase insert experiment error, retrying clean payload:', error.message);
+        const cleanPayload = {
+          slug: payload.slug,
+          title: payload.title,
+          type: payload.type,
+          description: payload.description,
+          status: payload.status,
+          tone: payload.tone,
+          image_url: payload.image_url || '',
+          ...(user ? { user_id: user.id } : {})
+        };
+        const { data: retryData, error: retryError } = await supabase
+          .from('experiments')
+          .insert([cleanPayload])
+          .select()
+          .single();
+        if (!retryError && retryData) return retryData;
+        throw error;
+      }
+    } catch (err) {
+      console.error('Error creating experiment:', err);
+      throw err;
+    }
   },
 
   async updateExperiment(id, updates) {
-    const { data, error } = await supabase
-      .from('experiments')
-      .update({ ...updates, updated_at: new Date().toISOString() })
-      .eq('id', id)
-      .select()
-      .single();
-    if (error) throw error;
-    return data;
+    const payload = { ...updates, updated_at: new Date().toISOString() };
+    if (payload.cover_url !== undefined) {
+      if (!payload.image_url) payload.image_url = payload.cover_url;
+      delete payload.cover_url;
+    }
+    if (payload.image !== undefined) {
+      if (!payload.image_url) payload.image_url = payload.image;
+      delete payload.image;
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('experiments')
+        .update(payload)
+        .eq('id', id)
+        .select()
+        .single();
+      if (!error && data) return data;
+      if (error) {
+        console.warn('Supabase update experiment error, retrying clean payload:', error.message);
+        const cleanPayload = {
+          slug: payload.slug,
+          title: payload.title,
+          type: payload.type,
+          description: payload.description,
+          status: payload.status,
+          tone: payload.tone,
+          image_url: payload.image_url || '',
+          updated_at: payload.updated_at
+        };
+        const { data: retryData, error: retryError } = await supabase
+          .from('experiments')
+          .update(cleanPayload)
+          .eq('id', id)
+          .select()
+          .single();
+        if (!retryError && retryData) return retryData;
+        throw error;
+      }
+    } catch (err) {
+      console.error('Error updating experiment:', err);
+      throw err;
+    }
   },
 
   async deleteExperiment(id) {
