@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
 import { 
   FiGrid, 
@@ -12,13 +12,17 @@ import {
   FiCheckSquare,
   FiBookOpen,
   FiMenu,
-  FiInfo
+  FiInfo,
+  FiSearch,
+  FiX
 } from 'react-icons/fi';
 import { useLanguage } from '../context/LanguageContext';
 import DesktopalieMark from './DesktopalieMark';
 
 export default function Sidebar() {
   const { t } = useLanguage();
+  const [searchQuery, setSearchQuery] = useState('');
+  const searchInputRef = useRef(null);
   const [isCollapsed, setIsCollapsed] = useState(() => {
     return localStorage.getItem('desktopalie_sidebar_collapsed') === 'true';
   });
@@ -29,6 +33,18 @@ export default function Sidebar() {
       localStorage.setItem('desktopalie_sidebar_collapsed', String(next));
       return next;
     });
+  };
+
+  const handleSearchIconClick = () => {
+    if (isCollapsed) {
+      setIsCollapsed(false);
+      localStorage.setItem('desktopalie_sidebar_collapsed', 'false');
+      setTimeout(() => {
+        if (searchInputRef.current) {
+          searchInputRef.current.focus();
+        }
+      }, 100);
+    }
   };
 
   const navItems = [
@@ -43,6 +59,10 @@ export default function Sidebar() {
     { label: t('maintenance'), path: '/maintenance', icon: FiTool },
     { label: t('profile'), path: '/profile', icon: FiUser },
   ];
+
+  const filteredNavItems = navItems.filter((item) =>
+    item.label.toLowerCase().includes(searchQuery.toLowerCase().trim())
+  );
 
   return (
     <aside style={{
@@ -66,9 +86,9 @@ export default function Sidebar() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: isCollapsed ? 'center' : 'space-between',
-        padding: isCollapsed ? '0.5rem 0 1.5rem 0' : '0.5rem 0.25rem 1.5rem 0.25rem',
+        padding: isCollapsed ? '0.5rem 0 1rem 0' : '0.5rem 0.25rem 1rem 0.25rem',
         borderBottom: '1px solid var(--border-color)',
-        marginBottom: '1.25rem'
+        marginBottom: '1rem'
       }}>
         {!isCollapsed && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexShrink: 0 }}>
@@ -126,37 +146,133 @@ export default function Sidebar() {
         </button>
       </div>
 
-      {/* Nav List */}
-      <nav style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          return (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              end={item.path === '/'}
-              title={isCollapsed ? item.label : undefined}
-              style={({ isActive }) => ({
+      {/* Search Input Box */}
+      {!isCollapsed ? (
+        <div style={{
+          position: 'relative',
+          marginBottom: '0.85rem',
+          display: 'flex',
+          alignItems: 'center'
+        }}>
+          <FiSearch style={{
+            position: 'absolute',
+            left: '0.75rem',
+            color: 'var(--text-muted)',
+            fontSize: '0.9rem',
+            pointerEvents: 'none'
+          }} />
+          <input
+            ref={searchInputRef}
+            type="text"
+            placeholder={t('searchMenu')}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            style={{
+              width: '100%',
+              padding: '0.45rem 2rem 0.45rem 2.1rem',
+              fontSize: '0.825rem',
+              borderRadius: 'var(--radius-sm)',
+              border: '1px solid var(--border-color)',
+              backgroundColor: 'var(--bg-card-hover)',
+              color: 'var(--text-main)',
+              outline: 'none',
+              transition: 'border-color 0.15s ease, box-shadow 0.15s ease'
+            }}
+            onFocus={(e) => e.target.style.borderColor = 'var(--primary)'}
+            onBlur={(e) => e.target.style.borderColor = 'var(--border-color)'}
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery('')}
+              title="Clear search"
+              style={{
+                position: 'absolute',
+                right: '0.4rem',
+                background: 'transparent',
+                border: 'none',
+                color: 'var(--text-muted)',
+                cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: isCollapsed ? 'center' : 'flex-start',
-                gap: isCollapsed ? 0 : '0.75rem',
-                padding: isCollapsed ? '0.75rem 0' : '0.75rem 1rem',
-                borderRadius: 'var(--radius-sm)',
-                fontSize: '0.875rem',
-                fontWeight: '500',
-                textDecoration: 'none',
-                color: isActive ? 'var(--primary)' : 'var(--text-muted)',
-                backgroundColor: isActive ? 'var(--primary-light)' : 'transparent',
-                borderLeft: !isCollapsed && isActive ? '3px solid var(--primary)' : '3px solid transparent',
-                transition: 'all 0.15s ease'
-              })}
+                justifyContent: 'center',
+                padding: '0.2rem',
+                borderRadius: '50%'
+              }}
             >
-              <Icon style={{ fontSize: '1.25rem', flexShrink: 0 }} />
-              {!isCollapsed && <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.label}</span>}
-            </NavLink>
-          );
-        })}
+              <FiX style={{ fontSize: '0.9rem' }} />
+            </button>
+          )}
+        </div>
+      ) : (
+        <button
+          onClick={handleSearchIconClick}
+          title={t('searchMenu')}
+          style={{
+            background: 'transparent',
+            border: '1px solid var(--border-color)',
+            borderRadius: 'var(--radius-sm)',
+            color: 'var(--text-muted)',
+            cursor: 'pointer',
+            padding: '0.5rem 0',
+            marginBottom: '0.85rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%',
+            transition: 'all 0.15s ease'
+          }}
+          onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'var(--bg-card-hover)'}
+          onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+        >
+          <FiSearch style={{ fontSize: '1.1rem' }} />
+        </button>
+      )}
+
+      {/* Nav List */}
+      <nav style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+        {filteredNavItems.length > 0 ? (
+          filteredNavItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                end={item.path === '/'}
+                title={isCollapsed ? item.label : undefined}
+                style={({ isActive }) => ({
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: isCollapsed ? 'center' : 'flex-start',
+                  gap: isCollapsed ? 0 : '0.75rem',
+                  padding: isCollapsed ? '0.75rem 0' : '0.75rem 1rem',
+                  borderRadius: 'var(--radius-sm)',
+                  fontSize: '0.875rem',
+                  fontWeight: '500',
+                  textDecoration: 'none',
+                  color: isActive ? 'var(--primary)' : 'var(--text-muted)',
+                  backgroundColor: isActive ? 'var(--primary-light)' : 'transparent',
+                  borderLeft: !isCollapsed && isActive ? '3px solid var(--primary)' : '3px solid transparent',
+                  transition: 'all 0.15s ease'
+                })}
+              >
+                <Icon style={{ fontSize: '1.25rem', flexShrink: 0 }} />
+                {!isCollapsed && <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.label}</span>}
+              </NavLink>
+            );
+          })
+        ) : (
+          !isCollapsed && (
+            <div style={{
+              padding: '1rem 0.5rem',
+              textAlign: 'center',
+              fontSize: '0.8rem',
+              color: 'var(--text-subtle)',
+              fontStyle: 'italic'
+            }}>
+              {t('noMenuFound')}
+            </div>
+          )
+        )}
       </nav>
 
       {/* FOOTER: APP WEBSITE VERSION INFORMATION ONLY */}

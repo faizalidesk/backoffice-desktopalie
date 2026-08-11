@@ -15,6 +15,8 @@ export const translations = {
     bookmarks: 'Bookmarks',
     maintenance: 'Mode Pemeliharaan',
     profile: 'Profil & Pengaturan',
+    searchMenu: 'Cari menu...',
+    noMenuFound: 'Menu tidak ditemukan',
     
     // Header & Controls
     lightMode: 'Mode Terang',
@@ -57,6 +59,8 @@ export const translations = {
     bookmarks: 'Bookmarks',
     maintenance: 'Maintenance Mode',
     profile: 'Profile & Settings',
+    searchMenu: 'Search menu...',
+    noMenuFound: 'No menu found',
     
     // Header & Controls
     lightMode: 'Light Mode',
