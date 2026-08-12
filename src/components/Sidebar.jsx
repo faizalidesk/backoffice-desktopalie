@@ -22,7 +22,7 @@ import DesktopalieMark from './DesktopalieMark';
 
 export default function Sidebar() {
   const { t } = useLanguage();
-  const flavor = useFlavor();
+  const { flavor, flavorId, availableFlavors, switchFlavor } = useFlavor();
   const [searchQuery, setSearchQuery] = useState('');
   const searchInputRef = useRef(null);
   const [isCollapsed, setIsCollapsed] = useState(() => {
@@ -150,6 +150,93 @@ export default function Sidebar() {
           <FiMenu />
         </button>
       </div>
+
+      {/* PLATFORM / FLAVOR SWITCHER */}
+      {!isCollapsed ? (
+        <div style={{
+          marginBottom: '0.85rem',
+          padding: '0.55rem 0.65rem',
+          borderRadius: 'var(--radius-sm)',
+          backgroundColor: 'var(--bg-card-hover)',
+          border: '1px solid var(--border-color)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '0.35rem'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <span style={{
+              fontSize: '0.625rem',
+              fontWeight: '800',
+              textTransform: 'uppercase',
+              letterSpacing: '0.08em',
+              color: 'var(--text-muted)'
+            }}>
+              PLATFORM WORKSPACE
+            </span>
+            <span style={{
+              fontSize: '0.625rem',
+              fontWeight: '800',
+              padding: '0.1rem 0.45rem',
+              borderRadius: '99px',
+              backgroundColor: 'var(--primary-light)',
+              color: 'var(--primary)'
+            }}>
+              {flavor?.shortName || 'Platform'}
+            </span>
+          </div>
+
+          <select
+            value={flavorId}
+            onChange={(e) => switchFlavor(e.target.value)}
+            style={{
+              width: '100%',
+              padding: '0.35rem 0.45rem',
+              fontSize: '0.775rem',
+              fontWeight: '700',
+              borderRadius: 'var(--radius-sm)',
+              border: '1px solid var(--border-color)',
+              backgroundColor: 'var(--bg-card)',
+              color: 'var(--text-main)',
+              cursor: 'pointer',
+              outline: 'none',
+              transition: 'border-color 0.15s ease'
+            }}
+          >
+            {availableFlavors?.map((f) => (
+              <option key={f.id} value={f.id}>
+                {f.shortName} — {f.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      ) : (
+        <button
+          onClick={() => {
+            const ids = availableFlavors.map(f => f.id);
+            const nextIdx = (ids.indexOf(flavorId) + 1) % ids.length;
+            switchFlavor(ids[nextIdx]);
+          }}
+          title={`Platform: ${flavor?.shortName} (${flavor?.name}). Klik untuk ganti platform.`}
+          style={{
+            background: 'var(--primary-light)',
+            border: '1px solid var(--primary)',
+            borderRadius: 'var(--radius-sm)',
+            color: 'var(--primary)',
+            cursor: 'pointer',
+            padding: '0.35rem 0',
+            marginBottom: '0.85rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '0.7rem',
+            fontWeight: '800',
+            width: '100%',
+            transition: 'all 0.15s ease'
+          }}
+        >
+          {flavor?.shortName?.[0] || 'P'}
+        </button>
+      )}
 
       {/* Search Input Box */}
       {!isCollapsed ? (

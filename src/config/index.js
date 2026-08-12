@@ -10,7 +10,18 @@ export const flavors = {
   platform4,
 };
 
-// Ambil mode flavor dari VITE_FLAVOR atau fallback ke platform1
+export const availableFlavors = [
+  platform1,
+  platform2,
+  platform3,
+  platform4,
+];
+
+export const getFlavor = (flavorId) => {
+  return flavors[flavorId] || platform1;
+};
+
+// Ambil mode flavor default dari env atau fallback
 const rawFlavor = import.meta.env.VITE_FLAVOR || 'platform1';
 export const activeFlavorKey = flavors[rawFlavor] ? rawFlavor : 'platform1';
 export const activeFlavor = flavors[activeFlavorKey];

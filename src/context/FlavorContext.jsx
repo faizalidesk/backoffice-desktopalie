@@ -1,16 +1,27 @@
-import React, { createContext, useContext, useEffect } from 'react';
-import { activeFlavor } from '../config';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { flavors, availableFlavors, getFlavor } from '../config';
 
-const FlavorContext = createContext(activeFlavor);
+const FlavorContext = createContext();
 
 export const FlavorProvider = ({ children }) => {
+  const [flavorId, setFlavorId] = useState(() => {
+    const saved = localStorage.getItem('desktopalie_flavor');
+    if (saved && flavors[saved]) {
+      return saved;
+    }
+    const envFlavor = import.meta.env.VITE_FLAVOR;
+    return (envFlavor && flavors[envFlavor]) ? envFlavor : 'platform1';
+  });
+
+  const activeFlavor = getFlavor(flavorId);
+
   useEffect(() => {
-    // Set Document Title
+    // 1. Set Document Title
     if (activeFlavor?.name) {
       document.title = activeFlavor.name;
     }
 
-    // Inject CSS Variables untuk Theme Flavor
+    // 2. Inject CSS Variables untuk Theme Flavor
     if (activeFlavor?.theme) {
       const root = document.documentElement;
 
@@ -28,15 +39,27 @@ export const FlavorProvider = ({ children }) => {
         root.style.setProperty('--color-accent', activeFlavor.theme.accent);
       }
 
-      // Hanya set --bg-sidebar jika ditentukan secara spesifik dan tidak mengganggu light mode
       if (activeFlavor.theme.bgSidebar && activeFlavor.theme.bgSidebar !== 'default') {
         root.style.setProperty('--bg-sidebar', activeFlavor.theme.bgSidebar);
       }
     }
-  }, []);
+  }, [flavorId, activeFlavor]);
+
+  const switchFlavor = (newFlavorId) => {
+    if (flavors[newFlavorId]) {
+      setFlavorId(newFlavorId);
+      localStorage.setItem('desktopalie_flavor', newFlavorId);
+    }
+  };
 
   return (
-    <FlavorContext.Provider value={activeFlavor}>
+    <FlavorContext.Provider value={{
+      flavor: activeFlavor,
+      activeFlavor,
+      flavorId,
+      availableFlavors,
+      switchFlavor
+    }}>
       {children}
     </FlavorContext.Provider>
   );
@@ -45,7 +68,14 @@ export const FlavorProvider = ({ children }) => {
 export const useFlavor = () => {
   const context = useContext(FlavorContext);
   if (!context) {
-    return activeFlavor;
+    const defaultFlavor = getFlavor('platform1');
+    return {
+      flavor: defaultFlavor,
+      activeFlavor: defaultFlavor,
+      flavorId: 'platform1',
+      availableFlavors,
+      switchFlavor: () => {}
+    };
   }
   return context;
 };
