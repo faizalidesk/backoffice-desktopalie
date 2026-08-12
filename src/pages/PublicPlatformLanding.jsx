@@ -142,180 +142,251 @@ export default function PublicPlatformLanding() {
         width: '100vw',
         backgroundColor: isDarkMode ? '#080C14' : '#FAF9FC',
         color: isDarkMode ? '#F8FAFC' : '#0F172A',
-        fontFamily: "'Plus Jakarta Sans', sans-serif",
+        fontFamily: "'Plus Jakarta Sans', -apple-system, sans-serif",
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '2.5rem 1.5rem',
-        textAlign: 'center',
+        justifyContent: 'space-between',
         position: 'relative',
-        overflow: 'hidden'
+        overflowX: 'hidden',
+        boxSizing: 'border-box'
       }}>
-        {/* Glow */}
+        {/* Ambient Radial Background Glow */}
         <div style={{
           position: 'absolute',
-          width: '700px',
-          height: '700px',
+          top: '-150px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '800px',
+          height: '600px',
           borderRadius: '50%',
-          background: `radial-gradient(circle, ${primaryColor}22 0%, rgba(0,0,0,0) 70%)`,
+          background: `radial-gradient(circle, ${primaryColor}25 0%, rgba(0,0,0,0) 70%)`,
           pointerEvents: 'none'
         }} />
 
-        <div style={{
-          maxWidth: '720px',
+        {/* TOP NAVBAR HEADER */}
+        <header style={{
           width: '100%',
-          backgroundColor: isDarkMode ? '#111827' : '#FFFFFF',
-          border: `1px solid ${isDarkMode ? '#1F2937' : '#E5E7EB'}`,
-          borderRadius: '28px',
-          padding: '3.5rem 2.5rem',
-          boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)',
+          maxWidth: '1280px',
+          margin: '0 auto',
+          padding: '1.5rem 2rem',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
           position: 'relative',
           zIndex: 10
         }}>
-          {/* Maintenance Icon & Badge */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <DesktopalieMark size={34} style={{ color: isDarkMode ? '#F8FAFC' : '#0F172A', flexShrink: 0 }} />
+            <div>
+              <span style={{ fontSize: '1.1rem', fontWeight: '800', letterSpacing: '0.04em', color: isDarkMode ? '#F8FAFC' : '#0F172A', display: 'block', lineHeight: 1 }}>
+                {activeFlavor?.logoText || 'DESKTOPALIE'}
+              </span>
+              <span style={{ fontSize: '0.7rem', color: primaryColor, fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                {activeFlavor?.shortName} Portal
+              </span>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={toggleTheme}
+            title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+            style={{
+              width: '40px',
+              height: '40px',
+              borderRadius: '50%',
+              backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
+              border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: isDarkMode ? '#FBBF24' : '#0F172A',
+              fontSize: '1.1rem',
+              cursor: 'pointer',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            {isDarkMode ? <FiSun /> : <FiMoon />}
+          </button>
+        </header>
+
+        {/* CENTERED MAINTENANCE CONTENT CARD */}
+        <main style={{
+          flex: 1,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '2rem 1.5rem',
+          position: 'relative',
+          zIndex: 10
+        }}>
           <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            padding: '0.45rem 1.15rem',
-            borderRadius: '99px',
-            backgroundColor: 'rgba(239, 68, 68, 0.12)',
-            border: '1px solid rgba(239, 68, 68, 0.25)',
-            color: '#EF4444',
-            fontSize: '0.775rem',
-            fontWeight: '800',
-            marginBottom: '2rem',
-            textTransform: 'uppercase',
-            letterSpacing: '0.08em'
+            maxWidth: '680px',
+            width: '100%',
+            backgroundColor: isDarkMode ? '#111827' : '#FFFFFF',
+            border: `1px solid ${isDarkMode ? '#1F2937' : '#E5E7EB'}`,
+            borderRadius: '28px',
+            padding: '3.5rem 2.5rem',
+            boxShadow: isDarkMode ? '0 25px 50px -12px rgba(0,0,0,0.5)' : '0 20px 40px rgba(0,0,0,0.08)',
+            textAlign: 'center'
           }}>
-            <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#EF4444', boxShadow: '0 0 10px #EF4444' }} />
-            <span>{activeFlavor?.shortName} • SCHEDULED MAINTENANCE</span>
-          </div>
-
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem' }}>
-            <DesktopalieMark size={52} style={{ color: primaryColor }} />
-          </div>
-
-          <h1 style={{ fontSize: '2.25rem', fontWeight: '800', marginBottom: '0.85rem', color: isDarkMode ? '#F9FAFB' : '#111827', lineHeight: '1.2' }}>
-            {maintenance.title || 'System Under Maintenance'}
-          </h1>
-
-          <p style={{ fontSize: '1.05rem', lineHeight: '1.65', color: isDarkMode ? '#9CA3AF' : '#4B5563', marginBottom: '2.5rem', maxWidth: '580px', margin: '0 auto 2.5rem auto' }}>
-            {maintenance.message || 'Kami sedang melakukan peningkatan performa dan pemeliharaan rutin pada platform ini. Mohon kembali dalam beberapa saat.'}
-          </p>
-
-          {/* LIVE COUNTDOWN TILES */}
-          <div style={{ marginBottom: '2.5rem' }}>
+            {/* Status Pill Badge */}
             <div style={{
-              fontSize: '0.75rem',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              padding: '0.45rem 1.15rem',
+              borderRadius: '99px',
+              backgroundColor: 'rgba(239, 68, 68, 0.12)',
+              border: '1px solid rgba(239, 68, 68, 0.25)',
+              color: '#EF4444',
+              fontSize: '0.775rem',
               fontWeight: '800',
+              marginBottom: '2rem',
               textTransform: 'uppercase',
-              letterSpacing: '0.08em',
-              color: isDarkMode ? '#9CA3AF' : '#6B7280',
-              marginBottom: '1rem'
+              letterSpacing: '0.08em'
             }}>
-              ⏱️ HITUNG MUNDUR WAKTU SELESAI
+              <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#EF4444', boxShadow: '0 0 10px #EF4444' }} />
+              <span>{activeFlavor?.shortName} • SYSTEM UNDER MAINTENANCE</span>
             </div>
 
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(4, 1fr)',
-              gap: '0.85rem',
-              maxWidth: '520px',
-              margin: '0 auto 1.25rem auto'
-            }}>
-              <div style={{
-                backgroundColor: isDarkMode ? '#1F2937' : '#F3F4F6',
-                border: `1px solid ${isDarkMode ? '#374151' : '#E5E7EB'}`,
-                borderRadius: '16px',
-                padding: '1rem 0.5rem'
-              }}>
-                <div style={{ fontSize: '1.85rem', fontWeight: '800', color: primaryColor, lineHeight: 1, marginBottom: '0.3rem' }}>
-                  {String(timeLeft.days).padStart(2, '0')}
-                </div>
-                <div style={{ fontSize: '0.675rem', fontWeight: '800', color: isDarkMode ? '#9CA3AF' : '#6B7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                  HARI
-                </div>
-              </div>
-
-              <div style={{
-                backgroundColor: isDarkMode ? '#1F2937' : '#F3F4F6',
-                border: `1px solid ${isDarkMode ? '#374151' : '#E5E7EB'}`,
-                borderRadius: '16px',
-                padding: '1rem 0.5rem'
-              }}>
-                <div style={{ fontSize: '1.85rem', fontWeight: '800', color: primaryColor, lineHeight: 1, marginBottom: '0.3rem' }}>
-                  {String(timeLeft.hours).padStart(2, '0')}
-                </div>
-                <div style={{ fontSize: '0.675rem', fontWeight: '800', color: isDarkMode ? '#9CA3AF' : '#6B7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                  JAM
-                </div>
-              </div>
-
-              <div style={{
-                backgroundColor: isDarkMode ? '#1F2937' : '#F3F4F6',
-                border: `1px solid ${isDarkMode ? '#374151' : '#E5E7EB'}`,
-                borderRadius: '16px',
-                padding: '1rem 0.5rem'
-              }}>
-                <div style={{ fontSize: '1.85rem', fontWeight: '800', color: primaryColor, lineHeight: 1, marginBottom: '0.3rem' }}>
-                  {String(timeLeft.minutes).padStart(2, '0')}
-                </div>
-                <div style={{ fontSize: '0.675rem', fontWeight: '800', color: isDarkMode ? '#9CA3AF' : '#6B7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                  MENIT
-                </div>
-              </div>
-
-              <div style={{
-                backgroundColor: isDarkMode ? '#1F2937' : '#F3F4F6',
-                border: `1px solid ${isDarkMode ? '#374151' : '#E5E7EB'}`,
-                borderRadius: '16px',
-                padding: '1rem 0.5rem'
-              }}>
-                <div style={{ fontSize: '1.85rem', fontWeight: '800', color: primaryColor, lineHeight: 1, marginBottom: '0.3rem' }}>
-                  {String(timeLeft.seconds).padStart(2, '0')}
-                </div>
-                <div style={{ fontSize: '0.675rem', fontWeight: '800', color: isDarkMode ? '#9CA3AF' : '#6B7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                  DETIK
-                </div>
-              </div>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem' }}>
+              <DesktopalieMark size={56} style={{ color: primaryColor }} />
             </div>
 
-            {maintenance.end_time && (
-              <div style={{ fontSize: '0.85rem', fontWeight: '700', color: isDarkMode ? '#D1D5DB' : '#374151' }}>
-                Perkiraan Selesai: <span style={{ color: primaryColor }}>{new Date(maintenance.end_time).toLocaleString('id-ID', { dateStyle: 'full', timeStyle: 'short' })}</span>
+            <h1 style={{ fontSize: '2.25rem', fontWeight: '800', marginBottom: '0.85rem', color: isDarkMode ? '#F9FAFB' : '#111827', lineHeight: '1.2' }}>
+              {maintenance.title || 'System Under Maintenance'}
+            </h1>
+
+            <p style={{ fontSize: '1.05rem', lineHeight: '1.65', color: isDarkMode ? '#9CA3AF' : '#4B5563', marginBottom: '2.5rem', maxWidth: '560px', margin: '0 auto 2.5rem auto' }}>
+              {maintenance.message || 'Kami sedang melakukan peningkatan performa dan pemeliharaan rutin pada platform ini. Mohon kembali dalam beberapa saat.'}
+            </p>
+
+            {/* LIVE COUNTDOWN TILES */}
+            <div style={{ marginBottom: '2.5rem' }}>
+              <div style={{
+                fontSize: '0.75rem',
+                fontWeight: '800',
+                textTransform: 'uppercase',
+                letterSpacing: '0.08em',
+                color: isDarkMode ? '#9CA3AF' : '#6B7280',
+                marginBottom: '1rem'
+              }}>
+                ⏱️ HITUNG MUNDUR WAKTU SELESAI
+              </div>
+
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(4, 1fr)',
+                gap: '0.85rem',
+                maxWidth: '500px',
+                margin: '0 auto 1.25rem auto'
+              }}>
+                <div style={{
+                  backgroundColor: isDarkMode ? '#1F2937' : '#F3F4F6',
+                  border: `1px solid ${isDarkMode ? '#374151' : '#E5E7EB'}`,
+                  borderRadius: '16px',
+                  padding: '1rem 0.5rem'
+                }}>
+                  <div style={{ fontSize: '1.85rem', fontWeight: '800', color: primaryColor, lineHeight: 1, marginBottom: '0.3rem' }}>
+                    {String(timeLeft.days).padStart(2, '0')}
+                  </div>
+                  <div style={{ fontSize: '0.675rem', fontWeight: '800', color: isDarkMode ? '#9CA3AF' : '#6B7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    HARI
+                  </div>
+                </div>
+
+                <div style={{
+                  backgroundColor: isDarkMode ? '#1F2937' : '#F3F4F6',
+                  border: `1px solid ${isDarkMode ? '#374151' : '#E5E7EB'}`,
+                  borderRadius: '16px',
+                  padding: '1rem 0.5rem'
+                }}>
+                  <div style={{ fontSize: '1.85rem', fontWeight: '800', color: primaryColor, lineHeight: 1, marginBottom: '0.3rem' }}>
+                    {String(timeLeft.hours).padStart(2, '0')}
+                  </div>
+                  <div style={{ fontSize: '0.675rem', fontWeight: '800', color: isDarkMode ? '#9CA3AF' : '#6B7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    JAM
+                  </div>
+                </div>
+
+                <div style={{
+                  backgroundColor: isDarkMode ? '#1F2937' : '#F3F4F6',
+                  border: `1px solid ${isDarkMode ? '#374151' : '#E5E7EB'}`,
+                  borderRadius: '16px',
+                  padding: '1rem 0.5rem'
+                }}>
+                  <div style={{ fontSize: '1.85rem', fontWeight: '800', color: primaryColor, lineHeight: 1, marginBottom: '0.3rem' }}>
+                    {String(timeLeft.minutes).padStart(2, '0')}
+                  </div>
+                  <div style={{ fontSize: '0.675rem', fontWeight: '800', color: isDarkMode ? '#9CA3AF' : '#6B7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    MENIT
+                  </div>
+                </div>
+
+                <div style={{
+                  backgroundColor: isDarkMode ? '#1F2937' : '#F3F4F6',
+                  border: `1px solid ${isDarkMode ? '#374151' : '#E5E7EB'}`,
+                  borderRadius: '16px',
+                  padding: '1rem 0.5rem'
+                }}>
+                  <div style={{ fontSize: '1.85rem', fontWeight: '800', color: primaryColor, lineHeight: 1, marginBottom: '0.3rem' }}>
+                    {String(timeLeft.seconds).padStart(2, '0')}
+                  </div>
+                  <div style={{ fontSize: '0.675rem', fontWeight: '800', color: isDarkMode ? '#9CA3AF' : '#6B7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    DETIK
+                  </div>
+                </div>
+              </div>
+
+              {maintenance.end_time && (
+                <div style={{ fontSize: '0.85rem', fontWeight: '700', color: isDarkMode ? '#D1D5DB' : '#374151' }}>
+                  Perkiraan Selesai: <span style={{ color: primaryColor }}>{new Date(maintenance.end_time).toLocaleString('id-ID', { dateStyle: 'full', timeStyle: 'short' })}</span>
+                </div>
+              )}
+            </div>
+
+            {maintenance.allow_admin_bypass && (
+              <div>
+                <button
+                  type="button"
+                  onClick={() => navigate('/login')}
+                  style={{
+                    padding: '0.85rem 2.25rem',
+                    borderRadius: '99px',
+                    backgroundColor: primaryColor,
+                    color: '#FFFFFF',
+                    border: 'none',
+                    fontSize: '0.9rem',
+                    fontWeight: '700',
+                    cursor: 'pointer',
+                    boxShadow: `0 8px 20px ${primaryColor}40`,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    transition: 'all 0.15s ease'
+                  }}
+                >
+                  <FiLock />
+                  <span>Login Administrator (Bypass)</span>
+                </button>
               </div>
             )}
           </div>
+        </main>
 
-          {maintenance.allow_admin_bypass && (
-            <div>
-              <button
-                type="button"
-                onClick={() => navigate('/login')}
-                style={{
-                  padding: '0.85rem 2.25rem',
-                  borderRadius: '99px',
-                  backgroundColor: primaryColor,
-                  color: '#FFFFFF',
-                  border: 'none',
-                  fontSize: '0.9rem',
-                  fontWeight: '700',
-                  cursor: 'pointer',
-                  boxShadow: `0 8px 20px ${primaryColor}40`,
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  transition: 'all 0.15s ease'
-                }}
-              >
-                <FiLock />
-                <span>Login Administrator (Bypass)</span>
-              </button>
-            </div>
-          )}
-        </div>
+        {/* BOTTOM MINIMAL FOOTER */}
+        <footer style={{
+          padding: '1.5rem 2rem',
+          textAlign: 'center',
+          fontSize: '0.8rem',
+          color: isDarkMode ? '#6B7280' : '#9CA3AF',
+          position: 'relative',
+          zIndex: 10
+        }}>
+          © {new Date().getFullYear()} {activeFlavor?.name}. Powered by Desktopalie Engine • ISO 27001 Security Compliant
+        </footer>
       </div>
     );
   }
