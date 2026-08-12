@@ -182,7 +182,7 @@ export default function MaintenanceManager() {
                     const updated = { ...settings, is_enabled: newStatus };
                     setSettings(updated);
                     try {
-                      await backofficeService.updateMaintenanceSettings(updated);
+                      await backofficeService.updateMaintenanceSettings(updated, flavorId);
                       toast.success(newStatus ? 'Maintenance Mode ENABLED!' : 'Maintenance Mode DISABLED!');
                     } catch (err) {
                       toast.error('Failed to update maintenance status');

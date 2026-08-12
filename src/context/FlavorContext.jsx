@@ -10,7 +10,12 @@ const detectPlatformFromHostname = () => {
   if (hostname.includes('beta.')) return 'platform2';
   if (hostname.includes('gamma.')) return 'platform3';
   if (hostname.includes('delta.')) return 'platform4';
-  if (hostname.includes('back.')) return 'platform1';
+
+  // For back.desktopalie.my.id, allow manual dropdown switching
+  if (hostname.includes('back.')) return null;
+
+  // For main domain desktopalie.my.id, lock to platform1
+  if (hostname.includes('desktopalie.my.id')) return 'platform1';
 
   return null;
 };
