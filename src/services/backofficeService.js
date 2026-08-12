@@ -133,12 +133,13 @@ export const backofficeService = {
   },
 
   // LANDING PAGE CONTENT SETTINGS
-  async getLandingPageSettings() {
+  async getLandingPageSettings(flavorId = 'platform1') {
+    const key = `landing_page_${flavorId}`;
     try {
       const { data, error } = await supabase
         .from('site_settings')
         .select('*')
-        .eq('key', 'landing_page')
+        .eq('key', key)
         .maybeSingle();
 
       if (data?.value) {
@@ -149,40 +150,119 @@ export const backofficeService = {
       console.warn('Supabase site_settings table not accessible:', err);
     }
 
-    const localData = localStorage.getItem('desktopalie_landing_settings');
+    const localData = localStorage.getItem(`desktopalie_landing_settings_${flavorId}`);
     if (localData) {
       try {
         return JSON.parse(localData);
       } catch (e) {}
     }
 
-    return {
-      hero_badge: 'Independent designer & developer',
-      hero_title: 'Ideas, crafted into digital experiences.',
-      hero_description: 'Desktopalie is my personal space for projects, experiments, and digital creations—documenting my journey through web development, UI/UX design, and modern technology.',
-      hero_cta_text: 'Explore my work',
-      hero_secondary_cta_text: 'More about me',
-      hero_note: 'Currently exploring creative interfaces, thoughtful motion, and useful AI.',
-      about_title: 'I build to learn, and share what I discover.',
-      about_large_copy: 'I am Ali, a designer and developer interested in the space between technology and human experience.',
-      about_description: 'Desktopalie is where I collect the projects, lessons, and experiments that shape my creative journey. I care about simple ideas, precise details, and digital work with a clear reason to exist.',
-      about_location: 'Based in Indonesia • Working worldwide',
-      stat_1_value: '4+',
-      stat_1_label: 'Years exploring the web',
-      stat_2_value: '20+',
-      stat_2_label: 'Projects & experiments',
-      stat_3_value: '∞',
-      stat_3_label: 'Ideas still in progress',
-      contact_title: "Let's make something worth remembering.",
-      contact_email: 'hello@desktopalie.my.id',
-      github_url: 'https://github.com',
-      linkedin_url: 'https://linkedin.com',
-      instagram_url: 'https://instagram.com'
+    // Default presets per flavor
+    const presets = {
+      platform1: {
+        domain_url: 'https://desktopalie.my.id',
+        hero_badge: 'Independent designer & developer',
+        hero_title: 'Ideas, crafted into digital experiences.',
+        hero_description: 'Desktopalie is my personal space for projects, experiments, and digital creations—documenting my journey through web development, UI/UX design, and modern technology.',
+        hero_cta_text: 'Explore my work',
+        hero_secondary_cta_text: 'More about me',
+        hero_note: 'Currently exploring creative interfaces, thoughtful motion, and useful AI.',
+        about_title: 'I build to learn, and share what I discover.',
+        about_large_copy: 'I am Ali, a designer and developer interested in the space between technology and human experience.',
+        about_description: 'Desktopalie is where I collect the projects, lessons, and experiments that shape my creative journey. I care about simple ideas, precise details, and digital work with a clear reason to exist.',
+        about_location: 'Based in Indonesia • Working worldwide',
+        stat_1_value: '4+',
+        stat_1_label: 'Years exploring the web',
+        stat_2_value: '20+',
+        stat_2_label: 'Projects & experiments',
+        stat_3_value: '∞',
+        stat_3_label: 'Ideas still in progress',
+        contact_title: "Let's make something worth remembering.",
+        contact_email: 'hello@desktopalie.my.id',
+        github_url: 'https://github.com',
+        linkedin_url: 'https://linkedin.com',
+        instagram_url: 'https://instagram.com'
+      },
+      platform2: {
+        domain_url: 'https://beta.desktopalie.my.id',
+        hero_badge: 'Smart Logistics & Fleet Telemetry System',
+        hero_title: 'Real-time Fleet Intelligence & Telemetry System',
+        hero_description: 'Solusi manajemen armada, pelacakan GPS real-time, pengawasan rute otomatis, dan analisis efisiensi bahan bakar Platform Beta.',
+        hero_cta_text: 'Lihat Live Telemetry',
+        hero_secondary_cta_text: 'Dokumentasi Fleet API',
+        hero_note: 'Mendukung integrasi IoT sensor GPS, OBD-II, dan kalkulasi rute otomatis.',
+        about_title: 'Transformasi Logistik Modern Berbasis Data.',
+        about_large_copy: 'Platform Beta menyediakan dasbor kontrol armada kendaraan dengan pemantauan posisi real-time dan analisis pengemudi.',
+        about_description: 'Dikembangkan khusus untuk kebutuhan operasi armada logistik, transportasi, dan rantai pasokan dengan transparansi data yang akurat.',
+        about_location: 'Jakarta • Surabaya • Dispatch Hub',
+        stat_1_value: '150+',
+        stat_1_label: 'Armada Aktif Terhubung',
+        stat_2_value: '99.9%',
+        stat_2_label: 'Uptime GPS Telemetry',
+        stat_3_value: '< 50ms',
+        stat_3_label: 'Latensi Respon Sensor',
+        contact_title: 'Hubungi Tim Operasi Logistik Beta.',
+        contact_email: 'fleet@beta.desktopalie.my.id',
+        github_url: 'https://github.com',
+        linkedin_url: 'https://linkedin.com',
+        instagram_url: 'https://instagram.com'
+      },
+      platform3: {
+        domain_url: 'https://gamma.desktopalie.my.id',
+        hero_badge: 'AI Video Transcoder & Streaming Analytics Hub',
+        hero_title: 'High-Throughput Transcoding & Media Analytics Platform',
+        hero_description: 'Engine transkoding video HLS/DASH berbasis cloud, pembuatan subtitle AI otomatis, dan analitik penonton Platform Gamma.',
+        hero_cta_text: 'Coba Studio Streaming',
+        hero_secondary_cta_text: 'Arsitektur Transcoder',
+        hero_note: 'Dipersenjatai GPU Acceleration untuk rendering video 4K 60fps serentak.',
+        about_title: 'Infrastruktur Video Terakselerasi untuk Kreator & Media.',
+        about_large_copy: 'Platform Gamma memberikan pengalaman streaming berlatensi rendah dengan analitik keterlibatan penonton yang presisi.',
+        about_description: 'Memproses ribuan jam konten video setiap bulan dengan konversi format otomatis dan optimasi bandwith secara cerdas.',
+        about_location: 'Cloud Edge Nodes • Global CDN',
+        stat_1_value: '10K+',
+        stat_1_label: 'Jam Video Terolah',
+        stat_2_value: '4K 60FPS',
+        stat_2_label: 'Kualitas Transcode Max',
+        stat_3_value: '0.8s',
+        stat_3_label: 'Rata-rata Buffer Stream',
+        contact_title: 'Konsultasikan Infrastruktur Streaming Anda.',
+        contact_email: 'media@gamma.desktopalie.my.id',
+        github_url: 'https://github.com',
+        linkedin_url: 'https://linkedin.com',
+        instagram_url: 'https://instagram.com'
+      },
+      platform4: {
+        domain_url: 'https://delta.desktopalie.my.id',
+        hero_badge: 'Enterprise ERP & Compliance Audit System',
+        hero_title: 'Client Financial ERP, Inventory & Security Audit Engine',
+        hero_description: 'Sistem manajemen sumber daya perusahaan, akuntansi terpusat, pengawasan persediaan, dan audit kepatuhan keamanan ISO 27001.',
+        hero_cta_text: 'Jelajahi Modul ERP',
+        hero_secondary_cta_text: 'Laporan Audit Kepatuhan',
+        hero_note: 'Dilengkapi Enkripsi AES-256 dan sertifikasi audit jejak digital enterprise.',
+        about_title: 'Tingkat Keamanan & Tata Kelola Enterprise Terbaik.',
+        about_large_copy: 'Platform Delta dirancang untuk perusahaan berskala besar yang membutuhkan pengawasan keuangan dan audit internal tanpa kompromi.',
+        about_description: 'Mengintegrasikan modul keuangan, inventaris multi-gudang, manajemen kontrak vendor, dan pelaporan audit pajak secara real-time.',
+        about_location: 'Enterprise Finance Center',
+        stat_1_value: 'ISO 27001',
+        stat_1_label: 'Standar Keamanan Siber',
+        stat_2_value: '100%',
+        stat_2_label: 'Jejak Audit Terverifikasi',
+        stat_3_value: '24/7',
+        stat_3_label: 'Pengawasan Keuangan Real-Time',
+        contact_title: 'Diskusikan Solusi Enterprise Delta dengan Kami.',
+        contact_email: 'enterprise@delta.desktopalie.my.id',
+        github_url: 'https://github.com',
+        linkedin_url: 'https://linkedin.com',
+        instagram_url: 'https://instagram.com'
+      }
     };
+
+    return presets[flavorId] || presets.platform1;
   },
 
-  async updateLandingPageSettings(settings) {
-    localStorage.setItem('desktopalie_landing_settings', JSON.stringify(settings));
+  async updateLandingPageSettings(settings, flavorId = 'platform1') {
+    const key = `landing_page_${flavorId}`;
+    localStorage.setItem(`desktopalie_landing_settings_${flavorId}`, JSON.stringify(settings));
     window.dispatchEvent(new Event('storage'));
 
     try {
@@ -190,7 +270,7 @@ export const backofficeService = {
         .from('site_settings')
         .upsert(
           {
-            key: 'landing_page',
+            key: key,
             value: settings,
             updated_at: new Date().toISOString()
           },
