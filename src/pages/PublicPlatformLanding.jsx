@@ -501,17 +501,19 @@ export default function PublicPlatformLanding() {
         position: 'relative',
         zIndex: 10
       }}>
-        {/* Left Brand Logo */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <DesktopalieMark size={32} style={{ color: isDarkMode ? '#F8FAFC' : '#0F172A', flexShrink: 0 }} />
-          <div>
-            <span style={{ fontSize: '1.05rem', fontWeight: '800', letterSpacing: '0.05em', color: isDarkMode ? '#F8FAFC' : '#0F172A', display: 'block', lineHeight: 1 }}>
-              {activeFlavor?.logoText || 'DESKTOPALIE'}
-            </span>
-            <span style={{ fontSize: '0.7rem', color: primaryColor, fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-              {activeFlavor?.shortName} Portal
-            </span>
-          </div>
+        {/* Left Brand Logo matching screenshot */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+          <DesktopalieMark size={24} style={{ color: isDarkMode ? '#F8FAFC' : '#0F172A', flexShrink: 0 }} />
+          <span style={{
+            fontSize: '0.9rem',
+            fontWeight: '800',
+            letterSpacing: '0.08em',
+            color: isDarkMode ? '#F8FAFC' : '#0F172A',
+            textTransform: 'uppercase',
+            lineHeight: 1
+          }}>
+            {activeFlavor?.logoText || 'DESKTOPALIE'}
+          </span>
         </div>
 
         {/* Navigation Links */}
