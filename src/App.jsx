@@ -20,6 +20,9 @@ import LandingPageManager from './pages/LandingPageManager';
 import TodoListManager from './pages/TodoListManager';
 import DocumentationManager from './pages/DocumentationManager';
 
+import PlatformWorkspacesManager from './pages/PlatformWorkspacesManager';
+import { useFlavor } from './context/FlavorContext';
+
 function ProtectedLayout({ children }) {
   const { user, loading } = useAuth();
 
@@ -52,6 +55,14 @@ function ProtectedLayout({ children }) {
   );
 }
 
+function DashboardRoute() {
+  const { hasSelectedFlavor } = useFlavor();
+  if (!hasSelectedFlavor) {
+    return <Navigate to="/workspaces" replace />;
+  }
+  return <Dashboard />;
+}
+
 export default function App() {
   return (
     <FlavorProvider>
@@ -75,7 +86,8 @@ export default function App() {
                   <Route path="/login" element={<Login />} />
                   <Route path="/register" element={<Register />} />
 
-                  <Route path="/" element={<ProtectedLayout><Dashboard /></ProtectedLayout>} />
+                  <Route path="/" element={<ProtectedLayout><DashboardRoute /></ProtectedLayout>} />
+                  <Route path="/workspaces" element={<ProtectedLayout><PlatformWorkspacesManager /></ProtectedLayout>} />
                   <Route path="/todos" element={<ProtectedLayout><TodoListManager /></ProtectedLayout>} />
                   <Route path="/documentation" element={<ProtectedLayout><DocumentationManager /></ProtectedLayout>} />
                   <Route path="/landing-manager" element={<ProtectedLayout><LandingPageManager /></ProtectedLayout>} />

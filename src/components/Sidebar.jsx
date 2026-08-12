@@ -14,7 +14,8 @@ import {
   FiMenu,
   FiInfo,
   FiSearch,
-  FiX
+  FiX,
+  FiLayers
 } from 'react-icons/fi';
 import { useLanguage } from '../context/LanguageContext';
 import { useFlavor } from '../context/FlavorContext';
@@ -51,6 +52,7 @@ export default function Sidebar() {
 
   const allNavItems = [
     { label: t('dashboard'), path: '/', icon: FiGrid, featureKey: true },
+    { label: t('workspaces'), path: '/workspaces', icon: FiLayers, featureKey: true },
     { label: t('todos'), path: '/todos', icon: FiCheckSquare, featureKey: flavor.features?.enableTodos },
     { label: t('documentation'), path: '/documentation', icon: FiBookOpen, featureKey: flavor.features?.enableDocumentation },
     { label: t('landingManager'), path: '/landing-manager', icon: FiLayout, featureKey: flavor.features?.enableLandingManager },

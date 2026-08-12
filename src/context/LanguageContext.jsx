@@ -6,6 +6,7 @@ export const translations = {
   id: {
     // Navigation
     dashboard: 'Dashboard Overview',
+    workspaces: 'Platform Workspaces',
     todos: 'To-Do & Board QA',
     documentation: 'Dokumentasi System',
     landingManager: 'Landing Page Manager',

@@ -4,6 +4,10 @@ import { flavors, availableFlavors, getFlavor } from '../config';
 const FlavorContext = createContext();
 
 export const FlavorProvider = ({ children }) => {
+  const [hasSelectedFlavor, setHasSelectedFlavor] = useState(() => {
+    return Boolean(localStorage.getItem('desktopalie_flavor'));
+  });
+
   const [flavorId, setFlavorId] = useState(() => {
     const saved = localStorage.getItem('desktopalie_flavor');
     if (saved && flavors[saved]) {
@@ -48,6 +52,7 @@ export const FlavorProvider = ({ children }) => {
   const switchFlavor = (newFlavorId) => {
     if (flavors[newFlavorId]) {
       setFlavorId(newFlavorId);
+      setHasSelectedFlavor(true);
       localStorage.setItem('desktopalie_flavor', newFlavorId);
     }
   };
@@ -57,6 +62,7 @@ export const FlavorProvider = ({ children }) => {
       flavor: activeFlavor,
       activeFlavor,
       flavorId,
+      hasSelectedFlavor,
       availableFlavors,
       switchFlavor
     }}>
