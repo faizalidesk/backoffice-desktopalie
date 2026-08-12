@@ -3,14 +3,35 @@ import { flavors, availableFlavors, subPlatformFlavors, mainFlavor, getFlavor } 
 
 const FlavorContext = createContext();
 
+const detectPlatformFromHostname = () => {
+  if (typeof window === 'undefined') return null;
+  const hostname = window.location.hostname.toLowerCase();
+
+  if (hostname.includes('beta.')) return 'platform2';
+  if (hostname.includes('gamma.')) return 'platform3';
+  if (hostname.includes('delta.')) return 'platform4';
+  if (hostname.includes('back.')) return 'platform1';
+
+  return null;
+};
+
 export const FlavorProvider = ({ children }) => {
   const [hasSelectedFlavor, setHasSelectedFlavor] = useState(true);
 
   const [flavorId, setFlavorId] = useState(() => {
+    // 1. Detect platform automatically from domain URL (e.g. beta.desktopalie.my.id -> platform2)
+    const hostnameFlavor = detectPlatformFromHostname();
+    if (hostnameFlavor && flavors[hostnameFlavor]) {
+      return hostnameFlavor;
+    }
+
+    // 2. Fallback to localStorage saved selection
     const saved = localStorage.getItem('desktopalie_flavor');
     if (saved && flavors[saved]) {
       return saved;
     }
+
+    // 3. Fallback to env or default platform1
     const envFlavor = import.meta.env.VITE_FLAVOR;
     return (envFlavor && flavors[envFlavor]) ? envFlavor : 'platform1';
   });
