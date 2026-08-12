@@ -390,9 +390,10 @@ export default function TodoListManager() {
           /* NOTION / JIRA KANBAN BOARD VIEW WITH NATIVE DRAG & DROP */
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
+            gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
             gap: '1.25rem',
-            alignItems: 'start'
+            alignItems: 'start',
+            width: '100%'
           }}>
             {STATUSES.map(col => {
               const columnTodos = filteredTodos.filter(t => t.status === col.key);
@@ -412,6 +413,7 @@ export default function TodoListManager() {
                     flexDirection: 'column',
                     gap: '0.75rem',
                     minHeight: '480px',
+                    minWidth: 0,
                     transition: 'all 0.2s ease'
                   }}
                 >
@@ -446,7 +448,7 @@ export default function TodoListManager() {
                   </div>
 
                   {/* Task Cards Column Body */}
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem', flex: 1 }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem', flex: 1, minWidth: 0 }}>
                     {columnTodos.length === 0 ? (
                       <div style={{
                         padding: '1.5rem 1rem',
@@ -482,12 +484,24 @@ export default function TodoListManager() {
                               gap: '0.5rem',
                               cursor: 'pointer',
                               opacity: isBeingDragged ? 0.4 : 1,
+                              minWidth: 0,
+                              wordBreak: 'break-word',
+                              overflowWrap: 'anywhere',
                               transition: 'all 0.15s ease'
                             }}
                           >
-                            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+                            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', minWidth: 0 }}>
                               <FiFileText style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginTop: '3px', flexShrink: 0 }} />
-                              <div style={{ flex: 1, fontSize: '0.875rem', fontWeight: '600', color: 'var(--text-main)', lineHeight: '1.35' }}>
+                              <div style={{
+                                flex: 1,
+                                fontSize: '0.875rem',
+                                fontWeight: '600',
+                                color: 'var(--text-main)',
+                                lineHeight: '1.35',
+                                minWidth: 0,
+                                wordBreak: 'break-word',
+                                overflowWrap: 'anywhere'
+                              }}>
                                 {task.title}
                               </div>
                             </div>
@@ -498,8 +512,11 @@ export default function TodoListManager() {
                                 color: 'var(--text-muted)',
                                 margin: 0,
                                 paddingLeft: '1.45rem',
+                                lineHeight: '1.45',
+                                wordBreak: 'break-word',
+                                overflowWrap: 'anywhere',
                                 display: '-webkit-box',
-                                WebkitLineClamp: 2,
+                                WebkitLineClamp: 3,
                                 WebkitBoxOrient: 'vertical',
                                 overflow: 'hidden'
                               }}>
