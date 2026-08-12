@@ -10,8 +10,17 @@ export const flavors = {
   platform4,
 };
 
+export const mainFlavor = platform1;
+
 export const availableFlavors = [
   platform1,
+  platform2,
+  platform3,
+  platform4,
+];
+
+// Sub-platform switcher excludes Desktopalie Main (platform1)
+export const subPlatformFlavors = [
   platform2,
   platform3,
   platform4,

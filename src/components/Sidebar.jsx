@@ -23,7 +23,7 @@ import DesktopalieMark from './DesktopalieMark';
 
 export default function Sidebar() {
   const { t } = useLanguage();
-  const { flavor, flavorId, availableFlavors, switchFlavor } = useFlavor();
+  const { flavor, flavorId, subPlatformFlavors, isMainDesktopalie, switchFlavor, resetToMainFlavor } = useFlavor();
   const [searchQuery, setSearchQuery] = useState('');
   const searchInputRef = useRef(null);
   const [isCollapsed, setIsCollapsed] = useState(() => {
@@ -111,11 +111,11 @@ export default function Sidebar() {
                 margin: 0,
                 whiteSpace: 'nowrap'
               }}>
-                {flavor.shortName ? `Desktopalie` : 'Desktopalie'}
+                Desktopalie
               </h2>
               <span style={{
                 fontSize: '0.65rem',
-                color: 'var(--color-primary, var(--primary))',
+                color: isMainDesktopalie ? 'var(--color-primary, var(--primary))' : '#E11D48',
                 fontWeight: '700',
                 textTransform: 'uppercase',
                 letterSpacing: '0.08em',
@@ -123,7 +123,7 @@ export default function Sidebar() {
                 marginTop: '0.15rem',
                 whiteSpace: 'nowrap'
               }}>
-                {flavor.shortName ? `Platform ${flavor.shortName}` : 'Backoffice Admin'}
+                {isMainDesktopalie ? 'Main Backoffice' : `Platform ${flavor.shortName}`}
               </span>
             </div>
           </div>
@@ -153,7 +153,7 @@ export default function Sidebar() {
         </button>
       </div>
 
-      {/* PLATFORM / FLAVOR SWITCHER */}
+      {/* SUB-PLATFORM SWITCHER (Desktopalie Excluded from dropdown options) */}
       {!isCollapsed ? (
         <div style={{
           marginBottom: '0.85rem',
@@ -173,23 +173,29 @@ export default function Sidebar() {
               letterSpacing: '0.08em',
               color: 'var(--text-muted)'
             }}>
-              PLATFORM WORKSPACE
+              SUB-PLATFORMS
             </span>
             <span style={{
               fontSize: '0.625rem',
               fontWeight: '800',
               padding: '0.1rem 0.45rem',
               borderRadius: '99px',
-              backgroundColor: 'var(--primary-light)',
-              color: 'var(--primary)'
+              backgroundColor: isMainDesktopalie ? 'rgba(79, 70, 229, 0.15)' : 'var(--primary-light)',
+              color: isMainDesktopalie ? '#4F46E5' : 'var(--primary)'
             }}>
-              {flavor?.shortName || 'Platform'}
+              {isMainDesktopalie ? 'Main Core' : `Platform ${flavor?.shortName}`}
             </span>
           </div>
 
           <select
-            value={flavorId}
-            onChange={(e) => switchFlavor(e.target.value)}
+            value={isMainDesktopalie ? '' : flavorId}
+            onChange={(e) => {
+              if (e.target.value === 'main') {
+                resetToMainFlavor();
+              } else if (e.target.value) {
+                switchFlavor(e.target.value);
+              }
+            }}
             style={{
               width: '100%',
               padding: '0.35rem 0.45rem',
@@ -204,26 +210,65 @@ export default function Sidebar() {
               transition: 'border-color 0.15s ease'
             }}
           >
-            {availableFlavors?.map((f) => (
+            {isMainDesktopalie && (
+              <option value="" disabled>
+                -- Switch Sub-Platform --
+              </option>
+            )}
+            {!isMainDesktopalie && (
+              <option value="main" style={{ fontWeight: 'bold' }}>
+                🏠 Desktopalie (Main Hub)
+              </option>
+            )}
+            {subPlatformFlavors?.map((f) => (
               <option key={f.id} value={f.id}>
                 {f.shortName} — {f.name}
               </option>
             ))}
           </select>
+
+          {!isMainDesktopalie && (
+            <button
+              onClick={resetToMainFlavor}
+              style={{
+                marginTop: '0.2rem',
+                padding: '0.25rem 0.4rem',
+                fontSize: '0.675rem',
+                fontWeight: '700',
+                borderRadius: '4px',
+                border: 'none',
+                backgroundColor: 'rgba(79, 70, 229, 0.12)',
+                color: '#4F46E5',
+                cursor: 'pointer',
+                textAlign: 'center',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              ← Kembali ke Desktopalie Main
+            </button>
+          )}
         </div>
       ) : (
         <button
           onClick={() => {
-            const ids = availableFlavors.map(f => f.id);
-            const nextIdx = (ids.indexOf(flavorId) + 1) % ids.length;
-            switchFlavor(ids[nextIdx]);
+            const subIds = subPlatformFlavors.map(f => f.id);
+            if (isMainDesktopalie) {
+              switchFlavor(subIds[0]);
+            } else {
+              const currentIdx = subIds.indexOf(flavorId);
+              if (currentIdx === subIds.length - 1) {
+                resetToMainFlavor();
+              } else {
+                switchFlavor(subIds[currentIdx + 1]);
+              }
+            }
           }}
-          title={`Platform: ${flavor?.shortName} (${flavor?.name}). Klik untuk ganti platform.`}
+          title={isMainDesktopalie ? "Desktopalie Main. Klik untuk pilih sub-platform." : `Platform Sub: ${flavor?.shortName}. Klik untuk ganti.`}
           style={{
-            background: 'var(--primary-light)',
-            border: '1px solid var(--primary)',
+            background: isMainDesktopalie ? 'rgba(79, 70, 229, 0.15)' : 'var(--primary-light)',
+            border: `1px solid ${isMainDesktopalie ? '#4F46E5' : 'var(--primary)'}`,
             borderRadius: 'var(--radius-sm)',
-            color: 'var(--primary)',
+            color: isMainDesktopalie ? '#4F46E5' : 'var(--primary)',
             cursor: 'pointer',
             padding: '0.35rem 0',
             marginBottom: '0.85rem',
@@ -236,7 +281,7 @@ export default function Sidebar() {
             transition: 'all 0.15s ease'
           }}
         >
-          {flavor?.shortName?.[0] || 'P'}
+          {isMainDesktopalie ? 'D' : (flavor?.shortName?.[0] || 'S')}
         </button>
       )}
 

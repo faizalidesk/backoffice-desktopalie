@@ -1,9 +1,9 @@
 export default {
   id: 'platform1',
-  name: 'Desktopalie Backoffice Alpha',
-  shortName: 'Alpha',
-  description: 'Platform 1 - Primary Workspace (Portofolio & Design System)',
-  logoText: 'Desktopalie Alpha',
+  name: 'Desktopalie Main Backoffice',
+  shortName: 'Desktopalie',
+  description: 'Primary Independent Backoffice Workspace (https://desktopalie.my.id/)',
+  logoText: 'Desktopalie',
   theme: {
     colorPrimary: '#4f46e5', // Indigo
     colorSecondary: '#6366f1',

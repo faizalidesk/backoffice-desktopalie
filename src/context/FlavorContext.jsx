@@ -1,12 +1,10 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { flavors, availableFlavors, getFlavor } from '../config';
+import { flavors, availableFlavors, subPlatformFlavors, mainFlavor, getFlavor } from '../config';
 
 const FlavorContext = createContext();
 
 export const FlavorProvider = ({ children }) => {
-  const [hasSelectedFlavor, setHasSelectedFlavor] = useState(() => {
-    return Boolean(localStorage.getItem('desktopalie_flavor'));
-  });
+  const [hasSelectedFlavor, setHasSelectedFlavor] = useState(true);
 
   const [flavorId, setFlavorId] = useState(() => {
     const saved = localStorage.getItem('desktopalie_flavor');
@@ -18,6 +16,7 @@ export const FlavorProvider = ({ children }) => {
   });
 
   const activeFlavor = getFlavor(flavorId);
+  const isMainDesktopalie = flavorId === 'platform1';
 
   useEffect(() => {
     // 1. Set Document Title
@@ -57,6 +56,10 @@ export const FlavorProvider = ({ children }) => {
     }
   };
 
+  const resetToMainFlavor = () => {
+    switchFlavor('platform1');
+  };
+
   return (
     <FlavorContext.Provider value={{
       flavor: activeFlavor,
@@ -64,7 +67,11 @@ export const FlavorProvider = ({ children }) => {
       flavorId,
       hasSelectedFlavor,
       availableFlavors,
-      switchFlavor
+      subPlatformFlavors,
+      mainFlavor,
+      isMainDesktopalie,
+      switchFlavor,
+      resetToMainFlavor
     }}>
       {children}
     </FlavorContext.Provider>
@@ -80,7 +87,11 @@ export const useFlavor = () => {
       activeFlavor: defaultFlavor,
       flavorId: 'platform1',
       availableFlavors,
-      switchFlavor: () => {}
+      subPlatformFlavors,
+      mainFlavor,
+      isMainDesktopalie: true,
+      switchFlavor: () => {},
+      resetToMainFlavor: () => {}
     };
   }
   return context;
