@@ -153,40 +153,9 @@ export default function Sidebar() {
         </button>
       </div>
 
-      {/* SUB-PLATFORM SWITCHER (Desktopalie Excluded from dropdown options) */}
+      {/* SUB-PLATFORM SWITCHER (Ultra Minimalist) */}
       {!isCollapsed ? (
-        <div style={{
-          marginBottom: '0.85rem',
-          padding: '0.55rem 0.65rem',
-          borderRadius: 'var(--radius-sm)',
-          backgroundColor: 'var(--bg-card-hover)',
-          border: '1px solid var(--border-color)',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '0.35rem'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span style={{
-              fontSize: '0.625rem',
-              fontWeight: '800',
-              textTransform: 'uppercase',
-              letterSpacing: '0.08em',
-              color: 'var(--text-muted)'
-            }}>
-              SUB-PLATFORMS
-            </span>
-            <span style={{
-              fontSize: '0.625rem',
-              fontWeight: '800',
-              padding: '0.1rem 0.45rem',
-              borderRadius: '99px',
-              backgroundColor: isMainDesktopalie ? 'rgba(79, 70, 229, 0.15)' : 'var(--primary-light)',
-              color: isMainDesktopalie ? '#4F46E5' : 'var(--primary)'
-            }}>
-              {isMainDesktopalie ? 'Main Core' : `Platform ${flavor?.shortName}`}
-            </span>
-          </div>
-
+        <div style={{ marginBottom: '0.85rem' }}>
           <select
             value={isMainDesktopalie ? '' : flavorId}
             onChange={(e) => {
@@ -198,55 +167,34 @@ export default function Sidebar() {
             }}
             style={{
               width: '100%',
-              padding: '0.35rem 0.45rem',
+              padding: '0.4rem 0.6rem',
               fontSize: '0.775rem',
-              fontWeight: '700',
+              fontWeight: '600',
               borderRadius: 'var(--radius-sm)',
               border: '1px solid var(--border-color)',
-              backgroundColor: 'var(--bg-card)',
-              color: 'var(--text-main)',
+              backgroundColor: 'transparent',
+              color: 'var(--text-muted)',
               cursor: 'pointer',
               outline: 'none',
-              transition: 'border-color 0.15s ease'
+              transition: 'all 0.15s ease'
             }}
           >
             {isMainDesktopalie && (
               <option value="" disabled>
-                -- Switch Sub-Platform --
+                -- Sub-Platform --
               </option>
             )}
             {!isMainDesktopalie && (
-              <option value="main" style={{ fontWeight: 'bold' }}>
-                🏠 Desktopalie (Main Hub)
+              <option value="main">
+                ← Desktopalie Main
               </option>
             )}
             {subPlatformFlavors?.map((f) => (
               <option key={f.id} value={f.id}>
-                {f.shortName} — {f.name}
+                Platform {f.shortName}
               </option>
             ))}
           </select>
-
-          {!isMainDesktopalie && (
-            <button
-              onClick={resetToMainFlavor}
-              style={{
-                marginTop: '0.2rem',
-                padding: '0.25rem 0.4rem',
-                fontSize: '0.675rem',
-                fontWeight: '700',
-                borderRadius: '4px',
-                border: 'none',
-                backgroundColor: 'rgba(79, 70, 229, 0.12)',
-                color: '#4F46E5',
-                cursor: 'pointer',
-                textAlign: 'center',
-                transition: 'all 0.15s ease'
-              }}
-            >
-              ← Kembali ke Desktopalie Main
-            </button>
-          )}
         </div>
       ) : (
         <button
@@ -265,10 +213,10 @@ export default function Sidebar() {
           }}
           title={isMainDesktopalie ? "Desktopalie Main. Klik untuk pilih sub-platform." : `Platform Sub: ${flavor?.shortName}. Klik untuk ganti.`}
           style={{
-            background: isMainDesktopalie ? 'rgba(79, 70, 229, 0.15)' : 'var(--primary-light)',
-            border: `1px solid ${isMainDesktopalie ? '#4F46E5' : 'var(--primary)'}`,
+            background: 'transparent',
+            border: '1px solid var(--border-color)',
             borderRadius: 'var(--radius-sm)',
-            color: isMainDesktopalie ? '#4F46E5' : 'var(--primary)',
+            color: 'var(--text-muted)',
             cursor: 'pointer',
             padding: '0.35rem 0',
             marginBottom: '0.85rem',
@@ -276,7 +224,7 @@ export default function Sidebar() {
             alignItems: 'center',
             justifyContent: 'center',
             fontSize: '0.7rem',
-            fontWeight: '800',
+            fontWeight: '700',
             width: '100%',
             transition: 'all 0.15s ease'
           }}
@@ -312,7 +260,7 @@ export default function Sidebar() {
               fontSize: '0.825rem',
               borderRadius: 'var(--radius-sm)',
               border: '1px solid var(--border-color)',
-              backgroundColor: 'var(--bg-card-hover)',
+              backgroundColor: 'transparent',
               color: 'var(--text-main)',
               outline: 'none',
               transition: 'border-color 0.15s ease, box-shadow 0.15s ease'
@@ -414,65 +362,26 @@ export default function Sidebar() {
         )}
       </nav>
 
-      {/* FOOTER: APP WEBSITE VERSION INFORMATION ONLY */}
+      {/* FOOTER: PLAIN VERSION TEXT ONLY (NO CARDS) */}
       <div style={{
-        paddingTop: '1rem',
+        paddingTop: '0.75rem',
         borderTop: '1px solid var(--border-color)',
         display: 'flex',
-        flexDirection: 'column',
-        alignItems: isCollapsed ? 'center' : 'stretch'
+        alignItems: 'center',
+        justifyContent: isCollapsed ? 'center' : 'space-between',
+        fontSize: '0.725rem',
+        color: 'var(--text-subtle)',
+        fontWeight: '600',
+        paddingLeft: isCollapsed ? 0 : '0.25rem',
+        paddingRight: isCollapsed ? 0 : '0.25rem'
       }}>
         {!isCollapsed ? (
-          <div style={{
-            padding: '0.75rem',
-            borderRadius: 'var(--radius-sm)',
-            backgroundColor: 'var(--bg-card-hover)',
-            border: '1px solid var(--border-color)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '0.35rem'
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span style={{ fontSize: '0.7rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--primary)' }}>
-                SYSTEM VERSION
-              </span>
-              <span style={{
-                fontSize: '0.65rem',
-                fontWeight: '700',
-                padding: '0.1rem 0.4rem',
-                borderRadius: '99px',
-                backgroundColor: 'rgba(34, 197, 94, 0.15)',
-                color: '#16A34A'
-              }}>
-                v2.5.0
-              </span>
-            </div>
-
-            <div style={{ fontSize: '0.775rem', fontWeight: '700', color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-              <FiInfo style={{ color: 'var(--primary)', flexShrink: 0 }} />
-              <span>Desktopalie Workspace</span>
-            </div>
-
-            <div style={{ fontSize: '0.675rem', color: 'var(--text-subtle)', lineHeight: '1.4' }}>
-              Built for Desktop Experience • Synced
-            </div>
-          </div>
+          <>
+            <span>Desktopalie</span>
+            <span>v2.5.0</span>
+          </>
         ) : (
-          <div 
-            title="Desktopalie Backoffice v2.5.0"
-            style={{
-              padding: '0.35rem 0.5rem',
-              borderRadius: '99px',
-              backgroundColor: 'var(--bg-card-hover)',
-              border: '1px solid var(--border-color)',
-              fontSize: '0.65rem',
-              fontWeight: '800',
-              color: 'var(--primary)',
-              fontFamily: "'JetBrains Mono', monospace"
-            }}
-          >
-            v2.5
-          </div>
+          <span title="Desktopalie v2.5.0">v2.5</span>
         )}
       </div>
     </aside>
