@@ -100,14 +100,30 @@ export default function PublicPlatformLanding() {
 
   const navLinks = getNavLinks();
 
-  const isMaintenanceActive = Boolean(
-    maintenance && (
-      maintenance.is_enabled === true ||
-      maintenance.is_enabled === 'true' ||
-      maintenance.is_enabled === 1 ||
-      maintenance.is_enabled === '1'
-    )
-  );
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+
+  useEffect(() => {
+    if (!maintenance?.end_time) return;
+    const calculateTimeLeft = () => {
+      const target = new Date(maintenance.end_time).getTime();
+      const now = new Date().getTime();
+      const diff = target - now;
+
+      if (diff <= 0) {
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+      } else {
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        setTimeLeft({ days, hours, minutes, seconds });
+      }
+    };
+
+    calculateTimeLeft();
+    const timer = setInterval(calculateTimeLeft, 1000);
+    return () => clearInterval(timer);
+  }, [maintenance?.end_time]);
 
   // RENDER MAINTENANCE SCREEN IF MAINTENANCE MODE IS ACTIVE FOR THIS PLATFORM FLAVOR
   if (isMaintenanceActive) {
@@ -115,14 +131,14 @@ export default function PublicPlatformLanding() {
       <div style={{
         minHeight: '100vh',
         width: '100vw',
-        backgroundColor: isDarkMode ? '#0B0F19' : '#FAF9FC',
+        backgroundColor: isDarkMode ? '#080C14' : '#FAF9FC',
         color: isDarkMode ? '#F8FAFC' : '#0F172A',
         fontFamily: "'Plus Jakarta Sans', sans-serif",
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '2rem',
+        padding: '2.5rem 1.5rem',
         textAlign: 'center',
         position: 'relative',
         overflow: 'hidden'
@@ -130,20 +146,21 @@ export default function PublicPlatformLanding() {
         {/* Glow */}
         <div style={{
           position: 'absolute',
-          width: '600px',
-          height: '600px',
+          width: '700px',
+          height: '700px',
           borderRadius: '50%',
-          background: `radial-gradient(circle, ${primaryColor}25 0%, rgba(0,0,0,0) 70%)`,
+          background: `radial-gradient(circle, ${primaryColor}22 0%, rgba(0,0,0,0) 70%)`,
           pointerEvents: 'none'
         }} />
 
         <div style={{
-          maxWidth: '650px',
-          backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-          border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
-          borderRadius: '24px',
+          maxWidth: '720px',
+          width: '100%',
+          backgroundColor: isDarkMode ? '#111827' : '#FFFFFF',
+          border: `1px solid ${isDarkMode ? '#1F2937' : '#E5E7EB'}`,
+          borderRadius: '28px',
           padding: '3.5rem 2.5rem',
-          boxShadow: '0 20px 40px rgba(0,0,0,0.15)',
+          boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)',
           position: 'relative',
           zIndex: 10
         }}>
@@ -152,53 +169,116 @@ export default function PublicPlatformLanding() {
             display: 'inline-flex',
             alignItems: 'center',
             gap: '0.5rem',
-            padding: '0.4rem 1rem',
+            padding: '0.45rem 1.15rem',
             borderRadius: '99px',
-            backgroundColor: 'rgba(239, 68, 68, 0.15)',
-            border: '1px solid rgba(239, 68, 68, 0.3)',
+            backgroundColor: 'rgba(239, 68, 68, 0.12)',
+            border: '1px solid rgba(239, 68, 68, 0.25)',
             color: '#EF4444',
             fontSize: '0.775rem',
-            fontWeight: '700',
-            marginBottom: '1.75rem',
+            fontWeight: '800',
+            marginBottom: '2rem',
             textTransform: 'uppercase',
             letterSpacing: '0.08em'
           }}>
-            <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#EF4444', boxShadow: '0 0 8px #EF4444' }} />
-            <span>{activeFlavor?.shortName} - Scheduled Maintenance</span>
+            <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#EF4444', boxShadow: '0 0 10px #EF4444' }} />
+            <span>{activeFlavor?.shortName} • SCHEDULED MAINTENANCE</span>
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.25rem' }}>
-            <DesktopalieMark size={48} style={{ color: primaryColor }} />
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem' }}>
+            <DesktopalieMark size={52} style={{ color: primaryColor }} />
           </div>
 
-          <h1 style={{ fontSize: '2rem', fontWeight: '800', marginBottom: '1rem', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+          <h1 style={{ fontSize: '2.25rem', fontWeight: '800', marginBottom: '0.85rem', color: isDarkMode ? '#F9FAFB' : '#111827', lineHeight: '1.2' }}>
             {maintenance.title || 'System Under Maintenance'}
           </h1>
 
-          <p style={{ fontSize: '1rem', lineHeight: '1.65', color: isDarkMode ? '#94A3B8' : '#64748B', marginBottom: '2rem' }}>
-            {maintenance.message || 'Kami sedang melakukan pemeliharaan dan efisiensi sistem pada platform ini. Silakan kembali dalam beberapa saat.'}
+          <p style={{ fontSize: '1.05rem', lineHeight: '1.65', color: isDarkMode ? '#9CA3AF' : '#4B5563', marginBottom: '2.5rem', maxWidth: '580px', margin: '0 auto 2.5rem auto' }}>
+            {maintenance.message || 'Kami sedang melakukan peningkatan performa dan pemeliharaan rutin pada platform ini. Mohon kembali dalam beberapa saat.'}
           </p>
 
-          {maintenance.end_time && (
+          {/* LIVE COUNTDOWN TILES */}
+          <div style={{ marginBottom: '2.5rem' }}>
             <div style={{
-              backgroundColor: isDarkMode ? '#0F172A' : '#F1F5F9',
-              padding: '1.25rem',
-              borderRadius: '16px',
-              border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
-              marginBottom: '2rem',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '0.35rem'
+              fontSize: '0.75rem',
+              fontWeight: '800',
+              textTransform: 'uppercase',
+              letterSpacing: '0.08em',
+              color: isDarkMode ? '#9CA3AF' : '#6B7280',
+              marginBottom: '1rem'
             }}>
-              <span style={{ fontSize: '0.75rem', fontWeight: '700', color: isDarkMode ? '#94A3B8' : '#64748B', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                Perkiraan Selesai Pemeliharaan
-              </span>
-              <span style={{ fontSize: '1.25rem', fontWeight: '800', color: primaryColor }}>
-                {new Date(maintenance.end_time).toLocaleString('id-ID', { dateStyle: 'full', timeStyle: 'short' })}
-              </span>
+              ⏱️ HITUNG MUNDUR WAKTU SELESAI
             </div>
-          )}
+
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(4, 1fr)',
+              gap: '0.85rem',
+              maxWidth: '520px',
+              margin: '0 auto 1.25rem auto'
+            }}>
+              <div style={{
+                backgroundColor: isDarkMode ? '#1F2937' : '#F3F4F6',
+                border: `1px solid ${isDarkMode ? '#374151' : '#E5E7EB'}`,
+                borderRadius: '16px',
+                padding: '1rem 0.5rem'
+              }}>
+                <div style={{ fontSize: '1.85rem', fontWeight: '800', color: primaryColor, lineHeight: 1, marginBottom: '0.3rem' }}>
+                  {String(timeLeft.days).padStart(2, '0')}
+                </div>
+                <div style={{ fontSize: '0.675rem', fontWeight: '800', color: isDarkMode ? '#9CA3AF' : '#6B7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  HARI
+                </div>
+              </div>
+
+              <div style={{
+                backgroundColor: isDarkMode ? '#1F2937' : '#F3F4F6',
+                border: `1px solid ${isDarkMode ? '#374151' : '#E5E7EB'}`,
+                borderRadius: '16px',
+                padding: '1rem 0.5rem'
+              }}>
+                <div style={{ fontSize: '1.85rem', fontWeight: '800', color: primaryColor, lineHeight: 1, marginBottom: '0.3rem' }}>
+                  {String(timeLeft.hours).padStart(2, '0')}
+                </div>
+                <div style={{ fontSize: '0.675rem', fontWeight: '800', color: isDarkMode ? '#9CA3AF' : '#6B7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  JAM
+                </div>
+              </div>
+
+              <div style={{
+                backgroundColor: isDarkMode ? '#1F2937' : '#F3F4F6',
+                border: `1px solid ${isDarkMode ? '#374151' : '#E5E7EB'}`,
+                borderRadius: '16px',
+                padding: '1rem 0.5rem'
+              }}>
+                <div style={{ fontSize: '1.85rem', fontWeight: '800', color: primaryColor, lineHeight: 1, marginBottom: '0.3rem' }}>
+                  {String(timeLeft.minutes).padStart(2, '0')}
+                </div>
+                <div style={{ fontSize: '0.675rem', fontWeight: '800', color: isDarkMode ? '#9CA3AF' : '#6B7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  MENIT
+                </div>
+              </div>
+
+              <div style={{
+                backgroundColor: isDarkMode ? '#1F2937' : '#F3F4F6',
+                border: `1px solid ${isDarkMode ? '#374151' : '#E5E7EB'}`,
+                borderRadius: '16px',
+                padding: '1rem 0.5rem'
+              }}>
+                <div style={{ fontSize: '1.85rem', fontWeight: '800', color: primaryColor, lineHeight: 1, marginBottom: '0.3rem' }}>
+                  {String(timeLeft.seconds).padStart(2, '0')}
+                </div>
+                <div style={{ fontSize: '0.675rem', fontWeight: '800', color: isDarkMode ? '#9CA3AF' : '#6B7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  DETIK
+                </div>
+              </div>
+            </div>
+
+            {maintenance.end_time && (
+              <div style={{ fontSize: '0.85rem', fontWeight: '700', color: isDarkMode ? '#D1D5DB' : '#374151' }}>
+                Perkiraan Selesai: <span style={{ color: primaryColor }}>{new Date(maintenance.end_time).toLocaleString('id-ID', { dateStyle: 'full', timeStyle: 'short' })}</span>
+              </div>
+            )}
+          </div>
 
           {maintenance.allow_admin_bypass && (
             <div>
@@ -206,18 +286,23 @@ export default function PublicPlatformLanding() {
                 type="button"
                 onClick={() => navigate('/login')}
                 style={{
-                  padding: '0.75rem 1.75rem',
+                  padding: '0.85rem 2.25rem',
                   borderRadius: '99px',
                   backgroundColor: primaryColor,
                   color: '#FFFFFF',
                   border: 'none',
-                  fontSize: '0.875rem',
+                  fontSize: '0.9rem',
                   fontWeight: '700',
                   cursor: 'pointer',
-                  boxShadow: `0 4px 16px ${primaryColor}40`
+                  boxShadow: `0 8px 20px ${primaryColor}40`,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  transition: 'all 0.15s ease'
                 }}
               >
-                🔒 Login Administrator (Bypass)
+                <FiLock />
+                <span>Login Administrator (Bypass)</span>
               </button>
             </div>
           )}

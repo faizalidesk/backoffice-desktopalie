@@ -123,7 +123,7 @@ export const backofficeService = {
       console.warn('Supabase site_settings table not accessible:', err);
     }
 
-    const localData = localStorage.getItem(`desktopalie_maintenance_settings_${targetPlatform}`) || localStorage.getItem('desktopalie_maintenance_settings');
+    const localData = localStorage.getItem(`desktopalie_maintenance_settings_${targetPlatform}`);
     if (localData) {
       try {
         let val = JSON.parse(localData);
