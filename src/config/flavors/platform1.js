@@ -7,7 +7,7 @@ export default {
   theme: {
     colorPrimary: '#4f46e5', // Indigo
     colorSecondary: '#6366f1',
-    bgSidebar: '#0f172a',
+    bgSidebar: '#ffffff', // Clean light mode sidebar
     accent: '#818cf8',
   },
   features: {
