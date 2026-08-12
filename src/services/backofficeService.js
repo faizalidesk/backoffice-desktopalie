@@ -48,12 +48,14 @@ export const backofficeService = {
   },
 
   // MAINTENANCE SETTINGS
-  async getMaintenanceSettings() {
+  async getMaintenanceSettings(platformId = null) {
+    const targetPlatform = platformId || getCurrentPlatformId();
+    const key = `maintenance_${targetPlatform}`;
     try {
       const { data, error } = await supabase
         .from('site_settings')
         .select('*')
-        .eq('key', 'maintenance')
+        .eq('key', key)
         .maybeSingle();
 
       if (data?.value) {
@@ -72,7 +74,7 @@ export const backofficeService = {
 
         if (needsUpdate) {
           // Update DB record to English permanently
-          supabase.from('site_settings').upsert({ key: 'maintenance', value: val, updated_at: new Date().toISOString() }, { onConflict: 'key' }).then(() => {});
+          supabase.from('site_settings').upsert({ key: key, value: val, updated_at: new Date().toISOString() }, { onConflict: 'key' }).then(() => {});
         }
 
         return val;
@@ -81,7 +83,7 @@ export const backofficeService = {
       console.warn('Supabase site_settings table not accessible:', err);
     }
 
-    const localData = localStorage.getItem('desktopalie_maintenance_settings');
+    const localData = localStorage.getItem(`desktopalie_maintenance_settings_${targetPlatform}`);
     if (localData) {
       try {
         let val = JSON.parse(localData);
@@ -104,9 +106,11 @@ export const backofficeService = {
     };
   },
 
-  async updateMaintenanceSettings(settings) {
+  async updateMaintenanceSettings(settings, platformId = null) {
+    const targetPlatform = platformId || getCurrentPlatformId();
+    const key = `maintenance_${targetPlatform}`;
     // Always save to LocalStorage for instant local tab sync
-    localStorage.setItem('desktopalie_maintenance_settings', JSON.stringify(settings));
+    localStorage.setItem(`desktopalie_maintenance_settings_${targetPlatform}`, JSON.stringify(settings));
     window.dispatchEvent(new Event('storage'));
 
     try {
@@ -114,7 +118,7 @@ export const backofficeService = {
         .from('site_settings')
         .upsert(
           {
-            key: 'maintenance',
+            key: key,
             value: settings,
             updated_at: new Date().toISOString()
           },

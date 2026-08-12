@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { backofficeService } from '../services/backofficeService';
+import { useFlavor } from '../context/FlavorContext';
 import { toast } from 'react-hot-toast';
 import { FiTool, FiClock, FiAlertTriangle, FiCheckCircle, FiSave, FiZap, FiShield } from 'react-icons/fi';
 import Header from '../components/Header';
 
 export default function MaintenanceManager() {
+  const { flavorId } = useFlavor();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -20,7 +22,7 @@ export default function MaintenanceManager() {
 
   useEffect(() => {
     loadSettings();
-  }, []);
+  }, [flavorId]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -32,7 +34,7 @@ export default function MaintenanceManager() {
   const loadSettings = async () => {
     setLoading(true);
     try {
-      const data = await backofficeService.getMaintenanceSettings();
+      const data = await backofficeService.getMaintenanceSettings(flavorId);
       if (data) {
         setSettings({
           is_enabled: !!data.is_enabled,
@@ -80,7 +82,7 @@ export default function MaintenanceManager() {
     e.preventDefault();
     setSaving(true);
     try {
-      await backofficeService.updateMaintenanceSettings(settings);
+      await backofficeService.updateMaintenanceSettings(settings, flavorId);
       toast.success('Maintenance Mode settings saved successfully!');
     } catch (err) {
       console.error(err);
