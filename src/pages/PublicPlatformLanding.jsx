@@ -52,7 +52,17 @@ export default function PublicPlatformLanding() {
     return null;
   };
 
-  const [settings, setSettings] = useState(null);
+  const getInitialSettings = () => {
+    try {
+      const cached = localStorage.getItem(`desktopalie_settings_${flavorId}`);
+      if (cached) return JSON.parse(cached);
+    } catch (e) {
+      // ignore
+    }
+    return null;
+  };
+
+  const [settings, setSettings] = useState(getInitialSettings);
   const [maintenance, setMaintenance] = useState(getInitialMaintenance);
 
   useEffect(() => {
@@ -67,6 +77,14 @@ export default function PublicPlatformLanding() {
           setSettings(landingData);
           setMaintenance(maintData);
           
+          if (landingData) {
+            try {
+              localStorage.setItem(`desktopalie_settings_${flavorId}`, JSON.stringify(landingData));
+            } catch (e) {
+              // ignore
+            }
+          }
+
           const isEnabled = Boolean(
             maintData && (
               maintData.is_enabled === true ||
@@ -472,7 +490,7 @@ export default function PublicPlatformLanding() {
       }} />
 
       {/* TOP PUBLIC NAVBAR HEADER */}
-      <header style={{
+      <header className="public-header" style={{
         width: '100%',
         maxWidth: '1280px',
         margin: '0 auto',
@@ -497,7 +515,7 @@ export default function PublicPlatformLanding() {
         </div>
 
         {/* Navigation Links */}
-        <nav style={{ display: 'flex', alignItems: 'center', gap: '1.75rem' }}>
+        <nav className="public-nav" style={{ display: 'flex', alignItems: 'center', gap: '1.75rem' }}>
           {navLinks.map((item, idx) => (
             <a
               key={idx}
