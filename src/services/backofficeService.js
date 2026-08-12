@@ -1,6 +1,12 @@
 import { supabase } from '../lib/supabase';
 
+const getCurrentPlatformId = () => {
+  return localStorage.getItem('desktopalie_flavor') || import.meta.env.VITE_FLAVOR || 'platform1';
+};
+
 export const backofficeService = {
+  getCurrentPlatformId,
+
   // STORAGE MEDIA UPLOAD
   async uploadMedia(file, folder = 'general') {
     if (!file) return null;
@@ -203,138 +209,38 @@ export const backofficeService = {
   },
 
   // SYSTEM DOCUMENTATION & KNOWLEDGE BASE WITH FOLDER & SUBFOLDER TREE
-  async getDocs() {
+  async getDocs(platformId = null) {
+    const targetPlatform = platformId || getCurrentPlatformId();
     try {
       const { data, error } = await supabase
         .from('documentation')
         .select('*')
+        .eq('platform_id', targetPlatform)
         .order('created_at', { ascending: false });
 
       if (!error && data && data.length > 0) {
-        localStorage.setItem('desktopalie_docs_fallback', JSON.stringify(data));
         return data;
       }
     } catch (err) {
       console.warn('Supabase documentation table error, reading fallback:', err);
     }
 
-    const localData = localStorage.getItem('desktopalie_docs_fallback');
+    const localData = localStorage.getItem(`desktopalie_docs_fallback_${targetPlatform}`);
     if (localData) {
       try {
         return JSON.parse(localData);
       } catch (e) {}
     }
 
-    const defaultDocs = [
-      {
-        id: 'doc-1',
-        title: 'Arsitektur Sistem & Integrasi Real-Time Supabase',
-        folder: '1. Arsitektur System & Core',
-        subfolder: 'Backend & Database',
-        category: 'Architecture',
-        author: 'Lead Architect',
-        content: `### Overview Arsitektur Ekosistem Desktopalie
-
-Sistem **Desktopalie** terdiri dari 2 aplikasi utama yang berinteroperasi secara real-time via Supabase:
-1. **Public Website Platform** (\`desktop-alie\`): Aplikasi utama publik untuk pengunjung situs.
-2. **Backoffice Admin Workspace** (\`backoffice-desktopalie\`): Panel kontrol untuk mengelola konten, portofolio, mode maintenance, dan tugas QA.
-
----
-
-### Supabase Synchronisation Protocol
-- **Tabel \`site_settings\`**: Menyimpan konfigurasi global seperti *Maintenance Mode* dan *Landing Page Copy*.
-- **Realtime Channels**: Public platform berlangganan real-time postgres_changes dari Supabase dengan fallback polling interval 2 detik jika koneksi terputus.`,
-        created_at: new Date().toISOString()
-      },
-      {
-        id: 'doc-2',
-        title: 'Alur Interoperasi Public Platform & Backoffice Workspace',
-        folder: '1. Arsitektur System & Core',
-        subfolder: 'Frontend & Platform',
-        category: 'Architecture',
-        author: 'Frontend Lead',
-        content: `### Alur Kerja Interoperasi
-
-1. **Backoffice Workspace** memperbarui data di Supabase (misalnya mengubah teks landing page atau status maintenance).
-2. Supabase memancarkan event websocket realtime.
-3. Aplikasi publik (\`desktop-alie\`) menerima payload baru dan langsung memperbarui DOM tanpa perlu reload halaman manual.`,
-        created_at: new Date().toISOString()
-      },
-      {
-        id: 'doc-3',
-        title: 'Panduan Operasional Maintenance Mode & Countdown',
-        folder: '2. Panduan Operasional (SOP)',
-        subfolder: 'Maintenance & Security',
-        category: 'Guides',
-        author: 'DevOps & Admin',
-        content: `### Panduan Mengaktifkan Pemeliharaan Sistem
-
-1. Buka menu **Maintenance Mode** di sidebar Backoffice.
-2. Pilih durasi cepat (+1 Jam, +3 Jam, +12 Jam, +24 Jam) atau atur tanggal & jam secara manual.
-3. Centang **"Izinkan Akses Bypass untuk Admin (Bypass Checkbox)"** untuk tetap menguji situs utama saat mode pemeliharaan aktif.
-4. Klik **Aktifkan & Simpan Pengaturan**.
-
-> **Catatan Penting**: Semua pengunjung tanpa cookie admin akan langsung diarahkan ke layar Countdown Pemeliharaan Interaktif.`,
-        created_at: new Date().toISOString()
-      },
-      {
-        id: 'doc-4',
-        title: 'Pengelolaan Konten Landing Page & Assets',
-        folder: '2. Panduan Operasional (SOP)',
-        subfolder: 'Content Management',
-        category: 'Guides',
-        author: 'Content Admin',
-        content: `### Panduan Mengelola Konten Beranda
-
-Gunakan menu **Landing Manager** di Backoffice untuk menyesuaikan:
-- **Hero Section**: Badge label, headline judul, dan subtitle.
-- **About Section**: Narasi profil, lokasi, dan statistik counter.
-- **Contact & Socials**: Email publik dan tautan sosial media footer.`,
-        created_at: new Date().toISOString()
-      },
-      {
-        id: 'doc-5',
-        title: 'Standar Operasional QA & Pengujian Sistem (Test Case & Sprint)',
-        folder: '3. QA & Quality Assurance',
-        subfolder: 'Testing & Bug Management',
-        category: 'QA & Testing',
-        author: 'QA Lead',
-        content: `### Standar Prosedur Pengujian Aplikasi
-
-#### 1. Klasifikasi Severity Bug
-- **Blocker / Critical**: Bug yang menyebabkan sistem tidak bisa diakses (misal: 404 Refresh Error).
-- **Major**: Fitur utama tidak berjalan sesuai kriteria penerimaan.
-- **Minor / Cosmetic**: Masalah penataan tata letak UI atau typo teks.
-
-#### 2. Siklus Pengujian di To-Do Board
-- Setiap item pengujian memiliki subtask checklist.
-- Centang checkbox untuk memberikan efek **coret garis (strikethrough)** pada item yang lolos pengujian.`,
-        created_at: new Date().toISOString()
-      },
-      {
-        id: 'doc-6',
-        title: 'Penggunaan Subtask Checklist & Dynamic Strikethrough',
-        folder: '3. QA & Quality Assurance',
-        subfolder: 'Checklist & Task Board',
-        category: 'QA & Testing',
-        author: 'QA Tester',
-        content: `### Panduan Checklist QA
-
-Dalam modal Popup 2-Section pada To-Do Board:
-- Tambahkan rincian poin pengujian di bagian **Checklist & Subtask QA**.
-- Mengklik checkbox akan mengaktifkan teks coret garis (\`line-through\`) untuk memberikan konfirmasi visual bahwa skenario testing telah lulus.`,
-        created_at: new Date().toISOString()
-      }
-    ];
-
-    localStorage.setItem('desktopalie_docs_fallback', JSON.stringify(defaultDocs));
-    return defaultDocs;
+    return [];
   },
 
   async createDoc(doc) {
     const { data: { user } } = await supabase.auth.getUser();
+    const targetPlatform = doc.platform_id || getCurrentPlatformId();
     const payload = {
       id: crypto.randomUUID(),
+      platform_id: targetPlatform,
       title: doc.title,
       folder: doc.folder || '1. Arsitektur System & Core',
       subfolder: doc.subfolder || 'General',
@@ -357,9 +263,9 @@ Dalam modal Popup 2-Section pada To-Do Board:
       console.warn('Supabase insert documentation error, saved locally:', err);
     }
 
-    const currentLocal = JSON.parse(localStorage.getItem('desktopalie_docs_fallback') || '[]');
+    const currentLocal = JSON.parse(localStorage.getItem(`desktopalie_docs_fallback_${targetPlatform}`) || '[]');
     const updated = [payload, ...currentLocal];
-    localStorage.setItem('desktopalie_docs_fallback', JSON.stringify(updated));
+    localStorage.setItem(`desktopalie_docs_fallback_${targetPlatform}`, JSON.stringify(updated));
     return payload;
   },
 
@@ -397,168 +303,38 @@ Dalam modal Popup 2-Section pada To-Do Board:
   },
 
   // TODOS CRUD (Notion / Jira style Task Board)
-  async getTodos() {
+  async getTodos(platformId = null) {
+    const targetPlatform = platformId || getCurrentPlatformId();
     try {
       const { data, error } = await supabase
         .from('todos')
         .select('*')
+        .eq('platform_id', targetPlatform)
         .order('created_at', { ascending: false });
 
       if (!error && data && data.length > 0) {
-        localStorage.setItem('desktopalie_todos_fallback', JSON.stringify(data));
         return data;
       }
     } catch (err) {
       console.warn('Supabase todos table error, reading fallback:', err);
     }
 
-    const localData = localStorage.getItem('desktopalie_todos_fallback');
+    const localData = localStorage.getItem(`desktopalie_todos_fallback_${targetPlatform}`);
     if (localData) {
       try {
         return JSON.parse(localData);
       } catch (e) {}
     }
 
-    const defaultTodos = [
-      { 
-        id: '1', 
-        title: 'Mengenal struktur aplikasi Web (Nuxt.js)', 
-        status: 'Not started', 
-        priority: 'Medium', 
-        category: 'Research',
-        description: 'Pelajari arsitektur Nuxt 3, directory structure (pages, components, composables), dan SSR vs SPA mode.',
-        subtasks: [
-          { id: 'sub-101', title: 'Instalasi Nuxt 3 CLI', is_completed: true },
-          { id: 'sub-102', title: 'Memahami Routing File-based', is_completed: false },
-          { id: 'sub-103', title: 'Eksplorasi Composables & useState', is_completed: false }
-        ],
-        created_at: new Date().toISOString() 
-      },
-      { 
-        id: '2', 
-        title: 'Mengenal struktur aplikasi Mobile (Flutter)', 
-        status: 'Not started', 
-        priority: 'Low', 
-        category: 'Research',
-        description: 'Eksplorasi Widget Tree, State Management (Provider/Riverpod), dan struktur lib/ folder.',
-        subtasks: [
-          { id: 'sub-201', title: 'Setup Flutter SDK', is_completed: true },
-          { id: 'sub-202', title: 'Uji Coba Widget Stateless & Stateful', is_completed: false }
-        ],
-        created_at: new Date().toISOString() 
-      },
-      { 
-        id: '3', 
-        title: 'Mengenal struktur aplikasi Backoffice (Laravel/Vue)', 
-        status: 'Not started', 
-        priority: 'Medium', 
-        category: 'Research',
-        description: 'Struktur MVC Laravel, Blade vs Vue inertia integration, dan middleware authentication.',
-        subtasks: [],
-        created_at: new Date().toISOString() 
-      },
-      { 
-        id: '4', 
-        title: 'Memahami alur kerja Sprint Development', 
-        status: 'In progress', 
-        priority: 'High', 
-        category: 'Development',
-        description: 'Siklus 2 minggu Sprint: Planning, Daily Standup, Review, & Retrospective.',
-        subtasks: [
-          { id: 'sub-401', title: 'Sprint Planning Meeting', is_completed: true },
-          { id: 'sub-402', title: 'Task Estimation (Story Points)', is_completed: true },
-          { id: 'sub-403', title: 'Execution & Daily Standup', is_completed: false }
-        ],
-        created_at: new Date().toISOString() 
-      },
-      { 
-        id: '5', 
-        title: 'Memahami role dan tanggung jawab QA', 
-        status: 'In progress', 
-        priority: 'Medium', 
-        category: 'Testing',
-        description: 'Definisi QA Engineer vs QC, pencegahan bug vs pencarian bug, dan jaminan kualitas end-to-end.',
-        subtasks: [
-          { id: 'sub-501', title: 'Review Requirement Specification', is_completed: true },
-          { id: 'sub-502', title: 'Analisis Risk & Complexity', is_completed: false }
-        ],
-        created_at: new Date().toISOString() 
-      },
-      { 
-        id: '6', 
-        title: 'Mempelajari Manual Testing (UI, Functional, Exploratory)', 
-        status: 'Done', 
-        priority: 'High', 
-        category: 'Testing',
-        description: 'Metode verifikasi fitur secara manual sebelum dirilis ke lingkungan staging/production.',
-        subtasks: [
-          { id: 'sub-601', title: 'Testing Form Input & Validation', is_completed: true },
-          { id: 'sub-602', title: 'Testing Boundary Values & Negative Cases', is_completed: true },
-          { id: 'sub-603', title: 'Cross-browser Compatibility Check', is_completed: true }
-        ],
-        created_at: new Date().toISOString() 
-      },
-      { 
-        id: '7', 
-        title: 'Membuat Test Scenario dan Test Case', 
-        status: 'Done', 
-        priority: 'Urgent', 
-        category: 'Testing',
-        description: 'Dokumentasi langkah pengujian, precondition, expected result, dan actual result.',
-        subtasks: [
-          { id: 'sub-701', title: 'Penyusunan Test Matrix', is_completed: true },
-          { id: 'sub-702', title: 'Penulisan 15 High-Priority Test Cases', is_completed: true }
-        ],
-        created_at: new Date().toISOString() 
-      },
-      { 
-        id: '8', 
-        title: 'Memahami Severity dan Priority', 
-        status: 'Done', 
-        priority: 'Medium', 
-        category: 'Documentation',
-        description: 'Dampak teknis bug (Severity: Blocker/Critical/Major) vs Urgensi bisnis (Priority: P1/P2/P3).',
-        subtasks: [
-          { id: 'sub-801', title: 'Matriks Klasifikasi Bug Severity', is_completed: true }
-        ],
-        created_at: new Date().toISOString() 
-      },
-      { 
-        id: '9', 
-        title: 'Membuat Bug Report', 
-        status: 'Done', 
-        priority: 'High', 
-        category: 'Testing',
-        description: 'Laporan bug yang efektif dengan steps to reproduce, screenshot/video evidence, dan environment detail.',
-        subtasks: [
-          { id: 'sub-901', title: 'Template Standard Bug Report', is_completed: true },
-          { id: 'sub-902', title: 'Lampiran Console Log & Network Capture', is_completed: true }
-        ],
-        created_at: new Date().toISOString() 
-      },
-      { 
-        id: '10', 
-        title: 'Memahami Requirement, Product Backlog, User Story, Acceptance Criteria', 
-        status: 'Done', 
-        priority: 'Urgent', 
-        category: 'Documentation',
-        description: 'Format User Story (As a... I want to... So that...) dan Acceptance Criteria (Given... When... Then...).',
-        subtasks: [
-          { id: 'sub-1001', title: 'Bedah User Story Epic Auth', is_completed: true },
-          { id: 'sub-1002', title: 'Definisi Done (DoD) Criteria', is_completed: true }
-        ],
-        created_at: new Date().toISOString() 
-      }
-    ];
-
-    localStorage.setItem('desktopalie_todos_fallback', JSON.stringify(defaultTodos));
-    return defaultTodos;
+    return [];
   },
 
   async createTodo(todo) {
     const { data: { user } } = await supabase.auth.getUser();
+    const targetPlatform = todo.platform_id || getCurrentPlatformId();
     const payload = {
       id: crypto.randomUUID(),
+      platform_id: targetPlatform,
       title: todo.title,
       description: todo.description || '',
       status: todo.status || 'Not started',
@@ -580,9 +356,9 @@ Dalam modal Popup 2-Section pada To-Do Board:
       console.warn('Supabase insert todo error, saved to local state fallback:', err);
     }
 
-    const currentLocal = JSON.parse(localStorage.getItem('desktopalie_todos_fallback') || '[]');
+    const currentLocal = JSON.parse(localStorage.getItem(`desktopalie_todos_fallback_${targetPlatform}`) || '[]');
     const updated = [payload, ...currentLocal];
-    localStorage.setItem('desktopalie_todos_fallback', JSON.stringify(updated));
+    localStorage.setItem(`desktopalie_todos_fallback_${targetPlatform}`, JSON.stringify(updated));
     return payload;
   },
 
@@ -620,18 +396,31 @@ Dalam modal Popup 2-Section pada To-Do Board:
   },
 
   // PROJECTS CRUD
-  async getProjects() {
-    const { data, error } = await supabase
-      .from('projects')
-      .select('*')
-      .order('created_at', { ascending: false });
-    if (error) throw error;
-    return data || [];
+  async getProjects(platformId = null) {
+    const targetPlatform = platformId || getCurrentPlatformId();
+    try {
+      const { data, error } = await supabase
+        .from('projects')
+        .select('*')
+        .eq('platform_id', targetPlatform)
+        .order('created_at', { ascending: false });
+
+      if (!error && data) return data;
+      const { data: fallbackData } = await supabase
+        .from('projects')
+        .select('*')
+        .order('created_at', { ascending: false });
+      return fallbackData || [];
+    } catch (err) {
+      console.warn('Error fetching projects:', err);
+      return [];
+    }
   },
 
   async createProject(project) {
     const { data: { user } } = await supabase.auth.getUser();
-    const payload = { ...project };
+    const targetPlatform = project.platform_id || getCurrentPlatformId();
+    const payload = { ...project, platform_id: targetPlatform };
     if (payload.cover_url !== undefined) {
       if (!payload.image_url) payload.image_url = payload.cover_url;
       delete payload.cover_url;
@@ -652,6 +441,7 @@ Dalam modal Popup 2-Section pada To-Do Board:
       if (error) {
         console.warn('Supabase insert project error, retrying clean payload:', error.message);
         const cleanPayload = {
+          platform_id: targetPlatform,
           slug: payload.slug,
           title: payload.title,
           type: payload.type,
@@ -730,18 +520,31 @@ Dalam modal Popup 2-Section pada To-Do Board:
   },
 
   // EXPERIMENTS CRUD
-  async getExperiments() {
-    const { data, error } = await supabase
-      .from('experiments')
-      .select('*')
-      .order('created_at', { ascending: false });
-    if (error) throw error;
-    return data || [];
+  async getExperiments(platformId = null) {
+    const targetPlatform = platformId || getCurrentPlatformId();
+    try {
+      const { data, error } = await supabase
+        .from('experiments')
+        .select('*')
+        .eq('platform_id', targetPlatform)
+        .order('created_at', { ascending: false });
+
+      if (!error && data) return data;
+      const { data: fallbackData } = await supabase
+        .from('experiments')
+        .select('*')
+        .order('created_at', { ascending: false });
+      return fallbackData || [];
+    } catch (err) {
+      console.warn('Error fetching experiments:', err);
+      return [];
+    }
   },
 
   async createExperiment(experiment) {
     const { data: { user } } = await supabase.auth.getUser();
-    const payload = { ...experiment };
+    const targetPlatform = experiment.platform_id || getCurrentPlatformId();
+    const payload = { ...experiment, platform_id: targetPlatform };
     if (payload.cover_url !== undefined) {
       if (!payload.image_url) payload.image_url = payload.cover_url;
       delete payload.cover_url;
@@ -762,6 +565,7 @@ Dalam modal Popup 2-Section pada To-Do Board:
       if (error) {
         console.warn('Supabase insert experiment error, retrying clean payload:', error.message);
         const cleanPayload = {
+          platform_id: targetPlatform,
           slug: payload.slug,
           title: payload.title,
           type: payload.type,
@@ -838,18 +642,31 @@ Dalam modal Popup 2-Section pada To-Do Board:
   },
 
   // NOTES CRUD
-  async getNotes() {
-    const { data, error } = await supabase
-      .from('notes')
-      .select('*')
-      .order('created_at', { ascending: false });
-    if (error) throw error;
-    return data || [];
+  async getNotes(platformId = null) {
+    const targetPlatform = platformId || getCurrentPlatformId();
+    try {
+      const { data, error } = await supabase
+        .from('notes')
+        .select('*')
+        .eq('platform_id', targetPlatform)
+        .order('created_at', { ascending: false });
+
+      if (!error && data) return data;
+      const { data: fallbackData } = await supabase
+        .from('notes')
+        .select('*')
+        .order('created_at', { ascending: false });
+      return fallbackData || [];
+    } catch (err) {
+      console.warn('Error fetching notes:', err);
+      return [];
+    }
   },
 
   async createNote(note) {
     const { data: { user } } = await supabase.auth.getUser();
-    const payload = user ? { ...note, user_id: user.id } : note;
+    const targetPlatform = note.platform_id || getCurrentPlatformId();
+    const payload = { ...note, platform_id: targetPlatform, ...(user ? { user_id: user.id } : {}) };
     const { data, error } = await supabase
       .from('notes')
       .insert([payload])
@@ -877,18 +694,31 @@ Dalam modal Popup 2-Section pada To-Do Board:
   },
 
   // BOOKMARKS CRUD
-  async getBookmarks() {
-    const { data, error } = await supabase
-      .from('bookmarks')
-      .select('*')
-      .order('created_at', { ascending: false });
-    if (error) throw error;
-    return data || [];
+  async getBookmarks(platformId = null) {
+    const targetPlatform = platformId || getCurrentPlatformId();
+    try {
+      const { data, error } = await supabase
+        .from('bookmarks')
+        .select('*')
+        .eq('platform_id', targetPlatform)
+        .order('created_at', { ascending: false });
+
+      if (!error && data) return data;
+      const { data: fallbackData } = await supabase
+        .from('bookmarks')
+        .select('*')
+        .order('created_at', { ascending: false });
+      return fallbackData || [];
+    } catch (err) {
+      console.warn('Error fetching bookmarks:', err);
+      return [];
+    }
   },
 
   async createBookmark(bookmark) {
     const { data: { user } } = await supabase.auth.getUser();
-    const payload = user ? { ...bookmark, user_id: user.id } : bookmark;
+    const targetPlatform = bookmark.platform_id || getCurrentPlatformId();
+    const payload = { ...bookmark, platform_id: targetPlatform, ...(user ? { user_id: user.id } : {}) };
     const { data, error } = await supabase
       .from('bookmarks')
       .insert([payload])

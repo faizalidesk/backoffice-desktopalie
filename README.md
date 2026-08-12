@@ -70,6 +70,16 @@ Skema tabel di bawah ini terhubung langsung secara presisi dengan aplikasi utama
 
 ```sql
 -- ---------------------------------------------------
+-- MIGRATION: MULTI-PLATFORM FLAVORING COLUMN
+-- ---------------------------------------------------
+ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS platform_id TEXT DEFAULT 'platform1';
+ALTER TABLE public.experiments ADD COLUMN IF NOT EXISTS platform_id TEXT DEFAULT 'platform1';
+ALTER TABLE public.notes ADD COLUMN IF NOT EXISTS platform_id TEXT DEFAULT 'platform1';
+ALTER TABLE public.bookmarks ADD COLUMN IF NOT EXISTS platform_id TEXT DEFAULT 'platform1';
+ALTER TABLE public.todos ADD COLUMN IF NOT EXISTS platform_id TEXT DEFAULT 'platform1';
+ALTER TABLE public.documentation ADD COLUMN IF NOT EXISTS platform_id TEXT DEFAULT 'platform1';
+
+-- ---------------------------------------------------
 -- 1. TABEL PROFILES
 -- ---------------------------------------------------
 CREATE TABLE IF NOT EXISTS public.profiles (
