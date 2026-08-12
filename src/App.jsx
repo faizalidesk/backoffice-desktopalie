@@ -20,6 +20,7 @@ import LandingPageManager from './pages/LandingPageManager';
 import TodoListManager from './pages/TodoListManager';
 import DocumentationManager from './pages/DocumentationManager';
 
+import PublicPlatformLanding from './pages/PublicPlatformLanding';
 import PlatformWorkspacesManager from './pages/PlatformWorkspacesManager';
 import { useFlavor } from './context/FlavorContext';
 
@@ -83,10 +84,14 @@ export default function App() {
                   }} 
                 />
                 <Routes>
+                  {/* PUBLIC PLATFORM LANDING PAGE ROUTE */}
+                  <Route path="/" element={<PublicPlatformLanding />} />
+
+                  {/* AUTH & BACKOFFICE ROUTES */}
                   <Route path="/login" element={<Login />} />
                   <Route path="/register" element={<Register />} />
 
-                  <Route path="/" element={<ProtectedLayout><DashboardRoute /></ProtectedLayout>} />
+                  <Route path="/dashboard" element={<ProtectedLayout><DashboardRoute /></ProtectedLayout>} />
                   <Route path="/workspaces" element={<ProtectedLayout><PlatformWorkspacesManager /></ProtectedLayout>} />
                   <Route path="/todos" element={<ProtectedLayout><TodoListManager /></ProtectedLayout>} />
                   <Route path="/documentation" element={<ProtectedLayout><DocumentationManager /></ProtectedLayout>} />

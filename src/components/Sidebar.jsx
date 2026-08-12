@@ -51,7 +51,7 @@ export default function Sidebar() {
   };
 
   const allNavItems = [
-    { label: t('dashboard'), path: '/', icon: FiGrid },
+    { label: t('dashboard'), path: '/dashboard', icon: FiGrid },
     { label: t('workspaces'), path: '/workspaces', icon: FiLayers },
     { label: t('projects'), path: '/projects', icon: FiFolder },
     { label: t('experiments'), path: '/experiments', icon: FiCpu },
