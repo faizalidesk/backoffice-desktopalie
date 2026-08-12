@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
+import { useFlavor } from '../context/FlavorContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { FiLock, FiMail, FiArrowRight, FiAlertCircle, FiMoon, FiSun } from 'react-icons/fi';
@@ -13,6 +14,7 @@ export default function Login() {
   const [errorMessage, setErrorMessage] = useState('');
   const { login } = useAuth();
   const { isDarkMode, toggleTheme } = useTheme();
+  const { activeFlavor, isMainDesktopalie } = useFlavor();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -26,7 +28,7 @@ export default function Login() {
     setSubmitting(true);
     try {
       await login(email, password);
-      toast.success('Successfully signed in to Backoffice!');
+      toast.success(`Successfully signed in to ${activeFlavor?.name || 'Backoffice'}!`);
       navigate('/');
     } catch (err) {
       console.error('Login error:', err);
@@ -94,7 +96,7 @@ export default function Login() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
           <DesktopalieMark size={30} style={{ color: isDarkMode ? '#F8FAFC' : '#0F172A', flexShrink: 0 }} />
           <span style={{ fontSize: '1rem', fontWeight: '800', letterSpacing: '0.08em', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
-            DESKTOPALIE
+            {activeFlavor?.logoText?.toUpperCase() || 'DESKTOPALIE'}
           </span>
         </div>
 
@@ -183,7 +185,7 @@ export default function Login() {
             textTransform: 'uppercase'
           }}>
             <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: isDarkMode ? '#818CF8' : '#0D9488' }} />
-            <span>BACKOFFICE ADMIN WORKSPACE</span>
+            <span>{isMainDesktopalie ? 'MAIN BACKOFFICE ADMIN WORKSPACE' : `PLATFORM ${activeFlavor?.shortName?.toUpperCase()} WORKSPACE`}</span>
           </div>
 
           <h1 style={{
@@ -194,7 +196,7 @@ export default function Login() {
             letterSpacing: '-0.03em',
             marginBottom: '1.5rem'
           }}>
-            Ideas, crafted into digital experiences.
+            {activeFlavor?.name || 'Ideas, crafted into digital experiences.'}
           </h1>
 
           <p style={{
@@ -204,7 +206,7 @@ export default function Login() {
             marginBottom: '2rem',
             maxWidth: '520px'
           }}>
-            Desktopalie is my personal space for projects, experiments, and digital creations—documenting my journey through web development, UI/UX design, and modern technology.
+            {activeFlavor?.description || 'Desktopalie is a space for projects, experiments, and digital creations.'}
           </p>
 
           <div style={{

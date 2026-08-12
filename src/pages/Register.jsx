@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useFlavor } from '../context/FlavorContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { FiLock, FiMail, FiUser, FiArrowRight, FiAlertCircle } from 'react-icons/fi';
@@ -13,6 +14,7 @@ export default function Register() {
   const [submitting, setSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const { register } = useAuth();
+  const { activeFlavor } = useFlavor();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -84,10 +86,10 @@ export default function Register() {
         backdropFilter: 'blur(10px)'
       }}>
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <DesktopalieMark size={42} style={{ color: '#0F172A', marginBottom: '1rem' }} />
-          <h2 style={{ fontSize: '1.5rem', marginBottom: '0.25rem' }}>Register Backoffice Account</h2>
+          <DesktopalieMark size={42} style={{ color: 'var(--text-main)', marginBottom: '1rem' }} />
+          <h2 style={{ fontSize: '1.5rem', marginBottom: '0.25rem' }}>Register Account</h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>
-            Create a new admin account to manage your workspace
+            Create an admin account for {activeFlavor?.name || 'Desktopalie Workspace'}
           </p>
         </div>
 
