@@ -42,14 +42,22 @@ export default function PublicPlatformLanding() {
   const { user } = useAuth();
   const navigate = useNavigate();
 
+  const getInitialMaintenance = () => {
+    try {
+      const cached = localStorage.getItem(`desktopalie_maint_${flavorId}`);
+      if (cached) return JSON.parse(cached);
+    } catch (e) {
+      // ignore
+    }
+    return null;
+  };
+
   const [settings, setSettings] = useState(null);
-  const [maintenance, setMaintenance] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [maintenance, setMaintenance] = useState(getInitialMaintenance);
 
   useEffect(() => {
     let isMounted = true;
     async function loadData() {
-      setLoading(true);
       try {
         const [landingData, maintData] = await Promise.all([
           backofficeService.getLandingPageSettings(flavorId),
@@ -58,13 +66,16 @@ export default function PublicPlatformLanding() {
         if (isMounted) {
           setSettings(landingData);
           setMaintenance(maintData);
+          if (maintData) {
+            try {
+              localStorage.setItem(`desktopalie_maint_${flavorId}`, JSON.stringify(maintData));
+            } catch (e) {
+              // ignore
+            }
+          }
         }
       } catch (err) {
         console.error('Failed to load platform data:', err);
-      } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
       }
     }
 
@@ -188,35 +199,7 @@ export default function PublicPlatformLanding() {
     setMaintSubscribed(true);
   };
 
-  // 1. RENDER MINIMAL NEUTRAL LOADING SCREEN UNTIL BOTH SETTINGS & MAINTENANCE ARE FULLY LOADED
-  if (loading) {
-    return (
-      <div style={{
-        minHeight: '100vh',
-        width: '100vw',
-        backgroundColor: isDarkMode ? '#080C14' : '#FAF9FC',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontFamily: "'Plus Jakarta Sans', sans-serif"
-      }}>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.85rem' }}>
-          <DesktopalieMark size={40} style={{ color: primaryColor }} />
-          <div style={{
-            fontSize: '0.75rem',
-            fontWeight: '800',
-            letterSpacing: '0.08em',
-            color: isDarkMode ? '#94A3B8' : '#64748B',
-            textTransform: 'uppercase'
-          }}>
-            Memuat Workspace...
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // 2. RENDER MAINTENANCE SCREEN IF MAINTENANCE MODE IS ACTIVE FOR THIS PLATFORM FLAVOR
+  // RENDER MAINTENANCE SCREEN IF MAINTENANCE MODE IS ACTIVE FOR THIS PLATFORM FLAVOR
   if (isMaintenanceActive) {
     const brandName = activeFlavor?.logoText || "Desktopalie";
 
