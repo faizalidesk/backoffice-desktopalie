@@ -150,50 +150,45 @@ export default function Sidebar() {
         </button>
       </div>
 
-      {/* SUB-PLATFORM SWITCHER (Ultra Minimalist) */}
-      {!isCollapsed ? (
+      {/* SUB-PLATFORM SWITCHER (Ultra Minimalist & Syncs Active Flavor) */}
+      {!isCollapsed && (
         <div style={{ marginBottom: '0.85rem' }}>
           <select
-            value={isMainDesktopalie ? '' : flavorId}
+            value={flavorId}
             onChange={(e) => {
-              if (e.target.value === 'main') {
+              const selectedVal = e.target.value;
+              if (selectedVal === 'platform1') {
                 resetToMainFlavor();
-              } else if (e.target.value) {
-                switchFlavor(e.target.value);
+              } else if (selectedVal) {
+                switchFlavor(selectedVal);
               }
             }}
             style={{
               width: '100%',
-              padding: '0.4rem 0.6rem',
+              padding: '0.45rem 0.65rem',
               fontSize: '0.775rem',
               fontWeight: '600',
               borderRadius: 'var(--radius-sm)',
               border: '1px solid var(--border-color)',
-              backgroundColor: 'transparent',
-              color: 'var(--text-muted)',
+              backgroundColor: 'var(--bg-card-hover)',
+              color: 'var(--text-main)',
               cursor: 'pointer',
               outline: 'none',
               transition: 'all 0.15s ease'
             }}
           >
-            {isMainDesktopalie && (
-              <option value="" disabled>
-                -- Sub-Platform --
-              </option>
-            )}
-            {!isMainDesktopalie && (
-              <option value="main">
-                ← Desktopalie Main
-              </option>
-            )}
+            <option value="platform1">
+              🏠 Desktopalie Main
+            </option>
             {subPlatformFlavors?.map((f) => (
               <option key={f.id} value={f.id}>
-                Platform {f.shortName}
+                ⚡ Platform {f.shortName}
               </option>
             ))}
           </select>
         </div>
-      ) : (
+      )}
+      {isCollapsed && (
         <button
           onClick={() => {
             const subIds = subPlatformFlavors.map(f => f.id);
