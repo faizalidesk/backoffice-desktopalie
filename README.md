@@ -19,31 +19,46 @@
 
 ```text
 backoffice-desktopalie/
+├── .env.platform1          # Config Env Platform Alpha
+├── .env.platform2          # Config Env Platform Beta
+├── .env.platform3          # Config Env Platform Gamma
+├── .env.platform4          # Config Env Platform Delta
 ├── public/                 # Aset statis aplikasi
 ├── src/
-│   ├── components/         # Komponen UI
-│   │   ├── Header.jsx      # Topbar header dengan status Supabase & link website utama
-│   │   ├── Sidebar.jsx     # Navigasi utama & profil pengguna
-│   │   └── Modal.jsx       # Dialog modal universal untuk formulir CRUD
-│   ├── context/
-│   │   └── AuthContext.jsx # Provider otentikasi Supabase & Role Guard
+│   ├── components/         # Komponen UI Reusable (Sidebar, Modal, Uploader, dll)
+│   ├── config/             # Konfigurasi Flavoring & Multi-Platform
+│   │   ├── flavors/        # Objek Konfigurasi Platform (platform1..4)
+│   │   │   ├── platform1.js
+│   │   │   ├── platform2.js
+│   │   │   ├── platform3.js
+│   │   │   └── platform4.js
+│   │   └── index.js        # Active Flavor Loader (VITE_FLAVOR)
+│   ├── context/            # Global React Context Providers
+│   │   ├── AuthContext.jsx     # Provider otentikasi Supabase & Role Guard
+│   │   ├── FlavorContext.jsx   # Provider Theme & Feature Flags Flavor Dinamis
+│   │   ├── LanguageContext.jsx # Provider Bahasa & Lokalisasi
+│   │   └── ThemeContext.jsx    # Provider Tema Tampilan
 │   ├── lib/
 │   │   └── supabase.js     # Inisialisasi Supabase Client & error handling
 │   ├── pages/              # Halaman Utama Backoffice
 │   │   ├── Dashboard.jsx            # Ringkasan statistik & pintasan cepat
+│   │   ├── TodoListManager.jsx      # Manajemen Tugas & To-Do List
+│   │   ├── DocumentationManager.jsx # Sistem Knowledge Base & Panduan
+│   │   ├── LandingPageManager.jsx   # Manajemen Konten Landing Page
 │   │   ├── ProjectsManager.jsx      # Manajemen Portofolio & Case Studies
 │   │   ├── ExperimentsManager.jsx   # Manajemen Prototipe UI/UX & Motion
 │   │   ├── NotesManager.jsx         # Catatan Desain, Prinsip & Journal
 │   │   ├── BookmarksManager.jsx     # Simpanan Referensi Web & Link
+│   │   ├── MaintenanceManager.jsx   # Pengaturan Mode Pemeliharaan
 │   │   ├── ProfileSettings.jsx      # Pengaturan Profil Administrator
 │   │   ├── Login.jsx                # Halaman Autentikasi Masuk
 │   │   └── Register.jsx             # Halaman Pendaftaran Akun Admin Baru
 │   ├── services/
-│   │   └── backofficeService.js # Layer API CRUD Supabase
-│   ├── App.jsx             # Router utama & proteksi rute (ProtectedLayout)
-│   └── index.css           # Styling Global (Clean Light Mode System)
-├── README.md               # Dokumentasi resmi & Phase Roadmap
-├── package.json            # Dependensi & skrip Vite
+│   │   └── backofficeService.js     # Layer API CRUD Supabase
+│   ├── App.jsx             # Router utama, proteksi rute & FlavorProvider
+│   └── index.css           # Styling Global & Dynamic CSS Variables
+├── README.md               # Dokumentasi resmi & Arsitektur Flavoring
+├── package.json            # Dependensi & skrip Vite multi-platform
 └── vite.config.js          # Konfigurasi bundler
 ```
 
