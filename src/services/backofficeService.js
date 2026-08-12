@@ -47,7 +47,7 @@ export const backofficeService = {
     }
   },
 
-  // MAINTENANCE SETTINGS
+  // MAINTENANCE SETTINGS (SCOPED PER PLATFORM FLAVOR)
   async getMaintenanceSettings(platformId = null) {
     const targetPlatform = platformId || getCurrentPlatformId();
     const key = `maintenance_${targetPlatform}`;
@@ -58,8 +58,20 @@ export const backofficeService = {
         .eq('key', key)
         .maybeSingle();
 
-      if (data?.value) {
-        let val = typeof data.value === 'string' ? JSON.parse(data.value) : data.value;
+      let settingObj = data?.value;
+
+      // Fallback for platform1 to legacy 'maintenance' key if missing
+      if (!settingObj && targetPlatform === 'platform1') {
+        const { data: legacyData } = await supabase
+          .from('site_settings')
+          .select('*')
+          .eq('key', 'maintenance')
+          .maybeSingle();
+        settingObj = legacyData?.value;
+      }
+
+      if (settingObj) {
+        let val = typeof settingObj === 'string' ? JSON.parse(settingObj) : settingObj;
         const indonesianKeywords = ["situs", "pemeliharaan", "kami", "sedang", "melakukan", "peningkatan", "pembaruan", "beberapa", "saat", "kembali"];
         let needsUpdate = false;
 
@@ -73,7 +85,6 @@ export const backofficeService = {
         }
 
         if (needsUpdate) {
-          // Update DB record to English permanently
           supabase.from('site_settings').upsert({ key: key, value: val, updated_at: new Date().toISOString() }, { onConflict: 'key' }).then(() => {});
         }
 
@@ -83,7 +94,7 @@ export const backofficeService = {
       console.warn('Supabase site_settings table not accessible:', err);
     }
 
-    const localData = localStorage.getItem(`desktopalie_maintenance_settings_${targetPlatform}`);
+    const localData = localStorage.getItem(`desktopalie_maintenance_settings_${targetPlatform}`) || localStorage.getItem('desktopalie_maintenance_settings');
     if (localData) {
       try {
         let val = JSON.parse(localData);
@@ -109,22 +120,29 @@ export const backofficeService = {
   async updateMaintenanceSettings(settings, platformId = null) {
     const targetPlatform = platformId || getCurrentPlatformId();
     const key = `maintenance_${targetPlatform}`;
+
     // Always save to LocalStorage for instant local tab sync
     localStorage.setItem(`desktopalie_maintenance_settings_${targetPlatform}`, JSON.stringify(settings));
+    if (targetPlatform === 'platform1') {
+      localStorage.setItem('desktopalie_maintenance_settings', JSON.stringify(settings));
+    }
     window.dispatchEvent(new Event('storage'));
 
     try {
+      const payload = {
+        key: key,
+        value: settings,
+        updated_at: new Date().toISOString()
+      };
+
       const { data, error } = await supabase
         .from('site_settings')
-        .upsert(
-          {
-            key: key,
-            value: settings,
-            updated_at: new Date().toISOString()
-          },
-          { onConflict: 'key' }
-        )
+        .upsert(payload, { onConflict: 'key' })
         .select();
+
+      if (targetPlatform === 'platform1') {
+        supabase.from('site_settings').upsert({ key: 'maintenance', value: settings, updated_at: new Date().toISOString() }, { onConflict: 'key' }).then(() => {});
+      }
 
       if (error) {
         console.warn('Supabase site_settings error, saved to LocalStorage:', error.message);

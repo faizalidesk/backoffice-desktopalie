@@ -100,8 +100,17 @@ export default function PublicPlatformLanding() {
 
   const navLinks = getNavLinks();
 
+  const isMaintenanceActive = Boolean(
+    maintenance && (
+      maintenance.is_enabled === true ||
+      maintenance.is_enabled === 'true' ||
+      maintenance.is_enabled === 1 ||
+      maintenance.is_enabled === '1'
+    )
+  );
+
   // RENDER MAINTENANCE SCREEN IF MAINTENANCE MODE IS ACTIVE FOR THIS PLATFORM FLAVOR
-  if (maintenance?.is_enabled) {
+  if (isMaintenanceActive) {
     return (
       <div style={{
         minHeight: '100vh',
