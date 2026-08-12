@@ -262,4 +262,130 @@ Pastikan dua variabel lingkungan berikut terpasang di Vercel Dashboard Settings:
 
 ---
 
+## 🎨 6. Arsitektur & Penerapan Flavoring (Multi-Platform Support)
+
+Aplikasi Backoffice ini dapat menerapkan **Konsep Flavoring (White-Labeling / Multi-Brand Architecture)** untuk mengelola **4 platform/brand yang berbeda** dari satu codebase utama.
+
+### 🌟 Fitur Utama Flavoring
+1. **Branding Dinamis**: Logo, nama platform, favicon, dan dokumen title menyesuaikan platform yang dipilih.
+2. **Dynamic CSS Variables**: Color palette (Primary, Secondary, Sidebar Background) di-inject secara dinamis ke Root CSS (`:root`).
+3. **Feature Toggles**: Mengaktifkan/mematikan fitur spesifik (seperti Analytics, Export PDF, Multi-Currency) per platform.
+4. **Isolasi Config & Credentials**: URL API / Supabase keys terisolasi per platform.
+
+---
+
+### 📂 Struktur Direktori Konfigurasi Flavoring
+
+```text
+src/
+├── config/
+│   ├── flavors/
+│   │   ├── platform1.js   # Konfigurasi Platform 1
+│   │   ├── platform2.js   # Konfigurasi Platform 2
+│   │   ├── platform3.js   # Konfigurasi Platform 3
+│   │   └── platform4.js   # Konfigurasi Platform 4
+│   └── index.js           # Flavor Loader berdasarkan VITE_FLAVOR
+├── context/
+│   └── FlavorContext.jsx  # Context Provider untuk Theme & Feature Flags
+└── assets/
+    └── flavors/           # Asset visual (logo, icons) per platform
+```
+
+---
+
+### 💻 Contoh Kode Konfigurasi & Loader
+
+#### 1. File Konfigurasi Platform (`src/config/flavors/platform1.js`)
+```javascript
+export default {
+  id: 'platform1',
+  name: 'Backoffice Platform Alpha',
+  logo: '/src/assets/flavors/platform1/logo.svg',
+  theme: {
+    colorPrimary: '#1e40af',   // Blue
+    colorSecondary: '#3b82f6',
+    bgSidebar: '#0f172a',
+  },
+  features: {
+    enableAnalytics: true,
+    enableExportPdf: true,
+    enableMultiCurrency: false,
+  },
+  supabase: {
+    url: import.meta.env.VITE_PLATFORM1_SUPABASE_URL,
+    anonKey: import.meta.env.VITE_PLATFORM1_SUPABASE_KEY,
+  }
+};
+```
+
+#### 2. Flavor Context Provider (`src/context/FlavorContext.jsx`)
+```jsx
+import React, { createContext, useContext, useEffect } from 'react';
+import { activeFlavor } from '../config';
+
+const FlavorContext = createContext(activeFlavor);
+
+export const FlavorProvider = ({ children }) => {
+  useEffect(() => {
+    document.title = activeFlavor.name;
+    const root = document.documentElement;
+    root.style.setProperty('--color-primary', activeFlavor.theme.colorPrimary);
+    root.style.setProperty('--color-secondary', activeFlavor.theme.colorSecondary);
+    root.style.setProperty('--bg-sidebar', activeFlavor.theme.bgSidebar);
+  }, []);
+
+  return (
+    <FlavorContext.Provider value={activeFlavor}>
+      {children}
+    </FlavorContext.Provider>
+  );
+};
+
+export const useFlavor = () => useContext(FlavorContext);
+```
+
+---
+
+### ⚡ Skrip Pembangunan & Mode Eksekusi (`package.json`)
+
+Konfigurasi skrip eksekusi dan build untuk 4 platform di `package.json`:
+
+```json
+"scripts": {
+  "dev:p1": "vite --mode platform1",
+  "dev:p2": "vite --mode platform2",
+  "dev:p3": "vite --mode platform3",
+  "dev:p4": "vite --mode platform4",
+
+  "build:p1": "vite build --mode platform1 --outDir dist/p1",
+  "build:p2": "vite build --mode platform2 --outDir dist/p2",
+  "build:p3": "vite build --mode platform3 --outDir dist/p3",
+  "build:p4": "vite build --mode platform4 --outDir dist/p4",
+  "build:all": "npm run build:p1 && npm run build:p2 && npm run build:p3 && npm run build:p4"
+}
+```
+
+---
+
+### 🔑 Environment Variables (`.env.platform1`, dll)
+
+Setiap platform menggunakan file `.env` terpisah:
+
+```env
+# .env.platform1
+VITE_FLAVOR=platform1
+
+# .env.platform2
+VITE_FLAVOR=platform2
+
+# .env.platform3
+VITE_FLAVOR=platform3
+
+# .env.platform4
+VITE_FLAVOR=platform4
+```
+
+---
+
 © 2026 Desktopalie Backoffice. All rights reserved.
+
