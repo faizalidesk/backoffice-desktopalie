@@ -47,31 +47,40 @@ export const backofficeService = {
     }
   },
 
-  // HELPER: SAFE UPSERT/UPDATE TO SITE_SETTINGS
+  // HELPER: SAFE UPDATE/INSERT TO SITE_SETTINGS (PREVENTS 409 CONFLICT ERROR 23505)
   async saveSiteSetting(key, value) {
+    const updatedAt = new Date().toISOString();
     try {
-      const { data: existing } = await supabase
+      // 1. Try to UPDATE existing row by key first
+      const { data: updatedData, error: updateError } = await supabase
         .from('site_settings')
-        .select('id, key')
+        .update({ value, updated_at: updatedAt })
         .eq('key', key)
-        .maybeSingle();
+        .select();
 
-      if (existing) {
-        const { data, error } = await supabase
-          .from('site_settings')
-          .update({ value, updated_at: new Date().toISOString() })
-          .eq('key', key)
-          .select();
-        return { data, error };
-      } else {
-        const { data, error } = await supabase
-          .from('site_settings')
-          .insert([{ key, value, updated_at: new Date().toISOString() }])
-          .select();
-        return { data, error };
+      if (!updateError && updatedData && updatedData.length > 0) {
+        return { data: updatedData[0], error: null };
       }
+
+      // 2. If row does not exist yet, INSERT new row
+      const { data: insertedData, error: insertError } = await supabase
+        .from('site_settings')
+        .insert([{ key, value, updated_at: updatedAt }])
+        .select();
+
+      if (!insertError && insertedData) {
+        return { data: insertedData[0], error: null };
+      }
+
+      // 3. Final fallback: upsert
+      const { data: upsertData, error: upsertError } = await supabase
+        .from('site_settings')
+        .upsert({ key, value, updated_at: updatedAt })
+        .select();
+
+      return { data: upsertData, error: upsertError };
     } catch (err) {
-      console.warn('saveSiteSetting fallback:', err);
+      console.warn('saveSiteSetting error:', err);
       return { error: err };
     }
   },
