@@ -12,9 +12,9 @@ export default {
   },
   features: {
     enableProjects: true,
-    enableExperiments: false,
+    enableExperiments: true,
     enableNotes: true,
-    enableBookmarks: false,
+    enableBookmarks: true,
     enableTodos: true,
     enableDocumentation: true,
     enableLandingManager: true,

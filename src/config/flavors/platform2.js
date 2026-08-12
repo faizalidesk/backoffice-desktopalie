@@ -16,9 +16,9 @@ export default {
     enableNotes: true,
     enableBookmarks: true,
     enableTodos: true,
-    enableDocumentation: false,
+    enableDocumentation: true,
     enableLandingManager: true,
-    enableMaintenanceMode: false,
+    enableMaintenanceMode: true,
   },
   supabase: {
     url: import.meta.env.VITE_PLATFORM2_SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL,

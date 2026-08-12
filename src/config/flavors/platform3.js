@@ -15,9 +15,9 @@ export default {
     enableExperiments: true,
     enableNotes: true,
     enableBookmarks: true,
-    enableTodos: false,
+    enableTodos: true,
     enableDocumentation: true,
-    enableLandingManager: false,
+    enableLandingManager: true,
     enableMaintenanceMode: true,
   },
   supabase: {

@@ -51,23 +51,20 @@ export default function Sidebar() {
   };
 
   const allNavItems = [
-    { label: t('dashboard'), path: '/', icon: FiGrid, featureKey: true },
-    { label: t('workspaces'), path: '/workspaces', icon: FiLayers, featureKey: true },
-    { label: t('todos'), path: '/todos', icon: FiCheckSquare, featureKey: flavor.features?.enableTodos },
-    { label: t('documentation'), path: '/documentation', icon: FiBookOpen, featureKey: flavor.features?.enableDocumentation },
-    { label: t('landingManager'), path: '/landing-manager', icon: FiLayout, featureKey: flavor.features?.enableLandingManager },
-    { label: t('projects'), path: '/projects', icon: FiFolder, featureKey: flavor.features?.enableProjects },
-    { label: t('experiments'), path: '/experiments', icon: FiCpu, featureKey: flavor.features?.enableExperiments },
-    { label: t('notes'), path: '/notes', icon: FiFileText, featureKey: flavor.features?.enableNotes },
-    { label: t('bookmarks'), path: '/bookmarks', icon: FiBookmark, featureKey: flavor.features?.enableBookmarks },
-    { label: t('maintenance'), path: '/maintenance', icon: FiTool, featureKey: flavor.features?.enableMaintenanceMode },
-    { label: t('profile'), path: '/profile', icon: FiUser, featureKey: true },
+    { label: t('dashboard'), path: '/', icon: FiGrid },
+    { label: t('workspaces'), path: '/workspaces', icon: FiLayers },
+    { label: t('projects'), path: '/projects', icon: FiFolder },
+    { label: t('experiments'), path: '/experiments', icon: FiCpu },
+    { label: t('notes'), path: '/notes', icon: FiFileText },
+    { label: t('bookmarks'), path: '/bookmarks', icon: FiBookmark },
+    { label: t('todos'), path: '/todos', icon: FiCheckSquare },
+    { label: t('documentation'), path: '/documentation', icon: FiBookOpen },
+    { label: t('landingManager'), path: '/landing-manager', icon: FiLayout },
+    { label: t('maintenance'), path: '/maintenance', icon: FiTool },
+    { label: t('profile'), path: '/profile', icon: FiUser },
   ];
 
-  const navItems = allNavItems.filter(item => item.featureKey !== false);
-
-
-  const filteredNavItems = navItems.filter((item) =>
+  const filteredNavItems = allNavItems.filter((item) =>
     item.label.toLowerCase().includes(searchQuery.toLowerCase().trim())
   );
 
