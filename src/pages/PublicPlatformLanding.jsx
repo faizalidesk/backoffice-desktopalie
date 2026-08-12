@@ -4,6 +4,7 @@ import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
 import { backofficeService } from '../services/backofficeService';
 import { useNavigate, Link } from 'react-router-dom';
+import './MaintenancePage.css';
 import { 
   FiGlobe, 
   FiArrowRight, 
@@ -19,6 +20,20 @@ import {
   FiShield,
   FiActivity
 } from 'react-icons/fi';
+import {
+  FaBell,
+  FaCheckCircle,
+  FaGithub,
+  FaInstagram,
+  FaLinkedinIn,
+  FaLock,
+  FaMoon,
+  FaPaperPlane,
+  FaPause,
+  FaPlay,
+  FaSun,
+  FaTerminal
+} from 'react-icons/fa';
 import DesktopalieMark from '../components/DesktopalieMark';
 
 export default function PublicPlatformLanding() {
@@ -134,522 +149,272 @@ export default function PublicPlatformLanding() {
     )
   );
 
+  const INITIAL_LOGS = [
+    "[SYSTEM] Maintenance mode initiated globally.",
+    "[DATABASE] PostgreSQL RLS policies indexing complete.",
+    "[SECURITY] SSL certificates and PKCE token validators refreshed.",
+    "[OPTIMIZATION] Vite 8 assets pre-bundled & compressed.",
+    "[DEPLOYMENT] Syncing edge servers across Asia Pacific...",
+  ];
+
+  const [logs, setLogs] = useState(INITIAL_LOGS);
+  const [isLogStreaming, setIsLogStreaming] = useState(true);
+  const [maintEmail, setMaintEmail] = useState("");
+  const [maintSubscribed, setMaintSubscribed] = useState(false);
+
+  // Simulated Live Log Stream
+  useEffect(() => {
+    if (!isLogStreaming) return undefined;
+    const pool = [
+      "[CACHE] Purging CDN cache nodes...",
+      "[NETWORK] Latency health check 14ms (OK).",
+      "[REFACTOR] Modernizing UI v2.5 micro-interactions...",
+      "[STORAGE] Verifying Supabase bucket storage integrity...",
+      "[SYNC] Realtime subscription channels synchronized.",
+    ];
+    const stream = setInterval(() => {
+      const nextLog = pool[Math.floor(Math.random() * pool.length)];
+      const timestamp = new Date().toLocaleTimeString();
+      setLogs((prev) => [...prev.slice(-5), `[${timestamp}] ${nextLog.replace(/\[.*?\]\s*/, "")}`]);
+    }, 3200);
+    return () => clearInterval(stream);
+  }, [isLogStreaming]);
+
+  const handleMaintSubscribe = (e) => {
+    e.preventDefault();
+    if (!maintEmail.trim()) return;
+    setMaintSubscribed(true);
+  };
+
   // RENDER MAINTENANCE SCREEN IF MAINTENANCE MODE IS ACTIVE FOR THIS PLATFORM FLAVOR
   if (isMaintenanceActive) {
+    const brandName = activeFlavor?.logoText || "Desktopalie";
+
     return (
-      <div style={{
-        minHeight: '100vh',
-        width: '100vw',
-        backgroundColor: isDarkMode ? '#080C14' : '#F6F5F9',
-        color: isDarkMode ? '#F8FAFC' : '#0F172A',
-        fontFamily: "'Plus Jakarta Sans', -apple-system, sans-serif",
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        position: 'relative',
-        overflowX: 'hidden',
-        boxSizing: 'border-box'
-      }}>
-        {/* Ambient Radial Background Glows */}
-        <div style={{
-          position: 'absolute',
-          top: '-150px',
-          right: '-100px',
-          width: '700px',
-          height: '700px',
-          borderRadius: '50%',
-          background: `radial-gradient(circle, ${primaryColor}18 0%, rgba(0,0,0,0) 70%)`,
-          pointerEvents: 'none'
-        }} />
-        <div style={{
-          position: 'absolute',
-          bottom: '-150px',
-          left: '-100px',
-          width: '700px',
-          height: '700px',
-          borderRadius: '50%',
-          background: `radial-gradient(circle, ${primaryColor}15 0%, rgba(0,0,0,0) 70%)`,
-          pointerEvents: 'none'
-        }} />
+      <div className="desktopalie maintenance-landing" data-theme={isDarkMode ? "dark" : "light"}>
+        <div className="page-noise" aria-hidden="true" />
 
-        {/* 1. TOP NAVBAR HEADER */}
-        <header style={{
-          width: '100%',
-          maxWidth: '1280px',
-          margin: '0 auto',
-          padding: '1.5rem 2rem',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          position: 'relative',
-          zIndex: 10
-        }}>
-          {/* Left Logo */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <DesktopalieMark size={32} style={{ color: isDarkMode ? '#F8FAFC' : '#0F172A', flexShrink: 0 }} />
-            <div>
-              <span style={{ fontSize: '1.1rem', fontWeight: '800', letterSpacing: '0.04em', color: isDarkMode ? '#F8FAFC' : '#0F172A', display: 'block', lineHeight: 1 }}>
-                {activeFlavor?.logoText || 'DESKTOPALIE'}
-              </span>
-              <span style={{ fontSize: '0.675rem', color: primaryColor, fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                {activeFlavor?.shortName} Portal
-              </span>
-            </div>
-          </div>
+        {/* Unified Site Header */}
+        <header className="site-header">
+          <div className="site-wrap header-inner">
+            <Link to="/" className="brand" aria-label={`${brandName} home`}>
+              <DesktopalieMark className="brand-mark" style={{ color: primaryColor }} />
+              <span>{brandName}</span>
+            </Link>
 
-          {/* Center Disabled Nav Items */}
-          <nav style={{ display: 'flex', alignItems: 'center', gap: '1.75rem' }}>
-            {['Home', 'Projects', 'Experiments', 'About', 'Services', 'Contact'].map((item, idx) => (
-              <span
-                key={idx}
-                style={{
-                  fontSize: '0.85rem',
-                  fontWeight: '600',
-                  color: isDarkMode ? '#64748B' : '#94A3B8',
-                  textDecoration: 'line-through',
-                  opacity: 0.75,
-                  cursor: 'not-allowed'
-                }}
+            <nav className="site-nav" aria-label="Primary navigation">
+              <Link to="/">Home</Link>
+              <Link to="/projects">Projects</Link>
+              <Link to="/experiments">Experiments</Link>
+              <Link to="/about">About</Link>
+              <Link to="/services">Services</Link>
+              <Link to="/contact">Contact</Link>
+            </nav>
+
+            <div className="header-actions">
+              <button
+                className="theme-button"
+                onClick={toggleTheme}
+                aria-label={`Switch to ${isDarkMode ? "light" : "dark"} mode`}
               >
-                {item}
+                {isDarkMode ? <FaSun /> : <FaMoon />}
+              </button>
+              <span className="maint-locked-chip">
+                <FaLock /> Site Locked
               </span>
-            ))}
-          </nav>
-
-          {/* Right Controls: Theme Switcher & Site Locked Pill */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <button
-              type="button"
-              onClick={toggleTheme}
-              title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
-              style={{
-                width: '38px',
-                height: '38px',
-                borderRadius: '50%',
-                backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-                border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: isDarkMode ? '#FBBF24' : '#0F172A',
-                fontSize: '1.1rem',
-                cursor: 'pointer',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.06)'
-              }}
-            >
-              {isDarkMode ? <FiSun /> : <FiMoon />}
-            </button>
-
-            {/* Site Locked Red Badge */}
-            <div style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.45rem',
-              padding: '0.4rem 0.85rem',
-              borderRadius: '99px',
-              backgroundColor: 'rgba(239, 68, 68, 0.12)',
-              border: '1px solid rgba(239, 68, 68, 0.25)',
-              color: '#EF4444',
-              fontSize: '0.75rem',
-              fontWeight: '700'
-            }}>
-              <FiLock style={{ fontSize: '0.8rem' }} />
-              <span>Site Locked</span>
             </div>
           </div>
         </header>
 
-        {/* 2. MAIN 2-COLUMN HERO SECTION */}
-        <main style={{
-          maxWidth: '1280px',
-          width: '100%',
-          margin: '0 auto',
-          padding: '2.5rem 2rem',
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(420px, 1fr))',
-          gap: '4rem',
-          alignItems: 'center',
-          position: 'relative',
-          zIndex: 10,
-          flex: 1
-        }}>
+        <main id="top">
+          {/* Hero Section matching Landing Page */}
+          <section className="hero-section maint-hero-section">
+            <div className="hero-glow hero-glow-one" aria-hidden="true" />
+            <div className="hero-glow hero-glow-two" aria-hidden="true" />
+            <div className="site-wrap maint-hero-wrap">
+              <div className="maint-hero-copy">
+                <div className="status-pill">
+                  <span /> {activeFlavor?.shortName?.toUpperCase()} PLATFORM SYSTEM UPGRADE IN PROGRESS
+                </div>
+                <h1>
+                  {maintenance?.title || "We are upgrading our workspace."}
+                </h1>
+                <p>
+                  {maintenance?.message || `${brandName} is currently undergoing a core architecture refactor, database maintenance, and UI v2.5 performance enhancements. We will be back online shortly with a faster and more responsive digital experience.`}
+                </p>
 
-          {/* LEFT COLUMN: HERO MAINTENANCE INFO & LIVE COUNTDOWN */}
-          <div>
-            {/* Status Pill Badge */}
-            <div style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              padding: '0.35rem 0.85rem',
-              borderRadius: '99px',
-              backgroundColor: 'rgba(34, 197, 94, 0.12)',
-              border: '1px solid rgba(34, 197, 94, 0.25)',
-              color: '#16A34A',
-              fontSize: '0.725rem',
-              fontWeight: '800',
-              textTransform: 'uppercase',
-              letterSpacing: '0.08em',
-              marginBottom: '1.5rem'
-            }}>
-              <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#22C55E', boxShadow: '0 0 8px #22C55E' }} />
-              <span>{activeFlavor?.shortName} PLATFORM SYSTEM UPGRADE IN PROGRESS</span>
-            </div>
+                {/* Countdown Timer Widget */}
+                <div className="maint-timer-box">
+                  <span className="timer-tag" style={{ color: primaryColor }}>ESTIMATED TIME UNTIL COMPLETION</span>
+                  <div className="timer-display">
+                    {timeLeft.days > 0 && (
+                      <>
+                        <div className="t-unit">
+                          <strong>{String(timeLeft.days).padStart(2, "0")}</strong>
+                          <span>DAYS</span>
+                        </div>
+                        <span className="t-colon" style={{ color: primaryColor }}>:</span>
+                      </>
+                    )}
+                    <div className="t-unit">
+                      <strong>{String(timeLeft.hours).padStart(2, "0")}</strong>
+                      <span>HOURS</span>
+                    </div>
+                    <span className="t-colon" style={{ color: primaryColor }}>:</span>
+                    <div className="t-unit">
+                      <strong>{String(timeLeft.minutes).padStart(2, "0")}</strong>
+                      <span>MINUTES</span>
+                    </div>
+                    <span className="t-colon" style={{ color: primaryColor }}>:</span>
+                    <div className="t-unit">
+                      <strong>{String(timeLeft.seconds).padStart(2, "0")}</strong>
+                      <span>SECONDS</span>
+                    </div>
+                  </div>
+                </div>
 
-            {/* Title */}
-            <h1 style={{
-              fontSize: '3rem',
-              fontWeight: '800',
-              lineHeight: '1.1',
-              letterSpacing: '-0.02em',
-              marginBottom: '1rem',
-              color: isDarkMode ? '#F8FAFC' : '#0F172A'
-            }}>
-              {maintenance?.title || 'System Under Maintenance'}
-            </h1>
+                {/* Progress Steps */}
+                <div className="maint-steps-row">
+                  <div className="step-badge done">
+                    <FaCheckCircle /> <span>Database Indexing</span>
+                  </div>
+                  <div className="step-badge done">
+                    <FaCheckCircle /> <span>Security Audit</span>
+                  </div>
+                  <div className="step-badge active" style={{ color: primaryColor, backgroundColor: `${primaryColor}18`, borderColor: `${primaryColor}30` }}>
+                    <span className="pulse-circle" style={{ backgroundColor: primaryColor }} /> <span>UI v2.5 Deployment</span>
+                  </div>
+                </div>
 
-            {/* Message */}
-            <p style={{
-              fontSize: '1.05rem',
-              lineHeight: '1.65',
-              color: isDarkMode ? '#94A3B8' : '#64748B',
-              marginBottom: '2rem',
-              maxWidth: '540px'
-            }}>
-              {maintenance?.message || 'We are performing system upgrades and performance enhancements. Please check back shortly.'}
-            </p>
+                {/* Email Subscription Form */}
+                <div className="maint-subscribe-card">
+                  <h3>Get notified when we are back online</h3>
+                  {maintSubscribed ? (
+                    <div className="sub-success">
+                      <FaCheckCircle />
+                      <span>Thank you! We will email you as soon as the upgrade is complete.</span>
+                    </div>
+                  ) : (
+                    <form onSubmit={handleMaintSubscribe} className="maint-sub-form">
+                      <div className="sub-input-row">
+                        <FaBell className="sub-icon" />
+                        <input
+                          type="email"
+                          required
+                          placeholder="Enter your email address..."
+                          value={maintEmail}
+                          onChange={(e) => setMaintEmail(e.target.value)}
+                        />
+                        <button type="submit" className="sub-btn">
+                          Notify me <FaPaperPlane />
+                        </button>
+                      </div>
+                    </form>
+                  )}
+                </div>
 
-            {/* COUNTDOWN CARD (White Box as in Screenshot) */}
-            <div style={{
-              backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-              border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
-              borderRadius: '20px',
-              padding: '1.5rem 2rem',
-              marginBottom: '1.75rem',
-              boxShadow: isDarkMode ? '0 10px 30px rgba(0,0,0,0.3)' : '0 10px 30px rgba(0,0,0,0.05)',
-              maxWidth: '520px'
-            }}>
-              <div style={{
-                fontSize: '0.675rem',
-                fontWeight: '800',
-                textTransform: 'uppercase',
-                letterSpacing: '0.1em',
-                color: primaryColor,
-                marginBottom: '0.85rem'
-              }}>
-                ESTIMATED TIME UNTIL COMPLETION
+                {/* Admin Bypass Button */}
+                {maintenance?.allow_admin_bypass && (
+                  <div style={{ marginTop: '1.25rem' }}>
+                    <button
+                      type="button"
+                      onClick={() => navigate('/login')}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        padding: 0,
+                        color: primaryColor,
+                        fontWeight: '700',
+                        fontSize: '0.85rem',
+                        cursor: 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.35rem'
+                      }}
+                    >
+                      <FaLock style={{ fontSize: '0.8rem' }} />
+                      <span>Portal Admin Backoffice (Bypass)</span>
+                    </button>
+                  </div>
+                )}
               </div>
 
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '1.25rem',
-                fontFamily: "'JetBrains Mono', monospace, sans-serif"
-              }}>
-                <div>
-                  <div style={{ fontSize: '2.25rem', fontWeight: '800', color: isDarkMode ? '#F8FAFC' : '#0F172A', lineHeight: 1 }}>
-                    {String(timeLeft.days).padStart(2, '0')}
+              {/* Visual Browser Window & Live Terminal */}
+              <div className="maint-visual-wrap">
+                <div className="browser-window">
+                  <div className="browser-topbar">
+                    <div className="browser-dots">
+                      <i />
+                      <i />
+                      <i />
+                    </div>
+                    <div className="browser-url">{typeof window !== 'undefined' ? window.location.hostname : 'desktopalie.my.id'}/maintenance</div>
+                    <span className="browser-plus">+</span>
                   </div>
-                  <div style={{ fontSize: '0.625rem', fontWeight: '700', color: isDarkMode ? '#94A3B8' : '#64748B', marginTop: '0.35rem' }}>
-                    DAYS
+
+                  <div className="browser-content maint-browser-content">
+                    <div className="maint-terminal-panel">
+                      <div className="terminal-header">
+                        <div className="t-left">
+                          <FaTerminal />
+                          <span>System Refactor Logs</span>
+                        </div>
+                        <button
+                          className="t-stream-toggle"
+                          type="button"
+                          onClick={() => setIsLogStreaming(!isLogStreaming)}
+                          style={{ color: primaryColor, backgroundColor: `${primaryColor}18` }}
+                        >
+                          {isLogStreaming ? <FaPause /> : <FaPlay />}
+                          <span>{isLogStreaming ? "Pause" : "Live"}</span>
+                        </button>
+                      </div>
+                      <div className="terminal-logs-body">
+                        {logs.map((logLine, idx) => (
+                          <div key={idx} className="terminal-log-line">
+                            <span className="t-prefix" style={{ color: primaryColor }}>&gt;</span> {logLine}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                <span style={{ fontSize: '1.75rem', fontWeight: '700', color: primaryColor, marginTop: '-0.75rem' }}>:</span>
-
-                <div>
-                  <div style={{ fontSize: '2.25rem', fontWeight: '800', color: isDarkMode ? '#F8FAFC' : '#0F172A', lineHeight: 1 }}>
-                    {String(timeLeft.hours).padStart(2, '0')}
-                  </div>
-                  <div style={{ fontSize: '0.625rem', fontWeight: '700', color: isDarkMode ? '#94A3B8' : '#64748B', marginTop: '0.35rem' }}>
-                    HOURS
-                  </div>
+                <div className="floating-code" style={{ color: primaryColor }}>
+                  <span>await</span> system.upgrade(<b>v2.5</b>);
                 </div>
-
-                <span style={{ fontSize: '1.75rem', fontWeight: '700', color: primaryColor, marginTop: '-0.75rem' }}>:</span>
-
-                <div>
-                  <div style={{ fontSize: '2.25rem', fontWeight: '800', color: isDarkMode ? '#F8FAFC' : '#0F172A', lineHeight: 1 }}>
-                    {String(timeLeft.minutes).padStart(2, '0')}
-                  </div>
-                  <div style={{ fontSize: '0.625rem', fontWeight: '700', color: isDarkMode ? '#94A3B8' : '#64748B', marginTop: '0.35rem' }}>
-                    MINUTES
-                  </div>
-                </div>
-
-                <span style={{ fontSize: '1.75rem', fontWeight: '700', color: primaryColor, marginTop: '-0.75rem' }}>:</span>
-
-                <div>
-                  <div style={{ fontSize: '2.25rem', fontWeight: '800', color: isDarkMode ? '#F8FAFC' : '#0F172A', lineHeight: 1 }}>
-                    {String(timeLeft.seconds).padStart(2, '0')}
-                  </div>
-                  <div style={{ fontSize: '0.625rem', fontWeight: '700', color: isDarkMode ? '#94A3B8' : '#64748B', marginTop: '0.35rem' }}>
-                    SECONDS
-                  </div>
-                </div>
+                <div className="floating-tag">MAINTENANCE MODE ✦</div>
               </div>
             </div>
-
-            {/* STATUS BADGES ROW */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.65rem', marginBottom: '2rem' }}>
-              <span style={{
-                fontSize: '0.75rem',
-                fontWeight: '700',
-                padding: '0.35rem 0.85rem',
-                borderRadius: '99px',
-                backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-                color: isDarkMode ? '#94A3B8' : '#475569',
-                border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`
-              }}>
-                ✓ Database Indexing
-              </span>
-              <span style={{
-                fontSize: '0.75rem',
-                fontWeight: '700',
-                padding: '0.35rem 0.85rem',
-                borderRadius: '99px',
-                backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-                color: isDarkMode ? '#94A3B8' : '#475569',
-                border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`
-              }}>
-                ✓ Security Audit
-              </span>
-              <span style={{
-                fontSize: '0.75rem',
-                fontWeight: '700',
-                padding: '0.35rem 0.85rem',
-                borderRadius: '99px',
-                backgroundColor: `${primaryColor}18`,
-                color: primaryColor,
-                border: `1px solid ${primaryColor}30`
-              }}>
-                ● UI v2.5 Deployment
-              </span>
-            </div>
-
-            {/* NOTIFY EMAIL FORM */}
-            <div style={{ maxWidth: '520px', marginBottom: '1.5rem' }}>
-              <div style={{ fontSize: '0.85rem', fontWeight: '700', color: isDarkMode ? '#F8FAFC' : '#0F172A', marginBottom: '0.65rem' }}>
-                Get notified when we are back online
-              </div>
-
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  toast.success('Thank you! We will notify you when system is live.', { icon: '🔔' });
-                }}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-                  border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
-                  borderRadius: '16px',
-                  padding: '0.35rem 0.35rem 0.35rem 1rem',
-                  boxShadow: '0 4px 14px rgba(0,0,0,0.04)'
-                }}
-              >
-                <span style={{ color: isDarkMode ? '#64748B' : '#94A3B8', marginRight: '0.5rem' }}>🔔</span>
-                <input
-                  type="email"
-                  required
-                  placeholder="Enter your email address..."
-                  style={{
-                    flex: 1,
-                    background: 'none',
-                    border: 'none',
-                    outline: 'none',
-                    color: isDarkMode ? '#F8FAFC' : '#0F172A',
-                    fontSize: '0.875rem'
-                  }}
-                />
-                <button
-                  type="submit"
-                  style={{
-                    padding: '0.65rem 1.25rem',
-                    borderRadius: '12px',
-                    backgroundColor: isDarkMode ? '#F8FAFC' : '#0F172A',
-                    color: isDarkMode ? '#0F172A' : '#FFFFFF',
-                    border: 'none',
-                    fontSize: '0.85rem',
-                    fontWeight: '700',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.4rem'
-                  }}
-                >
-                  <span>Notify me</span>
-                  <FiArrowRight />
-                </button>
-              </form>
-            </div>
-
-            {/* ADMIN BYPASS BUTTON */}
-            {maintenance?.allow_admin_bypass && (
-              <div>
-                <button
-                  type="button"
-                  onClick={() => navigate('/login')}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    padding: 0,
-                    color: primaryColor,
-                    fontWeight: '700',
-                    fontSize: '0.85rem',
-                    cursor: 'pointer',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.35rem'
-                  }}
-                >
-                  <span>🔒 Portal Admin Backoffice (Bypass)</span>
-                  <FiArrowRight style={{ fontSize: '0.8rem' }} />
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* RIGHT COLUMN: MAC-STYLE CODE EDITOR MOCKUP */}
-          <div style={{ position: 'relative', display: 'flex', justifyContent: 'center' }}>
-            
-            {/* FLOATING BADGE 1: MAINTENANCE MODE */}
-            <div style={{
-              position: 'absolute',
-              top: '-15px',
-              right: '20px',
-              backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-              border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
-              borderRadius: '8px',
-              padding: '0.35rem 0.75rem',
-              fontSize: '0.7rem',
-              fontWeight: '800',
-              fontFamily: "'JetBrains Mono', monospace",
-              color: isDarkMode ? '#F8FAFC' : '#0F172A',
-              boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
-              zIndex: 20
-            }}>
-              MAINTENANCE MODE ⚡
-            </div>
-
-            {/* FLOATING BADGE 2: AWAIT SYSTEM UPGRADE */}
-            <div style={{
-              position: 'absolute',
-              bottom: '20px',
-              left: '-20px',
-              backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-              border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
-              borderRadius: '8px',
-              padding: '0.45rem 0.85rem',
-              fontSize: '0.75rem',
-              fontWeight: '700',
-              fontFamily: "'JetBrains Mono', monospace",
-              color: primaryColor,
-              boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
-              zIndex: 20
-            }}>
-              await system.upgrade(v2.5);
-            </div>
-
-            {/* MAIN CODE WINDOW CARD */}
-            <div style={{
-              width: '100%',
-              maxWidth: '520px',
-              backgroundColor: isDarkMode ? '#0F172A' : '#FFFFFF',
-              border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
-              borderRadius: '20px',
-              overflow: 'hidden',
-              boxShadow: isDarkMode ? '0 25px 60px rgba(0,0,0,0.6)' : '0 20px 50px rgba(0,0,0,0.08)',
-              fontFamily: "'JetBrains Mono', monospace"
-            }}>
-              {/* Window Header Toolbar */}
-              <div style={{
-                backgroundColor: isDarkMode ? '#1E293B' : '#F8FAFC',
-                borderBottom: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
-                padding: '0.75rem 1rem',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between'
-              }}>
-                {/* 3 Mac Dots */}
-                <div style={{ display: 'flex', gap: '0.4rem' }}>
-                  <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#EF4444' }} />
-                  <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#F59E0B' }} />
-                  <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#10B981' }} />
-                </div>
-
-                {/* URL Bar */}
-                <div style={{
-                  fontSize: '0.725rem',
-                  color: isDarkMode ? '#94A3B8' : '#64748B',
-                  backgroundColor: isDarkMode ? '#0F172A' : '#FFFFFF',
-                  border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
-                  borderRadius: '6px',
-                  padding: '0.2rem 0.85rem'
-                }}>
-                  desktopalie.my.id/maintenance
-                </div>
-
-                <div style={{ width: '30px' }} />
-              </div>
-
-              {/* Window Code Content */}
-              <div style={{ padding: '2rem 1.75rem', minHeight: '300px', fontSize: '0.825rem', lineHeight: '1.8', color: isDarkMode ? '#CBD5E1' : '#334155' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.25rem', color: isDarkMode ? '#94A3B8' : '#64748B' }}>
-                  <span>System Refactor Logs</span>
-                  <span style={{ fontSize: '0.7rem', padding: '0.1rem 0.4rem', borderRadius: '4px', background: `${primaryColor}20`, color: primaryColor, fontWeight: '700' }}>
-                    || Pause
-                  </span>
-                </div>
-
-                <div style={{ color: '#6366F1' }}>&gt; Initializing platform maintenance...</div>
-                <div style={{ color: '#10B981' }}>✓ Supabase DB schema migration: DONE</div>
-                <div style={{ color: '#10B981' }}>✓ Asset CDN Edge cache sync: DONE</div>
-                <div style={{ color: '#3B82F6' }}>ℹ Optimizing React v19 UI bundles...</div>
-                <div style={{ color: '#F59E0B' }}>⚠ Re-indexing global full-text search...</div>
-                <div style={{ color: primaryColor, fontWeight: '700', marginTop: '1rem' }}>
-                  [ STATUS ] System Upgrade v2.5 In Progress.
-                </div>
-              </div>
-            </div>
-
-          </div>
+          </section>
         </main>
 
-        {/* 3. BOTTOM FOOTER BAR */}
-        <footer style={{
-          width: '100%',
-          maxWidth: '1280px',
-          margin: '0 auto',
-          padding: '1.5rem 2rem',
-          display: 'flex',
-          flexWrap: 'wrap',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: '1rem',
-          borderTop: `1px solid ${isDarkMode ? '#1E293B' : '#E2E8F0'}`,
-          position: 'relative',
-          zIndex: 10
-        }}>
-          {/* Left Brand */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <DesktopalieMark size={22} style={{ color: isDarkMode ? '#F8FAFC' : '#0F172A' }} />
-            <span style={{ fontSize: '0.85rem', fontWeight: '800', letterSpacing: '0.05em', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
-              {activeFlavor?.logoText || 'DESKTOPALIE'}
-            </span>
-          </div>
-
-          {/* Center Text */}
-          <div style={{ fontSize: '0.725rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.1em', color: isDarkMode ? '#64748B' : '#94A3B8' }}>
-            PROJECTS, EXPERIMENTS, AND DIGITAL CREATIONS
-          </div>
-
-          {/* Right Social Icons & Copyright */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', fontSize: '0.8rem', color: isDarkMode ? '#64748B' : '#94A3B8' }}>
-            {settings?.github_url && <a href={settings.github_url} target="_blank" rel="noreferrer" style={{ color: 'inherit' }}><FiGithub /></a>}
-            {settings?.linkedin_url && <a href={settings.linkedin_url} target="_blank" rel="noreferrer" style={{ color: 'inherit' }}><FiLinkedin /></a>}
-            {settings?.instagram_url && <a href={settings.instagram_url} target="_blank" rel="noreferrer" style={{ color: 'inherit' }}><FiInstagram /></a>}
-            <span>© {new Date().getFullYear()} {activeFlavor?.logoText || 'DESKTOPALIE'}</span>
+        {/* Unified Site Footer */}
+        <footer className="site-footer">
+          <div className="site-wrap footer-inner">
+            <Link to="/" className="brand">
+              <DesktopalieMark className="brand-mark" style={{ color: primaryColor }} />
+              <span>{brandName}</span>
+            </Link>
+            <p>Projects, experiments, and digital creations.</p>
+            <div className="social-links">
+              {settings?.github_url && (
+                <a href={settings.github_url} target="_blank" rel="noreferrer" aria-label="GitHub">
+                  <FaGithub />
+                </a>
+              )}
+              {settings?.linkedin_url && (
+                <a href={settings.linkedin_url} target="_blank" rel="noreferrer" aria-label="LinkedIn">
+                  <FaLinkedinIn />
+                </a>
+              )}
+              {settings?.instagram_url && (
+                <a href={settings.instagram_url} target="_blank" rel="noreferrer" aria-label="Instagram">
+                  <FaInstagram />
+                </a>
+              )}
+            </div>
+            <span className="copyright">© {new Date().getFullYear()} {brandName.toUpperCase()}</span>
           </div>
         </footer>
       </div>
