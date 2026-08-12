@@ -24,6 +24,32 @@ export default function DesktopOnlyGuard({ children }) {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const hostname = typeof window !== 'undefined' ? window.location.hostname.toLowerCase() : '';
+  const pathname = typeof window !== 'undefined' ? window.location.pathname.toLowerCase() : '';
+
+  // Apply Desktop Guard ONLY for Backoffice domain (back.desktopalie.my.id) or Backoffice routes
+  const isBackofficeDomain = hostname.includes('back.') || hostname.includes('backoffice');
+  const isBackofficeRoute = isBackofficeDomain || (
+    pathname.startsWith('/login') ||
+    pathname.startsWith('/dashboard') ||
+    pathname.startsWith('/workspaces') ||
+    pathname.startsWith('/todos') ||
+    pathname.startsWith('/documentation') ||
+    pathname.startsWith('/landing-manager') ||
+    pathname.startsWith('/projects') ||
+    pathname.startsWith('/experiments') ||
+    pathname.startsWith('/notes') ||
+    pathname.startsWith('/bookmarks') ||
+    pathname.startsWith('/maintenance') ||
+    pathname.startsWith('/profile') ||
+    pathname.startsWith('/register')
+  );
+
+  // If visiting public landing pages (desktopalie.my.id, beta., gamma., delta.), allow full mobile access!
+  if (!isBackofficeRoute) {
+    return children;
+  }
+
   if (isMobile) {
     return (
       <div style={{
