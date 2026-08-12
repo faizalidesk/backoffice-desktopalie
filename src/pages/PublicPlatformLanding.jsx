@@ -125,6 +125,15 @@ export default function PublicPlatformLanding() {
     return () => clearInterval(timer);
   }, [maintenance?.end_time]);
 
+  const isMaintenanceActive = Boolean(
+    maintenance && (
+      maintenance.is_enabled === true ||
+      maintenance.is_enabled === 'true' ||
+      maintenance.is_enabled === 1 ||
+      maintenance.is_enabled === '1'
+    )
+  );
+
   // RENDER MAINTENANCE SCREEN IF MAINTENANCE MODE IS ACTIVE FOR THIS PLATFORM FLAVOR
   if (isMaintenanceActive) {
     return (
