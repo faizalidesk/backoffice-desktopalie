@@ -66,12 +66,24 @@ export default function PublicPlatformLanding() {
         if (isMounted) {
           setSettings(landingData);
           setMaintenance(maintData);
-          if (maintData) {
-            try {
+          
+          const isEnabled = Boolean(
+            maintData && (
+              maintData.is_enabled === true ||
+              maintData.is_enabled === 'true' ||
+              maintData.is_enabled === 1 ||
+              maintData.is_enabled === '1'
+            )
+          );
+
+          try {
+            if (isEnabled) {
               localStorage.setItem(`desktopalie_maint_${flavorId}`, JSON.stringify(maintData));
-            } catch (e) {
-              // ignore
+            } else {
+              localStorage.removeItem(`desktopalie_maint_${flavorId}`);
             }
+          } catch (e) {
+            // ignore
           }
         }
       } catch (err) {
