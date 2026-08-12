@@ -49,6 +49,46 @@ export default function PublicPlatformLanding() {
   const primaryColor = activeFlavor?.theme?.colorPrimary || '#4f46e5';
   const dummyProjects = activeFlavor?.dummyData?.recentProjects || [];
 
+  const getNavLinks = () => {
+    switch (flavorId) {
+      case 'platform2': // Beta (Logistics & Fleet)
+        return [
+          { label: 'Ikhtisar Armada', path: '#hero' },
+          { label: 'Live Telemetry', path: '#features' },
+          { label: 'Manajemen Rute', path: '#projects' },
+          { label: 'Tentang Beta', path: '#about' },
+          { label: 'Dukungan Logistik', path: '#contact' },
+        ];
+      case 'platform3': // Gamma (Streaming & Analytics)
+        return [
+          { label: 'Hub Transcoder', path: '#hero' },
+          { label: 'AI Subtitle Video', path: '#features' },
+          { label: 'Studio Streaming', path: '#projects' },
+          { label: 'Arsitektur CDN', path: '#about' },
+          { label: 'Kontak Media', path: '#contact' },
+        ];
+      case 'platform4': // Delta (Enterprise ERP)
+        return [
+          { label: 'Enterprise Core', path: '#hero' },
+          { label: 'Modul Keuangan', path: '#features' },
+          { label: 'Audit ISO 27001', path: '#projects' },
+          { label: 'Tata Kelola Delta', path: '#about' },
+          { label: 'Konsultasi Enterprise', path: '#contact' },
+        ];
+      case 'platform1':
+      default: // Desktopalie Main Core
+        return [
+          { label: 'Beranda Core', path: '#hero' },
+          { label: 'Fitur Utama', path: '#features' },
+          { label: 'Proyek & Karya', path: '#projects' },
+          { label: 'Tentang Saya', path: '#about' },
+          { label: 'Kontak', path: '#contact' },
+        ];
+    }
+  };
+
+  const navLinks = getNavLinks();
+
   return (
     <div style={{
       minHeight: '100vh',
@@ -101,11 +141,21 @@ export default function PublicPlatformLanding() {
 
         {/* Navigation Links */}
         <nav style={{ display: 'flex', alignItems: 'center', gap: '1.75rem' }}>
-          <a href="#hero" style={{ color: isDarkMode ? '#94A3B8' : '#475569', fontSize: '0.875rem', fontWeight: '600', textDecoration: 'none' }}>Overview</a>
-          <a href="#features" style={{ color: isDarkMode ? '#94A3B8' : '#475569', fontSize: '0.875rem', fontWeight: '600', textDecoration: 'none' }}>Features</a>
-          <a href="#projects" style={{ color: isDarkMode ? '#94A3B8' : '#475569', fontSize: '0.875rem', fontWeight: '600', textDecoration: 'none' }}>Projects</a>
-          <a href="#about" style={{ color: isDarkMode ? '#94A3B8' : '#475569', fontSize: '0.875rem', fontWeight: '600', textDecoration: 'none' }}>About</a>
-          <a href="#contact" style={{ color: isDarkMode ? '#94A3B8' : '#475569', fontSize: '0.875rem', fontWeight: '600', textDecoration: 'none' }}>Contact</a>
+          {navLinks.map((item, idx) => (
+            <a
+              key={idx}
+              href={item.path}
+              style={{
+                color: isDarkMode ? '#94A3B8' : '#475569',
+                fontSize: '0.875rem',
+                fontWeight: '600',
+                textDecoration: 'none',
+                transition: 'color 0.15s ease'
+              }}
+            >
+              {item.label}
+            </a>
+          ))}
         </nav>
 
         {/* Right Controls: Theme Switcher & Admin Sign In Button */}

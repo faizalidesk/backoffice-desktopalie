@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useLanguage } from '../context/LanguageContext';
+import { useFlavor } from '../context/FlavorContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
   FiActivity, 
@@ -20,9 +21,18 @@ export default function Header({ title = 'Dashboard Overview' }) {
   const { user, logout } = useAuth();
   const { isDarkMode, toggleTheme } = useTheme();
   const { language, setLanguage, t } = useLanguage();
+  const { activeFlavor, flavorId } = useFlavor();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
+
+  const targetWebsite = flavorId === 'platform2' 
+    ? 'https://beta.desktopalie.my.id' 
+    : flavorId === 'platform3' 
+    ? 'https://gamma.desktopalie.my.id' 
+    : flavorId === 'platform4' 
+    ? 'https://delta.desktopalie.my.id' 
+    : 'https://desktopalie.my.id';
 
   // Close dropdown on click outside
   useEffect(() => {
@@ -88,7 +98,7 @@ export default function Header({ title = 'Dashboard Overview' }) {
 
         {/* View Main Website Button */}
         <a 
-          href="https://desktopalie.my.id" 
+          href={targetWebsite} 
           target="_blank" 
           rel="noreferrer"
           className="btn btn-secondary btn-sm"
