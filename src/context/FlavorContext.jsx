@@ -40,12 +40,6 @@ export const FlavorProvider = ({ children }) => {
   const isMainDesktopalie = flavorId === 'platform1';
 
   useEffect(() => {
-    // 0. Sync flavor with domain hostname if visited directly
-    const domainFlavor = detectPlatformFromHostname();
-    if (domainFlavor && domainFlavor !== flavorId) {
-      setFlavorId(domainFlavor);
-    }
-
     // 1. Set Document Title
     if (activeFlavor?.name) {
       document.title = activeFlavor.name;
