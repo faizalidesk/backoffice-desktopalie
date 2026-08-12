@@ -68,8 +68,8 @@ function RootRoute() {
   const { user, loading } = useAuth();
   const hostname = typeof window !== 'undefined' ? window.location.hostname.toLowerCase() : '';
 
-  // If on back.desktopalie.my.id or backoffice domain or localhost, act purely as Backoffice (login/dashboard)
-  const isBackofficeDomain = hostname.includes('back.') || hostname.includes('backoffice');
+  // Strictly check if domain is explicitly back.desktopalie.my.id or backoffice subdomain
+  const isBackofficeDomain = hostname.startsWith('back.') || hostname.startsWith('backoffice.') || hostname === 'back.desktopalie.my.id';
 
   if (isBackofficeDomain) {
     if (loading) {
