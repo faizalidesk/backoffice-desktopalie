@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { backofficeService } from '../services/backofficeService';
+import { useFlavor } from '../context/FlavorContext';
 import { 
   FiFolder, 
   FiCpu, 
@@ -19,6 +20,7 @@ import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 
 export default function Dashboard() {
+  const { activeFlavor } = useFlavor();
   const [stats, setStats] = useState({
     projectsCount: 0,
     experimentsCount: 0,
@@ -37,45 +39,62 @@ export default function Dashboard() {
 
   useEffect(() => {
     loadDashboardData();
-  }, []);
+  }, [activeFlavor]);
 
   const loadDashboardData = async () => {
     setLoading(true);
     try {
-      const [
-        projects, 
-        experiments, 
-        notes, 
-        bookmarks, 
-        todos, 
-        docs, 
-        maintSettings, 
-        landSettings
-      ] = await Promise.all([
-        backofficeService.getProjects(),
-        backofficeService.getExperiments(),
-        backofficeService.getNotes(),
-        backofficeService.getBookmarks(),
-        backofficeService.getTodos(),
-        backofficeService.getDocs(),
-        backofficeService.getMaintenanceSettings(),
-        backofficeService.getLandingPageSettings()
-      ]);
+      if (activeFlavor?.dummyData) {
+        const dd = activeFlavor.dummyData;
+        setStats(dd.stats || {
+          projectsCount: 0,
+          experimentsCount: 0,
+          notesCount: 0,
+          bookmarksCount: 0,
+          todosCount: 0,
+          docsCount: 0
+        });
+        setRecentProjects(dd.recentProjects || []);
+        setRecentTodos(dd.recentTodos || []);
+        setRecentDocs(dd.recentDocs || []);
+        setMaintenance(dd.maintenance || null);
+        setLanding(dd.landing || null);
+      } else {
+        const [
+          projects, 
+          experiments, 
+          notes, 
+          bookmarks, 
+          todos, 
+          docs, 
+          maintSettings, 
+          landSettings
+        ] = await Promise.all([
+          backofficeService.getProjects(),
+          backofficeService.getExperiments(),
+          backofficeService.getNotes(),
+          backofficeService.getBookmarks(),
+          backofficeService.getTodos(),
+          backofficeService.getDocs(),
+          backofficeService.getMaintenanceSettings(),
+          backofficeService.getLandingPageSettings()
+        ]);
 
-      setStats({
-        projectsCount: projects.length,
-        experimentsCount: experiments.length,
-        notesCount: notes.length,
-        bookmarksCount: bookmarks.length,
-        todosCount: todos.length,
-        docsCount: docs.length
-      });
+        setStats({
+          projectsCount: projects.length,
+          experimentsCount: experiments.length,
+          notesCount: notes.length,
+          bookmarksCount: bookmarks.length,
+          todosCount: todos.length,
+          docsCount: docs.length
+        });
 
-      setRecentProjects(projects.slice(0, 4));
-      setRecentTodos(todos.slice(0, 5));
-      setRecentDocs(docs.slice(0, 3));
-      setMaintenance(maintSettings);
-      setLanding(landSettings);
+        setRecentProjects(projects.slice(0, 4));
+        setRecentTodos(todos.slice(0, 5));
+        setRecentDocs(docs.slice(0, 3));
+        setMaintenance(maintSettings);
+        setLanding(landSettings);
+      }
     } catch (err) {
       console.error('Error loading dashboard data:', err);
     } finally {
@@ -121,15 +140,15 @@ export default function Dashboard() {
             <div>
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', backgroundColor: 'rgba(79, 70, 229, 0.25)', border: '1px solid rgba(129, 140, 248, 0.3)', padding: '0.3rem 0.75rem', borderRadius: '99px', fontSize: '0.75rem', color: '#818CF8', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '1rem' }}>
                 <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#22C55E' }} />
-                <span>Real-Time Synced Ecosystem</span>
+                <span>{activeFlavor?.shortName ? `Platform ${activeFlavor.shortName} Active` : 'Real-Time Synced Ecosystem'}</span>
               </div>
 
               <h1 style={{ fontSize: '1.85rem', fontWeight: '800', color: '#FFFFFF', marginBottom: '0.5rem', letterSpacing: '-0.02em' }}>
-                Welcome Back, Workspace Administrator 👋
+                {activeFlavor?.name ? `Welcome to ${activeFlavor.name} 👋` : 'Welcome Back, Workspace Administrator 👋'}
               </h1>
 
               <p style={{ color: '#94A3B8', fontSize: '0.925rem', maxWidth: '620px', lineHeight: '1.6' }}>
-                Manage your public portfolio, landing page updates, QA sprint tasks, and system documentation in one centralized workspace.
+                {activeFlavor?.description || 'Manage your public portfolio, landing page updates, QA sprint tasks, and system documentation in one centralized workspace.'}
               </p>
             </div>
 
