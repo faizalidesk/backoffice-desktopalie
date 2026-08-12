@@ -47,6 +47,35 @@ export const backofficeService = {
     }
   },
 
+  // HELPER: SAFE UPSERT/UPDATE TO SITE_SETTINGS
+  async saveSiteSetting(key, value) {
+    try {
+      const { data: existing } = await supabase
+        .from('site_settings')
+        .select('id, key')
+        .eq('key', key)
+        .maybeSingle();
+
+      if (existing) {
+        const { data, error } = await supabase
+          .from('site_settings')
+          .update({ value, updated_at: new Date().toISOString() })
+          .eq('key', key)
+          .select();
+        return { data, error };
+      } else {
+        const { data, error } = await supabase
+          .from('site_settings')
+          .insert([{ key, value, updated_at: new Date().toISOString() }])
+          .select();
+        return { data, error };
+      }
+    } catch (err) {
+      console.warn('saveSiteSetting fallback:', err);
+      return { error: err };
+    }
+  },
+
   // MAINTENANCE SETTINGS (SCOPED PER PLATFORM FLAVOR)
   async getMaintenanceSettings(platformId = null) {
     const targetPlatform = platformId || getCurrentPlatformId();
@@ -85,7 +114,7 @@ export const backofficeService = {
         }
 
         if (needsUpdate) {
-          supabase.from('site_settings').upsert({ key: key, value: val, updated_at: new Date().toISOString() }, { onConflict: 'key' }).then(() => {});
+          this.saveSiteSetting(key, val);
         }
 
         return val;
@@ -129,24 +158,12 @@ export const backofficeService = {
     window.dispatchEvent(new Event('storage'));
 
     try {
-      const payload = {
-        key: key,
-        value: settings,
-        updated_at: new Date().toISOString()
-      };
-
-      const { data, error } = await supabase
-        .from('site_settings')
-        .upsert(payload, { onConflict: 'key' })
-        .select();
+      await this.saveSiteSetting(key, settings);
 
       if (targetPlatform === 'platform1') {
-        supabase.from('site_settings').upsert({ key: 'maintenance', value: settings, updated_at: new Date().toISOString() }, { onConflict: 'key' }).then(() => {});
+        await this.saveSiteSetting('maintenance', settings);
       }
 
-      if (error) {
-        console.warn('Supabase site_settings error, saved to LocalStorage:', error.message);
-      }
       return settings;
     } catch (err) {
       console.warn('Saved to LocalStorage fallback:', err);
@@ -288,21 +305,7 @@ export const backofficeService = {
     window.dispatchEvent(new Event('storage'));
 
     try {
-      const { data, error } = await supabase
-        .from('site_settings')
-        .upsert(
-          {
-            key: key,
-            value: settings,
-            updated_at: new Date().toISOString()
-          },
-          { onConflict: 'key' }
-        )
-        .select();
-
-      if (error) {
-        console.warn('Supabase site_settings error, saved to LocalStorage:', error.message);
-      }
+      await this.saveSiteSetting(key, settings);
       return settings;
     } catch (err) {
       console.warn('Saved to LocalStorage fallback:', err);
