@@ -64,6 +64,38 @@ function DashboardRoute() {
   return <Dashboard />;
 }
 
+function RootRoute() {
+  const { user, loading } = useAuth();
+  const hostname = typeof window !== 'undefined' ? window.location.hostname.toLowerCase() : '';
+
+  // If on back.desktopalie.my.id or backoffice domain or localhost, act purely as Backoffice (login/dashboard)
+  const isBackofficeDomain = hostname.includes('back.') || hostname.includes('backoffice');
+
+  if (isBackofficeDomain) {
+    if (loading) {
+      return (
+        <div style={{
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: 'var(--bg-main)',
+          color: 'var(--text-muted)'
+        }}>
+          Memuat Backoffice Workspace...
+        </div>
+      );
+    }
+    if (!user) {
+      return <Navigate to="/login" replace />;
+    }
+    return <ProtectedLayout><DashboardRoute /></ProtectedLayout>;
+  }
+
+  // On public subdomains (beta., gamma., delta., desktopalie.my.id), render Public Platform Landing
+  return <PublicPlatformLanding />;
+}
+
 export default function App() {
   return (
     <FlavorProvider>
@@ -84,8 +116,8 @@ export default function App() {
                   }} 
                 />
                 <Routes>
-                  {/* PUBLIC PLATFORM LANDING PAGE ROUTE */}
-                  <Route path="/" element={<PublicPlatformLanding />} />
+                  {/* ROOT ROUTE: PURE BACKOFFICE LOGIN FOR BACK.DESKTOPALIE.MY.ID, PUBLIC LANDING FOR OTHER SUBDOMAINS */}
+                  <Route path="/" element={<RootRoute />} />
 
                   {/* AUTH & BACKOFFICE ROUTES */}
                   <Route path="/login" element={<Login />} />
