@@ -1,6 +1,6 @@
 export default {
   id: 'platform4',
-  name: 'Desktopalie Backoffice Delta',
+  name: 'Desktopalie Delta (Enterprise ERP)',
   shortName: 'Delta',
   description: 'Platform 4 - Client Enterprise Workspace (ERP & Security Audit)',
   logoText: 'Desktopalie Delta',
