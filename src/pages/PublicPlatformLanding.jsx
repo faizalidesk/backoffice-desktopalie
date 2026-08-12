@@ -47,30 +47,32 @@ export default function PublicPlatformLanding() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadLandingContent();
-    loadMaintenanceStatus();
+    let isMounted = true;
+    async function loadData() {
+      setLoading(true);
+      try {
+        const [landingData, maintData] = await Promise.all([
+          backofficeService.getLandingPageSettings(flavorId),
+          backofficeService.getMaintenanceSettings(flavorId)
+        ]);
+        if (isMounted) {
+          setSettings(landingData);
+          setMaintenance(maintData);
+        }
+      } catch (err) {
+        console.error('Failed to load platform data:', err);
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    }
+
+    loadData();
+    return () => {
+      isMounted = false;
+    };
   }, [flavorId]);
-
-  const loadLandingContent = async () => {
-    setLoading(true);
-    try {
-      const data = await backofficeService.getLandingPageSettings(flavorId);
-      setSettings(data);
-    } catch (err) {
-      console.error('Failed to load landing content:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const loadMaintenanceStatus = async () => {
-    try {
-      const data = await backofficeService.getMaintenanceSettings(flavorId);
-      setMaintenance(data);
-    } catch (err) {
-      console.error('Failed to load maintenance status:', err);
-    }
-  };
 
   const primaryColor = activeFlavor?.theme?.colorPrimary || '#4f46e5';
   const dummyProjects = activeFlavor?.dummyData?.recentProjects || [];
@@ -186,7 +188,35 @@ export default function PublicPlatformLanding() {
     setMaintSubscribed(true);
   };
 
-  // RENDER MAINTENANCE SCREEN IF MAINTENANCE MODE IS ACTIVE FOR THIS PLATFORM FLAVOR
+  // 1. RENDER MINIMAL NEUTRAL LOADING SCREEN UNTIL BOTH SETTINGS & MAINTENANCE ARE FULLY LOADED
+  if (loading) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        width: '100vw',
+        backgroundColor: isDarkMode ? '#080C14' : '#FAF9FC',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontFamily: "'Plus Jakarta Sans', sans-serif"
+      }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.85rem' }}>
+          <DesktopalieMark size={40} style={{ color: primaryColor }} />
+          <div style={{
+            fontSize: '0.75rem',
+            fontWeight: '800',
+            letterSpacing: '0.08em',
+            color: isDarkMode ? '#94A3B8' : '#64748B',
+            textTransform: 'uppercase'
+          }}>
+            Memuat Workspace...
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // 2. RENDER MAINTENANCE SCREEN IF MAINTENANCE MODE IS ACTIVE FOR THIS PLATFORM FLAVOR
   if (isMaintenanceActive) {
     const brandName = activeFlavor?.logoText || "Desktopalie";
 
