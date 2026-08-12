@@ -493,30 +493,321 @@ export default function PublicPlatformLanding() {
         </div>
       </section>
 
-      {/* FOOTER CONTACT */}
+      {/* MODERN MULTI-COLUMN HIGH-END FOOTER */}
       <footer id="contact" style={{
-        borderTop: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
-        backgroundColor: isDarkMode ? '#0B1120' : '#F1F5F9',
-        padding: '4rem 2rem 3rem 2rem',
-        textAlign: 'center'
+        borderTop: `1px solid ${isDarkMode ? '#1E293B' : '#E2E8F0'}`,
+        backgroundColor: isDarkMode ? '#090D16' : '#F1F5F9',
+        padding: '5rem 2rem 2.5rem 2rem',
+        position: 'relative',
+        overflow: 'hidden'
       }}>
-        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-          <h3 style={{ fontSize: '1.75rem', fontWeight: '800', marginBottom: '1rem', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
-            {settings?.contact_title || 'Hubungi Kami'}
-          </h3>
-          <p style={{ fontSize: '1rem', color: primaryColor, fontWeight: '700', marginBottom: '2rem' }}>
-            ✉️ {settings?.contact_email || 'hello@desktopalie.my.id'}
-          </p>
 
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '1.5rem', marginBottom: '2.5rem', fontSize: '1.35rem', color: isDarkMode ? '#94A3B8' : '#64748B' }}>
-            {settings?.github_url && <a href={settings.github_url} target="_blank" rel="noreferrer" style={{ color: 'inherit' }}><FiGithub /></a>}
-            {settings?.linkedin_url && <a href={settings.linkedin_url} target="_blank" rel="noreferrer" style={{ color: 'inherit' }}><FiLinkedin /></a>}
-            {settings?.instagram_url && <a href={settings.instagram_url} target="_blank" rel="noreferrer" style={{ color: 'inherit' }}><FiInstagram /></a>}
+        {/* Ambient Bottom Glow */}
+        <div style={{
+          position: 'absolute',
+          bottom: '-150px',
+          right: '-100px',
+          width: '500px',
+          height: '500px',
+          borderRadius: '50%',
+          background: `radial-gradient(circle, ${primaryColor}15 0%, rgba(0,0,0,0) 70%)`,
+          pointerEvents: 'none'
+        }} />
+
+        <div style={{ maxWidth: '1280px', margin: '0 auto', position: 'relative', zIndex: 5 }}>
+          
+          {/* Main Footer Grid */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+            gap: '3rem',
+            marginBottom: '4rem'
+          }}>
+
+            {/* COLUMN 1: BRANDING & SYSTEM STATUS */}
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
+                <DesktopalieMark size={34} style={{ color: isDarkMode ? '#F8FAFC' : '#0F172A' }} />
+                <div>
+                  <span style={{ fontSize: '1.15rem', fontWeight: '800', letterSpacing: '0.04em', color: isDarkMode ? '#F8FAFC' : '#0F172A', display: 'block', lineHeight: 1 }}>
+                    {activeFlavor?.logoText || 'DESKTOPALIE'}
+                  </span>
+                  <span style={{ fontSize: '0.7rem', color: primaryColor, fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                    {activeFlavor?.shortName} Portal
+                  </span>
+                </div>
+              </div>
+
+              <p style={{
+                fontSize: '0.875rem',
+                lineHeight: '1.65',
+                color: isDarkMode ? '#94A3B8' : '#64748B',
+                marginBottom: '1.5rem',
+                maxWidth: '300px'
+              }}>
+                {activeFlavor?.description || 'Desktopalie Ekosistem digital terpadu untuk proyek, aplikasi enterprise, dan inovasi teknologi.'}
+              </p>
+
+              {/* System Live Operational Status Badge */}
+              <div style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                padding: '0.35rem 0.75rem',
+                borderRadius: '99px',
+                backgroundColor: isDarkMode ? 'rgba(34, 197, 94, 0.12)' : 'rgba(22, 163, 74, 0.1)',
+                border: `1px solid ${isDarkMode ? 'rgba(34, 197, 94, 0.3)' : 'rgba(22, 163, 74, 0.2)'}`,
+                fontSize: '0.75rem',
+                fontWeight: '700',
+                color: isDarkMode ? '#4ADE80' : '#16A34A'
+              }}>
+                <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#22C55E', boxShadow: '0 0 8px #22C55E' }} />
+                <span>Ekosistem System Operational</span>
+              </div>
+            </div>
+
+            {/* COLUMN 2: QUICK NAVIGATION */}
+            <div>
+              <h4 style={{ fontSize: '0.9rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.08em', color: isDarkMode ? '#F8FAFC' : '#0F172A', marginBottom: '1.25rem' }}>
+                Navigasi Platform
+              </h4>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.875rem' }}>
+                {navLinks.map((link, idx) => (
+                  <li key={idx}>
+                    <a
+                      href={link.path}
+                      style={{
+                        color: isDarkMode ? '#94A3B8' : '#64748B',
+                        textDecoration: 'none',
+                        transition: 'color 0.15s ease',
+                        fontWeight: '500'
+                      }}
+                      onMouseOver={(e) => e.currentTarget.style.color = primaryColor}
+                      onMouseOut={(e) => e.currentTarget.style.color = isDarkMode ? '#94A3B8' : '#64748B'}
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+                <li>
+                  <button
+                    type="button"
+                    onClick={() => navigate('/login')}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      padding: 0,
+                      color: primaryColor,
+                      fontWeight: '700',
+                      fontSize: '0.875rem',
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.35rem'
+                    }}
+                  >
+                    <span>🔒 Portal Admin Backoffice</span>
+                    <FiArrowRight style={{ fontSize: '0.8rem' }} />
+                  </button>
+                </li>
+              </ul>
+            </div>
+
+            {/* COLUMN 3: EKOSISTEM SUB-PLATFORM */}
+            <div>
+              <h4 style={{ fontSize: '0.9rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.08em', color: isDarkMode ? '#F8FAFC' : '#0F172A', marginBottom: '1.25rem' }}>
+                Ekosistem Sub-Platform
+              </h4>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+                <li>
+                  <a
+                    href="https://desktopalie.my.id"
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      color: isDarkMode ? '#94A3B8' : '#64748B',
+                      textDecoration: 'none',
+                      fontSize: '0.825rem',
+                      fontWeight: '600'
+                    }}
+                  >
+                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#4f46e5' }} />
+                    <span>Desktopalie Main Core</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://beta.desktopalie.my.id"
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      color: isDarkMode ? '#94A3B8' : '#64748B',
+                      textDecoration: 'none',
+                      fontSize: '0.825rem',
+                      fontWeight: '600'
+                    }}
+                  >
+                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#059669' }} />
+                    <span>Platform Beta (Logistics)</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://gamma.desktopalie.my.id"
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      color: isDarkMode ? '#94A3B8' : '#64748B',
+                      textDecoration: 'none',
+                      fontSize: '0.825rem',
+                      fontWeight: '600'
+                    }}
+                  >
+                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#0284c7' }} />
+                    <span>Platform Gamma (Streaming)</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://delta.desktopalie.my.id"
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      color: isDarkMode ? '#94A3B8' : '#64748B',
+                      textDecoration: 'none',
+                      fontSize: '0.825rem',
+                      fontWeight: '600'
+                    }}
+                  >
+                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#d97706' }} />
+                    <span>Platform Delta (Enterprise ERP)</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* COLUMN 4: CONTACT & SOCIAL HANDLES */}
+            <div>
+              <h4 style={{ fontSize: '0.9rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.08em', color: isDarkMode ? '#F8FAFC' : '#0F172A', marginBottom: '1.25rem' }}>
+                Kontak & Komunitas
+              </h4>
+              <p style={{ fontSize: '0.85rem', color: isDarkMode ? '#94A3B8' : '#64748B', marginBottom: '1rem' }}>
+                {settings?.contact_title || 'Punya pertanyaan atau butuh integrasi custom?'}
+              </p>
+
+              <div style={{
+                backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
+                border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+                borderRadius: '12px',
+                padding: '0.75rem 1rem',
+                fontSize: '0.85rem',
+                fontWeight: '700',
+                color: primaryColor,
+                marginBottom: '1.25rem',
+                display: 'inline-block'
+              }}>
+                ✉️ {settings?.contact_email || 'hello@desktopalie.my.id'}
+              </div>
+
+              <div style={{ display: 'flex', gap: '0.85rem' }}>
+                {settings?.github_url && (
+                  <a
+                    href={settings.github_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{
+                      width: '38px',
+                      height: '38px',
+                      borderRadius: '50%',
+                      backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
+                      border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: isDarkMode ? '#F8FAFC' : '#0F172A',
+                      fontSize: '1.1rem',
+                      transition: 'all 0.15s ease'
+                    }}
+                  >
+                    <FiGithub />
+                  </a>
+                )}
+                {settings?.linkedin_url && (
+                  <a
+                    href={settings.linkedin_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{
+                      width: '38px',
+                      height: '38px',
+                      borderRadius: '50%',
+                      backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
+                      border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: isDarkMode ? '#F8FAFC' : '#0F172A',
+                      fontSize: '1.1rem',
+                      transition: 'all 0.15s ease'
+                    }}
+                  >
+                    <FiLinkedin />
+                  </a>
+                )}
+                {settings?.instagram_url && (
+                  <a
+                    href={settings.instagram_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{
+                      width: '38px',
+                      height: '38px',
+                      borderRadius: '50%',
+                      backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
+                      border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: isDarkMode ? '#F8FAFC' : '#0F172A',
+                      fontSize: '1.1rem',
+                      transition: 'all 0.15s ease'
+                    }}
+                  >
+                    <FiInstagram />
+                  </a>
+                )}
+              </div>
+            </div>
+
           </div>
 
-          <div style={{ fontSize: '0.8rem', color: isDarkMode ? '#64748B' : '#94A3B8', borderTop: `1px solid ${isDarkMode ? '#1E293B' : '#E2E8F0'}`, paddingTop: '1.5rem' }}>
-            © {new Date().getFullYear()} {activeFlavor?.name}. All rights reserved. Powered by Desktopalie Core Backoffice.
+          {/* BOTTOM BAR: COPYRIGHT & COMPLIANCE */}
+          <div style={{
+            borderTop: `1px solid ${isDarkMode ? '#1E293B' : '#E2E8F0'}`,
+            paddingTop: '2rem',
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '1rem',
+            fontSize: '0.775rem',
+            color: isDarkMode ? '#64748B' : '#94A3B8'
+          }}>
+            <div>
+              © {new Date().getFullYear()} <strong>{activeFlavor?.name}</strong>. Hak Cipta Dilindungi. Powered by Desktopalie Core Engine.
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', fontWeight: '600' }}>
+              <span>ISO 27001 Security Compliant</span>
+              <span>•</span>
+              <span>Encrypted SSL 256-bit</span>
+            </div>
           </div>
+
         </div>
       </footer>
 
