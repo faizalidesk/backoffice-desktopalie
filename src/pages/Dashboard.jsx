@@ -114,66 +114,68 @@ export default function Dashboard() {
     <>
       <Header title="Dashboard Overview" />
       <div className="page-body" style={{ paddingBottom: '4rem' }}>
-        {/* EXECUTIVE WELCOME BANNER */}
+        
+        {/* MINIMALIST WELCOME HEADER */}
         <div style={{
-          backgroundColor: '#0F172A',
-          color: '#FFFFFF',
+          backgroundColor: 'var(--bg-card)',
+          border: '1px solid var(--border-color)',
           borderRadius: 'var(--radius-lg)',
-          padding: '2.25rem 2rem',
-          marginBottom: '2rem',
-          boxShadow: 'var(--shadow-md)',
-          position: 'relative',
-          overflow: 'hidden'
+          padding: '1.75rem 2rem',
+          marginBottom: '1.75rem',
+          boxShadow: 'var(--shadow-sm)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: '1.5rem'
         }}>
-          <div style={{
-            position: 'absolute',
-            right: '-50px',
-            top: '-50px',
-            width: '350px',
-            height: '350px',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(79,70,229,0.35) 0%, rgba(15,23,42,0) 70%)',
-            pointerEvents: 'none'
-          }} />
-
-          <div style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1.5rem' }}>
-            <div>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', backgroundColor: 'rgba(79, 70, 229, 0.25)', border: '1px solid rgba(129, 140, 248, 0.3)', padding: '0.3rem 0.75rem', borderRadius: '99px', fontSize: '0.75rem', color: '#818CF8', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '1rem' }}>
-                <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#22C55E' }} />
-                <span>{activeFlavor?.shortName ? `Platform ${activeFlavor.shortName} Active` : 'Real-Time Synced Ecosystem'}</span>
-              </div>
-
-              <h1 style={{ fontSize: '1.85rem', fontWeight: '800', color: '#FFFFFF', marginBottom: '0.5rem', letterSpacing: '-0.02em' }}>
-                {activeFlavor?.name ? `Welcome to ${activeFlavor.name} 👋` : 'Welcome Back, Workspace Administrator 👋'}
-              </h1>
-
-              <p style={{ color: '#94A3B8', fontSize: '0.925rem', maxWidth: '620px', lineHeight: '1.6' }}>
-                {activeFlavor?.description || 'Manage your public portfolio, landing page updates, QA sprint tasks, and system documentation in one centralized workspace.'}
-              </p>
+          <div>
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              backgroundColor: 'var(--primary-light)',
+              padding: '0.2rem 0.6rem',
+              borderRadius: '99px',
+              fontSize: '0.725rem',
+              color: 'var(--primary)',
+              fontWeight: '700',
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+              marginBottom: '0.6rem'
+            }}>
+              <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#22C55E' }} />
+              <span>{activeFlavor?.shortName ? `Platform ${activeFlavor.shortName} Active` : 'Synced Workspace'}</span>
             </div>
 
-            {/* Banner Quick CTAs */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-              <Link to="/todos" className="btn btn-primary" style={{ backgroundColor: '#4F46E5' }}>
-                <FiCheckSquare />
-                <span>To-Do & Board</span>
-              </Link>
-              <Link to="/documentation" className="btn btn-secondary" style={{ backgroundColor: '#1E293B', color: '#F8FAFC', borderColor: '#334155' }}>
-                <FiBookOpen />
-                <span>Documentation</span>
-              </Link>
-            </div>
+            <h1 style={{ fontSize: '1.6rem', fontWeight: '800', color: 'var(--text-main)', marginBottom: '0.35rem', letterSpacing: '-0.02em' }}>
+              {activeFlavor?.name ? `Welcome to ${activeFlavor.name}` : 'Welcome Back, Workspace Administrator'}
+            </h1>
+
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', maxWidth: '650px', margin: 0, lineHeight: '1.5' }}>
+              {activeFlavor?.description || 'Manage your public portfolio, landing page updates, QA sprint tasks, and system documentation in one centralized workspace.'}
+            </p>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+            <Link to="/todos" className="btn btn-primary">
+              <FiCheckSquare />
+              <span>To-Do Board</span>
+            </Link>
+            <Link to="/documentation" className="btn btn-secondary">
+              <FiBookOpen />
+              <span>Docs</span>
+            </Link>
           </div>
         </div>
 
-        {/* 6 TOP KPI STAT CARDS GRID */}
+        {/* 6 KPI STAT CARDS GRID */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
           gap: '1.25rem',
-          marginBottom: '2rem'
+          marginBottom: '1.75rem'
         }}>
-          {/* Projects Card */}
           <Link to="/projects" style={{ textDecoration: 'none' }}>
             <div className="stat-card" style={{ height: '100%' }}>
               <div className="stat-info">
@@ -186,7 +188,6 @@ export default function Dashboard() {
             </div>
           </Link>
 
-          {/* Experiments Card */}
           <Link to="/experiments" style={{ textDecoration: 'none' }}>
             <div className="stat-card" style={{ height: '100%' }}>
               <div className="stat-info">
@@ -199,7 +200,6 @@ export default function Dashboard() {
             </div>
           </Link>
 
-          {/* To-Do Tasks Card */}
           <Link to="/todos" style={{ textDecoration: 'none' }}>
             <div className="stat-card" style={{ height: '100%' }}>
               <div className="stat-info">
@@ -212,7 +212,6 @@ export default function Dashboard() {
             </div>
           </Link>
 
-          {/* Documentation Card */}
           <Link to="/documentation" style={{ textDecoration: 'none' }}>
             <div className="stat-card" style={{ height: '100%' }}>
               <div className="stat-info">
@@ -225,7 +224,6 @@ export default function Dashboard() {
             </div>
           </Link>
 
-          {/* Notes & Journal Card */}
           <Link to="/notes" style={{ textDecoration: 'none' }}>
             <div className="stat-card" style={{ height: '100%' }}>
               <div className="stat-info">
@@ -238,7 +236,6 @@ export default function Dashboard() {
             </div>
           </Link>
 
-          {/* Bookmarks Card */}
           <Link to="/bookmarks" style={{ textDecoration: 'none' }}>
             <div className="stat-card" style={{ height: '100%' }}>
               <div className="stat-info">
@@ -252,38 +249,38 @@ export default function Dashboard() {
           </Link>
         </div>
 
-        {/* SECTION 1: SPRINT PROGRESS & TASK BOARD OVERVIEW */}
+        {/* SECTION 1: SPRINT PROGRESS & MAINTENANCE MODE */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
           gap: '1.5rem',
-          marginBottom: '2rem'
+          marginBottom: '1.75rem'
         }}>
           {/* Task Board Progress Card */}
           <div className="card">
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <FiCheckSquare style={{ color: 'var(--primary)', fontSize: '1.25rem' }} />
-                <h3 style={{ fontSize: '1.1rem' }}>Sprint Progress & QA Tasks</h3>
+                <FiCheckSquare style={{ color: 'var(--primary)', fontSize: '1.15rem' }} />
+                <h3 style={{ fontSize: '1rem', fontWeight: '700' }}>Sprint Progress & QA Tasks</h3>
               </div>
-              <Link to="/todos" style={{ color: 'var(--primary)', fontSize: '0.85rem', fontWeight: '600', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                <span>Open Task Board</span>
+              <Link to="/todos" style={{ color: 'var(--primary)', fontSize: '0.8rem', fontWeight: '600', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                <span>Task Board</span>
                 <FiArrowRight />
               </Link>
             </div>
 
             {/* Progress Bar & Badges */}
-            <div style={{ backgroundColor: '#F8FAFC', padding: '1rem 1.25rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', marginBottom: '1.25rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.85rem', fontWeight: '700' }}>
-                <span>QA Scenario Completion Rate</span>
-                <span style={{ color: 'var(--primary)' }}>{taskProgressPercent}% Completed</span>
+            <div style={{ backgroundColor: 'var(--bg-card-hover)', padding: '1rem 1.15rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', marginBottom: '1rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.825rem', fontWeight: '700' }}>
+                <span>Completion Rate</span>
+                <span style={{ color: 'var(--primary)' }}>{taskProgressPercent}%</span>
               </div>
 
-              <div style={{ width: '100%', height: '8px', backgroundColor: '#E2E8F0', borderRadius: '99px', overflow: 'hidden' }}>
+              <div style={{ width: '100%', height: '6px', backgroundColor: 'var(--border-color)', borderRadius: '99px', overflow: 'hidden' }}>
                 <div style={{ height: '100%', width: `${taskProgressPercent}%`, backgroundColor: 'var(--primary)', borderRadius: '99px', transition: 'width 0.3s ease' }} />
               </div>
 
-              <div style={{ display: 'flex', gap: '1rem', marginTop: '0.875rem', fontSize: '0.78rem', color: 'var(--text-muted)', fontWeight: '600' }}>
+              <div style={{ display: 'flex', gap: '0.85rem', marginTop: '0.75rem', fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: '600' }}>
                 <span>🔴 Not Started: {notStartedTodos}</span>
                 <span>🟡 In Progress: {inProgressTodos}</span>
                 <span>🟢 Done: {completedTodos}</span>
@@ -291,25 +288,25 @@ export default function Dashboard() {
             </div>
 
             {/* Task Items Preview */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               {recentTodos.length === 0 ? (
-                <div style={{ color: 'var(--text-subtle)', fontSize: '0.85rem' }}>No tasks on the Sprint board yet.</div>
+                <div style={{ color: 'var(--text-subtle)', fontSize: '0.825rem' }}>No tasks on the Sprint board yet.</div>
               ) : (
                 recentTodos.map(todo => (
-                  <div key={todo.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.65rem 0.85rem', borderRadius: 'var(--radius-sm)', backgroundColor: '#FFFFFF', border: '1px solid var(--border-color)' }}>
+                  <div key={todo.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.55rem 0.75rem', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--bg-card-hover)', border: '1px solid var(--border-color)' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', overflow: 'hidden' }}>
-                      <FiFileText style={{ color: 'var(--text-muted)', fontSize: '0.9rem', flexShrink: 0 }} />
-                      <span style={{ fontSize: '0.85rem', fontWeight: '600', color: '#0F172A', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      <FiFileText style={{ color: 'var(--text-muted)', fontSize: '0.85rem', flexShrink: 0 }} />
+                      <span style={{ fontSize: '0.825rem', fontWeight: '600', color: 'var(--text-main)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                         {todo.title}
                       </span>
                     </div>
                     <span style={{
-                      fontSize: '0.725rem',
+                      fontSize: '0.7rem',
                       fontWeight: '700',
-                      padding: '0.15rem 0.5rem',
+                      padding: '0.12rem 0.45rem',
                       borderRadius: '99px',
-                      backgroundColor: todo.status === 'Done' ? '#DCFCE7' : todo.status === 'In progress' ? '#FEF3C7' : '#F1F5F9',
-                      color: todo.status === 'Done' ? '#166534' : todo.status === 'In progress' ? '#92400E' : '#475569'
+                      backgroundColor: todo.status === 'Done' ? 'rgba(34, 197, 94, 0.15)' : todo.status === 'In progress' ? 'rgba(234, 179, 8, 0.15)' : 'var(--bg-card)',
+                      color: todo.status === 'Done' ? '#16A34A' : todo.status === 'In progress' ? '#D97706' : 'var(--text-muted)'
                     }}>
                       {todo.status}
                     </span>
@@ -319,31 +316,31 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Maintenance Mode & System Security Status */}
+          {/* Maintenance Mode Status */}
           <div className="card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <FiTool style={{ color: 'var(--accent-teal)', fontSize: '1.25rem' }} />
-                  <h3 style={{ fontSize: '1.1rem' }}>Maintenance Mode Status</h3>
+                  <FiTool style={{ color: 'var(--accent-teal)', fontSize: '1.15rem' }} />
+                  <h3 style={{ fontSize: '1rem', fontWeight: '700' }}>Maintenance Mode</h3>
                 </div>
                 <span className={`badge badge-${maintenance?.is_enabled ? 'rose' : 'teal'}`}>
-                  {maintenance?.is_enabled ? 'Maintenance Active' : 'Main Website Live'}
+                  {maintenance?.is_enabled ? 'Maintenance Active' : 'Website Live'}
                 </span>
               </div>
 
-              <div style={{ backgroundColor: maintenance?.is_enabled ? '#FFF1F2' : '#F0FDFA', border: `1px solid ${maintenance?.is_enabled ? '#FECDD3' : '#CCFBF1'}`, padding: '1.15rem', borderRadius: 'var(--radius-sm)', marginBottom: '1.25rem' }}>
-                <div style={{ fontWeight: '700', fontSize: '0.95rem', color: maintenance?.is_enabled ? '#BE123C' : '#0F766E', marginBottom: '0.35rem' }}>
-                  {maintenance?.title || 'Main Website Running Normally'}
+              <div style={{ backgroundColor: 'var(--bg-card-hover)', border: '1px solid var(--border-color)', padding: '1.1rem', borderRadius: 'var(--radius-sm)', marginBottom: '1.25rem' }}>
+                <div style={{ fontWeight: '700', fontSize: '0.9rem', color: 'var(--text-main)', marginBottom: '0.3rem' }}>
+                  {maintenance?.title || 'System Running Normally'}
                 </div>
-                <p style={{ fontSize: '0.825rem', color: '#475569', margin: 0, lineHeight: '1.5' }}>
+                <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: 0, lineHeight: '1.5' }}>
                   {maintenance?.message}
                 </p>
 
                 {maintenance?.is_enabled && (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginTop: '0.75rem', fontSize: '0.78rem', fontWeight: '700', color: '#BE123C' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginTop: '0.75rem', fontSize: '0.75rem', fontWeight: '700', color: 'var(--accent-rose)' }}>
                     <FiClock />
-                    <span>Estimated Completion: {new Date(maintenance.end_time).toLocaleString()}</span>
+                    <span>Est. Completion: {new Date(maintenance.end_time).toLocaleString()}</span>
                   </div>
                 )}
               </div>
@@ -351,32 +348,32 @@ export default function Dashboard() {
 
             <Link to="/maintenance" className="btn btn-secondary" style={{ width: '100%', justifyContent: 'center' }}>
               <FiTool />
-              <span>Manage Maintenance Settings</span>
+              <span>Manage Settings</span>
             </Link>
           </div>
         </div>
 
         {/* SECTION 2: SYSTEM DOCUMENTATION & KNOWLEDGE BASE QUICK SOPS */}
-        <div className="card" style={{ marginBottom: '2rem' }}>
+        <div className="card" style={{ marginBottom: '1.75rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <FiBookOpen style={{ color: 'var(--primary)', fontSize: '1.25rem' }} />
-              <h3 style={{ fontSize: '1.1rem' }}>Popular System Guides & Documentation</h3>
+              <FiBookOpen style={{ color: 'var(--primary)', fontSize: '1.15rem' }} />
+              <h3 style={{ fontSize: '1rem', fontWeight: '700' }}>Popular System Guides & Documentation</h3>
             </div>
-            <Link to="/documentation" style={{ color: 'var(--primary)', fontSize: '0.85rem', fontWeight: '600', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-              <span>Manage Documentation</span>
+            <Link to="/documentation" style={{ color: 'var(--primary)', fontSize: '0.8rem', fontWeight: '600', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+              <span>Manage Docs</span>
               <FiArrowRight />
             </Link>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1rem' }}>
             {recentDocs.map(doc => (
               <Link key={doc.id} to="/documentation" style={{ textDecoration: 'none' }}>
                 <div style={{
-                  backgroundColor: '#FFFFFF',
+                  backgroundColor: 'var(--bg-card-hover)',
                   border: '1px solid var(--border-color)',
                   borderRadius: 'var(--radius-sm)',
-                  padding: '1.15rem',
+                  padding: '1.1rem',
                   height: '100%',
                   display: 'flex',
                   flexDirection: 'column',
@@ -384,10 +381,10 @@ export default function Dashboard() {
                   transition: 'all 0.15s ease'
                 }} className="card">
                   <div>
-                    <span className="badge badge-violet" style={{ fontSize: '0.68rem', marginBottom: '0.625rem', textTransform: 'uppercase' }}>
+                    <span className="badge badge-violet" style={{ fontSize: '0.65rem', marginBottom: '0.5rem', textTransform: 'uppercase' }}>
                       {doc.category || 'Guides'}
                     </span>
-                    <h4 style={{ fontSize: '0.95rem', fontWeight: '700', color: '#0F172A', marginBottom: '0.4rem', lineHeight: '1.3' }}>
+                    <h4 style={{ fontSize: '0.9rem', fontWeight: '700', color: 'var(--text-main)', marginBottom: '0.35rem', lineHeight: '1.3' }}>
                       {doc.title}
                     </h4>
                     <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', margin: 0, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
@@ -395,7 +392,7 @@ export default function Dashboard() {
                     </p>
                   </div>
 
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '1rem', paddingTop: '0.5rem', borderTop: '1px solid #F1F5F9', fontSize: '0.725rem', color: 'var(--text-subtle)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.85rem', paddingTop: '0.4rem', borderTop: '1px solid var(--border-color)', fontSize: '0.725rem', color: 'var(--text-subtle)' }}>
                     <span>Author: {doc.author || 'Admin'}</span>
                     <FiArrowRight style={{ color: 'var(--primary)' }} />
                   </div>
@@ -406,15 +403,15 @@ export default function Dashboard() {
         </div>
 
         {/* SECTION 3: RECENT PROJECTS SHOWCASE TABLE */}
-        <div className="table-container" style={{ marginBottom: '2rem' }}>
+        <div className="table-container" style={{ marginBottom: '1.75rem' }}>
           <div className="table-toolbar">
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <FiFolder style={{ color: 'var(--primary)' }} />
-              <h3 style={{ fontSize: '1.05rem', margin: 0 }}>Recent Portfolio Projects</h3>
+              <h3 style={{ fontSize: '1rem', fontWeight: '700', margin: 0 }}>Recent Portfolio Projects</h3>
             </div>
             <Link to="/projects" className="btn btn-secondary btn-sm">
               <FiPlus />
-              <span>Manage Projects</span>
+              <span>Projects</span>
             </Link>
           </div>
 
@@ -437,15 +434,15 @@ export default function Dashboard() {
                 {recentProjects.map(p => (
                   <tr key={p.id}>
                     <td>
-                      <div style={{ fontWeight: '700', color: '#0F172A' }}>{p.title}</div>
+                      <div style={{ fontWeight: '700', color: 'var(--text-main)' }}>{p.title}</div>
                       <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>/{p.slug}</div>
                     </td>
                     <td>
                       <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{p.type}</span>
                     </td>
-                    <td style={{ width: '220px' }}>
+                    <td style={{ width: '200px' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <div style={{ flex: 1, height: '6px', backgroundColor: '#E2E8F0', borderRadius: '99px', overflow: 'hidden' }}>
+                        <div style={{ flex: 1, height: '5px', backgroundColor: 'var(--border-color)', borderRadius: '99px', overflow: 'hidden' }}>
                           <div style={{ height: '100%', width: `${p.progress}%`, backgroundColor: 'var(--primary)', borderRadius: '99px' }} />
                         </div>
                         <span style={{ fontSize: '0.75rem', fontWeight: '700' }}>{p.progress}%</span>
@@ -469,33 +466,33 @@ export default function Dashboard() {
         </div>
 
         {/* SECTION 4: LANDING PAGE CONTENT SYNC & QUICK ACTIONS */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
           {/* Landing Page Sync Card */}
           <div className="card">
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <FiLayout style={{ color: 'var(--accent-teal)', fontSize: '1.25rem' }} />
-                <h3 style={{ fontSize: '1.1rem' }}>Landing Page Content</h3>
+                <FiLayout style={{ color: 'var(--accent-teal)', fontSize: '1.15rem' }} />
+                <h3 style={{ fontSize: '1rem', fontWeight: '700' }}>Landing Page Content</h3>
               </div>
               <Link to="/landing-manager" className="btn btn-secondary btn-sm">
-                Edit Content
+                Edit
               </Link>
             </div>
 
-            <div style={{ backgroundColor: '#F8FAFC', padding: '1rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', marginBottom: '1rem' }}>
-              <div style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--primary)', fontWeight: '700', marginBottom: '0.25rem' }}>
+            <div style={{ backgroundColor: 'var(--bg-card-hover)', padding: '0.95rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', marginBottom: '1rem' }}>
+              <div style={{ fontSize: '0.675rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--primary)', fontWeight: '700', marginBottom: '0.2rem' }}>
                 {landing?.hero_badge || 'Independent Designer & Developer'}
               </div>
-              <h4 style={{ fontSize: '1rem', fontWeight: '800', color: '#0F172A', marginBottom: '0.5rem', lineHeight: '1.3' }}>
+              <h4 style={{ fontSize: '0.95rem', fontWeight: '800', color: 'var(--text-main)', marginBottom: '0.4rem', lineHeight: '1.3' }}>
                 "{landing?.hero_title || 'Ideas, crafted into digital experiences.'}"
               </h4>
-              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: 0, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+              <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', margin: 0, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                 {landing?.hero_description}
               </p>
             </div>
 
             <a href="https://desktopalie.my.id" target="_blank" rel="noreferrer" className="btn btn-secondary" style={{ width: '100%', justifyContent: 'center' }}>
-              <span>View Main Website (desktopalie.my.id)</span>
+              <span>View Main Website</span>
               <FiExternalLink />
             </a>
           </div>
@@ -503,32 +500,32 @@ export default function Dashboard() {
           {/* System Activity Timeline Log */}
           <div className="card">
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
-              <FiActivity style={{ color: 'var(--primary)', fontSize: '1.25rem' }} />
-              <h3 style={{ fontSize: '1.1rem' }}>Recent Backoffice Activity</h3>
+              <FiActivity style={{ color: 'var(--primary)', fontSize: '1.15rem' }} />
+              <h3 style={{ fontSize: '1rem', fontWeight: '700' }}>Recent Activity</h3>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
               <div style={{ display: 'flex', gap: '0.75rem' }}>
-                <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#22C55E', marginTop: '6px', flexShrink: 0 }} />
+                <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#22C55E', marginTop: '6px', flexShrink: 0 }} />
                 <div>
-                  <div style={{ fontSize: '0.85rem', fontWeight: '600', color: '#0F172A' }}>QA Task Board Configured</div>
-                  <span style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>Jira/Notion Kanban board active with drag & drop.</span>
+                  <div style={{ fontSize: '0.825rem', fontWeight: '600', color: 'var(--text-main)' }}>QA Task Board Active</div>
+                  <span style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>Kanban board active with real-time status.</span>
                 </div>
               </div>
 
               <div style={{ display: 'flex', gap: '0.75rem' }}>
-                <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#4F46E5', marginTop: '6px', flexShrink: 0 }} />
+                <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: 'var(--primary)', marginTop: '6px', flexShrink: 0 }} />
                 <div>
-                  <div style={{ fontSize: '0.85rem', fontWeight: '600', color: '#0F172A' }}>System Documentation Updated</div>
-                  <span style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>GitBook/Obsidian Explorer with Editor & Live Preview modes.</span>
+                  <div style={{ fontSize: '0.825rem', fontWeight: '600', color: 'var(--text-main)' }}>Documentation Synced</div>
+                  <span style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>System tree & live markdown preview enabled.</span>
                 </div>
               </div>
 
               <div style={{ display: 'flex', gap: '0.75rem' }}>
-                <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#0D9488', marginTop: '6px', flexShrink: 0 }} />
+                <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: 'var(--accent-teal)', marginTop: '6px', flexShrink: 0 }} />
                 <div>
-                  <div style={{ fontSize: '0.85rem', fontWeight: '600', color: '#0F172A' }}>Maintenance Mode Guard Active</div>
-                  <span style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>Automated countdown & Admin bypass synced.</span>
+                  <div style={{ fontSize: '0.825rem', fontWeight: '600', color: 'var(--text-main)' }}>Maintenance Guard Active</div>
+                  <span style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>Automated countdown & Admin bypass active.</span>
                 </div>
               </div>
             </div>
