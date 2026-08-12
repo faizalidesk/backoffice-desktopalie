@@ -158,7 +158,7 @@ export default function PublicPlatformLanding() {
           ))}
         </nav>
 
-        {/* Right Controls: Theme Switcher & Admin Sign In Button */}
+        {/* Right Controls: Theme Switcher Only */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <button
             type="button"
@@ -182,54 +182,6 @@ export default function PublicPlatformLanding() {
           >
             {isDarkMode ? <FiSun /> : <FiMoon />}
           </button>
-
-          {user ? (
-            <button
-              type="button"
-              onClick={() => navigate('/workspaces')}
-              style={{
-                padding: '0.6rem 1.25rem',
-                borderRadius: '99px',
-                backgroundColor: primaryColor,
-                color: '#FFFFFF',
-                border: 'none',
-                fontSize: '0.85rem',
-                fontWeight: '700',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                cursor: 'pointer',
-                boxShadow: '0 4px 14px rgba(0,0,0,0.15)'
-              }}
-            >
-              <FiLock />
-              <span>Backoffice Dashboard</span>
-              <FiArrowRight />
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={() => navigate('/login')}
-              style={{
-                padding: '0.6rem 1.25rem',
-                borderRadius: '99px',
-                backgroundColor: isDarkMode ? '#1E293B' : '#0F172A',
-                color: '#FFFFFF',
-                border: `1px solid ${isDarkMode ? '#334155' : '#0F172A'}`,
-                fontSize: '0.85rem',
-                fontWeight: '700',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                cursor: 'pointer',
-                boxShadow: '0 4px 14px rgba(0,0,0,0.12)'
-              }}
-            >
-              <FiLock />
-              <span>Sign In Admin</span>
-              <FiArrowRight />
-            </button>
-          )}
         </div>
       </header>
 
@@ -307,9 +259,8 @@ export default function PublicPlatformLanding() {
             <FiArrowRight />
           </a>
 
-          <button
-            type="button"
-            onClick={() => navigate('/login')}
+          <a
+            href="#about"
             style={{
               padding: '0.875rem 2rem',
               borderRadius: '99px',
@@ -318,15 +269,14 @@ export default function PublicPlatformLanding() {
               border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
               fontWeight: '600',
               fontSize: '0.95rem',
-              cursor: 'pointer',
+              textDecoration: 'none',
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.5rem'
             }}
           >
-            <FiLock />
-            <span>{settings?.hero_secondary_cta_text || 'Masuk Backoffice'}</span>
-          </button>
+            <span>{settings?.hero_secondary_cta_text || 'Tentang Platform'}</span>
+          </a>
         </div>
 
         {/* Footnote Note */}
@@ -589,27 +539,6 @@ export default function PublicPlatformLanding() {
                     </a>
                   </li>
                 ))}
-                <li>
-                  <button
-                    type="button"
-                    onClick={() => navigate('/login')}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      padding: 0,
-                      color: primaryColor,
-                      fontWeight: '700',
-                      fontSize: '0.875rem',
-                      cursor: 'pointer',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '0.35rem'
-                    }}
-                  >
-                    <span>🔒 Portal Admin Backoffice</span>
-                    <FiArrowRight style={{ fontSize: '0.8rem' }} />
-                  </button>
-                </li>
               </ul>
             </div>
 
