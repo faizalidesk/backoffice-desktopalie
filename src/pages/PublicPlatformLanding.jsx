@@ -28,10 +28,12 @@ export default function PublicPlatformLanding() {
   const navigate = useNavigate();
 
   const [settings, setSettings] = useState(null);
+  const [maintenance, setMaintenance] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     loadLandingContent();
+    loadMaintenanceStatus();
   }, [flavorId]);
 
   const loadLandingContent = async () => {
@@ -43,6 +45,15 @@ export default function PublicPlatformLanding() {
       console.error('Failed to load landing content:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadMaintenanceStatus = async () => {
+    try {
+      const data = await backofficeService.getMaintenanceSettings(flavorId);
+      setMaintenance(data);
+    } catch (err) {
+      console.error('Failed to load maintenance status:', err);
     }
   };
 
@@ -88,6 +99,123 @@ export default function PublicPlatformLanding() {
   };
 
   const navLinks = getNavLinks();
+
+  // RENDER MAINTENANCE SCREEN IF MAINTENANCE MODE IS ACTIVE FOR THIS PLATFORM FLAVOR
+  if (maintenance?.is_enabled) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        width: '100vw',
+        backgroundColor: isDarkMode ? '#0B0F19' : '#FAF9FC',
+        color: isDarkMode ? '#F8FAFC' : '#0F172A',
+        fontFamily: "'Plus Jakarta Sans', sans-serif",
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '2rem',
+        textAlign: 'center',
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
+        {/* Glow */}
+        <div style={{
+          position: 'absolute',
+          width: '600px',
+          height: '600px',
+          borderRadius: '50%',
+          background: `radial-gradient(circle, ${primaryColor}25 0%, rgba(0,0,0,0) 70%)`,
+          pointerEvents: 'none'
+        }} />
+
+        <div style={{
+          maxWidth: '650px',
+          backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
+          border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+          borderRadius: '24px',
+          padding: '3.5rem 2.5rem',
+          boxShadow: '0 20px 40px rgba(0,0,0,0.15)',
+          position: 'relative',
+          zIndex: 10
+        }}>
+          {/* Maintenance Icon & Badge */}
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            padding: '0.4rem 1rem',
+            borderRadius: '99px',
+            backgroundColor: 'rgba(239, 68, 68, 0.15)',
+            border: '1px solid rgba(239, 68, 68, 0.3)',
+            color: '#EF4444',
+            fontSize: '0.775rem',
+            fontWeight: '700',
+            marginBottom: '1.75rem',
+            textTransform: 'uppercase',
+            letterSpacing: '0.08em'
+          }}>
+            <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#EF4444', boxShadow: '0 0 8px #EF4444' }} />
+            <span>{activeFlavor?.shortName} - Scheduled Maintenance</span>
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.25rem' }}>
+            <DesktopalieMark size={48} style={{ color: primaryColor }} />
+          </div>
+
+          <h1 style={{ fontSize: '2rem', fontWeight: '800', marginBottom: '1rem', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+            {maintenance.title || 'System Under Maintenance'}
+          </h1>
+
+          <p style={{ fontSize: '1rem', lineHeight: '1.65', color: isDarkMode ? '#94A3B8' : '#64748B', marginBottom: '2rem' }}>
+            {maintenance.message || 'Kami sedang melakukan pemeliharaan dan efisiensi sistem pada platform ini. Silakan kembali dalam beberapa saat.'}
+          </p>
+
+          {maintenance.end_time && (
+            <div style={{
+              backgroundColor: isDarkMode ? '#0F172A' : '#F1F5F9',
+              padding: '1.25rem',
+              borderRadius: '16px',
+              border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+              marginBottom: '2rem',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '0.35rem'
+            }}>
+              <span style={{ fontSize: '0.75rem', fontWeight: '700', color: isDarkMode ? '#94A3B8' : '#64748B', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                Perkiraan Selesai Pemeliharaan
+              </span>
+              <span style={{ fontSize: '1.25rem', fontWeight: '800', color: primaryColor }}>
+                {new Date(maintenance.end_time).toLocaleString('id-ID', { dateStyle: 'full', timeStyle: 'short' })}
+              </span>
+            </div>
+          )}
+
+          {maintenance.allow_admin_bypass && (
+            <div>
+              <button
+                type="button"
+                onClick={() => navigate('/login')}
+                style={{
+                  padding: '0.75rem 1.75rem',
+                  borderRadius: '99px',
+                  backgroundColor: primaryColor,
+                  color: '#FFFFFF',
+                  border: 'none',
+                  fontSize: '0.875rem',
+                  fontWeight: '700',
+                  cursor: 'pointer',
+                  boxShadow: `0 4px 16px ${primaryColor}40`
+                }}
+              >
+                🔒 Login Administrator (Bypass)
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{
