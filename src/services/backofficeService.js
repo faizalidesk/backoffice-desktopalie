@@ -85,6 +85,47 @@ export const backofficeService = {
     }
   },
 
+  async getAllSiteSettings() {
+    try {
+      const { data, error } = await supabase
+        .from('site_settings')
+        .select('*');
+      
+      if (error) {
+        console.warn('getAllSiteSettings error:', error);
+        return {};
+      }
+
+      const settingsMap = {};
+      if (data && data.length > 0) {
+        data.forEach(item => {
+          settingsMap[item.key] = item.value;
+        });
+      }
+      return settingsMap;
+    } catch (err) {
+      console.warn('getAllSiteSettings exception:', err);
+      return {};
+    }
+  },
+
+  async getAllProfiles() {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*');
+      
+      if (error) {
+        console.warn('getAllProfiles error:', error);
+        return [];
+      }
+      return data || [];
+    } catch (err) {
+      console.warn('getAllProfiles exception:', err);
+      return [];
+    }
+  },
+
   // MAINTENANCE SETTINGS (SCOPED PER PLATFORM FLAVOR)
   async getMaintenanceSettings(platformId = null) {
     const targetPlatform = platformId || getCurrentPlatformId();

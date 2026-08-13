@@ -111,9 +111,9 @@ export default function MembershipManager() {
         }
       }
 
-      // 3. Read from Supabase site_settings (keys starting with member_)
+      // 3. Read from Supabase site_settings (keys starting with member_ or profile_)
       try {
-        const settings = await backofficeService.getSiteSettings();
+        const settings = await backofficeService.getAllSiteSettings();
         if (settings) {
           Object.keys(settings).forEach(key => {
             if (key.startsWith('member_') || key.startsWith('profile_')) {
@@ -142,8 +142,8 @@ export default function MembershipManager() {
 
       // 4. Read from Supabase profiles table
       try {
-        const { data: profiles, error } = await supabase.from('profiles').select('*');
-        if (!error && profiles && profiles.length > 0) {
+        const profiles = await backofficeService.getAllProfiles();
+        if (profiles && profiles.length > 0) {
           profiles.forEach(p => {
             if (p.email) {
               const existing = map.get(p.email) || {};
@@ -364,28 +364,6 @@ export default function MembershipManager() {
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-              <button
-                type="button"
-                onClick={() => setShowAddModal(true)}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  padding: '0.75rem 1.25rem',
-                  borderRadius: '12px',
-                  backgroundColor: '#10B981',
-                  color: '#FFFFFF',
-                  border: 'none',
-                  fontWeight: '700',
-                  fontSize: '0.875rem',
-                  cursor: 'pointer',
-                  boxShadow: '0 4px 14px rgba(16, 185, 129, 0.4)'
-                }}
-              >
-                <FiUserCheck />
-                <span>+ Sync / Tambah Akun</span>
-              </button>
-
               <button
                 type="button"
                 onClick={handleExportCSV}
