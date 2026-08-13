@@ -5,6 +5,14 @@ import { toast } from 'react-hot-toast';
 import { FiTool, FiClock, FiAlertTriangle, FiCheckCircle, FiSave, FiZap, FiShield } from 'react-icons/fi';
 import Header from '../components/Header';
 
+const formatToLocalDatetimeInput = (dateInput) => {
+  if (!dateInput) return '';
+  const d = new Date(dateInput);
+  if (isNaN(d.getTime())) return '';
+  const tzOffset = d.getTimezoneOffset() * 60000;
+  return new Date(d.getTime() - tzOffset).toISOString().slice(0, 16);
+};
+
 export default function MaintenanceManager() {
   const { flavorId } = useFlavor();
   const [loading, setLoading] = useState(true);
@@ -14,7 +22,7 @@ export default function MaintenanceManager() {
     is_enabled: false,
     title: 'System Under Maintenance',
     message: 'We are performing system upgrades and performance enhancements. Please check back shortly.',
-    end_time: new Date(Date.now() + 3 * 3600 * 1000).toISOString().slice(0, 16),
+    end_time: formatToLocalDatetimeInput(Date.now() + 3 * 3600 * 1000),
     allow_admin_bypass: true
   });
 
@@ -40,7 +48,7 @@ export default function MaintenanceManager() {
           is_enabled: !!data.is_enabled,
           title: data.title || 'System Under Maintenance',
           message: data.message || 'We are performing system upgrades and performance enhancements. Please check back shortly.',
-          end_time: data.end_time ? new Date(data.end_time).toISOString().slice(0, 16) : new Date(Date.now() + 3 * 3600 * 1000).toISOString().slice(0, 16),
+          end_time: formatToLocalDatetimeInput(data.end_time || (Date.now() + 3 * 3600 * 1000)),
           allow_admin_bypass: data.allow_admin_bypass !== false
         });
       }
@@ -71,9 +79,7 @@ export default function MaintenanceManager() {
   };
 
   const handlePreset = (hoursToAdd) => {
-    const newTarget = new Date(Date.now() + hoursToAdd * 3600 * 1000);
-    const tzOffset = newTarget.getTimezoneOffset() * 60000;
-    const localISOTime = new Date(newTarget.getTime() - tzOffset).toISOString().slice(0, 16);
+    const localISOTime = formatToLocalDatetimeInput(Date.now() + hoursToAdd * 3600 * 1000);
     setSettings(prev => ({ ...prev, end_time: localISOTime }));
     toast.success(`Countdown set to +${hoursToAdd} hours from now`);
   };
@@ -82,7 +88,9 @@ export default function MaintenanceManager() {
     e.preventDefault();
     setSaving(true);
     try {
-      await backofficeService.updateMaintenanceSettings(settings, flavorId);
+      const targetISO = settings.end_time ? new Date(settings.end_time).toISOString() : new Date().toISOString();
+      const payload = { ...settings, end_time: targetISO };
+      await backofficeService.updateMaintenanceSettings(payload, flavorId);
       toast.success('Maintenance Mode settings saved successfully!');
     } catch (err) {
       console.error(err);
@@ -179,8 +187,9 @@ export default function MaintenanceManager() {
                   type="button"
                   onClick={async () => {
                     const newStatus = !settings.is_enabled;
-                    const updated = { ...settings, is_enabled: newStatus };
-                    setSettings(updated);
+                    const targetISO = settings.end_time ? new Date(settings.end_time).toISOString() : new Date().toISOString();
+                    const updated = { ...settings, is_enabled: newStatus, end_time: targetISO };
+                    setSettings(prev => ({ ...prev, is_enabled: newStatus }));
                     try {
                       await backofficeService.updateMaintenanceSettings(updated, flavorId);
                       toast.success(newStatus ? 'Maintenance Mode ENABLED!' : 'Maintenance Mode DISABLED!');

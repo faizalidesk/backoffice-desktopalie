@@ -20,7 +20,7 @@ import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 
 export default function Dashboard() {
-  const { activeFlavor } = useFlavor();
+  const { activeFlavor, flavorId } = useFlavor();
   const [stats, setStats] = useState({
     projectsCount: 0,
     experimentsCount: 0,
@@ -76,8 +76,8 @@ export default function Dashboard() {
           backofficeService.getBookmarks(),
           backofficeService.getTodos(),
           backofficeService.getDocs(),
-          backofficeService.getMaintenanceSettings(),
-          backofficeService.getLandingPageSettings()
+          backofficeService.getMaintenanceSettings(flavorId),
+          backofficeService.getLandingPageSettings(flavorId)
         ]);
 
         setStats({

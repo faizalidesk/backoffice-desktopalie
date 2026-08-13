@@ -44,7 +44,8 @@ export default function PublicPlatformLanding() {
 
   const getInitialMaintenance = () => {
     try {
-      const cached = localStorage.getItem(`desktopalie_maint_${flavorId}`);
+      const cached = localStorage.getItem(`desktopalie_maintenance_settings_${flavorId}`) ||
+                     localStorage.getItem(`desktopalie_maint_${flavorId}`);
       if (cached) return JSON.parse(cached);
     } catch (e) {
       // ignore
@@ -96,8 +97,10 @@ export default function PublicPlatformLanding() {
 
           try {
             if (isEnabled) {
+              localStorage.setItem(`desktopalie_maintenance_settings_${flavorId}`, JSON.stringify(maintData));
               localStorage.setItem(`desktopalie_maint_${flavorId}`, JSON.stringify(maintData));
             } else {
+              localStorage.removeItem(`desktopalie_maintenance_settings_${flavorId}`);
               localStorage.removeItem(`desktopalie_maint_${flavorId}`);
             }
           } catch (e) {
@@ -110,8 +113,18 @@ export default function PublicPlatformLanding() {
     }
 
     loadData();
+
+    const handleStorageChange = (e) => {
+      if (!e || !e.key || e.key.includes('maintenance')) {
+        loadData();
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
     return () => {
       isMounted = false;
+      window.removeEventListener('storage', handleStorageChange);
     };
   }, [flavorId]);
 
