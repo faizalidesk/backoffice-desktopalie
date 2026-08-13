@@ -336,10 +336,10 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* 7 KPI STAT CARDS GRID */}
+        {/* 3 KPI STAT CARDS GRID */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
           gap: '1.25rem',
           marginBottom: '1.75rem'
         }}>
@@ -367,18 +367,6 @@ export default function Dashboard() {
             </div>
           </Link>
 
-          <Link to="/experiments" style={{ textDecoration: 'none' }}>
-            <div className="stat-card" style={{ height: '100%' }}>
-              <div className="stat-info">
-                <div className="stat-label">Experiments</div>
-                <div className="stat-value">{loading ? '...' : stats.experimentsCount}</div>
-              </div>
-              <div className="stat-icon teal">
-                <FiCpu />
-              </div>
-            </div>
-          </Link>
-
           <Link to="/todos" style={{ textDecoration: 'none' }}>
             <div className="stat-card" style={{ height: '100%' }}>
               <div className="stat-info">
@@ -387,42 +375,6 @@ export default function Dashboard() {
               </div>
               <div className="stat-icon amber">
                 <FiCheckSquare />
-              </div>
-            </div>
-          </Link>
-
-          <Link to="/documentation" style={{ textDecoration: 'none' }}>
-            <div className="stat-card" style={{ height: '100%' }}>
-              <div className="stat-info">
-                <div className="stat-label">Documentation</div>
-                <div className="stat-value">{loading ? '...' : stats.docsCount}</div>
-              </div>
-              <div className="stat-icon violet">
-                <FiBookOpen />
-              </div>
-            </div>
-          </Link>
-
-          <Link to="/notes" style={{ textDecoration: 'none' }}>
-            <div className="stat-card" style={{ height: '100%' }}>
-              <div className="stat-info">
-                <div className="stat-label">Notes & Ideas</div>
-                <div className="stat-value">{loading ? '...' : stats.notesCount}</div>
-              </div>
-              <div className="stat-icon rose">
-                <FiFileText />
-              </div>
-            </div>
-          </Link>
-
-          <Link to="/bookmarks" style={{ textDecoration: 'none' }}>
-            <div className="stat-card" style={{ height: '100%' }}>
-              <div className="stat-info">
-                <div className="stat-label">Bookmarks</div>
-                <div className="stat-value">{loading ? '...' : stats.bookmarksCount}</div>
-              </div>
-              <div className="stat-icon teal">
-                <FiBookmark />
               </div>
             </div>
           </Link>
