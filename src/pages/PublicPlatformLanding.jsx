@@ -766,96 +766,181 @@ export default function PublicPlatformLanding() {
     );
   };
 
-  const renderGoogleAuthCard = () => {
+  const renderEmbeddedPlatformLoginCard = () => {
     if (!isSubPlatform) return null;
 
+    const targetPortalPath = flavorId === 'platform2' ? '/beta/portal' : (flavorId === 'platform3' ? '/gamma/portal' : '/delta/portal');
+
     return (
-      <section style={{ maxWidth: '1280px', margin: '0 auto 4rem auto', padding: '0 2rem' }}>
+      <section id="login-section" style={{ maxWidth: '1280px', margin: '0 auto 4rem auto', padding: '0 2rem' }}>
         <div style={{
           backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
           border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
-          borderRadius: '20px',
-          padding: '2rem 2.25rem',
+          borderRadius: '24px',
+          padding: '2.5rem',
           boxShadow: isDarkMode ? '0 20px 40px rgba(0,0,0,0.4)' : '0 12px 32px rgba(15, 23, 42, 0.08)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          gap: '1.75rem'
+          position: 'relative',
+          overflow: 'hidden'
         }}>
-          <div style={{ flex: 1, minWidth: '280px' }}>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: '#EA4335', fontWeight: '700', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.35rem' }}>
-              <FaGoogle /> Google OAuth 2.0 + Supabase Database Sync
-            </div>
-            <h3 style={{ fontSize: '1.35rem', fontWeight: '800', margin: '0 0 0.5rem 0', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
-              Autentikasi Google Akun Instant di {activeFlavor?.name}
-            </h3>
-            <p style={{ color: isDarkMode ? '#94A3B8' : '#64748B', fontSize: '0.9rem', margin: 0, lineHeight: '1.55', maxWidth: '680px' }}>
-              Fitur login sekali klik menggunakan akun Google resmi. Data profil nama, avatar foto, dan email Anda akan disinkronkan secara otomatis dan tersimpan aman di database PostgreSQL Supabase.
-            </p>
-          </div>
+          {/* Accent Line */}
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: '4px',
+            background: `linear-gradient(90deg, ${primaryColor}, #8B5CF6)`
+          }} />
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-            {user ? (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                  <img
-                    src={user.user_metadata?.avatar_url || user.user_metadata?.picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.email)}`}
-                    alt="User Avatar"
-                    style={{ width: '42px', height: '42px', borderRadius: '50%', border: `2px solid ${primaryColor}`, objectFit: 'cover' }}
-                  />
-                  <div>
-                    <div style={{ fontWeight: '700', fontSize: '0.9rem', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
-                      {user.user_metadata?.full_name || user.email}
-                    </div>
-                    <div style={{ fontSize: '0.75rem', color: '#10B981', fontWeight: '600' }}>
-                      🟢 Google Connected & Synced
-                    </div>
+          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '2rem' }}>
+            
+            {/* Left Info Text */}
+            <div style={{ flex: 1, minWidth: '280px' }}>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: primaryColor, fontWeight: '700', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>
+                <FiLock /> Direct Platform Portal Authentication
+              </div>
+              <h2 style={{ fontSize: '1.75rem', fontWeight: '800', margin: '0 0 0.75rem 0', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+                Masuk ke Workspace Portal {activeFlavor?.name}
+              </h2>
+              <p style={{ color: isDarkMode ? '#94A3B8' : '#64748B', fontSize: '0.95rem', margin: 0, lineHeight: '1.6', maxWidth: '540px' }}>
+                Akses langsung ke ruang kerja khusus {activeFlavor?.shortName}. Silakan login menggunakan akun Google terverifikasi atau kredensial email administrator Anda.
+              </p>
+            </div>
+
+            {/* Right Interactive Form / Logged In Card */}
+            <div style={{ width: '100%', maxWidth: '420px' }}>
+              {user ? (
+                <div style={{
+                  padding: '1.75rem',
+                  borderRadius: '16px',
+                  backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
+                  border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+                  textAlign: 'center'
+                }}>
+                  <div style={{ width: '64px', height: '64px', borderRadius: '50%', margin: '0 auto 1rem auto', overflow: 'hidden', border: `3px solid ${primaryColor}` }}>
+                    <img
+                      src={user.user_metadata?.avatar_url || user.user_metadata?.picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.email)}`}
+                      alt="Avatar"
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                  </div>
+                  <h4 style={{ margin: '0 0 0.25rem 0', fontSize: '1.1rem', fontWeight: '800', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+                    {user.user_metadata?.full_name || user.email}
+                  </h4>
+                  <div style={{ fontSize: '0.8rem', color: '#10B981', fontWeight: '700', marginBottom: '1.25rem' }}>
+                    🟢 Anda Sudah Terhubung ke {activeFlavor?.shortName}
+                  </div>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                    <button
+                      type="button"
+                      onClick={() => navigate(targetPortalPath)}
+                      style={{
+                        padding: '0.85rem 1.5rem',
+                        borderRadius: '12px',
+                        backgroundColor: primaryColor,
+                        color: '#FFFFFF',
+                        border: 'none',
+                        fontWeight: '800',
+                        fontSize: '0.95rem',
+                        cursor: 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '0.5rem',
+                        boxShadow: `0 6px 20px ${primaryColor}40`
+                      }}
+                    >
+                      <span>Buka Workspace Portal {activeFlavor?.shortName}</span>
+                      <FiArrowRight />
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={logout}
+                      style={{
+                        padding: '0.65rem',
+                        borderRadius: '10px',
+                        backgroundColor: 'transparent',
+                        border: `1px solid ${isDarkMode ? '#334155' : '#CBD5E1'}`,
+                        color: isDarkMode ? '#94A3B8' : '#64748B',
+                        fontWeight: '700',
+                        fontSize: '0.8rem',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      Keluar / Sign Out
+                    </button>
                   </div>
                 </div>
+              ) : (
+                <div style={{
+                  padding: '1.75rem',
+                  borderRadius: '16px',
+                  backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
+                  border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`
+                }}>
+                  {/* Google Login Button */}
+                  <button
+                    type="button"
+                    onClick={handleGoogleSignIn}
+                    disabled={googleLoading}
+                    style={{
+                      width: '100%',
+                      padding: '0.85rem',
+                      borderRadius: '12px',
+                      backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
+                      color: isDarkMode ? '#F8FAFC' : '#0F172A',
+                      border: `1px solid ${isDarkMode ? '#334155' : '#CBD5E1'}`,
+                      fontWeight: '700',
+                      fontSize: '0.9rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '0.65rem',
+                      cursor: 'pointer',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+                      marginBottom: '1.25rem'
+                    }}
+                  >
+                    <FaGoogle style={{ color: '#EA4335', fontSize: '1.1rem' }} />
+                    <span>{googleLoading ? 'Memproses Google...' : 'Masuk via Google (Auto Sync)'}</span>
+                  </button>
 
-                <button
-                  type="button"
-                  onClick={logout}
-                  style={{
-                    padding: '0.55rem 1.15rem',
-                    borderRadius: '10px',
-                    backgroundColor: isDarkMode ? '#0F172A' : '#F1F5F9',
-                    border: `1px solid ${isDarkMode ? '#334155' : '#CBD5E1'}`,
-                    color: isDarkMode ? '#F8FAFC' : '#0F172A',
-                    fontWeight: '700',
-                    fontSize: '0.8rem',
-                    cursor: 'pointer'
-                  }}
-                >
-                  Sign Out
-                </button>
-              </div>
-            ) : (
-              <button
-                type="button"
-                onClick={handleGoogleSignIn}
-                disabled={googleLoading}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.65rem',
-                  padding: '0.85rem 1.75rem',
-                  borderRadius: '12px',
-                  backgroundColor: '#FFFFFF',
-                  color: '#0F172A',
-                  border: '1px solid #CBD5E1',
-                  fontWeight: '800',
-                  fontSize: '0.95rem',
-                  cursor: 'pointer',
-                  boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)',
-                  transition: 'all 0.2s ease'
-                }}
-              >
-                <FaGoogle style={{ color: '#EA4335', fontSize: '1.2rem' }} />
-                <span>{googleLoading ? 'Memproses OAuth...' : 'Login dengan Google'}</span>
-              </button>
-            )}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem', color: 'var(--text-muted)' }}>
+                    <div style={{ flex: 1, height: '1px', backgroundColor: isDarkMode ? '#334155' : '#E2E8F0' }} />
+                    <span style={{ fontSize: '0.7rem', fontWeight: '700', textTransform: 'uppercase' }}>atau login portal</span>
+                    <div style={{ flex: 1, height: '1px', backgroundColor: isDarkMode ? '#334155' : '#E2E8F0' }} />
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => navigate(flavorId === 'platform2' ? '/beta/login' : (flavorId === 'platform3' ? '/gamma/login' : '/delta/login'))}
+                    style={{
+                      width: '100%',
+                      padding: '0.85rem',
+                      borderRadius: '12px',
+                      backgroundColor: primaryColor,
+                      color: '#FFFFFF',
+                      border: 'none',
+                      fontWeight: '800',
+                      fontSize: '0.9rem',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '0.5rem',
+                      boxShadow: `0 4px 14px ${primaryColor}35`
+                    }}
+                  >
+                    <FiLock />
+                    <span>Halaman Login Dedicated {activeFlavor?.shortName}</span>
+                    <FiArrowRight />
+                  </button>
+                </div>
+              )}
+            </div>
+
           </div>
         </div>
       </section>
@@ -1194,8 +1279,8 @@ export default function PublicPlatformLanding() {
         </div>
       </section>
 
-      {/* GOOGLE AUTHENTICATION & SUPABASE AUTO-SYNC CARD FOR SUB-PLATFORMS */}
-      {renderGoogleAuthCard()}
+      {/* EMBEDDED DIRECT PLATFORM LOGIN CARD FOR SUB-PLATFORMS */}
+      {renderEmbeddedPlatformLoginCard()}
 
       {/* DYNAMIC INTERACTIVE PLATFORM TELEMETRY WIDGET */}
       {renderPlatformWidget()}
