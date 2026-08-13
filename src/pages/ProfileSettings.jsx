@@ -207,17 +207,16 @@ export default function ProfileSettings() {
                     )}
                   </div>
 
-                  {/* Status Indicator Dot (Clean & Unclipped) */}
+                  {/* Status Indicator Dot (Clean Green Dot) */}
                   <span style={{
                     position: 'absolute',
-                    bottom: '2px',
-                    right: '2px',
-                    width: '20px',
-                    height: '20px',
+                    bottom: '3px',
+                    right: '3px',
+                    width: '16px',
+                    height: '16px',
                     borderRadius: '50%',
                     backgroundColor: '#10B981',
-                    border: '3px solid #0F172A',
-                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
+                    boxShadow: '0 0 10px rgba(16, 185, 129, 0.6)',
                     zIndex: 3
                   }} title="Active Online" />
                 </div>
