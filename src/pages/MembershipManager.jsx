@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { supabase } from '../lib/supabase';
 import { backofficeService } from '../services/backofficeService';
 import { toast } from 'react-hot-toast';
+import { useFlavor } from '../context/FlavorContext';
 import { 
   FiUsers, 
   FiSearch, 
@@ -30,13 +31,20 @@ import { FaGoogle } from 'react-icons/fa';
 export default function MembershipManager() {
   const { isDarkMode } = useTheme();
   const { user: currentUser } = useAuth();
+  const { flavorId, activeFlavor } = useFlavor();
 
-  const [activeFilter, setActiveFilter] = useState('all');
+  const [activeFilter, setActiveFilter] = useState(() => flavorId || 'platform1');
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [members, setMembers] = useState([]);
   const [selectedMember, setSelectedMember] = useState(null);
   const [selectedIds, setSelectedIds] = useState([]);
+
+  useEffect(() => {
+    if (flavorId) {
+      setActiveFilter(flavorId);
+    }
+  }, [flavorId]);
 
   // Initial Demo Data Fallback
   const initialDemoMembers = [
