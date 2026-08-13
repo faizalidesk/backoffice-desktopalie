@@ -54,17 +54,13 @@ export default function ProfileSettings() {
   });
 
   useEffect(() => {
-    if (user?.id) {
-      loadProfile();
-    } else {
-      setLoading(false);
-    }
-  }, [user]);
+    loadProfile();
+  }, [user?.id]);
 
   const loadProfile = async () => {
     setLoading(true);
     try {
-      const data = await backofficeService.getProfile(user.id);
+      const data = await backofficeService.getProfile(user?.id);
       if (data) {
         setProfile({
           full_name: data.full_name || '',
@@ -84,11 +80,20 @@ export default function ProfileSettings() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!user?.id) return;
-
     setSaving(true);
     try {
-      await backofficeService.updateProfile(user.id, profile);
+      const savedData = await backofficeService.updateProfile(user?.id, profile);
+      if (savedData) {
+        setProfile(prev => ({
+          ...prev,
+          full_name: savedData.full_name || prev.full_name,
+          username: savedData.username || prev.username,
+          bio: savedData.bio || prev.bio,
+          avatar_url: savedData.avatar_url || prev.avatar_url,
+          location: savedData.location || prev.location,
+          website: savedData.website || prev.website
+        }));
+      }
       toast.success(t('profileUpdated'));
     } catch (err) {
       console.error(err);

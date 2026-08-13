@@ -849,72 +849,88 @@ export const backofficeService = {
   },
 
   // PROFILES (DATABASE PERSISTENCE + LOCAL FALLBACK)
-  async getProfile(userId) {
-    if (!userId) return null;
-    const localKey = `desktopalie_profile_${userId}`;
+  async getProfile(userId = null) {
+    const targetUserId = userId || 'default_admin';
+    const localKey = `desktopalie_profile_${targetUserId}`;
+    
+    // Check LocalStorage cache first
+    let localData = null;
     try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .maybeSingle();
+      const cached = localStorage.getItem(localKey) || localStorage.getItem('desktopalie_profile');
+      if (cached) localData = JSON.parse(cached);
+    } catch (e) {}
 
-      if (!error && data) {
-        localStorage.setItem(localKey, JSON.stringify(data));
-        return data;
-      }
-    } catch (err) {
-      console.warn('Supabase profiles fetch error, reading local fallback:', err);
-    }
-
-    const cached = localStorage.getItem(localKey);
-    if (cached) {
+    // Try fetching from Supabase profiles table if userId is present
+    if (userId) {
       try {
-        return JSON.parse(cached);
-      } catch (e) {}
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', userId)
+          .maybeSingle();
+
+        if (!error && data && Object.keys(data).length > 0) {
+          const merged = { ...localData, ...data };
+          localStorage.setItem(localKey, JSON.stringify(merged));
+          localStorage.setItem('desktopalie_profile', JSON.stringify(merged));
+          return merged;
+        }
+      } catch (err) {
+        console.warn('Supabase profiles fetch error, reading local fallback:', err);
+      }
     }
-    return null;
+
+    return localData || {
+      full_name: 'Faiz Ali',
+      username: 'faizali',
+      bio: 'Independent designer & developer',
+      avatar_url: '',
+      location: 'Indonesia',
+      website: 'https://desktopalie.my.id'
+    };
   },
 
-  async updateProfile(userId, updates) {
-    if (!userId) throw new Error('User ID is missing');
-    const localKey = `desktopalie_profile_${userId}`;
+  async updateProfile(userId = null, updates = {}) {
+    const targetUserId = userId || 'default_admin';
+    const localKey = `desktopalie_profile_${targetUserId}`;
     const payload = {
-      id: userId,
+      id: targetUserId,
       ...updates,
       updated_at: new Date().toISOString()
     };
 
-    // 1. Always save to LocalStorage for instant fallback and multi-tab storage events
+    // 1. Always save to LocalStorage for instant persistence and multi-tab storage events
     localStorage.setItem(localKey, JSON.stringify(payload));
+    localStorage.setItem('desktopalie_profile', JSON.stringify(payload));
     window.dispatchEvent(new Event('storage'));
 
     // 2. Persist directly to Supabase Database (profiles table)
-    try {
-      const { data: updateData, error: updateErr } = await supabase
-        .from('profiles')
-        .update(payload)
-        .eq('id', userId)
-        .select();
+    if (userId) {
+      try {
+        const { data: updateData, error: updateErr } = await supabase
+          .from('profiles')
+          .update(payload)
+          .eq('id', userId)
+          .select();
 
-      if (!updateErr && updateData && updateData.length > 0) {
-        return updateData[0];
-      }
+        if (!updateErr && updateData && updateData.length > 0) {
+          return updateData[0];
+        }
 
-      const { data: upsertData, error: upsertErr } = await supabase
-        .from('profiles')
-        .upsert([payload])
-        .select()
-        .single();
+        const { data: upsertData, error: upsertErr } = await supabase
+          .from('profiles')
+          .upsert([payload])
+          .select();
 
-      if (!upsertErr && upsertData) {
-        return upsertData;
+        if (!upsertErr && upsertData && upsertData.length > 0) {
+          return upsertData[0];
+        }
+        if (upsertErr) {
+          console.warn('Supabase profile upsert warning:', upsertErr.message);
+        }
+      } catch (err) {
+        console.warn('Supabase profiles update error, saved locally:', err);
       }
-      if (upsertErr) {
-        console.warn('Supabase profile upsert warning:', upsertErr.message);
-      }
-    } catch (err) {
-      console.warn('Supabase profiles update error, saved locally:', err);
     }
 
     return payload;
