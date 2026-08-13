@@ -1018,7 +1018,7 @@ export default function PublicPlatformLanding() {
           ))}
         </nav>
 
-        {/* Right Controls: Theme Switcher & Google Login Button for Sub-Platforms */}
+        {/* Right Controls: Theme Switcher & Prominent Google Sign-In Button on Top Navbar */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <button
             type="button"
@@ -1045,46 +1045,80 @@ export default function PublicPlatformLanding() {
 
           {isSubPlatform && (
             user ? (
-              <Link
-                to="/"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  padding: '0.5rem 1rem',
-                  borderRadius: '99px',
-                  backgroundColor: primaryColor,
-                  color: '#FFFFFF',
-                  fontWeight: '700',
-                  fontSize: '0.825rem',
-                  textDecoration: 'none'
-                }}
-              >
-                <span>Backoffice Dashboard</span>
-              </Link>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                <img
+                  src={user.user_metadata?.avatar_url || user.user_metadata?.picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.email)}`}
+                  alt="Avatar"
+                  style={{ width: '36px', height: '36px', borderRadius: '50%', border: `2px solid ${primaryColor}`, objectFit: 'cover' }}
+                />
+                <button
+                  type="button"
+                  onClick={() => navigate(flavorId === 'platform2' ? '/beta/portal' : (flavorId === 'platform3' ? '/gamma/portal' : '/delta/portal'))}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.4rem',
+                    padding: '0.5rem 1.15rem',
+                    borderRadius: '99px',
+                    backgroundColor: primaryColor,
+                    color: '#FFFFFF',
+                    border: 'none',
+                    fontWeight: '800',
+                    fontSize: '0.825rem',
+                    cursor: 'pointer',
+                    boxShadow: `0 4px 14px ${primaryColor}40`
+                  }}
+                >
+                  <span>Portal {activeFlavor?.shortName}</span>
+                </button>
+              </div>
             ) : (
-              <button
-                type="button"
-                onClick={handleGoogleSignIn}
-                disabled={googleLoading}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.45rem',
-                  padding: '0.5rem 1.1rem',
-                  borderRadius: '99px',
-                  backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-                  color: isDarkMode ? '#F8FAFC' : '#0F172A',
-                  border: `1px solid ${isDarkMode ? '#334155' : '#CBD5E1'}`,
-                  fontWeight: '700',
-                  fontSize: '0.825rem',
-                  cursor: 'pointer',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.06)'
-                }}
-              >
-                <FaGoogle style={{ color: '#EA4335', fontSize: '0.9rem' }} />
-                <span>{googleLoading ? 'Memproses...' : 'Login Google'}</span>
-              </button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <button
+                  type="button"
+                  onClick={handleGoogleSignIn}
+                  disabled={googleLoading}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    padding: '0.55rem 1.25rem',
+                    borderRadius: '99px',
+                    backgroundColor: '#FFFFFF',
+                    color: '#0F172A',
+                    border: '1.5px solid #CBD5E1',
+                    fontWeight: '800',
+                    fontSize: '0.85rem',
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  <FaGoogle style={{ color: '#EA4335', fontSize: '1rem' }} />
+                  <span>{googleLoading ? 'Memproses...' : 'Sign in with Google'}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => navigate(flavorId === 'platform2' ? '/beta/login' : (flavorId === 'platform3' ? '/gamma/login' : '/delta/login'))}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.35rem',
+                    padding: '0.55rem 1.1rem',
+                    borderRadius: '99px',
+                    backgroundColor: primaryColor,
+                    color: '#FFFFFF',
+                    border: 'none',
+                    fontWeight: '700',
+                    fontSize: '0.85rem',
+                    cursor: 'pointer'
+                  }}
+                >
+                  <FiLock />
+                  <span>Login</span>
+                </button>
+              </div>
             )
           )}
         </div>
@@ -1278,9 +1312,6 @@ export default function PublicPlatformLanding() {
           </div>
         </div>
       </section>
-
-      {/* EMBEDDED DIRECT PLATFORM LOGIN CARD FOR SUB-PLATFORMS */}
-      {renderEmbeddedPlatformLoginCard()}
 
       {/* DYNAMIC INTERACTIVE PLATFORM TELEMETRY WIDGET */}
       {renderPlatformWidget()}
