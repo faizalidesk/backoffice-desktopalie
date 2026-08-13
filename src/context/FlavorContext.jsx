@@ -4,37 +4,33 @@ import { flavors, availableFlavors, subPlatformFlavors, mainFlavor, getFlavor } 
 const FlavorContext = createContext();
 
 const detectPlatformFromHostname = () => {
-  if (typeof window === 'undefined') return 'platform1';
+  if (typeof window === 'undefined') return null;
   const hostname = window.location.hostname.toLowerCase();
 
   if (hostname.includes('beta.')) return 'platform2';
   if (hostname.includes('gamma.')) return 'platform3';
   if (hostname.includes('delta.')) return 'platform4';
 
-  // For back.desktopalie.my.id, main domain or default, lock to platform1 (Desktopalie Main)
-  if (hostname.includes('back.') || hostname.includes('desktopalie.my.id')) {
-    return 'platform1';
-  }
-
-  return 'platform1';
+  return null;
 };
 
 export const FlavorProvider = ({ children }) => {
   const [hasSelectedFlavor, setHasSelectedFlavor] = useState(true);
 
   const [flavorId, setFlavorId] = useState(() => {
-    // 1. Detect platform automatically from domain URL (e.g. back.desktopalie.my.id -> platform1)
+    // 1. Check if explicitly on sub-platform subdomain (e.g. beta, gamma, delta)
     const hostnameFlavor = detectPlatformFromHostname();
     if (hostnameFlavor && flavors[hostnameFlavor]) {
       return hostnameFlavor;
     }
 
-    // 2. Fallback to localStorage saved selection
+    // 2. Check saved localStorage selection (retains active flavor on refresh in backoffice)
     const saved = localStorage.getItem('desktopalie_flavor');
     if (saved && flavors[saved]) {
       return saved;
     }
 
+    // 3. Default fallback
     return 'platform1';
   });
 
