@@ -183,11 +183,14 @@ export const notificationService = {
       if (!stored) {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_NOTIFICATIONS));
       }
+      if (activePlatform === 'all_platforms' || activePlatform === 'all_master') {
+        return list;
+      }
       // Filter notifications matching target platform or global ('all')
       return list.filter(n => !n.platformId || n.platformId === 'all' || n.platformId === activePlatform);
     } catch (e) {
       console.error('Error reading notifications:', e);
-      return INITIAL_NOTIFICATIONS.filter(n => !n.platformId || n.platformId === 'all' || n.platformId === activePlatform);
+      return INITIAL_NOTIFICATIONS;
     }
   },
 

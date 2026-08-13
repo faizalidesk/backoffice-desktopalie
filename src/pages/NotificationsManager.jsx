@@ -17,7 +17,9 @@ import {
   FiFilter,
   FiSearch,
   FiRotateCcw,
-  FiExternalLink
+  FiExternalLink,
+  FiSend,
+  FiLayers
 } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 
@@ -35,30 +37,44 @@ function formatTimeAgo(dateString) {
   return `${days}h lalu`;
 }
 
+const PLATFORM_LABELS = {
+  all: { name: 'Semua Platform (Broadcast)', bg: '#F43F5E', color: '#FFFFFF' },
+  platform1: { name: 'Platform 1 - Alpha (Main)', bg: '#3B82F6', color: '#FFFFFF' },
+  platform2: { name: 'Platform 2 - Beta Logistics', bg: '#10B981', color: '#FFFFFF' },
+  platform3: { name: 'Platform 3 - Gamma Video Streaming', bg: '#8B5CF6', color: '#FFFFFF' },
+  platform4: { name: 'Platform 4 - Delta Financial ERP', bg: '#F59E0B', color: '#FFFFFF' }
+};
+
 export default function NotificationsManager() {
   const { activeFlavor, flavorId } = useFlavor();
   const { isDarkMode } = useTheme();
   const { t } = useLanguage();
   const navigate = useNavigate();
 
-  const [notifications, setNotifications] = useState(() => notificationService.getNotifications(flavorId));
+  // Selected Platform Filter View ('active_flavor' | 'all_platforms' | 'platform1' | 'platform2' | 'platform3' | 'platform4')
+  const [viewPlatformFilter, setViewPlatformFilter] = useState('active_flavor');
+  
+  const targetFilterId = viewPlatformFilter === 'active_flavor' ? flavorId : viewPlatformFilter;
+  const [notifications, setNotifications] = useState(() => notificationService.getNotifications(targetFilterId));
+
   const [filterType, setFilterType] = useState('all'); // 'all' | 'unread' | 'info' | 'warning' | 'success'
   const [searchQuery, setSearchQuery] = useState('');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   // Form State for New Notification
+  const [targetPlatform, setTargetPlatform] = useState(flavorId || 'platform1');
   const [newTitle, setNewTitle] = useState('');
   const [newMessage, setNewMessage] = useState('');
   const [newType, setNewType] = useState('info');
-  const [newLink, setNewLink] = useState('/workspaces');
+  const [newLink, setNewLink] = useState('/portal');
 
   useEffect(() => {
-    setNotifications(notificationService.getNotifications(flavorId));
+    setNotifications(notificationService.getNotifications(targetFilterId));
     const unsubscribe = notificationService.subscribe(() => {
-      setNotifications(notificationService.getNotifications(flavorId));
+      setNotifications(notificationService.getNotifications(targetFilterId));
     });
     return unsubscribe;
-  }, [flavorId]);
+  }, [targetFilterId]);
 
   const handleMarkAsRead = (id) => {
     notificationService.markAsRead(id);
@@ -66,7 +82,7 @@ export default function NotificationsManager() {
   };
 
   const handleMarkAllAsRead = () => {
-    notificationService.markAllAsRead();
+    notificationService.markAllAsRead(targetFilterId);
     toast.success('Semua notifikasi ditandai sudah dibaca');
   };
 
@@ -76,7 +92,7 @@ export default function NotificationsManager() {
   };
 
   const handleClearAll = () => {
-    notificationService.clearAllNotifications();
+    notificationService.clearAllNotifications(targetFilterId);
     toast.success('Daftar notifikasi dibersihkan');
   };
 
@@ -92,15 +108,17 @@ export default function NotificationsManager() {
       return;
     }
 
+    const platformName = PLATFORM_LABELS[targetPlatform]?.name || 'Platform';
+
     notificationService.addNotification({
-      title: `${newTitle} [${activeFlavor?.shortName || 'Platform'}]`,
+      title: newTitle,
       message: newMessage,
       type: newType,
       link: newLink,
-      platformId: flavorId
+      platformId: targetPlatform
     });
 
-    toast.success('Notifikasi baru berhasil diterbitkan!');
+    toast.success(`Notifikasi baru berhasil diterbitkan untuk ${platformName}!`);
     setIsCreateModalOpen(false);
     setNewTitle('');
     setNewMessage('');
@@ -126,15 +144,15 @@ export default function NotificationsManager() {
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg-main)' }}>
-      <Header title={`Notifikasi Platform - ${activeFlavor?.name || 'Desktopalie'}`} />
+      <Header title={`Pusat Notifikasi Platform - ${activeFlavor?.name || 'Desktopalie'}`} />
 
-      <main style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
+      <main style={{ padding: '2rem', maxWidth: '1240px', margin: '0 auto' }}>
         
         {/* PAGE HEADER HERO CARD */}
         <div className="card" style={{
           padding: '1.75rem 2rem',
           borderRadius: '16px',
-          marginBottom: '2rem',
+          marginBottom: '1.75rem',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -158,18 +176,18 @@ export default function NotificationsManager() {
                 textTransform: 'uppercase',
                 letterSpacing: '0.05em'
               }}>
-                Platform Notifikasi
+                Pusat Kontrol Notifikasi
               </span>
               <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-                ● {activeFlavor?.name}
+                ● Backoffice Platform Manager
               </span>
             </div>
 
             <h1 style={{ fontSize: '1.5rem', fontWeight: '800', color: 'var(--text-main)', margin: '0 0 0.4rem 0' }}>
-              Pusat Notifikasi & Log Platform
+              Terbitkan Notifikasi ke Setiap Platform
             </h1>
-            <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.9rem', maxWidth: '650px' }}>
-              Pantau seluruh pesan sistem, peringatan audit keamanan ISO 27001, serta pembaruan aktivitas untuk workspace platform aktif Anda.
+            <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.9rem', maxWidth: '680px' }}>
+              Buat, jadwalkan, dan terbitkan notifikasi langsung dari Backoffice ke masing-masing platform (Alpha, Beta Logistics, Gamma Video, atau Delta ERP).
             </p>
           </div>
 
@@ -182,7 +200,7 @@ export default function NotificationsManager() {
               title="Reset ke Notifikasi Static Bawaan"
             >
               <FiRotateCcw />
-              <span>Muat Notifikasi Static</span>
+              <span>Muat Static Seed</span>
             </button>
 
             {unreadCount > 0 && (
@@ -199,10 +217,141 @@ export default function NotificationsManager() {
             <button
               type="button"
               className="btn btn-primary btn-sm"
-              onClick={() => setIsCreateModalOpen(true)}
+              onClick={() => {
+                setTargetPlatform(flavorId);
+                setIsCreateModalOpen(true);
+              }}
+              style={{
+                boxShadow: '0 4px 14px rgba(59, 130, 246, 0.35)'
+              }}
             >
-              <FiPlus />
-              <span>Buat Notifikasi</span>
+              <FiSend />
+              <span>+ Buat & Terbitkan Notifikasi</span>
+            </button>
+          </div>
+        </div>
+
+        {/* PLATFORM TARGET FILTER BAR (PILIH PLATFORM MANA YANG INGIN DILIHAT) */}
+        <div className="card" style={{
+          padding: '1rem 1.25rem',
+          borderRadius: '14px',
+          marginBottom: '1.5rem',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: '1rem',
+          backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
+          border: '1px solid var(--border-color)'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+            <FiLayers style={{ color: 'var(--primary)', fontSize: '1.1rem' }} />
+            <span style={{ fontSize: '0.85rem', fontWeight: '800', color: 'var(--text-main)' }}>
+              Filter Platform Target:
+            </span>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+            <button
+              type="button"
+              onClick={() => setViewPlatformFilter('active_flavor')}
+              style={{
+                padding: '0.4rem 0.85rem',
+                borderRadius: '99px',
+                fontSize: '0.78rem',
+                fontWeight: '700',
+                border: 'none',
+                backgroundColor: viewPlatformFilter === 'active_flavor' ? 'var(--primary)' : (isDarkMode ? '#334155' : '#F1F5F9'),
+                color: viewPlatformFilter === 'active_flavor' ? '#FFFFFF' : 'var(--text-muted)',
+                cursor: 'pointer'
+              }}
+            >
+              ★ Platform Aktif ({activeFlavor?.shortName})
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setViewPlatformFilter('all_platforms')}
+              style={{
+                padding: '0.4rem 0.85rem',
+                borderRadius: '99px',
+                fontSize: '0.78rem',
+                fontWeight: '700',
+                border: 'none',
+                backgroundColor: viewPlatformFilter === 'all_platforms' ? '#F43F5E' : (isDarkMode ? '#334155' : '#F1F5F9'),
+                color: viewPlatformFilter === 'all_platforms' ? '#FFFFFF' : 'var(--text-muted)',
+                cursor: 'pointer'
+              }}
+            >
+              🌐 Master Stream (Semua Platform)
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setViewPlatformFilter('platform1')}
+              style={{
+                padding: '0.4rem 0.85rem',
+                borderRadius: '99px',
+                fontSize: '0.78rem',
+                fontWeight: '700',
+                border: 'none',
+                backgroundColor: viewPlatformFilter === 'platform1' ? '#3B82F6' : (isDarkMode ? '#334155' : '#F1F5F9'),
+                color: viewPlatformFilter === 'platform1' ? '#FFFFFF' : 'var(--text-muted)',
+                cursor: 'pointer'
+              }}
+            >
+              Platform 1 (Alpha)
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setViewPlatformFilter('platform2')}
+              style={{
+                padding: '0.4rem 0.85rem',
+                borderRadius: '99px',
+                fontSize: '0.78rem',
+                fontWeight: '700',
+                border: 'none',
+                backgroundColor: viewPlatformFilter === 'platform2' ? '#10B981' : (isDarkMode ? '#334155' : '#F1F5F9'),
+                color: viewPlatformFilter === 'platform2' ? '#FFFFFF' : 'var(--text-muted)',
+                cursor: 'pointer'
+              }}
+            >
+              Platform 2 (Beta Logistics)
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setViewPlatformFilter('platform3')}
+              style={{
+                padding: '0.4rem 0.85rem',
+                borderRadius: '99px',
+                fontSize: '0.78rem',
+                fontWeight: '700',
+                border: 'none',
+                backgroundColor: viewPlatformFilter === 'platform3' ? '#8B5CF6' : (isDarkMode ? '#334155' : '#F1F5F9'),
+                color: viewPlatformFilter === 'platform3' ? '#FFFFFF' : 'var(--text-muted)',
+                cursor: 'pointer'
+              }}
+            >
+              Platform 3 (Gamma Video)
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setViewPlatformFilter('platform4')}
+              style={{
+                padding: '0.4rem 0.85rem',
+                borderRadius: '99px',
+                fontSize: '0.78rem',
+                fontWeight: '700',
+                border: 'none',
+                backgroundColor: viewPlatformFilter === 'platform4' ? '#F59E0B' : (isDarkMode ? '#334155' : '#F1F5F9'),
+                color: viewPlatformFilter === 'platform4' ? '#FFFFFF' : 'var(--text-muted)',
+                cursor: 'pointer'
+              }}
+            >
+              Platform 4 (Delta ERP)
             </button>
           </div>
         </div>
@@ -212,7 +361,7 @@ export default function NotificationsManager() {
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
           gap: '1.25rem',
-          marginBottom: '2rem'
+          marginBottom: '1.75rem'
         }}>
           <div className="card" style={{ padding: '1.25rem', borderRadius: '14px', display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <div style={{
@@ -233,7 +382,7 @@ export default function NotificationsManager() {
                 {notifications.length}
               </div>
               <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: '600' }}>
-                Total Notifikasi
+                Total Notifikasi Target
               </div>
             </div>
           </div>
@@ -311,7 +460,7 @@ export default function NotificationsManager() {
           </div>
         </div>
 
-        {/* CONTROLS BAR: SEARCH & TABS */}
+        {/* CONTROLS BAR: SEARCH & TYPE TABS */}
         <div className="card" style={{
           padding: '1rem 1.25rem',
           borderRadius: '14px',
@@ -322,7 +471,7 @@ export default function NotificationsManager() {
           flexWrap: 'wrap',
           gap: '1rem'
         }}>
-          {/* Filter Tabs */}
+          {/* Type Filter Tabs */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
             {[
               { id: 'all', label: `Semua (${notifications.length})` },
@@ -383,7 +532,7 @@ export default function NotificationsManager() {
                 type="button"
                 className="btn btn-danger btn-sm"
                 onClick={handleClearAll}
-                title="Hapus Seluruh Notifikasi"
+                title="Hapus Seluruh Notifikasi Pada View Ini"
               >
                 <FiTrash2 />
                 <span>Bersihkan</span>
@@ -421,6 +570,7 @@ export default function NotificationsManager() {
               const isUnread = !item.read;
               const Icon = item.type === 'success' ? FiCheckCircle : item.type === 'warning' ? FiAlertCircle : FiInfo;
               const iconColor = item.type === 'success' ? '#10B981' : item.type === 'warning' ? '#F59E0B' : '#3B82F6';
+              const pInfo = PLATFORM_LABELS[item.platformId || 'all'] || PLATFORM_LABELS.all;
 
               return (
                 <div
@@ -459,7 +609,18 @@ export default function NotificationsManager() {
                   {/* Details Body */}
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.35rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexWrap: 'wrap' }}>
+                        <span style={{
+                          backgroundColor: pInfo.bg,
+                          color: pInfo.color,
+                          fontSize: '0.675rem',
+                          fontWeight: '800',
+                          padding: '0.15rem 0.55rem',
+                          borderRadius: '99px'
+                        }}>
+                          {pInfo.name}
+                        </span>
+
                         <h3 style={{
                           fontSize: '0.975rem',
                           fontWeight: isUnread ? '800' : '700',
@@ -566,13 +727,33 @@ export default function NotificationsManager() {
 
       </main>
 
-      {/* MODAL BUAT NOTIFIKASI BARU */}
+      {/* MODAL BUAT NOTIFIKASI BARU PER-PLATFORM */}
       <Modal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
-        title="Terbitkan Notifikasi Baru"
+        title="Terbitkan Notifikasi Baru Ke Platform"
       >
         <form onSubmit={handleCreateNotification} style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
+          
+          {/* Target Platform Selector */}
+          <div>
+            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-main)', marginBottom: '0.4rem' }}>
+              🎯 Target Platform Penerima Notifikasi
+            </label>
+            <select
+              className="form-control"
+              value={targetPlatform}
+              onChange={(e) => setTargetPlatform(e.target.value)}
+              style={{ fontWeight: '700' }}
+            >
+              <option value="platform1">Platform 1 - Alpha (Main Backoffice)</option>
+              <option value="platform2">Platform 2 - Beta Logistics & Fleet Telemetry</option>
+              <option value="platform3">Platform 3 - Gamma AI Video Transcoder & Streaming</option>
+              <option value="platform4">Platform 4 - Delta Client Financial ERP & Security</option>
+              <option value="all">Semua Platform (Broadcast Ke Seluruh Ekosistem)</option>
+            </select>
+          </div>
+
           <div>
             <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-main)', marginBottom: '0.4rem' }}>
               Judul Notifikasi
@@ -582,7 +763,7 @@ export default function NotificationsManager() {
               className="form-control"
               value={newTitle}
               onChange={(e) => setNewTitle(e.target.value)}
-              placeholder="Misal: Pembaruan Modul Backoffice"
+              placeholder="Misal: Pembaruan Status Sistem & Modul"
               required
             />
           </div>
@@ -626,6 +807,7 @@ export default function NotificationsManager() {
                 value={newLink}
                 onChange={(e) => setNewLink(e.target.value)}
               >
+                <option value="/portal">Portal Sub-Platform</option>
                 <option value="/workspaces">Workspaces</option>
                 <option value="/projects">Projects</option>
                 <option value="/todos">To-Do & Board QA</option>
@@ -647,7 +829,8 @@ export default function NotificationsManager() {
               type="submit"
               className="btn btn-primary"
             >
-              Terbitkan Notifikasi
+              <FiSend />
+              <span>Terbitkan Notifikasi</span>
             </button>
           </div>
         </form>
