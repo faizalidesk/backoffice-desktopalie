@@ -193,16 +193,6 @@ export default function NotificationsManager() {
 
           {/* ACTION BUTTONS */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-            <button
-              type="button"
-              className="btn btn-secondary btn-sm"
-              onClick={handleResetStatic}
-              title="Reset ke Notifikasi Static Bawaan"
-            >
-              <FiRotateCcw />
-              <span>Muat Static Seed</span>
-            </button>
-
             {unreadCount > 0 && (
               <button
                 type="button"
@@ -560,9 +550,12 @@ export default function NotificationsManager() {
               <button
                 type="button"
                 className="btn btn-primary btn-sm"
-                onClick={handleResetStatic}
+                onClick={() => {
+                  setTargetPlatform(flavorId);
+                  setIsCreateModalOpen(true);
+                }}
               >
-                Muat Notifikasi Static Bawaan
+                + Buat Notifikasi Baru
               </button>
             </div>
           ) : (

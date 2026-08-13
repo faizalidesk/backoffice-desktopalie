@@ -234,23 +234,7 @@ export default function NotificationBell({ primaryColor }) {
                 fontSize: '0.85rem'
               }}>
                 <FiBell style={{ fontSize: '1.75rem', marginBottom: '0.5rem', opacity: 0.5 }} />
-                <p style={{ margin: '0 0 0.75rem 0' }}>{t('noNotifications') || 'Tidak ada notifikasi'}</p>
-                <button
-                  type="button"
-                  onClick={() => notificationService.resetToDefault()}
-                  style={{
-                    padding: '0.35rem 0.85rem',
-                    borderRadius: '99px',
-                    backgroundColor: `${activeColor}18`,
-                    color: activeColor,
-                    border: 'none',
-                    fontSize: '0.725rem',
-                    fontWeight: '700',
-                    cursor: 'pointer'
-                  }}
-                >
-                  Muat Notifikasi Static
-                </button>
+                <p style={{ margin: 0 }}>{t('noNotifications') || 'Tidak ada notifikasi'}</p>
               </div>
             ) : (
               filteredNotifs.map((item) => {

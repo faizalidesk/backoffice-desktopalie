@@ -352,23 +352,7 @@ export default function Header({ title = 'Dashboard Overview' }) {
                     fontSize: '0.85rem'
                   }}>
                     <FiBell style={{ fontSize: '1.75rem', marginBottom: '0.5rem', opacity: 0.5 }} />
-                    <p style={{ margin: '0 0 0.75rem 0' }}>{t('noNotifications')}</p>
-                    <button
-                      type="button"
-                      onClick={() => notificationService.resetToDefault()}
-                      style={{
-                        padding: '0.35rem 0.85rem',
-                        borderRadius: '99px',
-                        backgroundColor: 'var(--primary-light)',
-                        color: 'var(--primary)',
-                        border: 'none',
-                        fontSize: '0.75rem',
-                        fontWeight: '700',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      Muat Notifikasi Static
-                    </button>
+                    <p style={{ margin: 0 }}>{t('noNotifications')}</p>
                   </div>
                 ) : (
                   filteredNotifs.map((item) => {
