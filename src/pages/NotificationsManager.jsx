@@ -36,12 +36,12 @@ function formatTimeAgo(dateString) {
 }
 
 export default function NotificationsManager() {
-  const { activeFlavor } = useFlavor();
+  const { activeFlavor, flavorId } = useFlavor();
   const { isDarkMode } = useTheme();
   const { t } = useLanguage();
   const navigate = useNavigate();
 
-  const [notifications, setNotifications] = useState(() => notificationService.getNotifications());
+  const [notifications, setNotifications] = useState(() => notificationService.getNotifications(flavorId));
   const [filterType, setFilterType] = useState('all'); // 'all' | 'unread' | 'info' | 'warning' | 'success'
   const [searchQuery, setSearchQuery] = useState('');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -53,11 +53,12 @@ export default function NotificationsManager() {
   const [newLink, setNewLink] = useState('/workspaces');
 
   useEffect(() => {
+    setNotifications(notificationService.getNotifications(flavorId));
     const unsubscribe = notificationService.subscribe(() => {
-      setNotifications(notificationService.getNotifications());
+      setNotifications(notificationService.getNotifications(flavorId));
     });
     return unsubscribe;
-  }, []);
+  }, [flavorId]);
 
   const handleMarkAsRead = (id) => {
     notificationService.markAsRead(id);
@@ -95,7 +96,8 @@ export default function NotificationsManager() {
       title: `${newTitle} [${activeFlavor?.shortName || 'Platform'}]`,
       message: newMessage,
       type: newType,
-      link: newLink
+      link: newLink,
+      platformId: flavorId
     });
 
     toast.success('Notifikasi baru berhasil diterbitkan!');
