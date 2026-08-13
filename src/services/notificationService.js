@@ -95,6 +95,12 @@ export const notificationService = {
     return [];
   },
 
+  resetToDefault() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_NOTIFICATIONS));
+    notifySubscribers();
+    return INITIAL_NOTIFICATIONS;
+  },
+
   addNotification({ title, message, type = 'info', link = '' }) {
     const list = this.getNotifications();
     const newNotif = {
