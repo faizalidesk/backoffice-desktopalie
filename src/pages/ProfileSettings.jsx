@@ -183,38 +183,42 @@ export default function ProfileSettings() {
               
               {/* Left Profile Identity */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-                <div style={{
-                  position: 'relative',
-                  width: '88px',
-                  height: '88px',
-                  borderRadius: '50%',
-                  background: `linear-gradient(135deg, ${primaryColor}, #8B5CF6)`,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#FFFFFF',
-                  fontSize: '2.25rem',
-                  fontWeight: '800',
-                  border: '3px solid #FFFFFF',
-                  boxShadow: '0 6px 20px rgba(0, 0, 0, 0.2)',
-                  flexShrink: 0,
-                  overflow: 'hidden'
-                }}>
-                  {profile.avatar_url ? (
-                    <img src={profile.avatar_url} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                  ) : (
-                    profile.full_name ? profile.full_name.charAt(0).toUpperCase() : (user?.email?.charAt(0).toUpperCase() || 'A')
-                  )}
-                  {/* Status Indicator Dot */}
+                {/* Avatar Wrapper with Clean Online Badge */}
+                <div style={{ position: 'relative', width: '88px', height: '88px', flexShrink: 0 }}>
+                  <div style={{
+                    width: '100%',
+                    height: '100%',
+                    borderRadius: '50%',
+                    background: `linear-gradient(135deg, ${primaryColor}, #8B5CF6)`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#FFFFFF',
+                    fontSize: '2.25rem',
+                    fontWeight: '800',
+                    border: '3.5px solid #FFFFFF',
+                    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.25)',
+                    overflow: 'hidden'
+                  }}>
+                    {profile.avatar_url ? (
+                      <img src={profile.avatar_url} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    ) : (
+                      profile.full_name ? profile.full_name.charAt(0).toUpperCase() : (user?.email?.charAt(0).toUpperCase() || 'A')
+                    )}
+                  </div>
+
+                  {/* Status Indicator Dot (Clean & Unclipped) */}
                   <span style={{
                     position: 'absolute',
-                    bottom: '4px',
-                    right: '4px',
-                    width: '16px',
-                    height: '16px',
+                    bottom: '2px',
+                    right: '2px',
+                    width: '20px',
+                    height: '20px',
                     borderRadius: '50%',
                     backgroundColor: '#10B981',
-                    border: '2px solid #0F172A'
+                    border: '3px solid #0F172A',
+                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
+                    zIndex: 3
                   }} title="Active Online" />
                 </div>
 
