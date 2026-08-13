@@ -24,7 +24,8 @@ import {
   FiCheck,
   FiMail,
   FiMapPin,
-  FiLayers
+  FiLayers,
+  FiUsers
 } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
@@ -34,6 +35,8 @@ export default function Dashboard() {
   const { user } = useAuth();
   const [copiedId, setCopiedId] = useState(false);
   const [activeProfileTab, setActiveProfileTab] = useState('personal');
+  const [memberCount, setMemberCount] = useState(4);
+  const [recentMembers, setRecentMembers] = useState([]);
 
   const defaultStudentBio = "I am a student with a strong interest in Information Systems, web development, UI/UX design, and digital technology. I enjoy learning new technologies, working on creative projects, and developing digital solutions that combine functionality, usability, and visual design.";
 
@@ -106,6 +109,25 @@ export default function Dashboard() {
     window.addEventListener('storage', handleStorage);
     return () => window.removeEventListener('storage', handleStorage);
   }, [user?.id]);
+
+  useEffect(() => {
+    const fetchLiveMembers = () => {
+      try {
+        const localStr = localStorage.getItem('desktopalie_members_registry');
+        if (localStr) {
+          const arr = JSON.parse(localStr);
+          if (Array.isArray(arr) && arr.length > 0) {
+            setMemberCount(arr.length);
+            setRecentMembers(arr.slice(0, 4));
+          }
+        }
+      } catch (e) {}
+    };
+
+    fetchLiveMembers();
+    window.addEventListener('storage', fetchLiveMembers);
+    return () => window.removeEventListener('storage', fetchLiveMembers);
+  }, []);
 
   const copyUserId = () => {
     const targetId = user?.id || '008e1946-712e-45ac-bb6e-3e9a1078ae64';
@@ -295,13 +317,25 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* 6 KPI STAT CARDS GRID */}
+        {/* 7 KPI STAT CARDS GRID */}
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
           gap: '1.25rem',
           marginBottom: '1.75rem'
         }}>
+          <Link to="/members" style={{ textDecoration: 'none' }}>
+            <div className="stat-card" style={{ height: '100%' }}>
+              <div className="stat-info">
+                <div className="stat-label">Platform Members</div>
+                <div className="stat-value">{memberCount}</div>
+              </div>
+              <div className="stat-icon teal">
+                <FiUsers />
+              </div>
+            </div>
+          </Link>
+
           <Link to="/projects" style={{ textDecoration: 'none' }}>
             <div className="stat-card" style={{ height: '100%' }}>
               <div className="stat-info">
