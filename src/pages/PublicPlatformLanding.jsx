@@ -477,6 +477,280 @@ export default function PublicPlatformLanding() {
     );
   }
 
+  const renderPlatformWidget = () => {
+    // PLATFORM 2: BETA - SMART LOGISTICS & FREIGHT TRACKING WIDGET
+    if (flavorId === 'platform2') {
+      return (
+        <section style={{ maxWidth: '1280px', margin: '0 auto 4rem auto', padding: '0 2rem' }}>
+          <div style={{
+            backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
+            border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+            borderRadius: '20px',
+            padding: '2rem 2.25rem',
+            boxShadow: isDarkMode ? '0 20px 40px rgba(0,0,0,0.4)' : '0 12px 32px rgba(15, 23, 42, 0.08)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginBottom: '1.5rem',
+              flexWrap: 'wrap',
+              gap: '1rem'
+            }}>
+              <div>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: primaryColor, fontWeight: '700', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.25rem' }}>
+                  <FiActivity /> Live Fleet & Cargo Telemetry
+                </div>
+                <h3 style={{ fontSize: '1.35rem', fontWeight: '800', margin: 0, color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+                  Smart Logistics Tracking Engine
+                </h3>
+              </div>
+              <span style={{ padding: '0.35rem 0.85rem', borderRadius: '99px', backgroundColor: 'rgba(16, 185, 129, 0.15)', color: '#10B981', border: '1px solid rgba(16, 185, 129, 0.3)', fontSize: '0.75rem', fontWeight: '700' }}>
+                🟢 Live GPS Satellite Connected
+              </span>
+            </div>
+
+            {/* Tracking Search Input */}
+            <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '1.75rem', maxWidth: '600px' }}>
+              <input
+                type="text"
+                defaultValue="LOG-884920-JKT"
+                placeholder="Enter Shipment Waybill / Container ID..."
+                style={{
+                  flex: 1,
+                  padding: '0.75rem 1.25rem',
+                  borderRadius: '12px',
+                  backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
+                  border: `1px solid ${isDarkMode ? '#334155' : '#CBD5E1'}`,
+                  color: isDarkMode ? '#F8FAFC' : '#0F172A',
+                  fontWeight: '600',
+                  fontSize: '0.9rem'
+                }}
+              />
+              <button
+                type="button"
+                style={{
+                  padding: '0.75rem 1.5rem',
+                  borderRadius: '12px',
+                  backgroundColor: primaryColor,
+                  color: '#FFFFFF',
+                  border: 'none',
+                  fontWeight: '700',
+                  cursor: 'pointer',
+                  boxShadow: `0 4px 14px ${primaryColor}40`
+                }}
+              >
+                Track Cargo
+              </button>
+            </div>
+
+            {/* Cargo Journey Progress Bar */}
+            <div style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', display: 'grid', gap: '1rem', marginBottom: '1.5rem' }}>
+              {[
+                { step: '1. Port Pickup', status: 'Completed', time: '08:30 WIB' },
+                { step: '2. Customs Clearance', status: 'Completed', time: '10:15 WIB' },
+                { step: '3. In-Transit Cargo', status: 'In Progress', time: 'Active Now' },
+                { step: '4. Destination Hub', status: 'Pending', time: 'ETA 14:00' }
+              ].map((s, i) => (
+                <div key={i} style={{ padding: '1rem', borderRadius: '12px', backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC', border: `1px solid ${s.status === 'In Progress' ? primaryColor : (isDarkMode ? '#334155' : '#E2E8F0')}` }}>
+                  <div style={{ fontSize: '0.75rem', fontWeight: '700', color: s.status === 'Completed' ? '#10B981' : (s.status === 'In Progress' ? primaryColor : 'var(--text-muted)') }}>
+                    {s.status}
+                  </div>
+                  <div style={{ fontWeight: '800', fontSize: '0.875rem', color: isDarkMode ? '#F8FAFC' : '#0F172A', marginTop: '0.2rem' }}>
+                    {s.step}
+                  </div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.15rem' }}>
+                    {s.time}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Live Container Telemetry Details */}
+            <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', paddingTop: '1rem', borderTop: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`, fontSize: '0.8rem', color: isDarkMode ? '#94A3B8' : '#64748B' }}>
+              <span>🌡️ Container Temp: <strong>4.2 °C (Cold Chain OK)</strong></span>
+              <span>📍 Location: <strong>Tanjung Priok, Jakarta (S 6°6'12" E 106°53'45")</strong></span>
+              <span>⚡ Carrier Speed: <strong>45 km/h</strong></span>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    // PLATFORM 3: GAMMA - AI VIDEO TRANSCODER & STREAM MONITOR WIDGET
+    if (flavorId === 'platform3') {
+      return (
+        <section style={{ maxWidth: '1280px', margin: '0 auto 4rem auto', padding: '0 2rem' }}>
+          <div style={{
+            backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
+            border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+            borderRadius: '20px',
+            padding: '2rem 2.25rem',
+            boxShadow: isDarkMode ? '0 20px 40px rgba(0,0,0,0.4)' : '0 12px 32px rgba(15, 23, 42, 0.08)'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+              <div>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: primaryColor, fontWeight: '700', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.25rem' }}>
+                  <FiZap /> Real-Time Transcode Telemetry
+                </div>
+                <h3 style={{ fontSize: '1.35rem', fontWeight: '800', margin: 0, color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+                  AI Multi-Format Video Encoding Engine
+                </h3>
+              </div>
+              <span style={{ padding: '0.35rem 0.85rem', borderRadius: '99px', backgroundColor: 'rgba(139, 92, 246, 0.15)', color: '#8B5CF6', border: '1px solid rgba(139, 92, 246, 0.3)', fontSize: '0.75rem', fontWeight: '700' }}>
+                🚀 Hardware Acceleration (NVENC Active)
+              </span>
+            </div>
+
+            {/* Live Transcode Gauges */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.25rem', marginBottom: '1.5rem' }}>
+              <div style={{ padding: '1.25rem', borderRadius: '14px', backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC', border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}` }}>
+                <div style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--text-muted)' }}>GPU UTILIZATION</div>
+                <div style={{ fontSize: '1.75rem', fontWeight: '800', color: primaryColor, marginTop: '0.25rem' }}>68%</div>
+                <div style={{ height: '6px', width: '100%', backgroundColor: `${primaryColor}25`, borderRadius: '99px', marginTop: '0.5rem', overflow: 'hidden' }}>
+                  <div style={{ width: '68%', height: '100%', backgroundColor: primaryColor, borderRadius: '99px' }} />
+                </div>
+              </div>
+
+              <div style={{ padding: '1.25rem', borderRadius: '14px', backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC', border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}` }}>
+                <div style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--text-muted)' }}>BITRATE STREAM</div>
+                <div style={{ fontSize: '1.75rem', fontWeight: '800', color: '#10B981', marginTop: '0.25rem' }}>14.8 Mbps</div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>4K H.265 / AV1 Adaptive</div>
+              </div>
+
+              <div style={{ padding: '1.25rem', borderRadius: '14px', backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC', border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}` }}>
+                <div style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--text-muted)' }}>TRANSCODE SPEED</div>
+                <div style={{ fontSize: '1.75rem', fontWeight: '800', color: '#F59E0B', marginTop: '0.25rem' }}>4.2x FPS</div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>250 FPS Real-time Render</div>
+              </div>
+            </div>
+
+            {/* Preset Output Badges */}
+            <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+              {['4K 2160p H.265', '1080p 60fps H.264', '720p HD WebM', 'Audio AAC 320kbps'].map((preset, i) => (
+                <span key={i} style={{ padding: '0.4rem 0.85rem', borderRadius: '8px', backgroundColor: isDarkMode ? '#0F172A' : '#F1F5F9', border: `1px solid ${isDarkMode ? '#334155' : '#CBD5E1'}`, fontSize: '0.8rem', fontWeight: '700', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+                  🎬 {preset}
+                </span>
+              ))}
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    // PLATFORM 4: DELTA - CLOUD INFRASTRUCTURE & CLUSTER HEALTH WIDGET
+    if (flavorId === 'platform4') {
+      return (
+        <section style={{ maxWidth: '1280px', margin: '0 auto 4rem auto', padding: '0 2rem' }}>
+          <div style={{
+            backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
+            border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+            borderRadius: '20px',
+            padding: '2rem 2.25rem',
+            boxShadow: isDarkMode ? '0 20px 40px rgba(0,0,0,0.4)' : '0 12px 32px rgba(15, 23, 42, 0.08)'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+              <div>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: primaryColor, fontWeight: '700', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.25rem' }}>
+                  <FiShield /> Multi-Node Cluster Telemetry
+                </div>
+                <h3 style={{ fontSize: '1.35rem', fontWeight: '800', margin: 0, color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+                  Enterprise Cloud Infrastructure Monitor
+                </h3>
+              </div>
+              <span style={{ padding: '0.35rem 0.85rem', borderRadius: '99px', backgroundColor: 'rgba(16, 185, 129, 0.15)', color: '#10B981', border: '1px solid rgba(16, 185, 129, 0.3)', fontSize: '0.75rem', fontWeight: '700' }}>
+                🛡️ 99.99% SLA Operational
+              </span>
+            </div>
+
+            {/* Cluster Nodes Grid */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.25rem', marginBottom: '1.5rem' }}>
+              {[
+                { name: 'Cluster Node 01 (Jakarta)', status: 'Healthy', load: '32%', latency: '8ms' },
+                { name: 'Cluster Node 02 (Singapore)', status: 'Healthy', load: '45%', latency: '14ms' },
+                { name: 'Cluster Node 03 (Tokyo)', status: 'Healthy', load: '28%', latency: '35ms' }
+              ].map((node, i) => (
+                <div key={i} style={{ padding: '1.25rem', borderRadius: '14px', backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC', border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}` }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                    <span style={{ fontSize: '0.8rem', fontWeight: '800', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>{node.name}</span>
+                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#10B981' }} />
+                  </div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Load: <strong>{node.load}</strong> | Latency: <strong>{node.latency}</strong></div>
+                  <div style={{ height: '5px', width: '100%', backgroundColor: `${primaryColor}25`, borderRadius: '99px', marginTop: '0.6rem', overflow: 'hidden' }}>
+                    <div style={{ width: node.load, height: '100%', backgroundColor: primaryColor, borderRadius: '99px' }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', paddingTop: '1rem', borderTop: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`, fontSize: '0.8rem', color: isDarkMode ? '#94A3B8' : '#64748B' }}>
+              <span>⚙️ Active Microservices: <strong>24 / 24 Healthy</strong></span>
+              <span>💾 DB Connections: <strong>38 / 100 Active</strong></span>
+              <span>🔐 SSL TLS 1.3: <strong>Valid (256-bit AES)</strong></span>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    // PLATFORM 1: MAIN DESKTOPALIE - LIVE DEVELOPER PROFILE & SYSTEM WIDGET
+    return (
+      <section style={{ maxWidth: '1280px', margin: '0 auto 4rem auto', padding: '0 2rem' }}>
+        <div style={{
+          backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
+          border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+          borderRadius: '20px',
+          padding: '2rem 2.25rem',
+          boxShadow: isDarkMode ? '0 20px 40px rgba(0,0,0,0.4)' : '0 12px 32px rgba(15, 23, 42, 0.08)'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+            <div>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: primaryColor, fontWeight: '700', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.25rem' }}>
+                <FiGlobe /> Developer Workspace & System Telemetry
+              </div>
+              <h3 style={{ fontSize: '1.35rem', fontWeight: '800', margin: 0, color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+                Desktopalie Core Ecosystem Status
+              </h3>
+            </div>
+            <span style={{ padding: '0.35rem 0.85rem', borderRadius: '99px', backgroundColor: 'rgba(16, 185, 129, 0.15)', color: '#10B981', border: '1px solid rgba(16, 185, 129, 0.3)', fontSize: '0.75rem', fontWeight: '700' }}>
+              🟢 All Systems Operational
+            </span>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.25rem', marginBottom: '1.5rem' }}>
+            <div style={{ padding: '1.25rem', borderRadius: '14px', backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC', border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}` }}>
+              <div style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--text-muted)' }}>BUILD ENGINE</div>
+              <div style={{ fontSize: '1.5rem', fontWeight: '800', color: primaryColor, marginTop: '0.25rem' }}>Vite 6.4</div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>React 19 Core</div>
+            </div>
+
+            <div style={{ padding: '1.25rem', borderRadius: '14px', backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC', border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}` }}>
+              <div style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--text-muted)' }}>DATABASE ENGINE</div>
+              <div style={{ fontSize: '1.5rem', fontWeight: '800', color: '#10B981', marginTop: '0.25rem' }}>Supabase DB</div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>PostgreSQL + RLS Enabled</div>
+            </div>
+
+            <div style={{ padding: '1.25rem', borderRadius: '14px', backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC', border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}` }}>
+              <div style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--text-muted)' }}>EDGE LATENCY</div>
+              <div style={{ fontSize: '1.5rem', fontWeight: '800', color: '#F59E0B', marginTop: '0.25rem' }}>12 ms</div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>Asia-Pacific Edge CDN</div>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+            {['ReactJS', 'Vite', 'Supabase', 'PostgreSQL', 'Tailwind', 'Antigravity CLI'].map((tech, i) => (
+              <span key={i} style={{ padding: '0.4rem 0.85rem', borderRadius: '8px', backgroundColor: isDarkMode ? '#0F172A' : '#F1F5F9', border: `1px solid ${isDarkMode ? '#334155' : '#CBD5E1'}`, fontSize: '0.8rem', fontWeight: '700', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+                ⚡ {tech}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  };
+
   return (
     <div style={{
       minHeight: '100vh',
@@ -737,6 +1011,9 @@ export default function PublicPlatformLanding() {
           </div>
         </div>
       </section>
+
+      {/* DYNAMIC INTERACTIVE PLATFORM TELEMETRY WIDGET */}
+      {renderPlatformWidget()}
 
       {/* FEATURED PROJECTS SHOWCASE */}
       <section id="projects" style={{
