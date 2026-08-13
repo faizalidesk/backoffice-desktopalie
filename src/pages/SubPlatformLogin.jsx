@@ -183,7 +183,7 @@ export default function SubPlatformLogin() {
         margin: '0 auto',
         padding: '2rem 2rem 4rem 2rem',
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(480px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
         gap: '4rem',
         alignItems: 'center',
         position: 'relative',
