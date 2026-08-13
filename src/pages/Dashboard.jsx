@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { backofficeService } from '../services/backofficeService';
 import { useFlavor } from '../context/FlavorContext';
+import { useAuth } from '../context/AuthContext';
+import { toast } from 'react-hot-toast';
 import { 
   FiFolder, 
   FiCpu, 
@@ -14,13 +16,52 @@ import {
   FiLayout, 
   FiActivity, 
   FiClock, 
-  FiExternalLink
+  FiExternalLink,
+  FiUser,
+  FiGlobe,
+  FiShield,
+  FiCopy,
+  FiCheck,
+  FiMail,
+  FiMapPin,
+  FiLayers
 } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 
 export default function Dashboard() {
   const { activeFlavor, flavorId } = useFlavor();
+  const { user } = useAuth();
+  const [copiedId, setCopiedId] = useState(false);
+  const [activeProfileTab, setActiveProfileTab] = useState('personal');
+
+  const defaultStudentBio = "I am a student with a strong interest in Information Systems, web development, UI/UX design, and digital technology. I enjoy learning new technologies, working on creative projects, and developing digital solutions that combine functionality, usability, and visual design.";
+
+  const [userProfile, setUserProfile] = useState(() => {
+    try {
+      const cached = localStorage.getItem('desktopalie_profile') || localStorage.getItem(`desktopalie_profile_${user?.id}`);
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        return {
+          full_name: parsed.full_name || 'Faiz ali',
+          username: parsed.username || 'faiezalie',
+          bio: parsed.bio || defaultStudentBio,
+          avatar_url: parsed.avatar_url || '',
+          location: parsed.location || 'Indonesia',
+          website: parsed.website || ''
+        };
+      }
+    } catch (e) {}
+    return {
+      full_name: 'Faiz ali',
+      username: 'faiezalie',
+      bio: defaultStudentBio,
+      avatar_url: '',
+      location: 'Indonesia',
+      website: ''
+    };
+  });
+
   const [stats, setStats] = useState({
     projectsCount: 0,
     experimentsCount: 0,
@@ -36,6 +77,43 @@ export default function Dashboard() {
   const [maintenance, setMaintenance] = useState(null);
   const [landing, setLanding] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchDashboardProfile() {
+      try {
+        const p = await backofficeService.getProfile(user?.id);
+        if (p) {
+          setUserProfile(prev => ({
+            ...prev,
+            full_name: p.full_name || prev.full_name || 'Faiz ali',
+            username: p.username || prev.username || 'faiezalie',
+            bio: p.bio || prev.bio || defaultStudentBio,
+            avatar_url: p.avatar_url || prev.avatar_url || '',
+            location: p.location || prev.location || 'Indonesia',
+            website: p.website || prev.website || ''
+          }));
+        }
+      } catch (e) {}
+    }
+
+    fetchDashboardProfile();
+
+    const handleStorage = (e) => {
+      if (!e || !e.key || e.key.includes('profile')) {
+        fetchDashboardProfile();
+      }
+    };
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
+  }, [user?.id]);
+
+  const copyUserId = () => {
+    const targetId = user?.id || '008e1946-712e-45ac-bb6e-3e9a1078ae64';
+    navigator.clipboard.writeText(targetId);
+    setCopiedId(true);
+    toast.success('User ID copied to clipboard!');
+    setTimeout(() => setCopiedId(false), 2000);
+  };
 
   useEffect(() => {
     loadDashboardData();
@@ -115,56 +193,233 @@ export default function Dashboard() {
       <Header title="Dashboard Overview" />
       <div className="page-body" style={{ paddingBottom: '4rem' }}>
         
-        {/* MINIMALIST WELCOME HEADER */}
+        {/* HERO PROFILE COVER BANNER */}
         <div style={{
-          backgroundColor: 'var(--bg-card)',
-          border: '1px solid var(--border-color)',
-          borderRadius: 'var(--radius-lg)',
-          padding: '1.75rem 2rem',
-          marginBottom: '1.75rem',
-          boxShadow: 'var(--shadow-sm)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          gap: '1.5rem'
+          position: 'relative',
+          borderRadius: '16px',
+          overflow: 'hidden',
+          backgroundColor: '#0F172A',
+          color: '#FFFFFF',
+          marginBottom: '2rem',
+          boxShadow: '0 8px 30px rgba(15, 23, 42, 0.12)'
         }}>
-          <div>
+          {/* Ambient Decorative Gradient & Glow */}
+          <div style={{
+            position: 'absolute',
+            top: '-50%',
+            left: '-10%',
+            width: '600px',
+            height: '400px',
+            borderRadius: '50%',
+            background: `radial-gradient(circle, ${primaryColor}66 0%, rgba(15, 23, 42, 0) 70%)`,
+            pointerEvents: 'none'
+          }} />
+          <div style={{
+            position: 'absolute',
+            top: '0',
+            right: '0',
+            width: '100%',
+            height: '100%',
+            backgroundImage: 'radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px)',
+            backgroundSize: '20px 20px',
+            pointerEvents: 'none'
+          }} />
+
+          {/* Banner Main Content */}
+          <div style={{ position: 'relative', zIndex: 2, padding: '2rem 2.25rem 1.5rem 2.25rem' }}>
             <div style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.4rem',
-              backgroundColor: 'var(--primary-light)',
-              padding: '0.2rem 0.6rem',
-              borderRadius: '99px',
-              fontSize: '0.725rem',
-              color: 'var(--primary)',
-              fontWeight: '700',
-              textTransform: 'uppercase',
-              letterSpacing: '0.05em',
-              marginBottom: '0.6rem'
+              display: 'flex',
+              alignItems: 'flex-start',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: '1.5rem'
             }}>
-              <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#22C55E' }} />
-              <span>{activeFlavor?.shortName ? `Platform ${activeFlavor.shortName} Active` : 'Synced Workspace'}</span>
+              
+              {/* Left Profile Identity */}
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1.5rem', flex: 1, minWidth: '300px' }}>
+                
+                {/* Avatar & Copy ID Column */}
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.85rem' }}>
+                  <div style={{ position: 'relative', width: '88px', height: '88px', flexShrink: 0 }}>
+                    <div style={{
+                      width: '100%',
+                      height: '100%',
+                      borderRadius: '50%',
+                      background: `linear-gradient(135deg, ${primaryColor}, #8B5CF6)`,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: '#FFFFFF',
+                      fontSize: '2.25rem',
+                      fontWeight: '800',
+                      border: '3.5px solid #FFFFFF',
+                      boxShadow: '0 8px 24px rgba(0, 0, 0, 0.25)',
+                      overflow: 'hidden'
+                    }}>
+                      {userProfile?.avatar_url ? (
+                        <img src={userProfile.avatar_url} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      ) : (
+                        userProfile?.full_name ? userProfile.full_name.charAt(0).toUpperCase() : (user?.email?.charAt(0).toUpperCase() || 'F')
+                      )}
+                    </div>
+
+                    {/* Status Indicator Dot */}
+                    <span style={{
+                      position: 'absolute',
+                      bottom: '1px',
+                      right: '1px',
+                      width: '20px',
+                      height: '20px',
+                      borderRadius: '50%',
+                      backgroundColor: '#10B981',
+                      border: '3px solid #0F172A',
+                      boxShadow: '0 2px 6px rgba(0, 0, 0, 0.35)',
+                      zIndex: 3
+                    }} title="Active Online" />
+                  </div>
+
+                  {/* Copy User ID Button */}
+                  <button
+                    type="button"
+                    onClick={copyUserId}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.4rem',
+                      padding: '0.35rem 0.75rem',
+                      borderRadius: '8px',
+                      backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                      border: '1px solid rgba(255, 255, 255, 0.15)',
+                      color: '#FFFFFF',
+                      fontSize: '0.75rem',
+                      fontWeight: '700',
+                      cursor: 'pointer',
+                      backdropFilter: 'blur(8px)',
+                      transition: 'all 0.2s ease',
+                      whiteSpace: 'nowrap'
+                    }}
+                  >
+                    {copiedId ? <FiCheck style={{ color: '#10B981' }} /> : <FiCopy />}
+                    <span>{copiedId ? 'ID Copied!' : 'Copy User ID'}</span>
+                  </button>
+                </div>
+
+                {/* Info Text Column */}
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.4rem', flexWrap: 'wrap' }}>
+                    <h1 style={{ fontSize: '1.6rem', fontWeight: '800', margin: 0, color: '#FFFFFF', letterSpacing: '-0.02em' }}>
+                      {userProfile?.full_name || 'Faiz ali'}
+                    </h1>
+                    <span style={{ fontSize: '0.9rem', color: '#94A3B8', fontWeight: '600' }}>
+                      @{userProfile?.username || 'faiezalie'}
+                    </span>
+                    <span style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.3rem',
+                      padding: '0.2rem 0.6rem',
+                      borderRadius: '99px',
+                      backgroundColor: 'rgba(16, 185, 129, 0.15)',
+                      color: '#34D399',
+                      border: '1px solid rgba(16, 185, 129, 0.3)',
+                      fontSize: '0.725rem',
+                      fontWeight: '700'
+                    }}>
+                      <FiShield style={{ fontSize: '0.75rem' }} />
+                      <span>Verified Admin</span>
+                    </span>
+                  </div>
+
+                  <p style={{ fontSize: '0.875rem', color: '#CBD5E1', margin: '0 0 0.85rem 0', lineHeight: '1.5', maxWidth: '850px' }}>
+                    {userProfile?.bio || defaultStudentBio}
+                  </p>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', flexWrap: 'wrap', fontSize: '0.8rem', color: '#94A3B8' }}>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                      <FiMail style={{ color: primaryColor }} />
+                      <span>{user?.email || '12@gmail.com'}</span>
+                    </span>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                      <FiMapPin style={{ color: '#F59E0B' }} />
+                      <span>{userProfile?.location || 'Indonesia'}</span>
+                    </span>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                      <FiLayers style={{ color: '#A855F7' }} />
+                      <span>Workspace: {activeFlavor?.shortName || 'Beta'}</span>
+                    </span>
+                  </div>
+                </div>
+
+              </div>
+
             </div>
-
-            <h1 style={{ fontSize: '1.6rem', fontWeight: '800', color: 'var(--text-main)', marginBottom: '0.35rem', letterSpacing: '-0.02em' }}>
-              {activeFlavor?.name ? `Welcome to ${activeFlavor.name}` : 'Welcome Back, Workspace Administrator'}
-            </h1>
-
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', maxWidth: '650px', margin: 0, lineHeight: '1.5' }}>
-              {activeFlavor?.description || 'Manage your public portfolio, landing page updates, QA sprint tasks, and system documentation in one centralized workspace.'}
-            </p>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-            <Link to="/todos" className="btn btn-primary">
-              <FiCheckSquare />
-              <span>To-Do Board</span>
+          {/* TABBED NAVIGATION HEADER */}
+          <div style={{
+            display: 'flex',
+            gap: '0.5rem',
+            padding: '0 2.25rem',
+            backgroundColor: 'rgba(15, 23, 42, 0.6)',
+            borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+            position: 'relative',
+            zIndex: 3
+          }}>
+            <Link
+              to="/profile"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                padding: '0.85rem 1.25rem',
+                fontSize: '0.85rem',
+                fontWeight: '700',
+                color: '#FFFFFF',
+                borderBottom: `2.5px solid ${primaryColor}`,
+                textDecoration: 'none',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              <FiUser style={{ fontSize: '1rem', color: primaryColor }} />
+              <span>Personal & Profile Details</span>
             </Link>
-            <Link to="/documentation" className="btn btn-secondary">
-              <FiBookOpen />
-              <span>Docs</span>
+
+            <Link
+              to="/profile"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                padding: '0.85rem 1.25rem',
+                fontSize: '0.85rem',
+                fontWeight: '600',
+                color: '#94A3B8',
+                borderBottom: '2.5px solid transparent',
+                textDecoration: 'none',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              <FiGlobe style={{ fontSize: '1rem' }} />
+              <span>Language & Regional</span>
+            </Link>
+
+            <Link
+              to="/profile"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                padding: '0.85rem 1.25rem',
+                fontSize: '0.85rem',
+                fontWeight: '600',
+                color: '#94A3B8',
+                borderBottom: '2.5px solid transparent',
+                textDecoration: 'none',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              <FiShield style={{ fontSize: '1rem' }} />
+              <span>Security & Metadata</span>
             </Link>
           </div>
         </div>
