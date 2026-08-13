@@ -20,7 +20,10 @@ import {
   FiEye, 
   FiRefreshCw, 
   FiLayers,
-  FiX
+  FiX,
+  FiCheckSquare,
+  FiEdit,
+  FiUser
 } from 'react-icons/fi';
 import { FaGoogle } from 'react-icons/fa';
 
@@ -33,6 +36,7 @@ export default function MembershipManager() {
   const [loading, setLoading] = useState(true);
   const [members, setMembers] = useState([]);
   const [selectedMember, setSelectedMember] = useState(null);
+  const [selectedIds, setSelectedIds] = useState([]);
 
   // Initial Demo Data Fallback
   const initialDemoMembers = [
@@ -40,7 +44,7 @@ export default function MembershipManager() {
       id: 'usr-google-881920',
       full_name: 'Faiz Ali (Administrator)',
       email: 'faizali.desk@gmail.com',
-      avatar_url: 'https://lh3.googleusercontent.com/a/ACg8ocI...',
+      avatar_url: 'https://ui-avatars.com/api/?name=Faiz+Ali&background=3B82F6&color=fff',
       provider: 'Google OAuth 2.0',
       platform: 'platform1',
       platformName: 'Desktopalie Main',
@@ -214,9 +218,65 @@ export default function MembershipManager() {
     return matchesFilter && matchesSearch;
   });
 
+  const visibleIds = filteredMembers.map(m => m.id);
+  const isAllSelected = visibleIds.length > 0 && visibleIds.every(id => selectedIds.includes(id));
+
+  // Toggle single selection
+  const handleToggleSelect = (id) => {
+    setSelectedIds(prev => 
+      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
+    );
+  };
+
+  // Toggle Select All Visible Members
+  const handleToggleSelectAll = () => {
+    if (isAllSelected) {
+      setSelectedIds(prev => prev.filter(id => !visibleIds.includes(id)));
+    } else {
+      const combined = new Set([...selectedIds, ...visibleIds]);
+      setSelectedIds(Array.from(combined));
+    }
+  };
+
+  // Bulk Delete Selected Members
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) return;
+    if (window.confirm(`Apakah Anda yakin ingin menghapus ${selectedIds.length} akun anggota terpilih secara bersamaan?`)) {
+      setMembers(prev => prev.filter(m => !selectedIds.includes(m.id)));
+      
+      // Update local storage
+      try {
+        const registryStr = localStorage.getItem('desktopalie_members_registry');
+        if (registryStr) {
+          const arr = JSON.parse(registryStr);
+          const updated = arr.filter(m => !selectedIds.includes(m.id));
+          localStorage.setItem('desktopalie_members_registry', JSON.stringify(updated));
+        }
+      } catch (e) {}
+
+      // Delete from Supabase profiles if possible
+      try {
+        await supabase.from('profiles').delete().in('id', selectedIds);
+      } catch (e) {}
+
+      toast.success(`Berhasil menghapus ${selectedIds.length} akun anggota terpilih.`);
+      setSelectedIds([]);
+    }
+  };
+
+  // Bulk Role Update
+  const handleBulkRoleUpdate = (newRole) => {
+    if (selectedIds.length === 0) return;
+    setMembers(prev => prev.map(m => 
+      selectedIds.includes(m.id) ? { ...m, role: newRole } : m
+    ));
+    toast.success(`Role ${selectedIds.length} akun terpilih diperbarui menjadi "${newRole}".`);
+  };
+
   const handleDeleteMember = (id) => {
     if (window.confirm('Apakah Anda yakin ingin menghapus akun anggota ini?')) {
       setMembers(members.filter(m => m.id !== id));
+      setSelectedIds(selectedIds.filter(i => i !== id));
       toast.success('Anggota berhasil dihapus.');
       setSelectedMember(null);
     }
@@ -236,68 +296,6 @@ export default function MembershipManager() {
     link.click();
     document.body.removeChild(link);
     toast.success('Data membership berhasil diekspor ke CSV!');
-  };
-
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [addName, setAddName] = useState('');
-  const [addEmail, setAddEmail] = useState('');
-  const [addPlatform, setAddPlatform] = useState('platform1');
-  const [addProvider, setAddProvider] = useState('Google OAuth 2.0');
-
-  const handleAddManualMember = async (e) => {
-    e.preventDefault();
-    if (!addEmail) {
-      toast.error('Masukkan alamat email');
-      return;
-    }
-
-    const platformNameMap = {
-      platform1: 'Desktopalie Main',
-      platform2: 'Desktopalie Beta',
-      platform3: 'Desktopalie Gamma',
-      platform4: 'Desktopalie Delta'
-    };
-
-    const newMemberPayload = {
-      id: `usr-manual-${Date.now()}`,
-      email: addEmail,
-      full_name: addName || addEmail.split('@')[0],
-      avatar_url: `https://ui-avatars.com/api/?name=${encodeURIComponent(addName || addEmail)}`,
-      provider: addProvider,
-      platform: addPlatform,
-      platformName: platformNameMap[addPlatform] || 'Desktopalie Main',
-      role: 'Member',
-      status: 'Active',
-      created_at: new Date().toISOString(),
-      last_login: 'Baru Saja'
-    };
-
-    // 1. Save to localStorage registry
-    const registryStr = localStorage.getItem('desktopalie_members_registry');
-    let registry = registryStr ? JSON.parse(registryStr) : [];
-    registry.unshift(newMemberPayload);
-    localStorage.setItem('desktopalie_members_registry', JSON.stringify(registry));
-    window.dispatchEvent(new Event('storage'));
-
-    // 2. Save to Supabase site_settings table
-    try {
-      await backofficeService.saveSiteSetting(`member_${newMemberPayload.id}`, newMemberPayload);
-      await supabase.from('profiles').upsert([{
-        id: newMemberPayload.id,
-        full_name: newMemberPayload.full_name,
-        avatar_url: newMemberPayload.avatar_url,
-        role: 'Member',
-        updated_at: new Date().toISOString()
-      }]);
-    } catch (err) {
-      console.warn('Manual member add warning:', err);
-    }
-
-    toast.success(`Berhasil mendaftarkan akun ${newMemberPayload.email}!`);
-    setShowAddModal(false);
-    setAddName('');
-    setAddEmail('');
-    fetchMembers();
   };
 
   return (
@@ -503,6 +501,118 @@ export default function MembershipManager() {
           </div>
         </div>
 
+        {/* BULK ACTION TOOLBAR (WHEN MEMBERS ARE CHECKED/SELECTED) */}
+        {selectedIds.length > 0 && (
+          <div style={{
+            backgroundColor: isDarkMode ? '#0F172A' : '#EFF6FF',
+            border: `1.5px solid ${isDarkMode ? '#3B82F6' : '#93C5FD'}`,
+            borderRadius: '16px',
+            padding: '1rem 1.5rem',
+            marginBottom: '1.5rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '1rem',
+            boxShadow: '0 8px 24px rgba(59, 130, 246, 0.15)'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <div style={{
+                padding: '0.35rem 0.85rem',
+                borderRadius: '99px',
+                backgroundColor: '#3B82F6',
+                color: '#FFFFFF',
+                fontWeight: '800',
+                fontSize: '0.825rem',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.4rem'
+              }}>
+                <FiCheckSquare />
+                <span>{selectedIds.length} AKUN TERPILIH</span>
+              </div>
+              <span style={{ fontSize: '0.875rem', fontWeight: '600', color: isDarkMode ? '#94A3B8' : '#475569' }}>
+                Pilih tindakan edit masal:
+              </span>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+              <button
+                type="button"
+                onClick={() => handleBulkRoleUpdate('Administrator')}
+                style={{
+                  padding: '0.55rem 1rem',
+                  borderRadius: '10px',
+                  backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
+                  color: '#3B82F6',
+                  border: `1px solid ${isDarkMode ? '#334155' : '#CBD5E1'}`,
+                  fontWeight: '700',
+                  fontSize: '0.8rem',
+                  cursor: 'pointer'
+                }}
+              >
+                Set Role Admin
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleBulkRoleUpdate('Member')}
+                style={{
+                  padding: '0.55rem 1rem',
+                  borderRadius: '10px',
+                  backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
+                  color: '#10B981',
+                  border: `1px solid ${isDarkMode ? '#334155' : '#CBD5E1'}`,
+                  fontWeight: '700',
+                  fontSize: '0.8rem',
+                  cursor: 'pointer'
+                }}
+              >
+                Set Role Member
+              </button>
+
+              <button
+                type="button"
+                onClick={handleBulkDelete}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  padding: '0.55rem 1.15rem',
+                  borderRadius: '10px',
+                  backgroundColor: '#EF4444',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  fontWeight: '800',
+                  fontSize: '0.825rem',
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 14px rgba(239, 68, 68, 0.4)'
+                }}
+              >
+                <FiTrash2 />
+                <span>Hapus Terpilih ({selectedIds.length})</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setSelectedIds([])}
+                style={{
+                  padding: '0.55rem 0.85rem',
+                  borderRadius: '10px',
+                  backgroundColor: 'transparent',
+                  color: isDarkMode ? '#94A3B8' : '#64748B',
+                  border: 'none',
+                  fontWeight: '700',
+                  fontSize: '0.8rem',
+                  cursor: 'pointer'
+                }}
+              >
+                Batalkan Pilih
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* MEMBERS TABLE CARD */}
         <div style={{
           backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
@@ -521,6 +631,22 @@ export default function MembershipManager() {
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
               <thead>
                 <tr style={{ borderBottom: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`, textAlign: 'left', color: 'var(--text-muted)' }}>
+                  {/* SELECT ALL CHECKBOX COLUMN */}
+                  <th style={{ padding: '0.85rem 1rem', width: '40px' }}>
+                    <input
+                      type="checkbox"
+                      checked={isAllSelected}
+                      onChange={handleToggleSelectAll}
+                      style={{
+                        width: '18px',
+                        height: '18px',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        accentColor: '#3B82F6'
+                      }}
+                      title="Pilih Semua Akun"
+                    />
+                  </th>
                   <th style={{ padding: '0.85rem 1rem' }}>PENGGUNA</th>
                   <th style={{ padding: '0.85rem 1rem' }}>EMAIL</th>
                   <th style={{ padding: '0.85rem 1rem' }}>METODE AUTH</th>
@@ -533,118 +659,144 @@ export default function MembershipManager() {
               <tbody>
                 {filteredMembers.length === 0 ? (
                   <tr>
-                    <td colSpan={7} style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>
+                    <td colSpan={8} style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>
                       Tidak ada pengguna yang cocok dengan pencarian / filter platform ini.
                     </td>
                   </tr>
                 ) : (
-                  filteredMembers.map((row) => (
-                    <tr key={row.id} style={{ borderBottom: `1px solid ${isDarkMode ? '#334155' : '#F1F5F9'}` }}>
-                      {/* User Info */}
-                      <td style={{ padding: '0.9rem 1rem' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                          <img
-                            src={row.avatar_url}
-                            alt="Avatar"
-                            style={{ width: '38px', height: '38px', borderRadius: '50%', objectFit: 'cover', border: '1.5px solid #3B82F6' }}
+                  filteredMembers.map((row) => {
+                    const isChecked = selectedIds.includes(row.id);
+                    return (
+                      <tr 
+                        key={row.id} 
+                        style={{ 
+                          borderBottom: `1px solid ${isDarkMode ? '#334155' : '#F1F5F9'}`,
+                          backgroundColor: isChecked ? (isDarkMode ? 'rgba(59, 130, 246, 0.1)' : '#F0F9FF') : 'transparent',
+                          transition: 'background-color 0.15s ease'
+                        }}
+                      >
+                        {/* CHECKBOX */}
+                        <td style={{ padding: '0.9rem 1rem' }}>
+                          <input
+                            type="checkbox"
+                            checked={isChecked}
+                            onChange={() => handleToggleSelect(row.id)}
+                            style={{
+                              width: '18px',
+                              height: '18px',
+                              borderRadius: '4px',
+                              cursor: 'pointer',
+                              accentColor: '#3B82F6'
+                            }}
                           />
-                          <div>
-                            <div style={{ fontWeight: '800', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>{row.full_name}</div>
-                            <div style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>ID: {row.id.slice(0, 12)}...</div>
+                        </td>
+
+                        {/* User Info */}
+                        <td style={{ padding: '0.9rem 1rem' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                            <img
+                              src={row.avatar_url}
+                              alt="Avatar"
+                              style={{ width: '38px', height: '38px', borderRadius: '50%', objectFit: 'cover', border: '1.5px solid #3B82F6' }}
+                            />
+                            <div>
+                              <div style={{ fontWeight: '800', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>{row.full_name}</div>
+                              <div style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>ID: {row.id.slice(0, 12)}...</div>
+                            </div>
                           </div>
-                        </div>
-                      </td>
+                        </td>
 
-                      {/* Email */}
-                      <td style={{ padding: '0.9rem 1rem', fontWeight: '600' }}>{row.email}</td>
+                        {/* Email */}
+                        <td style={{ padding: '0.9rem 1rem', fontWeight: '600' }}>{row.email}</td>
 
-                      {/* Auth Provider */}
-                      <td style={{ padding: '0.9rem 1rem' }}>
-                        <span style={{
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '0.35rem',
-                          padding: '0.25rem 0.65rem',
-                          borderRadius: '99px',
-                          backgroundColor: row.provider.includes('Google') ? 'rgba(234, 67, 53, 0.12)' : 'rgba(59, 130, 246, 0.12)',
-                          color: row.provider.includes('Google') ? '#EA4335' : '#3B82F6',
-                          fontWeight: '700',
-                          fontSize: '0.75rem'
-                        }}>
-                          {row.provider.includes('Google') ? <FaGoogle /> : <FiMail />}
-                          <span>{row.provider}</span>
-                        </span>
-                      </td>
+                        {/* Auth Provider */}
+                        <td style={{ padding: '0.9rem 1rem' }}>
+                          <span style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.35rem',
+                            padding: '0.25rem 0.65rem',
+                            borderRadius: '99px',
+                            backgroundColor: row.provider.includes('Google') ? 'rgba(234, 67, 53, 0.12)' : 'rgba(59, 130, 246, 0.12)',
+                            color: row.provider.includes('Google') ? '#EA4335' : '#3B82F6',
+                            fontWeight: '700',
+                            fontSize: '0.75rem'
+                          }}>
+                            {row.provider.includes('Google') ? <FaGoogle /> : <FiMail />}
+                            <span>{row.provider}</span>
+                          </span>
+                        </td>
 
-                      {/* Platform Origin Badge */}
-                      <td style={{ padding: '0.9rem 1rem' }}>
-                        <span style={{
-                          padding: '0.25rem 0.65rem',
-                          borderRadius: '99px',
-                          backgroundColor: row.platform === 'platform2' ? 'rgba(16, 185, 129, 0.15)' : (row.platform === 'platform3' ? 'rgba(139, 92, 246, 0.15)' : (row.platform === 'platform4' ? 'rgba(245, 158, 11, 0.15)' : 'rgba(59, 130, 246, 0.15)')),
-                          color: row.platform === 'platform2' ? '#10B981' : (row.platform === 'platform3' ? '#8B5CF6' : (row.platform === 'platform4' ? '#F59E0B' : '#3B82F6')),
-                          fontWeight: '800',
-                          fontSize: '0.75rem'
-                        }}>
-                          {row.platformName}
-                        </span>
-                      </td>
+                        {/* Platform Origin Badge */}
+                        <td style={{ padding: '0.9rem 1rem' }}>
+                          <span style={{
+                            padding: '0.25rem 0.65rem',
+                            borderRadius: '99px',
+                            backgroundColor: row.platform === 'platform2' ? 'rgba(16, 185, 129, 0.15)' : (row.platform === 'platform3' ? 'rgba(139, 92, 246, 0.15)' : (row.platform === 'platform4' ? 'rgba(245, 158, 11, 0.15)' : 'rgba(59, 130, 246, 0.15)')),
+                            color: row.platform === 'platform2' ? '#10B981' : (row.platform === 'platform3' ? '#8B5CF6' : (row.platform === 'platform4' ? '#F59E0B' : '#3B82F6')),
+                            fontWeight: '800',
+                            fontSize: '0.75rem'
+                          }}>
+                            {row.platformName}
+                          </span>
+                        </td>
 
-                      {/* Role */}
-                      <td style={{ padding: '0.9rem 1rem', fontWeight: '700' }}>{row.role}</td>
+                        {/* Role */}
+                        <td style={{ padding: '0.9rem 1rem', fontWeight: '700' }}>{row.role}</td>
 
-                      {/* Status */}
-                      <td style={{ padding: '0.9rem 1rem' }}>
-                        <span style={{
-                          padding: '0.2rem 0.6rem',
-                          borderRadius: '99px',
-                          backgroundColor: 'rgba(16, 185, 129, 0.15)',
-                          color: '#10B981',
-                          fontWeight: '700',
-                          fontSize: '0.725rem'
-                        }}>
-                          ● {row.status}
-                        </span>
-                      </td>
+                        {/* Status */}
+                        <td style={{ padding: '0.9rem 1rem' }}>
+                          <span style={{
+                            padding: '0.2rem 0.6rem',
+                            borderRadius: '99px',
+                            backgroundColor: 'rgba(16, 185, 129, 0.15)',
+                            color: '#10B981',
+                            fontWeight: '700',
+                            fontSize: '0.725rem'
+                          }}>
+                            ● {row.status}
+                          </span>
+                        </td>
 
-                      {/* Actions */}
-                      <td style={{ padding: '0.9rem 1rem' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                          <button
-                            type="button"
-                            onClick={() => setSelectedMember(row)}
-                            style={{
-                              padding: '0.45rem 0.65rem',
-                              borderRadius: '8px',
-                              backgroundColor: isDarkMode ? '#0F172A' : '#F1F5F9',
-                              border: `1px solid ${isDarkMode ? '#334155' : '#CBD5E1'}`,
-                              color: isDarkMode ? '#F8FAFC' : '#0F172A',
-                              cursor: 'pointer'
-                            }}
-                            title="Detail Profil Pengguna"
-                          >
-                            <FiEye />
-                          </button>
+                        {/* Actions */}
+                        <td style={{ padding: '0.9rem 1rem' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <button
+                              type="button"
+                              onClick={() => setSelectedMember(row)}
+                              style={{
+                                padding: '0.45rem 0.65rem',
+                                borderRadius: '8px',
+                                backgroundColor: isDarkMode ? '#0F172A' : '#F1F5F9',
+                                border: `1px solid ${isDarkMode ? '#334155' : '#CBD5E1'}`,
+                                color: isDarkMode ? '#F8FAFC' : '#0F172A',
+                                cursor: 'pointer'
+                              }}
+                              title="Detail Profil Pengguna"
+                            >
+                              <FiEye />
+                            </button>
 
-                          <button
-                            type="button"
-                            onClick={() => handleDeleteMember(row.id)}
-                            style={{
-                              padding: '0.45rem 0.65rem',
-                              borderRadius: '8px',
-                              backgroundColor: 'rgba(239, 68, 68, 0.12)',
-                              border: 'none',
-                              color: '#EF4444',
-                              cursor: 'pointer'
-                            }}
-                            title="Hapus Pengguna"
-                          >
-                            <FiTrash2 />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteMember(row.id)}
+                              style={{
+                                padding: '0.45rem 0.65rem',
+                                borderRadius: '8px',
+                                backgroundColor: 'rgba(239, 68, 68, 0.12)',
+                                border: 'none',
+                                color: '#EF4444',
+                                cursor: 'pointer'
+                              }}
+                              title="Hapus Pengguna"
+                            >
+                              <FiTrash2 />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
                 )}
               </tbody>
             </table>
@@ -751,147 +903,6 @@ export default function MembershipManager() {
               >
                 Tutup Profil
               </button>
-            </div>
-          </div>
-        )}
-
-        {/* MANUAL ADD MEMBER MODAL */}
-        {showAddModal && (
-          <div style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(0,0,0,0.6)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1000,
-            backdropFilter: 'blur(4px)',
-            padding: '1rem'
-          }}>
-            <div style={{
-              width: '100%',
-              maxWidth: '460px',
-              backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-              border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
-              borderRadius: '24px',
-              padding: '2rem',
-              boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)',
-              position: 'relative'
-            }}>
-              <button
-                type="button"
-                onClick={() => setShowAddModal(false)}
-                style={{
-                  position: 'absolute',
-                  top: '1.25rem',
-                  right: '1.25rem',
-                  background: 'none',
-                  border: 'none',
-                  color: 'var(--text-muted)',
-                  fontSize: '1.25rem',
-                  cursor: 'pointer'
-                }}
-              >
-                <FiX />
-              </button>
-
-              <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '1.25rem', fontWeight: '800', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
-                ➕ Tambah / Sync Akun Pengguna Manual
-              </h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1.5rem' }}>
-                Masukkan data pengguna untuk didaftarkan langsung ke dalam direktori keanggotaan Supabase.
-              </p>
-
-              <form onSubmit={handleAddManualMember}>
-                <div style={{ marginBottom: '1rem' }}>
-                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '0.35rem' }}>
-                    Email Pengguna
-                  </label>
-                  <input
-                    type="email"
-                    required
-                    value={addEmail}
-                    onChange={(e) => setAddEmail(e.target.value)}
-                    placeholder="user@gmail.com"
-                    style={{
-                      width: '100%',
-                      padding: '0.75rem 1rem',
-                      borderRadius: '12px',
-                      backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
-                      border: `1px solid ${isDarkMode ? '#334155' : '#CBD5E1'}`,
-                      color: isDarkMode ? '#F8FAFC' : '#0F172A',
-                      fontSize: '0.9rem'
-                    }}
-                  />
-                </div>
-
-                <div style={{ marginBottom: '1rem' }}>
-                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '0.35rem' }}>
-                    Nama Lengkap
-                  </label>
-                  <input
-                    type="text"
-                    value={addName}
-                    onChange={(e) => setAddName(e.target.value)}
-                    placeholder="Contoh: Budi Santoso"
-                    style={{
-                      width: '100%',
-                      padding: '0.75rem 1rem',
-                      borderRadius: '12px',
-                      backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
-                      border: `1px solid ${isDarkMode ? '#334155' : '#CBD5E1'}`,
-                      color: isDarkMode ? '#F8FAFC' : '#0F172A',
-                      fontSize: '0.9rem'
-                    }}
-                  />
-                </div>
-
-                <div style={{ marginBottom: '1.5rem' }}>
-                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '0.35rem' }}>
-                    Asal Platform Target
-                  </label>
-                  <select
-                    value={addPlatform}
-                    onChange={(e) => setAddPlatform(e.target.value)}
-                    style={{
-                      width: '100%',
-                      padding: '0.75rem 1rem',
-                      borderRadius: '12px',
-                      backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
-                      border: `1px solid ${isDarkMode ? '#334155' : '#CBD5E1'}`,
-                      color: isDarkMode ? '#F8FAFC' : '#0F172A',
-                      fontSize: '0.9rem',
-                      fontWeight: '600'
-                    }}
-                  >
-                    <option value="platform1">Desktopalie Main (Website Utama)</option>
-                    <option value="platform2">Desktopalie Beta (Smart Logistics)</option>
-                    <option value="platform3">Desktopalie Gamma (AI Video Transcoder)</option>
-                    <option value="platform4">Desktopalie Delta (Enterprise Cloud ERP)</option>
-                  </select>
-                </div>
-
-                <button
-                  type="submit"
-                  style={{
-                    width: '100%',
-                    padding: '0.85rem',
-                    borderRadius: '12px',
-                    backgroundColor: '#10B981',
-                    color: '#FFFFFF',
-                    border: 'none',
-                    fontWeight: '800',
-                    fontSize: '0.95rem',
-                    cursor: 'pointer',
-                    boxShadow: '0 4px 14px rgba(16, 185, 129, 0.4)'
-                  }}
-                >
-                  Simpan Akun Anggota
-                </button>
-              </form>
             </div>
           </div>
         )}
