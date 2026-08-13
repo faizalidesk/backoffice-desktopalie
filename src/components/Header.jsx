@@ -21,22 +21,35 @@ import {
   FiCheckCircle,
   FiAlertCircle,
   FiInfo,
-  FiTrash2
+  FiTrash2,
+  FiX,
+  FiClock,
+  FiLayers
 } from 'react-icons/fi';
 
-function formatTimeAgo(dateString) {
+function formatFullDateTime(dateString) {
   if (!dateString) return '';
-  const date = new Date(dateString);
-  const now = new Date();
-  const seconds = Math.floor((now - date) / 1000);
-  if (seconds < 60) return 'Baru saja';
-  const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) return `${minutes}m lalu`;
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}j lalu`;
-  const days = Math.floor(hours / 24);
-  return `${days}h lalu`;
+  try {
+    const d = new Date(dateString);
+    return d.toLocaleString('id-ID', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    }) + ' WIB';
+  } catch (e) {
+    return dateString;
+  }
 }
+
+const PLATFORM_LABELS = {
+  all: { name: 'Semua Platform (Broadcast)', bg: '#F43F5E', color: '#FFFFFF' },
+  platform1: { name: 'Platform 1 - Alpha (Main)', bg: '#3B82F6', color: '#FFFFFF' },
+  platform2: { name: 'Platform 2 - Beta Logistics', bg: '#10B981', color: '#FFFFFF' },
+  platform3: { name: 'Platform 3 - Gamma Video Streaming', bg: '#8B5CF6', color: '#FFFFFF' },
+  platform4: { name: 'Platform 4 - Delta Financial ERP', bg: '#F59E0B', color: '#FFFFFF' }
+};
 
 export default function Header({ title = 'Dashboard Overview' }) {
   const { user, logout } = useAuth();
@@ -113,15 +126,15 @@ export default function Header({ title = 'Dashboard Overview' }) {
     logout();
   };
 
+  const [selectedNotif, setSelectedNotif] = useState(null);
+
   const unreadCount = notifications.filter(n => !n.read).length;
   const filteredNotifs = notifFilter === 'unread' ? notifications.filter(n => !n.read) : notifications;
 
   const handleNotifClick = (notif) => {
     notificationService.markAsRead(notif.id);
-    if (notif.link) {
-      setNotifOpen(false);
-      navigate(notif.link);
-    }
+    setSelectedNotif(notif);
+    setNotifOpen(false);
   };
 
   return (
@@ -754,6 +767,217 @@ export default function Header({ title = 'Dashboard Overview' }) {
         </div>
 
       </div>
+
+      {/* DETAIL NOTIFICATION POPUP MODAL (POPUP LENGKAP PEMBAHASAN) */}
+      {selectedNotif && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(15, 23, 42, 0.75)',
+          backdropFilter: 'blur(6px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 99999,
+          padding: '1.25rem'
+        }}>
+          <div style={{
+            width: '100%',
+            maxWidth: '540px',
+            backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
+            border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+            borderRadius: '20px',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.35)',
+            overflow: 'hidden',
+            animation: 'fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
+          }}>
+            {/* Modal Header */}
+            <div style={{
+              padding: '1.25rem 1.5rem',
+              borderBottom: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <FiBell style={{ color: 'var(--primary)', fontSize: '1.2rem' }} />
+                <span style={{ fontWeight: '800', fontSize: '1rem', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+                  Detail & Rincian Notifikasi
+                </span>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setSelectedNotif(null)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: isDarkMode ? '#94A3B8' : '#64748B',
+                  cursor: 'pointer',
+                  fontSize: '1.25rem',
+                  padding: '0.2rem',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                <FiX />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div style={{ padding: '1.5rem 1.75rem' }}>
+              {/* Target Platform Tag */}
+              {(() => {
+                const pInfo = PLATFORM_LABELS[selectedNotif.platformId || 'all'] || PLATFORM_LABELS.all;
+                const Icon = selectedNotif.type === 'success' ? FiCheckCircle : selectedNotif.type === 'warning' ? FiAlertCircle : FiInfo;
+                const iconColor = selectedNotif.type === 'success' ? '#10B981' : selectedNotif.type === 'warning' ? '#F59E0B' : '#3B82F6';
+
+                return (
+                  <>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                      <span style={{
+                        backgroundColor: pInfo.bg,
+                        color: pInfo.color,
+                        fontSize: '0.725rem',
+                        fontWeight: '800',
+                        padding: '0.25rem 0.75rem',
+                        borderRadius: '99px',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.4rem'
+                      }}>
+                        <FiLayers style={{ fontSize: '0.8rem' }} />
+                        <span>{pInfo.name}</span>
+                      </span>
+
+                      <span style={{
+                        backgroundColor: `${iconColor}18`,
+                        color: iconColor,
+                        fontSize: '0.725rem',
+                        fontWeight: '800',
+                        padding: '0.25rem 0.75rem',
+                        borderRadius: '99px',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.35rem'
+                      }}>
+                        <Icon />
+                        <span style={{ textTransform: 'capitalize' }}>{selectedNotif.type}</span>
+                      </span>
+                    </div>
+
+                    <h2 style={{
+                      fontSize: '1.25rem',
+                      fontWeight: '800',
+                      color: isDarkMode ? '#F8FAFC' : '#0F172A',
+                      margin: '0 0 1rem 0',
+                      lineHeight: 1.35
+                    }}>
+                      {selectedNotif.title}
+                    </h2>
+
+                    {/* Detailed Message Box */}
+                    <div style={{
+                      backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
+                      border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+                      borderRadius: '14px',
+                      padding: '1.25rem',
+                      marginBottom: '1.25rem'
+                    }}>
+                      <div style={{ fontSize: '0.75rem', fontWeight: '700', color: isDarkMode ? '#94A3B8' : '#64748B', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                        Isi & Pembahasan Lengkap:
+                      </div>
+                      <p style={{
+                        fontSize: '0.925rem',
+                        lineHeight: 1.65,
+                        color: isDarkMode ? '#E2E8F0' : '#334155',
+                        margin: 0,
+                        whiteSpace: 'pre-wrap'
+                      }}>
+                        {selectedNotif.message}
+                      </p>
+                    </div>
+
+                    {/* Timestamp Details */}
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      fontSize: '0.78rem',
+                      color: isDarkMode ? '#94A3B8' : '#64748B'
+                    }}>
+                      <FiClock />
+                      <span>Diterbitkan: <strong>{formatFullDateTime(selectedNotif.timestamp)}</strong></span>
+                    </div>
+                  </>
+                );
+              })()}
+            </div>
+
+            {/* Modal Footer Actions */}
+            <div style={{
+              padding: '1rem 1.75rem',
+              borderTop: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+              backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'flex-end',
+              gap: '0.75rem'
+            }}>
+              {selectedNotif.link && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    const link = selectedNotif.link;
+                    setSelectedNotif(null);
+                    navigate(link);
+                  }}
+                  style={{
+                    padding: '0.55rem 1.25rem',
+                    borderRadius: '10px',
+                    backgroundColor: 'var(--primary)',
+                    color: '#FFFFFF',
+                    border: 'none',
+                    fontWeight: '700',
+                    fontSize: '0.85rem',
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    boxShadow: '0 4px 12px rgba(59, 130, 246, 0.35)'
+                  }}
+                >
+                  <span>Buka Modul / Halaman Target</span>
+                  <FiExternalLink />
+                </button>
+              )}
+
+              <button
+                type="button"
+                onClick={() => setSelectedNotif(null)}
+                style={{
+                  padding: '0.55rem 1.25rem',
+                  borderRadius: '10px',
+                  backgroundColor: isDarkMode ? '#334155' : '#E2E8F0',
+                  color: isDarkMode ? '#F8FAFC' : '#0F172A',
+                  border: 'none',
+                  fontWeight: '700',
+                  fontSize: '0.85rem',
+                  cursor: 'pointer'
+                }}
+              >
+                Tutup
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 }

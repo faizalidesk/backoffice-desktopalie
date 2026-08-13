@@ -60,6 +60,7 @@ export default function NotificationsManager() {
   const [filterType, setFilterType] = useState('all'); // 'all' | 'unread' | 'info' | 'warning' | 'success'
   const [searchQuery, setSearchQuery] = useState('');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [selectedNotifForDetail, setSelectedNotifForDetail] = useState(null);
 
   // Form State for New Notification
   const [targetPlatform, setTargetPlatform] = useState(flavorId || 'platform1');
@@ -654,6 +655,19 @@ export default function NotificationsManager() {
 
                     {/* Actions */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+                      <button
+                        type="button"
+                        className="btn btn-primary btn-sm"
+                        onClick={() => {
+                          handleMarkAsRead(item.id);
+                          setSelectedNotifForDetail(item);
+                        }}
+                        style={{ padding: '0.25rem 0.65rem', fontSize: '0.775rem' }}
+                      >
+                        <FiInfo style={{ fontSize: '0.75rem' }} />
+                        <span>Lihat Detail & Pembahasan</span>
+                      </button>
+
                       {item.link && (
                         <button
                           type="button"
@@ -827,6 +841,121 @@ export default function NotificationsManager() {
             </button>
           </div>
         </form>
+      </Modal>
+
+      {/* DETAIL NOTIFICATION POPUP MODAL (POPUP LENGKAP PEMBAHASAN) */}
+      <Modal
+        isOpen={!!selectedNotifForDetail}
+        onClose={() => setSelectedNotifForDetail(null)}
+        title="Detail & Rincian Pembahasan Notifikasi"
+      >
+        {selectedNotifForDetail && (() => {
+          const pInfo = PLATFORM_LABELS[selectedNotifForDetail.platformId || 'all'] || PLATFORM_LABELS.all;
+          const Icon = selectedNotifForDetail.type === 'success' ? FiCheckCircle : selectedNotifForDetail.type === 'warning' ? FiAlertCircle : FiInfo;
+          const iconColor = selectedNotifForDetail.type === 'success' ? '#10B981' : selectedNotifForDetail.type === 'warning' ? '#F59E0B' : '#3B82F6';
+
+          return (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
+                <span style={{
+                  backgroundColor: pInfo.bg,
+                  color: pInfo.color,
+                  fontSize: '0.75rem',
+                  fontWeight: '800',
+                  padding: '0.25rem 0.75rem',
+                  borderRadius: '99px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.4rem'
+                }}>
+                  <FiLayers />
+                  <span>{pInfo.name}</span>
+                </span>
+
+                <span style={{
+                  backgroundColor: `${iconColor}18`,
+                  color: iconColor,
+                  fontSize: '0.75rem',
+                  fontWeight: '800',
+                  padding: '0.25rem 0.75rem',
+                  borderRadius: '99px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.35rem'
+                }}>
+                  <Icon />
+                  <span style={{ textTransform: 'capitalize' }}>{selectedNotifForDetail.type}</span>
+                </span>
+              </div>
+
+              <h2 style={{
+                fontSize: '1.25rem',
+                fontWeight: '800',
+                color: 'var(--text-main)',
+                margin: 0,
+                lineHeight: 1.35
+              }}>
+                {selectedNotifForDetail.title}
+              </h2>
+
+              <div style={{
+                backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
+                border: '1px solid var(--border-color)',
+                borderRadius: '14px',
+                padding: '1.25rem'
+              }}>
+                <div style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--text-muted)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                  Isi & Pembahasan Lengkap:
+                </div>
+                <p style={{
+                  fontSize: '0.925rem',
+                  lineHeight: 1.65,
+                  color: isDarkMode ? '#CBD5E1' : '#334155',
+                  margin: 0,
+                  whiteSpace: 'pre-wrap'
+                }}>
+                  {selectedNotifForDetail.message}
+                </p>
+              </div>
+
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                fontSize: '0.8rem',
+                color: 'var(--text-muted)'
+              }}>
+                <FiInfo />
+                <span>Waktu Diterbitkan: <strong>{formatTimeAgo(selectedNotifForDetail.timestamp)}</strong> ({new Date(selectedNotifForDetail.timestamp).toLocaleString('id-ID')})</span>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '0.5rem' }}>
+                {selectedNotifForDetail.link && (
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={() => {
+                      const link = selectedNotifForDetail.link;
+                      setSelectedNotifForDetail(null);
+                      navigate(link);
+                    }}
+                  >
+                    <span>Buka Modul Target</span>
+                    <FiExternalLink />
+                  </button>
+                )}
+
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => setSelectedNotifForDetail(null)}
+                >
+                  Tutup
+                </button>
+              </div>
+            </div>
+          );
+        })()}
       </Modal>
     </div>
   );
