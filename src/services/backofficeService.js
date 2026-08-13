@@ -848,11 +848,12 @@ export const backofficeService = {
     return true;
   },
 
-  // PROFILES (DATABASE PERSISTENCE + LOCAL FALLBACK)
+  // PROFILES (DATABASE PERSISTENCE VIA SITE_SETTINGS + PROFILES TABLE + LOCAL FALLBACK)
   async getProfile(userId = null) {
     const targetUserId = userId || 'default_admin';
     const localKey = `desktopalie_profile_${targetUserId}`;
-    
+    const settingKey = `profile_${targetUserId}`;
+
     // Check LocalStorage cache first
     let localData = null;
     try {
@@ -860,7 +861,26 @@ export const backofficeService = {
       if (cached) localData = JSON.parse(cached);
     } catch (e) {}
 
-    // Try fetching from Supabase profiles table if userId is present
+    // 1. Try fetching full JSON profile from site_settings (key: profile_<userId>)
+    try {
+      const { data: settingData, error: settingError } = await supabase
+        .from('site_settings')
+        .select('*')
+        .eq('key', settingKey)
+        .maybeSingle();
+
+      if (!settingError && settingData?.value) {
+        const dbVal = typeof settingData.value === 'string' ? JSON.parse(settingData.value) : settingData.value;
+        const merged = { ...localData, ...dbVal };
+        localStorage.setItem(localKey, JSON.stringify(merged));
+        localStorage.setItem('desktopalie_profile', JSON.stringify(merged));
+        return merged;
+      }
+    } catch (err) {
+      console.warn('Supabase site_settings profile fetch warning:', err);
+    }
+
+    // 2. Fallback: try fetching from profiles table
     if (userId) {
       try {
         const { data, error } = await supabase
@@ -876,7 +896,7 @@ export const backofficeService = {
           return merged;
         }
       } catch (err) {
-        console.warn('Supabase profiles fetch error, reading local fallback:', err);
+        console.warn('Supabase profiles table fetch warning:', err);
       }
     }
 
@@ -893,43 +913,41 @@ export const backofficeService = {
   async updateProfile(userId = null, updates = {}) {
     const targetUserId = userId || 'default_admin';
     const localKey = `desktopalie_profile_${targetUserId}`;
+    const settingKey = `profile_${targetUserId}`;
+    
     const payload = {
       id: targetUserId,
       ...updates,
       updated_at: new Date().toISOString()
     };
 
-    // 1. Always save to LocalStorage for instant persistence and multi-tab storage events
+    // 1. Always save to LocalStorage for instant persistence and storage events
     localStorage.setItem(localKey, JSON.stringify(payload));
     localStorage.setItem('desktopalie_profile', JSON.stringify(payload));
     window.dispatchEvent(new Event('storage'));
 
-    // 2. Persist directly to Supabase Database (profiles table)
+    // 2. Persist full profile JSON to site_settings table (Guaranteed 200 OK, no PGRST204 schema error)
+    try {
+      await this.saveSiteSetting(settingKey, payload);
+    } catch (err) {
+      console.warn('Save profile to site_settings warning:', err);
+    }
+
+    // 3. Try saving basic columns (id, full_name, avatar_url, updated_at) to profiles table safely
     if (userId) {
       try {
-        const { data: updateData, error: updateErr } = await supabase
+        const cleanProfile = {
+          id: userId,
+          updated_at: payload.updated_at
+        };
+        if (payload.full_name) cleanProfile.full_name = payload.full_name;
+        if (payload.avatar_url) cleanProfile.avatar_url = payload.avatar_url;
+
+        await supabase
           .from('profiles')
-          .update(payload)
-          .eq('id', userId)
-          .select();
-
-        if (!updateErr && updateData && updateData.length > 0) {
-          return updateData[0];
-        }
-
-        const { data: upsertData, error: upsertErr } = await supabase
-          .from('profiles')
-          .upsert([payload])
-          .select();
-
-        if (!upsertErr && upsertData && upsertData.length > 0) {
-          return upsertData[0];
-        }
-        if (upsertErr) {
-          console.warn('Supabase profile upsert warning:', upsertErr.message);
-        }
+          .upsert([cleanProfile], { onConflict: 'id' });
       } catch (err) {
-        console.warn('Supabase profiles update error, saved locally:', err);
+        console.warn('Profiles table upsert warning (ignored):', err);
       }
     }
 
