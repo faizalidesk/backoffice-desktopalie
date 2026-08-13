@@ -1,0 +1,648 @@
+import { useState, useEffect } from 'react';
+import Header from '../components/Header';
+import { useTheme } from '../context/ThemeContext';
+import { useAuth } from '../context/AuthContext';
+import { supabase } from '../lib/supabase';
+import { backofficeService } from '../services/backofficeService';
+import { toast } from 'react-hot-toast';
+import { 
+  FiUsers, 
+  FiSearch, 
+  FiFilter, 
+  FiDownload, 
+  FiUserCheck, 
+  FiShield, 
+  FiMail, 
+  FiCalendar, 
+  FiClock, 
+  FiCheckCircle, 
+  FiTrash2, 
+  FiEye, 
+  FiRefreshCw, 
+  FiLayers,
+  FiX
+} from 'react-icons/fi';
+import { FaGoogle } from 'react-icons/fa';
+
+export default function MembershipManager() {
+  const { isDarkMode } = useTheme();
+  const { user: currentUser } = useAuth();
+
+  const [activeFilter, setActiveFilter] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [members, setMembers] = useState([]);
+  const [selectedMember, setSelectedMember] = useState(null);
+
+  // Initial Demo Data Fallback
+  const initialDemoMembers = [
+    {
+      id: 'usr-google-881920',
+      full_name: 'Faiz Ali (Administrator)',
+      email: 'faizali.desk@gmail.com',
+      avatar_url: 'https://lh3.googleusercontent.com/a/ACg8ocI...',
+      provider: 'Google OAuth 2.0',
+      platform: 'platform1',
+      platformName: 'Desktopalie Main',
+      role: 'Super Admin',
+      status: 'Active',
+      created_at: '2026-08-10T14:32:00Z',
+      last_login: 'Baru Saja'
+    },
+    {
+      id: 'usr-beta-771201',
+      full_name: 'Budi Logistics Coordinator',
+      email: 'budi.logistics@cargo-beta.com',
+      avatar_url: 'https://ui-avatars.com/api/?name=Budi+Logistics&background=10B981&color=fff',
+      provider: 'Google OAuth 2.0',
+      platform: 'platform2',
+      platformName: 'Desktopalie Beta',
+      role: 'Logistics Manager',
+      status: 'Active',
+      created_at: '2026-08-11T09:15:00Z',
+      last_login: '2 Jam Lalu'
+    },
+    {
+      id: 'usr-gamma-551040',
+      full_name: 'Rian Transcoder Engineer',
+      email: 'rian.transcode@gamma-stream.io',
+      avatar_url: 'https://ui-avatars.com/api/?name=Rian+Engine&background=8B5CF6&color=fff',
+      provider: 'Email & Password',
+      platform: 'platform3',
+      platformName: 'Desktopalie Gamma',
+      role: 'Media Engineer',
+      status: 'Active',
+      created_at: '2026-08-12T11:20:00Z',
+      last_login: '5 Jam Lalu'
+    },
+    {
+      id: 'usr-delta-331092',
+      full_name: 'Dedi Enterprise Cloud Admin',
+      email: 'dedi.cloud@delta-erp.net',
+      avatar_url: 'https://ui-avatars.com/api/?name=Dedi+Cloud&background=F59E0B&color=fff',
+      provider: 'Google OAuth 2.0',
+      platform: 'platform4',
+      platformName: 'Desktopalie Delta',
+      role: 'Cloud Architect',
+      status: 'Active',
+      created_at: '2026-08-12T16:45:00Z',
+      last_login: '1 Hari Lalu'
+    }
+  ];
+
+  const fetchMembers = async () => {
+    setLoading(true);
+    try {
+      let fetchedList = [...initialDemoMembers];
+
+      // If current user exists, add/upsert current user to list
+      if (currentUser) {
+        const isCurrentInList = fetchedList.some(m => m.email === currentUser.email);
+        if (!isCurrentInList) {
+          fetchedList.unshift({
+            id: currentUser.id || 'usr-current',
+            full_name: currentUser.user_metadata?.full_name || currentUser.email?.split('@')[0],
+            email: currentUser.email,
+            avatar_url: currentUser.user_metadata?.avatar_url || currentUser.user_metadata?.picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.email)}`,
+            provider: currentUser.app_metadata?.provider === 'google' ? 'Google OAuth 2.0' : 'Email & Password',
+            platform: 'platform1',
+            platformName: 'Desktopalie Main',
+            role: 'Member',
+            status: 'Active',
+            created_at: currentUser.created_at || new Date().toISOString(),
+            last_login: 'Baru Saja'
+          });
+        }
+      }
+
+      // Fetch profiles table from Supabase if available
+      try {
+        const { data: profiles, error } = await supabase.from('profiles').select('*');
+        if (!error && profiles && profiles.length > 0) {
+          profiles.forEach(p => {
+            if (!fetchedList.some(m => m.email === p.email)) {
+              fetchedList.push({
+                id: p.id,
+                full_name: p.full_name || p.email?.split('@')[0],
+                email: p.email,
+                avatar_url: p.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(p.email)}`,
+                provider: p.provider || 'Google OAuth 2.0',
+                platform: p.platform || 'platform1',
+                platformName: p.platform === 'platform2' ? 'Desktopalie Beta' : (p.platform === 'platform3' ? 'Desktopalie Gamma' : (p.platform === 'platform4' ? 'Desktopalie Delta' : 'Desktopalie Main')),
+                role: 'Member',
+                status: 'Active',
+                created_at: p.created_at || new Date().toISOString(),
+                last_login: 'Aktif'
+              });
+            }
+          });
+        }
+      } catch (err) {
+        console.warn('Profiles fetch warning:', err);
+      }
+
+      setMembers(fetchedList);
+    } catch (err) {
+      console.error('Error fetching members:', err);
+      toast.error('Gagal memuat data anggota platform.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchMembers();
+  }, [currentUser]);
+
+  const filteredMembers = members.filter(m => {
+    const matchesFilter = activeFilter === 'all' || m.platform === activeFilter;
+    const matchesSearch = 
+      m.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      m.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      m.provider?.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesFilter && matchesSearch;
+  });
+
+  const handleDeleteMember = (id) => {
+    if (window.confirm('Apakah Anda yakin ingin menghapus akun anggota ini?')) {
+      setMembers(members.filter(m => m.id !== id));
+      toast.success('Anggota berhasil dihapus.');
+      setSelectedMember(null);
+    }
+  };
+
+  const handleExportCSV = () => {
+    const headers = ['ID,Full Name,Email,Provider,Platform,Role,Status,Created At'];
+    const rows = filteredMembers.map(m => 
+      `"${m.id}","${m.full_name}","${m.email}","${m.provider}","${m.platformName}","${m.role}","${m.status}","${m.created_at}"`
+    );
+    const csvContent = 'data:text/csv;charset=utf-8,' + [headers, ...rows].join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `desktopalie_membership_export_${new Date().toISOString().slice(0,10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success('Data membership berhasil diekspor ke CSV!');
+  };
+
+  return (
+    <>
+      <Header title="Platform Membership & Account Hub" />
+      <div className="page-body" style={{ paddingBottom: '4rem' }}>
+        
+        {/* HERO BANNER MEMBERSHIP */}
+        <div style={{
+          position: 'relative',
+          borderRadius: '20px',
+          overflow: 'hidden',
+          backgroundColor: '#0F172A',
+          color: '#FFFFFF',
+          padding: '2.25rem',
+          marginBottom: '2rem',
+          boxShadow: '0 10px 30px rgba(15, 23, 42, 0.15)'
+        }}>
+          <div style={{
+            position: 'absolute',
+            top: '-50%',
+            right: '-10%',
+            width: '600px',
+            height: '400px',
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(59, 130, 246, 0.35) 0%, rgba(15, 23, 42, 0) 70%)',
+            pointerEvents: 'none'
+          }} />
+
+          <div style={{
+            position: 'relative',
+            zIndex: 2,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '1.5rem'
+          }}>
+            <div>
+              <div style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                backgroundColor: 'rgba(59, 130, 246, 0.15)',
+                border: '1px solid rgba(59, 130, 246, 0.3)',
+                padding: '0.25rem 0.75rem',
+                borderRadius: '99px',
+                fontSize: '0.75rem',
+                color: '#60A5FA',
+                fontWeight: '700',
+                textTransform: 'uppercase',
+                marginBottom: '0.75rem'
+              }}>
+                <FiUsers /> Unified Multi-Tenant User Registry
+              </div>
+
+              <h1 style={{ fontSize: '1.85rem', fontWeight: '800', margin: '0 0 0.5rem 0', color: '#FFFFFF' }}>
+                Pusat Keanggotaan & Akun Pengguna Platform
+              </h1>
+
+              <p style={{ color: '#94A3B8', fontSize: '0.925rem', margin: 0, maxWidth: '720px', lineHeight: '1.55' }}>
+                Direktori terpadu seluruh akun pengguna dan administrator yang terdaftar atau login menggunakan Google OAuth di setiap platform (Main, Beta, Gamma, dan Delta).
+              </p>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <button
+                type="button"
+                onClick={handleExportCSV}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  padding: '0.75rem 1.25rem',
+                  borderRadius: '12px',
+                  backgroundColor: '#3B82F6',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  fontWeight: '700',
+                  fontSize: '0.875rem',
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 14px rgba(59, 130, 246, 0.4)'
+                }}
+              >
+                <FiDownload />
+                <span>Ekspor CSV</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={fetchMembers}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  padding: '0.75rem',
+                  borderRadius: '12px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  color: '#FFFFFF',
+                  fontSize: '1rem',
+                  cursor: 'pointer'
+                }}
+                title="Refresh Data Membership"
+              >
+                <FiRefreshCw />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* MEMBERSHIP KPI STATS GRID */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+          gap: '1.25rem',
+          marginBottom: '2rem'
+        }}>
+          {[
+            { label: 'Total Registered Members', value: members.length, color: '#3B82F6', icon: <FiUsers /> },
+            { label: 'Google OAuth Accounts', value: members.filter(m => m.provider.includes('Google')).length, color: '#EA4335', icon: <FaGoogle /> },
+            { label: 'Sub-Platform Accounts', value: members.filter(m => m.platform !== 'platform1').length, color: '#10B981', icon: <FiLayers /> },
+            { label: 'Active Sessions', value: members.length, color: '#F59E0B', icon: <FiCheckCircle /> }
+          ].map((kpi, idx) => (
+            <div key={idx} style={{
+              backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
+              border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+              borderRadius: '16px',
+              padding: '1.5rem',
+              boxShadow: '0 4px 16px rgba(0,0,0,0.04)'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                <span style={{ fontSize: '0.775rem', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase' }}>{kpi.label}</span>
+                <span style={{ fontSize: '1.1rem', color: kpi.color }}>{kpi.icon}</span>
+              </div>
+              <div style={{ fontSize: '1.75rem', fontWeight: '800', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>{kpi.value}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* CONTROLS BAR: SEARCH & PLATFORM FILTER TABS */}
+        <div style={{
+          backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
+          border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+          borderRadius: '18px',
+          padding: '1.5rem',
+          marginBottom: '2rem',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1.25rem'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
+            
+            {/* Search Input */}
+            <div style={{ position: 'relative', flex: 1, minWidth: '280px' }}>
+              <FiSearch style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Cari berdasarkan nama, email, atau metode login..."
+                style={{
+                  width: '100%',
+                  padding: '0.75rem 1rem 0.75rem 2.75rem',
+                  borderRadius: '12px',
+                  backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
+                  border: `1px solid ${isDarkMode ? '#334155' : '#CBD5E1'}`,
+                  color: isDarkMode ? '#F8FAFC' : '#0F172A',
+                  fontSize: '0.9rem',
+                  outline: 'none'
+                }}
+              />
+            </div>
+
+            {/* Platform Filter Tabs */}
+            <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
+              {[
+                { id: 'all', label: 'Semua Platform' },
+                { id: 'platform1', label: 'Main Website' },
+                { id: 'platform2', label: 'Beta (Logistics)' },
+                { id: 'platform3', label: 'Gamma (Transcoder)' },
+                { id: 'platform4', label: 'Delta (Cloud ERP)' }
+              ].map(tab => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveFilter(tab.id)}
+                  style={{
+                    padding: '0.6rem 1rem',
+                    borderRadius: '10px',
+                    backgroundColor: activeFilter === tab.id ? '#3B82F6' : (isDarkMode ? '#0F172A' : '#F1F5F9'),
+                    color: activeFilter === tab.id ? '#FFFFFF' : (isDarkMode ? '#94A3B8' : '#64748B'),
+                    border: `1px solid ${activeFilter === tab.id ? '#3B82F6' : (isDarkMode ? '#334155' : '#E2E8F0')}`,
+                    fontSize: '0.8rem',
+                    fontWeight: '700',
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease'
+                  }}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* MEMBERS TABLE CARD */}
+        <div style={{
+          backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
+          border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+          borderRadius: '18px',
+          padding: '1.75rem',
+          boxShadow: '0 4px 16px rgba(0,0,0,0.04)'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: '800', margin: 0, color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+              📋 Daftar Anggota & Akun Pengguna ({filteredMembers.length})
+            </h3>
+          </div>
+
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
+              <thead>
+                <tr style={{ borderBottom: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`, textAlign: 'left', color: 'var(--text-muted)' }}>
+                  <th style={{ padding: '0.85rem 1rem' }}>PENGGUNA</th>
+                  <th style={{ padding: '0.85rem 1rem' }}>EMAIL</th>
+                  <th style={{ padding: '0.85rem 1rem' }}>METODE AUTH</th>
+                  <th style={{ padding: '0.85rem 1rem' }}>ORIGIN PLATFORM</th>
+                  <th style={{ padding: '0.85rem 1rem' }}>ROLE</th>
+                  <th style={{ padding: '0.85rem 1rem' }}>STATUS</th>
+                  <th style={{ padding: '0.85rem 1rem' }}>AKSI</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredMembers.length === 0 ? (
+                  <tr>
+                    <td colSpan={7} style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>
+                      Tidak ada pengguna yang cocok dengan pencarian / filter platform ini.
+                    </td>
+                  </tr>
+                ) : (
+                  filteredMembers.map((row) => (
+                    <tr key={row.id} style={{ borderBottom: `1px solid ${isDarkMode ? '#334155' : '#F1F5F9'}` }}>
+                      {/* User Info */}
+                      <td style={{ padding: '0.9rem 1rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                          <img
+                            src={row.avatar_url}
+                            alt="Avatar"
+                            style={{ width: '38px', height: '38px', borderRadius: '50%', objectFit: 'cover', border: '1.5px solid #3B82F6' }}
+                          />
+                          <div>
+                            <div style={{ fontWeight: '800', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>{row.full_name}</div>
+                            <div style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>ID: {row.id.slice(0, 12)}...</div>
+                          </div>
+                        </div>
+                      </td>
+
+                      {/* Email */}
+                      <td style={{ padding: '0.9rem 1rem', fontWeight: '600' }}>{row.email}</td>
+
+                      {/* Auth Provider */}
+                      <td style={{ padding: '0.9rem 1rem' }}>
+                        <span style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.35rem',
+                          padding: '0.25rem 0.65rem',
+                          borderRadius: '99px',
+                          backgroundColor: row.provider.includes('Google') ? 'rgba(234, 67, 53, 0.12)' : 'rgba(59, 130, 246, 0.12)',
+                          color: row.provider.includes('Google') ? '#EA4335' : '#3B82F6',
+                          fontWeight: '700',
+                          fontSize: '0.75rem'
+                        }}>
+                          {row.provider.includes('Google') ? <FaGoogle /> : <FiMail />}
+                          <span>{row.provider}</span>
+                        </span>
+                      </td>
+
+                      {/* Platform Origin Badge */}
+                      <td style={{ padding: '0.9rem 1rem' }}>
+                        <span style={{
+                          padding: '0.25rem 0.65rem',
+                          borderRadius: '99px',
+                          backgroundColor: row.platform === 'platform2' ? 'rgba(16, 185, 129, 0.15)' : (row.platform === 'platform3' ? 'rgba(139, 92, 246, 0.15)' : (row.platform === 'platform4' ? 'rgba(245, 158, 11, 0.15)' : 'rgba(59, 130, 246, 0.15)')),
+                          color: row.platform === 'platform2' ? '#10B981' : (row.platform === 'platform3' ? '#8B5CF6' : (row.platform === 'platform4' ? '#F59E0B' : '#3B82F6')),
+                          fontWeight: '800',
+                          fontSize: '0.75rem'
+                        }}>
+                          {row.platformName}
+                        </span>
+                      </td>
+
+                      {/* Role */}
+                      <td style={{ padding: '0.9rem 1rem', fontWeight: '700' }}>{row.role}</td>
+
+                      {/* Status */}
+                      <td style={{ padding: '0.9rem 1rem' }}>
+                        <span style={{
+                          padding: '0.2rem 0.6rem',
+                          borderRadius: '99px',
+                          backgroundColor: 'rgba(16, 185, 129, 0.15)',
+                          color: '#10B981',
+                          fontWeight: '700',
+                          fontSize: '0.725rem'
+                        }}>
+                          ● {row.status}
+                        </span>
+                      </td>
+
+                      {/* Actions */}
+                      <td style={{ padding: '0.9rem 1rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                          <button
+                            type="button"
+                            onClick={() => setSelectedMember(row)}
+                            style={{
+                              padding: '0.45rem 0.65rem',
+                              borderRadius: '8px',
+                              backgroundColor: isDarkMode ? '#0F172A' : '#F1F5F9',
+                              border: `1px solid ${isDarkMode ? '#334155' : '#CBD5E1'}`,
+                              color: isDarkMode ? '#F8FAFC' : '#0F172A',
+                              cursor: 'pointer'
+                            }}
+                            title="Detail Profil Pengguna"
+                          >
+                            <FiEye />
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteMember(row.id)}
+                            style={{
+                              padding: '0.45rem 0.65rem',
+                              borderRadius: '8px',
+                              backgroundColor: 'rgba(239, 68, 68, 0.12)',
+                              border: 'none',
+                              color: '#EF4444',
+                              cursor: 'pointer'
+                            }}
+                            title="Hapus Pengguna"
+                          >
+                            <FiTrash2 />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* PROFILE DETAIL MODAL */}
+        {selectedMember && (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.6)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+            backdropFilter: 'blur(4px)',
+            padding: '1rem'
+          }}>
+            <div style={{
+              width: '100%',
+              maxWidth: '480px',
+              backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
+              border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+              borderRadius: '24px',
+              padding: '2rem',
+              boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)',
+              position: 'relative'
+            }}>
+              <button
+                type="button"
+                onClick={() => setSelectedMember(null)}
+                style={{
+                  position: 'absolute',
+                  top: '1.25rem',
+                  right: '1.25rem',
+                  background: 'none',
+                  border: 'none',
+                  color: 'var(--text-muted)',
+                  fontSize: '1.25rem',
+                  cursor: 'pointer'
+                }}
+              >
+                <FiX />
+              </button>
+
+              <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+                <img
+                  src={selectedMember.avatar_url}
+                  alt="Avatar"
+                  style={{ width: '72px', height: '72px', borderRadius: '50%', objectFit: 'cover', border: '3px solid #3B82F6', margin: '0 auto 0.75rem auto' }}
+                />
+                <h3 style={{ margin: '0 0 0.25rem 0', fontSize: '1.25rem', fontWeight: '800', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+                  {selectedMember.full_name}
+                </h3>
+                <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.875rem' }}>{selectedMember.email}</p>
+              </div>
+
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.75rem',
+                padding: '1.25rem',
+                borderRadius: '16px',
+                backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
+                border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+                marginBottom: '1.5rem',
+                fontSize: '0.85rem'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: 'var(--text-muted)' }}>Platform Terdaftar:</span>
+                  <strong style={{ color: '#3B82F6' }}>{selectedMember.platformName}</strong>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: 'var(--text-muted)' }}>Metode Autentikasi:</span>
+                  <strong>{selectedMember.provider}</strong>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: 'var(--text-muted)' }}>Role Pengguna:</span>
+                  <strong>{selectedMember.role}</strong>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: 'var(--text-muted)' }}>Waktu Registrasi:</span>
+                  <strong>{new Date(selectedMember.created_at).toLocaleDateString('id-ID')}</strong>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setSelectedMember(null)}
+                style={{
+                  width: '100%',
+                  padding: '0.75rem',
+                  borderRadius: '12px',
+                  backgroundColor: '#3B82F6',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  fontWeight: '800',
+                  cursor: 'pointer'
+                }}
+              >
+                Tutup Profil
+              </button>
+            </div>
+          </div>
+        )}
+
+      </div>
+    </>
+  );
+}

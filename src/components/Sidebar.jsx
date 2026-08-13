@@ -15,7 +15,8 @@ import {
   FiInfo,
   FiSearch,
   FiX,
-  FiLayers
+  FiLayers,
+  FiUsers
 } from 'react-icons/fi';
 import { useLanguage } from '../context/LanguageContext';
 import { useFlavor } from '../context/FlavorContext';
@@ -53,6 +54,7 @@ export default function Sidebar() {
   const allNavItems = [
     { label: t('dashboard'), path: '/dashboard', icon: FiGrid },
     { label: t('workspaces'), path: '/workspaces', icon: FiLayers },
+    { label: 'Membership', path: '/members', icon: FiUsers },
     { label: t('projects'), path: '/projects', icon: FiFolder },
     { label: t('experiments'), path: '/experiments', icon: FiCpu },
     { label: t('notes'), path: '/notes', icon: FiFileText },
