@@ -27,7 +27,41 @@ import PlatformBetaPortal from './pages/PlatformBetaPortal';
 import PlatformGammaPortal from './pages/PlatformGammaPortal';
 import PlatformDeltaPortal from './pages/PlatformDeltaPortal';
 
+// MAIN BACKOFFICE PROTECTED LAYOUT (WITH SIDEBAR)
 function ProtectedLayout({ children }) {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'var(--bg-main)',
+        color: 'var(--text-muted)'
+      }}>
+        Memuat Backoffice Workspace...
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return (
+    <div className="app-container">
+      <Sidebar />
+      <div className="main-content">
+        {children}
+      </div>
+    </div>
+  );
+}
+
+// SUB-PLATFORM STANDALONE PORTAL LAYOUT (WITHOUT BACKOFFICE SIDEBAR)
+function SubPlatformProtectedLayout({ children }) {
   const { user, loading } = useAuth();
   const { flavorId } = useFlavor();
 
@@ -41,7 +75,7 @@ function ProtectedLayout({ children }) {
         backgroundColor: 'var(--bg-main)',
         color: 'var(--text-muted)'
       }}>
-        Memuat Workspace...
+        Memuat Portal Platform...
       </div>
     );
   }
@@ -54,11 +88,8 @@ function ProtectedLayout({ children }) {
   }
 
   return (
-    <div className="app-container">
-      <Sidebar />
-      <div className="main-content">
-        {children}
-      </div>
+    <div className="subplatform-portal-wrapper" style={{ minHeight: '100vh', width: '100vw', backgroundColor: 'var(--bg-main)' }}>
+      {children}
     </div>
   );
 }
@@ -136,10 +167,10 @@ export default function App() {
                   <Route path="/delta/login" element={<SubPlatformLogin />} />
                   <Route path="/platform/:platformName/login" element={<SubPlatformLogin />} />
 
-                  {/* SUB-PLATFORM DEDICATED WORKSPACE PORTALS */}
-                  <Route path="/beta/portal" element={<ProtectedLayout><PlatformBetaPortal /></ProtectedLayout>} />
-                  <Route path="/gamma/portal" element={<ProtectedLayout><PlatformGammaPortal /></ProtectedLayout>} />
-                  <Route path="/delta/portal" element={<ProtectedLayout><PlatformDeltaPortal /></ProtectedLayout>} />
+                  {/* SUB-PLATFORM STANDALONE PORTALS (WITHOUT BACKOFFICE SIDEBAR) */}
+                  <Route path="/beta/portal" element={<SubPlatformProtectedLayout><PlatformBetaPortal /></SubPlatformProtectedLayout>} />
+                  <Route path="/gamma/portal" element={<SubPlatformProtectedLayout><PlatformGammaPortal /></SubPlatformProtectedLayout>} />
+                  <Route path="/delta/portal" element={<SubPlatformProtectedLayout><PlatformDeltaPortal /></SubPlatformProtectedLayout>} />
 
                   {/* AUTH & MAIN BACKOFFICE ROUTES */}
                   <Route path="/login" element={<Login />} />

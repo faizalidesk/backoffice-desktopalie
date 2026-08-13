@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useFlavor } from '../context/FlavorContext';
-import { useNavigate } from 'react-router-dom';
-import Header from '../components/Header';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
+import DesktopalieMark from '../components/DesktopalieMark';
 import { 
   FiTruck, 
   FiPackage, 
@@ -23,13 +23,16 @@ import {
   FiUserCheck,
   FiPlus,
   FiShield,
-  FiActivity
+  FiActivity,
+  FiSun,
+  FiMoon,
+  FiGlobe
 } from 'react-icons/fi';
 
 export default function PlatformBetaPortal() {
   const { user, logout } = useAuth();
   const { activeFlavor } = useFlavor();
-  const { isDarkMode } = useTheme();
+  const { isDarkMode, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState('dispatch');
@@ -74,9 +77,93 @@ export default function PlatformBetaPortal() {
   };
 
   return (
-    <>
-      <Header title="Platform Beta Workspace (Smart Logistics Portal)" />
-      <div className="page-body" style={{ paddingBottom: '4rem' }}>
+    <div style={{
+      minHeight: '100vh',
+      width: '100vw',
+      backgroundColor: isDarkMode ? '#0F172A' : '#FAF9FC',
+      color: isDarkMode ? '#F8FAFC' : '#0F172A',
+      fontFamily: "'Plus Jakarta Sans', -apple-system, sans-serif"
+    }}>
+      {/* STANDALONE PORTAL TOP HEADER (WITHOUT BACKOFFICE SIDEBAR) */}
+      <header style={{
+        width: '100%',
+        maxWidth: '1280px',
+        margin: '0 auto',
+        padding: '1.25rem 2rem',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        borderBottom: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
+          <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', textDecoration: 'none' }}>
+            <DesktopalieMark size={26} style={{ color: primaryColor }} />
+            <span style={{ fontSize: '1rem', fontWeight: '800', color: isDarkMode ? '#F8FAFC' : '#0F172A', letterSpacing: '0.04em' }}>
+              DESKTOPALIE BETA PORTAL
+            </span>
+          </Link>
+          <span style={{ padding: '0.2rem 0.65rem', borderRadius: '99px', backgroundColor: 'rgba(16, 185, 129, 0.15)', color: '#10B981', border: '1px solid rgba(16, 185, 129, 0.3)', fontSize: '0.725rem', fontWeight: '700' }}>
+            ● Logistics Workspace
+          </span>
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <button
+            type="button"
+            onClick={toggleTheme}
+            style={{
+              width: '38px',
+              height: '38px',
+              borderRadius: '50%',
+              backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
+              border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+              color: isDarkMode ? '#FBBF24' : '#0F172A',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer'
+            }}
+          >
+            {isDarkMode ? <FiSun /> : <FiMoon />}
+          </button>
+
+          {user && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+              <img
+                src={user.user_metadata?.avatar_url || user.user_metadata?.picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.email)}`}
+                alt="Avatar"
+                style={{ width: '36px', height: '36px', borderRadius: '50%', border: `2px solid ${primaryColor}`, objectFit: 'cover' }}
+              />
+              <span style={{ fontSize: '0.85rem', fontWeight: '700' }}>
+                {user.user_metadata?.full_name || user.email?.split('@')[0]}
+              </span>
+            </div>
+          )}
+
+          <button
+            onClick={handleSignOut}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              padding: '0.5rem 1rem',
+              borderRadius: '10px',
+              backgroundColor: isDarkMode ? '#1E293B' : '#F1F5F9',
+              border: `1px solid ${isDarkMode ? '#334155' : '#CBD5E1'}`,
+              color: isDarkMode ? '#F8FAFC' : '#0F172A',
+              fontWeight: '700',
+              fontSize: '0.8rem',
+              cursor: 'pointer'
+            }}
+          >
+            <FiLogOut />
+            <span>Keluar</span>
+          </button>
+        </div>
+      </header>
+
+      {/* PORTAL MAIN CONTENT AREA */}
+      <main style={{ maxWidth: '1280px', margin: '0 auto', padding: '2rem 2rem 4rem 2rem' }}>
         
         {/* HERO BANNER LOGISTICS */}
         <div style={{
@@ -124,7 +211,7 @@ export default function PlatformBetaPortal() {
                 textTransform: 'uppercase',
                 marginBottom: '0.75rem'
               }}>
-                <FiTruck /> Dedicated Platform Beta Portal
+                <FiTruck /> Standalone Platform Beta Portal
               </div>
 
               <h1 style={{ fontSize: '1.85rem', fontWeight: '800', margin: '0 0 0.5rem 0', letterSpacing: '-0.02em', color: '#FFFFFF' }}>
@@ -132,30 +219,8 @@ export default function PlatformBetaPortal() {
               </h1>
 
               <p style={{ color: '#94A3B8', fontSize: '0.925rem', margin: 0, maxWidth: '750px', lineHeight: '1.55' }}>
-                Selamat datang di portal utama Platform Beta. Ruang kerja lengkap pengelolaan armada truk, tracking kontainer cold-chain real-time, penerbitan Bill of Lading, dan dispatching kargo.
+                Selamat datang di portal utama Platform Beta. Ruang kerja mandiri untuk pengoperasian armada kargo, monitoring sensor suhu reefer cold-chain, pabean, dan dispatching.
               </p>
-            </div>
-
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-              <button
-                onClick={handleSignOut}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  padding: '0.75rem 1.25rem',
-                  borderRadius: '12px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  color: '#FFFFFF',
-                  fontWeight: '700',
-                  fontSize: '0.85rem',
-                  cursor: 'pointer'
-                }}
-              >
-                <FiLogOut />
-                <span>Keluar Workspace</span>
-              </button>
             </div>
           </div>
 
@@ -393,9 +458,6 @@ export default function PlatformBetaPortal() {
             <h3 style={{ fontSize: '1.25rem', fontWeight: '800', marginBottom: '1rem', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
               📄 Customs Clearance & Bill of Lading Manifest
             </h3>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
-              Dokumen pabean, penerbitan sertifikat bebas karantina, serta clearance bea cukai terintegrasi.
-            </p>
             <div style={{ padding: '2rem', textAlign: 'center', borderRadius: '12px', border: `2px dashed ${isDarkMode ? '#334155' : '#E2E8F0'}`, color: 'var(--text-muted)' }}>
               📋 <strong>Manifest Pabean Digital Terverifikasi</strong> (Semua dokumen disinkronkan ke pelabuhan tujuan).
             </div>
@@ -425,7 +487,7 @@ export default function PlatformBetaPortal() {
           </div>
         )}
 
-      </div>
-    </>
+      </main>
+    </div>
   );
 }
