@@ -17,7 +17,10 @@ import {
   FiClock, 
   FiLayers, 
   FiZap,
-  FiCheck
+  FiCheck,
+  FiEye,
+  FiEyeOff,
+  FiLock
 } from 'react-icons/fi';
 import Header from '../components/Header';
 import ImageUploader from '../components/ImageUploader';
@@ -30,6 +33,16 @@ export default function ProfileSettings() {
   const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState('personal'); // 'personal', 'language', 'security'
   const [copiedId, setCopiedId] = useState(false);
+  const [showFullId, setShowFullId] = useState(false);
+
+  const maskId = (id) => {
+    if (!id) return '••••••••-••••-••••-••••-••••••••••••';
+    const parts = id.split('-');
+    if (parts.length === 5) {
+      return `${parts[0]}-••••-••••-••••-${parts[4]}`;
+    }
+    return id.slice(0, 8) + '••••••••••••••••' + id.slice(-4);
+  };
 
   const [profile, setProfile] = useState({
     full_name: '',
@@ -557,11 +570,36 @@ export default function ProfileSettings() {
                     gap: '1rem'
                   }}>
                     <div>
-                      <div style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                        Supabase User UUID
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.75rem', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                        <FiLock style={{ color: '#10B981' }} />
+                        <span>Supabase User UUID (Encrypted / Masked)</span>
                       </div>
-                      <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.875rem', fontWeight: '700', color: 'var(--text-main)', marginTop: '0.2rem' }}>
-                        {user?.id || 'No active user session'}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginTop: '0.35rem' }}>
+                        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.875rem', fontWeight: '700', color: 'var(--text-main)', letterSpacing: '0.04em' }}>
+                          {showFullId ? (user?.id || 'No active user session') : maskId(user?.id)}
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setShowFullId(!showFullId)}
+                          title={showFullId ? "Mask / Hide UUID" : "Reveal Full UUID"}
+                          style={{
+                            background: 'none',
+                            border: `1px solid ${showFullId ? '#CBD5E1' : `${primaryColor}40`}`,
+                            borderRadius: '6px',
+                            padding: '0.2rem 0.5rem',
+                            color: primaryColor,
+                            backgroundColor: `${primaryColor}10`,
+                            cursor: 'pointer',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.3rem',
+                            fontSize: '0.75rem',
+                            fontWeight: '700'
+                          }}
+                        >
+                          {showFullId ? <FiEyeOff /> : <FiEye />}
+                          <span>{showFullId ? 'Mask' : 'Reveal'}</span>
+                        </button>
                       </div>
                     </div>
 
