@@ -188,15 +188,6 @@
   }
 }
 
-@media (max-width: 768px) {
-  .public-header {
-    padding: 1.1rem 1.25rem !important;
-  }
-
-  .public-nav {
-    display: none !important;
-  }
-}
 
 @media (max-width: 640px) {
   .header-inner {
@@ -712,9 +703,407 @@
   border-color: #6366F1;
 }
 
+
 .maintenance-landing .copyright {
   font-size: 0.75rem;
   font-weight: 700;
   font-family: 'JetBrains Mono', monospace;
   color: #94A3B8;
 }
+
+/* ==========================================================================
+   PUBLIC PLATFORM LANDING RESPONSIVE & MOBILE DESIGN SYSTEM
+   ========================================================================== */
+
+.public-header {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 1.25rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+.public-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+.public-brand-title {
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
+.public-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+}
+
+.public-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-shrink: 0;
+}
+
+.public-user-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.public-auth-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.public-theme-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.public-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  display: block;
+}
+
+.public-portal-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.45rem 1.1rem;
+  height: 36px;
+  border-radius: 99px;
+  color: #FFFFFF;
+  border: none;
+  font-weight: 700;
+  font-size: 0.825rem;
+  cursor: pointer;
+  white-space: nowrap;
+  box-sizing: border-box;
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.public-google-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 1.15rem;
+  height: 36px;
+  border-radius: 99px;
+  background-color: #FFFFFF;
+  color: #0F172A;
+  border: 1.5px solid #CBD5E1;
+  font-weight: 700;
+  font-size: 0.825rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+
+.public-login-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 1.1rem;
+  height: 36px;
+  border-radius: 99px;
+  color: #FFFFFF;
+  border: none;
+  font-weight: 700;
+  font-size: 0.825rem;
+  cursor: pointer;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+
+/* HERO SECTION */
+.public-hero-section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 4.5rem 1.5rem 3.5rem 1.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 5;
+  box-sizing: border-box;
+}
+
+.public-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 1rem;
+  border-radius: 99px;
+  font-size: 0.775rem;
+  font-weight: 700;
+  margin-bottom: 1.75rem;
+  letter-spacing: 0.04em;
+  max-width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.public-hero-badge span:first-child {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+.public-hero-title {
+  font-size: clamp(2.25rem, 5vw, 3.5rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  max-width: 860px;
+  margin: 0 auto 1.5rem auto;
+  word-break: break-word;
+  text-wrap: balance;
+}
+
+.public-hero-desc {
+  font-size: 1.05rem;
+  line-height: 1.65;
+  max-width: 680px;
+  margin: 0 auto 2.25rem auto;
+  text-wrap: pretty;
+}
+
+.public-hero-cta-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 2.5rem;
+  width: 100%;
+}
+
+/* WIDGET & CARDS */
+.public-section-padding {
+  max-width: 1280px;
+  margin: 0 auto 4rem auto;
+  padding: 0 2rem;
+  box-sizing: border-box;
+}
+
+.public-card-container {
+  border-radius: 20px;
+  padding: 2rem 2.25rem;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.public-widget-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.public-widget-input-row {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.75rem;
+  max-width: 600px;
+  width: 100%;
+}
+
+.public-direct-login-box {
+  border-radius: 24px;
+  padding: 2.5rem;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.public-direct-login-flex {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+/* RESPONSIVE MEDIA QUERIES FOR MOBILE (< 768px & < 480px) */
+@media (max-width: 768px) {
+  .public-header {
+    padding: 0.85rem 1rem !important;
+  }
+
+  .public-nav {
+    display: none !important;
+  }
+
+  .public-brand-title {
+    font-size: 0.775rem !important;
+    letter-spacing: 0.03em !important;
+    white-space: nowrap !important;
+  }
+
+  .public-header-actions {
+    gap: 0.4rem !important;
+  }
+
+  .public-theme-btn {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 0.9rem !important;
+  }
+
+  .public-avatar {
+    width: 30px !important;
+    height: 30px !important;
+  }
+
+  .public-portal-btn {
+    height: 32px !important;
+    padding: 0.35rem 0.75rem !important;
+    font-size: 0.75rem !important;
+  }
+
+  .public-google-btn {
+    height: 32px !important;
+    padding: 0.35rem 0.75rem !important;
+    font-size: 0.75rem !important;
+  }
+
+  .public-login-btn {
+    height: 32px !important;
+    padding: 0.35rem 0.75rem !important;
+    font-size: 0.75rem !important;
+  }
+
+  .public-hero-section {
+    padding: 2.25rem 1rem 2rem 1rem !important;
+  }
+
+  .public-hero-badge {
+    padding: 0.35rem 0.85rem !important;
+    font-size: 0.725rem !important;
+    margin-bottom: 1.25rem !important;
+    max-width: 95% !important;
+    line-height: 1.3 !important;
+    text-wrap: balance !important;
+  }
+
+  .public-hero-title {
+    font-size: clamp(1.45rem, 5vw, 1.85rem) !important;
+    line-height: 1.22 !important;
+    letter-spacing: -0.015em !important;
+    margin-bottom: 1rem !important;
+    max-width: 100% !important;
+    text-wrap: balance !important;
+  }
+
+  .public-hero-desc {
+    font-size: 0.875rem !important;
+    line-height: 1.55 !important;
+    margin-bottom: 1.75rem !important;
+    max-width: 95% !important;
+    text-wrap: pretty !important;
+  }
+
+  .public-hero-cta-row {
+    flex-direction: column !important;
+    width: 100% !important;
+    max-width: 320px !important;
+    margin: 0 auto 2rem auto !important;
+    gap: 0.75rem !important;
+  }
+
+  .public-hero-cta-row a,
+  .public-hero-cta-row button {
+    width: 100% !important;
+    justify-content: center !important;
+    padding: 0.8rem 1.25rem !important;
+    font-size: 0.875rem !important;
+  }
+
+  .public-section-padding {
+    margin-bottom: 2.5rem !important;
+    padding: 0 1rem !important;
+  }
+
+  .public-card-container,
+  .public-direct-login-box {
+    padding: 1.35rem 1rem !important;
+    border-radius: 16px !important;
+  }
+
+  .public-widget-input-row {
+    flex-direction: column !important;
+    width: 100% !important;
+    margin-bottom: 1.25rem !important;
+  }
+
+  .public-widget-input-row input,
+  .public-widget-input-row button {
+    width: 100% !important;
+  }
+
+  .public-direct-login-flex {
+    flex-direction: column !important;
+    gap: 1.5rem !important;
+  }
+
+  .public-direct-login-flex > div {
+    min-width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .public-header {
+    padding: 0.75rem 0.75rem !important;
+  }
+
+  .public-brand-title {
+    font-size: 0.7rem !important;
+    letter-spacing: 0.02em !important;
+  }
+
+  .public-hero-title {
+    font-size: clamp(1.3rem, 5.2vw, 1.65rem) !important;
+    line-height: 1.25 !important;
+  }
+}
+
+

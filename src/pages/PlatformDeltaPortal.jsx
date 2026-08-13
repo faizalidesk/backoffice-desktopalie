@@ -58,13 +58,15 @@ export default function PlatformDeltaPortal() {
         width: '100%',
         maxWidth: '1280px',
         margin: '0 auto',
-        padding: '1.25rem 2rem',
+        padding: '1rem 1.25rem',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: '0.75rem',
         borderBottom: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
           <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', textDecoration: 'none' }}>
             <DesktopalieMark size={26} style={{ color: primaryColor }} />
             <span style={{ fontSize: '1rem', fontWeight: '800', color: isDarkMode ? '#F8FAFC' : '#0F172A', letterSpacing: '0.04em' }}>
