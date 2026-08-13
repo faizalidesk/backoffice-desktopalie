@@ -93,15 +93,10 @@ function SubPlatformProtectedLayout({ children }) {
 }
 
 function DashboardRoute() {
-  const { hasSelectedFlavor, flavorId } = useFlavor();
+  const { hasSelectedFlavor } = useFlavor();
   if (!hasSelectedFlavor) {
     return <Navigate to="/workspaces" replace />;
   }
-  
-  if (flavorId === 'platform2') return <PlatformBetaPortal />;
-  if (flavorId === 'platform3') return <PlatformGammaPortal />;
-  if (flavorId === 'platform4') return <PlatformDeltaPortal />;
-  
   return <Dashboard />;
 }
 

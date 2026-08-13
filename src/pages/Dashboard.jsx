@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { backofficeService } from '../services/backofficeService';
 import { useFlavor } from '../context/FlavorContext';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import { toast } from 'react-hot-toast';
 import { 
   FiFolder, 
@@ -25,7 +26,15 @@ import {
   FiMail,
   FiMapPin,
   FiLayers,
-  FiUsers
+  FiUsers,
+  FiTruck,
+  FiPackage,
+  FiServer,
+  FiFilm,
+  FiDollarSign,
+  FiZap,
+  FiPlay,
+  FiDatabase
 } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
@@ -33,9 +42,10 @@ import Header from '../components/Header';
 export default function Dashboard() {
   const { activeFlavor, flavorId } = useFlavor();
   const { user } = useAuth();
+  const { isDarkMode } = useTheme();
   const [copiedId, setCopiedId] = useState(false);
   const [activeProfileTab, setActiveProfileTab] = useState('personal');
-  const [memberCount, setMemberCount] = useState(4);
+  const [memberCount, setMemberCount] = useState(5);
   const [recentMembers, setRecentMembers] = useState([]);
 
   const defaultStudentBio = "I am a student with a strong interest in Information Systems, web development, UI/UX design, and digital technology. I enjoy learning new technologies, working on creative projects, and developing digital solutions that combine functionality, usability, and visual design.";
@@ -80,6 +90,25 @@ export default function Dashboard() {
   const [maintenance, setMaintenance] = useState(null);
   const [landing, setLanding] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  // PLATFORM-SPECIFIC DEMO DATA STATES FOR BACKOFFICE DASHBOARD
+  const [betaWaybills, setBetaWaybills] = useState([
+    { id: 'LOG-884920-JKT', type: 'Pharma Cold-Chain Vaccines', route: 'Tanjung Priok ➔ Bandung Hub', temp: '4.2 °C', status: 'In-Transit', driver: 'Budi Santoso' },
+    { id: 'LOG-772910-SUB', type: 'Frozen Seafood Export', route: 'Surabaya Port ➔ Malang Cargo', temp: '-18.5 °C', status: 'Delivered', driver: 'Agus Wijaya' },
+    { id: 'LOG-552140-DPS', type: 'High-Tech Electronics', route: 'Jakarta ➔ Denpasar Cargo Hub', temp: '24.0 °C', status: 'Customs Clear', driver: 'Rian Pratama' }
+  ]);
+
+  const [gammaRenderJobs, setGammaRenderJobs] = useState([
+    { id: 'JOB-9041', name: '4K_Cyberpunk_Showreel_2026.mp4', codec: 'AV1 / 60 FPS', progress: 84, speed: '142 FPS', status: 'Encoding' },
+    { id: 'JOB-9042', name: 'Logistics_Drone_4K_Telemetry.mov', codec: 'HEVC H.265', progress: 100, speed: 'Done', status: 'Completed' },
+    { id: 'JOB-9043', name: 'ERP_Cloud_Cluster_Overview.mkv', codec: 'ProRes 422 HQ', progress: 32, speed: '98 FPS', status: 'Encoding' }
+  ]);
+
+  const [deltaClusterNodes, setDeltaClusterNodes] = useState([
+    { id: 'NODE-ASIA-SE1', region: 'Jakarta (ap-southeast-3)', cpu: '38%', mem: '14.2 / 32 GB', status: 'Healthy', latency: '12ms' },
+    { id: 'NODE-SG-MAIN2', region: 'Singapore (ap-southeast-1)', cpu: '62%', mem: '28.4 / 64 GB', status: 'Healthy', latency: '18ms' },
+    { id: 'NODE-US-EAST', region: 'US East (N. Virginia)', cpu: '21%', mem: '8.1 / 16 GB', status: 'Healthy', latency: '145ms' }
+  ]);
 
   useEffect(() => {
     async function fetchDashboardProfile() {
@@ -213,19 +242,19 @@ export default function Dashboard() {
 
   return (
     <>
-      <Header title="Dashboard Overview" />
+      <Header title={`${activeFlavor?.name || 'Desktopalie'} Backoffice Dashboard`} />
       <div className="page-body" style={{ paddingBottom: '4rem' }}>
         
         {/* SLEEK AMBIENT WELCOME BANNER FOR DASHBOARD OVERVIEW */}
         <div style={{
           position: 'relative',
-          borderRadius: '16px',
+          borderRadius: '20px',
           overflow: 'hidden',
           backgroundColor: '#0F172A',
           color: '#FFFFFF',
           padding: '2rem 2.25rem',
           marginBottom: '2rem',
-          boxShadow: '0 8px 30px rgba(15, 23, 42, 0.12)',
+          boxShadow: '0 10px 30px rgba(15, 23, 42, 0.15)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -243,16 +272,6 @@ export default function Dashboard() {
             background: `radial-gradient(circle, ${primaryColor}66 0%, rgba(15, 23, 42, 0) 70%)`,
             pointerEvents: 'none'
           }} />
-          <div style={{
-            position: 'absolute',
-            top: '0',
-            right: '0',
-            width: '100%',
-            height: '100%',
-            backgroundImage: 'radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px)',
-            backgroundSize: '20px 20px',
-            pointerEvents: 'none'
-          }} />
 
           {/* Left Text Content */}
           <div style={{ position: 'relative', zIndex: 2, flex: 1, minWidth: '280px' }}>
@@ -260,44 +279,45 @@ export default function Dashboard() {
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.4rem',
-              backgroundColor: 'rgba(16, 185, 129, 0.15)',
-              border: '1px solid rgba(16, 185, 129, 0.3)',
+              backgroundColor: `${primaryColor}22`,
+              border: `1px solid ${primaryColor}44`,
               padding: '0.25rem 0.75rem',
               borderRadius: '99px',
               fontSize: '0.725rem',
-              color: '#34D399',
+              color: primaryColor,
               fontWeight: '700',
               textTransform: 'uppercase',
               letterSpacing: '0.05em',
               marginBottom: '0.75rem'
             }}>
-              <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10B981' }} />
-              <span>{activeFlavor?.shortName ? `Platform ${activeFlavor.shortName} Active` : 'Synced Workspace'}</span>
+              <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: primaryColor }} />
+              <span>{activeFlavor?.shortName ? `Platform ${activeFlavor.shortName} Workspace Active` : 'Synced Workspace'}</span>
             </div>
 
-            <h1 style={{ fontSize: '1.75rem', fontWeight: '800', color: '#FFFFFF', marginBottom: '0.5rem', letterSpacing: '-0.02em' }}>
-              {activeFlavor?.name ? `Welcome to ${activeFlavor.name}` : 'Welcome Back, Workspace Administrator'}
+            <h1 style={{ fontSize: '1.85rem', fontWeight: '800', color: '#FFFFFF', marginBottom: '0.5rem', letterSpacing: '-0.02em' }}>
+              {activeFlavor?.name ? `Welcome to ${activeFlavor.name} Backoffice` : 'Welcome Back, Workspace Administrator'}
             </h1>
 
-            <p style={{ color: '#94A3B8', fontSize: '0.9rem', maxWidth: '700px', margin: 0, lineHeight: '1.55' }}>
-              {activeFlavor?.description || 'Manage your public portfolio, landing page updates, QA sprint tasks, and system documentation in one centralized workspace.'}
+            <p style={{ color: '#94A3B8', fontSize: '0.925rem', margin: 0, maxWidth: '640px', lineHeight: '1.5' }}>
+              {activeFlavor?.description || 'Unified management suite for system portfolio, maintenance controls, and multi-platform telemetry.'}
             </p>
           </div>
 
-          {/* Right Action Buttons */}
-          <div style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+          {/* Quick Action Button Group */}
+          <div style={{ position: 'relative', zIndex: 2, display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
             <Link 
-              to="/todos" 
-              className="btn btn-primary"
+              to="/members" 
+              className="btn"
               style={{
-                background: `linear-gradient(135deg, ${primaryColor}, #8B5CF6)`,
+                backgroundColor: primaryColor,
+                color: '#FFFFFF',
+                fontWeight: '700',
                 border: 'none',
-                boxShadow: '0 4px 14px rgba(79, 70, 229, 0.35)',
-                fontWeight: '700'
+                boxShadow: `0 4px 14px ${primaryColor}66`
               }}
             >
-              <FiCheckSquare />
-              <span>To-Do Board</span>
+              <FiUsers />
+              <span>Membership</span>
             </Link>
 
             <Link 
@@ -307,7 +327,6 @@ export default function Dashboard() {
                 backgroundColor: 'rgba(255, 255, 255, 0.08)',
                 border: '1px solid rgba(255, 255, 255, 0.15)',
                 color: '#FFFFFF',
-                backdropFilter: 'blur(8px)',
                 fontWeight: '700'
               }}
             >
@@ -409,6 +428,149 @@ export default function Dashboard() {
           </Link>
         </div>
 
+        {/* PLATFORM SPECIFIC LIVE TELEMETRY WIDGET SECTION */}
+        {flavorId === 'platform2' && (
+          <div className="card" style={{ marginBottom: '1.75rem', borderLeft: `4px solid ${primaryColor}` }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <FiTruck style={{ color: primaryColor, fontSize: '1.25rem' }} />
+                <h3 style={{ fontSize: '1.1rem', fontWeight: '800', margin: 0, color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+                  Smart Logistics Cold-Chain Fleet Telemetry
+                </h3>
+              </div>
+              <span className="badge badge-teal">Live Dispatch Feed</span>
+            </div>
+
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                <thead>
+                  <tr style={{ borderBottom: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`, textAlign: 'left', color: 'var(--text-muted)' }}>
+                    <th style={{ padding: '0.75rem' }}>WAYBILL CONTAINER</th>
+                    <th style={{ padding: '0.75rem' }}>CARGO TYPE</th>
+                    <th style={{ padding: '0.75rem' }}>LOGISTICS ROUTE</th>
+                    <th style={{ padding: '0.75rem' }}>TEMP TELEMETRY</th>
+                    <th style={{ padding: '0.75rem' }}>DRIVER</th>
+                    <th style={{ padding: '0.75rem' }}>STATUS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {betaWaybills.map(wb => (
+                    <tr key={wb.id} style={{ borderBottom: `1px solid ${isDarkMode ? '#334155' : '#F1F5F9'}` }}>
+                      <td style={{ padding: '0.75rem', fontWeight: '800', color: primaryColor }}>{wb.id}</td>
+                      <td style={{ padding: '0.75rem', fontWeight: '600' }}>{wb.type}</td>
+                      <td style={{ padding: '0.75rem' }}>{wb.route}</td>
+                      <td style={{ padding: '0.75rem', fontWeight: '700', color: '#10B981' }}>{wb.temp}</td>
+                      <td style={{ padding: '0.75rem' }}>{wb.driver}</td>
+                      <td style={{ padding: '0.75rem' }}>
+                        <span style={{ padding: '0.2rem 0.6rem', borderRadius: '99px', backgroundColor: 'rgba(16, 185, 129, 0.15)', color: '#10B981', fontWeight: '700', fontSize: '0.725rem' }}>
+                          ● {wb.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {flavorId === 'platform3' && (
+          <div className="card" style={{ marginBottom: '1.75rem', borderLeft: `4px solid ${primaryColor}` }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <FiFilm style={{ color: primaryColor, fontSize: '1.25rem' }} />
+                <h3 style={{ fontSize: '1.1rem', fontWeight: '800', margin: 0, color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+                  AI Video Transcoder Real-Time Render Queue
+                </h3>
+              </div>
+              <span className="badge badge-violet">GPU Accelerator Active</span>
+            </div>
+
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                <thead>
+                  <tr style={{ borderBottom: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`, textAlign: 'left', color: 'var(--text-muted)' }}>
+                    <th style={{ padding: '0.75rem' }}>JOB ID</th>
+                    <th style={{ padding: '0.75rem' }}>FILE NAME</th>
+                    <th style={{ padding: '0.75rem' }}>TARGET CODEC</th>
+                    <th style={{ padding: '0.75rem' }}>ENCODING SPEED</th>
+                    <th style={{ padding: '0.75rem' }}>PROGRESS</th>
+                    <th style={{ padding: '0.75rem' }}>STATUS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {gammaRenderJobs.map(job => (
+                    <tr key={job.id} style={{ borderBottom: `1px solid ${isDarkMode ? '#334155' : '#F1F5F9'}` }}>
+                      <td style={{ padding: '0.75rem', fontWeight: '800', color: primaryColor }}>{job.id}</td>
+                      <td style={{ padding: '0.75rem', fontWeight: '600' }}>{job.name}</td>
+                      <td style={{ padding: '0.75rem' }}>{job.codec}</td>
+                      <td style={{ padding: '0.75rem', fontWeight: '700', color: '#8B5CF6' }}>{job.speed}</td>
+                      <td style={{ padding: '0.75rem', width: '160px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                          <div style={{ flex: 1, height: '6px', backgroundColor: 'var(--border-color)', borderRadius: '99px', overflow: 'hidden' }}>
+                            <div style={{ height: '100%', width: `${job.progress}%`, backgroundColor: primaryColor, borderRadius: '99px' }} />
+                          </div>
+                          <span style={{ fontSize: '0.75rem', fontWeight: '800' }}>{job.progress}%</span>
+                        </div>
+                      </td>
+                      <td style={{ padding: '0.75rem' }}>
+                        <span style={{ padding: '0.2rem 0.6rem', borderRadius: '99px', backgroundColor: 'rgba(139, 92, 246, 0.15)', color: '#8B5CF6', fontWeight: '700', fontSize: '0.725rem' }}>
+                          ● {job.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {flavorId === 'platform4' && (
+          <div className="card" style={{ marginBottom: '1.75rem', borderLeft: `4px solid ${primaryColor}` }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <FiServer style={{ color: primaryColor, fontSize: '1.25rem' }} />
+                <h3 style={{ fontSize: '1.1rem', fontWeight: '800', margin: 0, color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+                  Enterprise Cloud ERP Multi-Node Kubernetes Clusters
+                </h3>
+              </div>
+              <span className="badge badge-amber">HA Cluster Synchronized</span>
+            </div>
+
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                <thead>
+                  <tr style={{ borderBottom: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`, textAlign: 'left', color: 'var(--text-muted)' }}>
+                    <th style={{ padding: '0.75rem' }}>NODE ID</th>
+                    <th style={{ padding: '0.75rem' }}>REGION CLUSTER</th>
+                    <th style={{ padding: '0.75rem' }}>CPU LOAD</th>
+                    <th style={{ padding: '0.75rem' }}>RAM USAGE</th>
+                    <th style={{ padding: '0.75rem' }}>LATENCY</th>
+                    <th style={{ padding: '0.75rem' }}>HEALTH</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {deltaClusterNodes.map(node => (
+                    <tr key={node.id} style={{ borderBottom: `1px solid ${isDarkMode ? '#334155' : '#F1F5F9'}` }}>
+                      <td style={{ padding: '0.75rem', fontWeight: '800', color: primaryColor }}>{node.id}</td>
+                      <td style={{ padding: '0.75rem', fontWeight: '600' }}>{node.region}</td>
+                      <td style={{ padding: '0.75rem', fontWeight: '700', color: '#F59E0B' }}>{node.cpu}</td>
+                      <td style={{ padding: '0.75rem' }}>{node.mem}</td>
+                      <td style={{ padding: '0.75rem', fontWeight: '600' }}>{node.latency}</td>
+                      <td style={{ padding: '0.75rem' }}>
+                        <span style={{ padding: '0.2rem 0.6rem', borderRadius: '99px', backgroundColor: 'rgba(245, 158, 11, 0.15)', color: '#F59E0B', fontWeight: '700', fontSize: '0.725rem' }}>
+                          ● {node.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
         {/* SECTION 1: SPRINT PROGRESS & MAINTENANCE MODE */}
         <div style={{
           display: 'grid',
@@ -420,10 +582,10 @@ export default function Dashboard() {
           <div className="card">
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <FiCheckSquare style={{ color: 'var(--primary)', fontSize: '1.15rem' }} />
+                <FiCheckSquare style={{ color: primaryColor, fontSize: '1.15rem' }} />
                 <h3 style={{ fontSize: '1rem', fontWeight: '700' }}>Sprint Progress & QA Tasks</h3>
               </div>
-              <Link to="/todos" style={{ color: 'var(--primary)', fontSize: '0.8rem', fontWeight: '600', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+              <Link to="/todos" style={{ color: primaryColor, fontSize: '0.8rem', fontWeight: '600', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                 <span>Task Board</span>
                 <FiArrowRight />
               </Link>
@@ -433,11 +595,11 @@ export default function Dashboard() {
             <div style={{ backgroundColor: 'var(--bg-card-hover)', padding: '1rem 1.15rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', marginBottom: '1rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.825rem', fontWeight: '700' }}>
                 <span>Completion Rate</span>
-                <span style={{ color: 'var(--primary)' }}>{taskProgressPercent}%</span>
+                <span style={{ color: primaryColor }}>{taskProgressPercent}%</span>
               </div>
 
               <div style={{ width: '100%', height: '6px', backgroundColor: 'var(--border-color)', borderRadius: '99px', overflow: 'hidden' }}>
-                <div style={{ height: '100%', width: `${taskProgressPercent}%`, backgroundColor: 'var(--primary)', borderRadius: '99px', transition: 'width 0.3s ease' }} />
+                <div style={{ height: '100%', width: `${taskProgressPercent}%`, backgroundColor: primaryColor, borderRadius: '99px', transition: 'width 0.3s ease' }} />
               </div>
 
               <div style={{ display: 'flex', gap: '0.85rem', marginTop: '0.75rem', fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: '600' }}>
@@ -517,10 +679,10 @@ export default function Dashboard() {
         <div className="card" style={{ marginBottom: '1.75rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <FiBookOpen style={{ color: 'var(--primary)', fontSize: '1.15rem' }} />
+              <FiBookOpen style={{ color: primaryColor, fontSize: '1.15rem' }} />
               <h3 style={{ fontSize: '1rem', fontWeight: '700' }}>Popular System Guides & Documentation</h3>
             </div>
-            <Link to="/documentation" style={{ color: 'var(--primary)', fontSize: '0.8rem', fontWeight: '600', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+            <Link to="/documentation" style={{ color: primaryColor, fontSize: '0.8rem', fontWeight: '600', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
               <span>Manage Docs</span>
               <FiArrowRight />
             </Link>
@@ -554,7 +716,7 @@ export default function Dashboard() {
 
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.85rem', paddingTop: '0.4rem', borderTop: '1px solid var(--border-color)', fontSize: '0.725rem', color: 'var(--text-subtle)' }}>
                     <span>Author: {doc.author || 'Admin'}</span>
-                    <FiArrowRight style={{ color: 'var(--primary)' }} />
+                    <FiArrowRight style={{ color: primaryColor }} />
                   </div>
                 </div>
               </Link>
@@ -566,7 +728,7 @@ export default function Dashboard() {
         <div className="table-container" style={{ marginBottom: '1.75rem' }}>
           <div className="table-toolbar">
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <FiFolder style={{ color: 'var(--primary)' }} />
+              <FiFolder style={{ color: primaryColor }} />
               <h3 style={{ fontSize: '1rem', fontWeight: '700', margin: 0 }}>Recent Portfolio Projects</h3>
             </div>
             <Link to="/projects" className="btn btn-secondary btn-sm">
@@ -603,7 +765,7 @@ export default function Dashboard() {
                     <td style={{ width: '200px' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                         <div style={{ flex: 1, height: '5px', backgroundColor: 'var(--border-color)', borderRadius: '99px', overflow: 'hidden' }}>
-                          <div style={{ height: '100%', width: `${p.progress}%`, backgroundColor: 'var(--primary)', borderRadius: '99px' }} />
+                          <div style={{ height: '100%', width: `${p.progress}%`, backgroundColor: primaryColor, borderRadius: '99px' }} />
                         </div>
                         <span style={{ fontSize: '0.75rem', fontWeight: '700' }}>{p.progress}%</span>
                       </div>
@@ -640,7 +802,7 @@ export default function Dashboard() {
             </div>
 
             <div style={{ backgroundColor: 'var(--bg-card-hover)', padding: '0.95rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', marginBottom: '1rem' }}>
-              <div style={{ fontSize: '0.675rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--primary)', fontWeight: '700', marginBottom: '0.2rem' }}>
+              <div style={{ fontSize: '0.675rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: primaryColor, fontWeight: '700', marginBottom: '0.2rem' }}>
                 {landing?.hero_badge || 'Independent Designer & Developer'}
               </div>
               <h4 style={{ fontSize: '0.95rem', fontWeight: '800', color: 'var(--text-main)', marginBottom: '0.4rem', lineHeight: '1.3' }}>
@@ -660,7 +822,7 @@ export default function Dashboard() {
           {/* System Activity Timeline Log */}
           <div className="card">
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
-              <FiActivity style={{ color: 'var(--primary)', fontSize: '1.15rem' }} />
+              <FiActivity style={{ color: primaryColor, fontSize: '1.15rem' }} />
               <h3 style={{ fontSize: '1rem', fontWeight: '700' }}>Recent Activity</h3>
             </div>
 
@@ -674,7 +836,7 @@ export default function Dashboard() {
               </div>
 
               <div style={{ display: 'flex', gap: '0.75rem' }}>
-                <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: 'var(--primary)', marginTop: '6px', flexShrink: 0 }} />
+                <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: primaryColor, marginTop: '6px', flexShrink: 0 }} />
                 <div>
                   <div style={{ fontSize: '0.825rem', fontWeight: '600', color: 'var(--text-main)' }}>Documentation Synced</div>
                   <span style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>System tree & live markdown preview enabled.</span>
