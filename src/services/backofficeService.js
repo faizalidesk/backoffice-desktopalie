@@ -848,25 +848,75 @@ export const backofficeService = {
     return true;
   },
 
-  // PROFILES
+  // PROFILES (DATABASE PERSISTENCE + LOCAL FALLBACK)
   async getProfile(userId) {
     if (!userId) return null;
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', userId)
-      .single();
-    if (error && error.code !== 'PGRST116') throw error;
-    return data;
+    const localKey = `desktopalie_profile_${userId}`;
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .maybeSingle();
+
+      if (!error && data) {
+        localStorage.setItem(localKey, JSON.stringify(data));
+        return data;
+      }
+    } catch (err) {
+      console.warn('Supabase profiles fetch error, reading local fallback:', err);
+    }
+
+    const cached = localStorage.getItem(localKey);
+    if (cached) {
+      try {
+        return JSON.parse(cached);
+      } catch (e) {}
+    }
+    return null;
   },
 
   async updateProfile(userId, updates) {
-    const { data, error } = await supabase
-      .from('profiles')
-      .upsert({ id: userId, ...updates, updated_at: new Date().toISOString() })
-      .select()
-      .single();
-    if (error) throw error;
-    return data;
+    if (!userId) throw new Error('User ID is missing');
+    const localKey = `desktopalie_profile_${userId}`;
+    const payload = {
+      id: userId,
+      ...updates,
+      updated_at: new Date().toISOString()
+    };
+
+    // 1. Always save to LocalStorage for instant fallback and multi-tab storage events
+    localStorage.setItem(localKey, JSON.stringify(payload));
+    window.dispatchEvent(new Event('storage'));
+
+    // 2. Persist directly to Supabase Database (profiles table)
+    try {
+      const { data: updateData, error: updateErr } = await supabase
+        .from('profiles')
+        .update(payload)
+        .eq('id', userId)
+        .select();
+
+      if (!updateErr && updateData && updateData.length > 0) {
+        return updateData[0];
+      }
+
+      const { data: upsertData, error: upsertErr } = await supabase
+        .from('profiles')
+        .upsert([payload])
+        .select()
+        .single();
+
+      if (!upsertErr && upsertData) {
+        return upsertData;
+      }
+      if (upsertErr) {
+        console.warn('Supabase profile upsert warning:', upsertErr.message);
+      }
+    } catch (err) {
+      console.warn('Supabase profiles update error, saved locally:', err);
+    }
+
+    return payload;
   }
 };
