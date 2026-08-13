@@ -336,10 +336,10 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* 3 KPI STAT CARDS GRID */}
+        {/* 4 KPI STAT CARDS GRID */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
           gap: '1.25rem',
           marginBottom: '1.75rem'
         }}>
@@ -375,6 +375,18 @@ export default function Dashboard() {
               </div>
               <div className="stat-icon amber">
                 <FiCheckSquare />
+              </div>
+            </div>
+          </Link>
+
+          <Link to="/documentation" style={{ textDecoration: 'none' }}>
+            <div className="stat-card" style={{ height: '100%' }}>
+              <div className="stat-info">
+                <div className="stat-label">Documentation</div>
+                <div className="stat-value">{loading ? '...' : stats.docsCount}</div>
+              </div>
+              <div className="stat-icon violet">
+                <FiBookOpen />
               </div>
             </div>
           </Link>
