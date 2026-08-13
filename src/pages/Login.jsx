@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useFlavor } from '../context/FlavorContext';
@@ -14,8 +14,16 @@ export default function Login() {
   const [errorMessage, setErrorMessage] = useState('');
   const { login } = useAuth();
   const { isDarkMode, toggleTheme } = useTheme();
-  const { activeFlavor, isMainDesktopalie } = useFlavor();
+  const { activeFlavor, flavorId, switchFlavor, isMainDesktopalie } = useFlavor();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const hostname = typeof window !== 'undefined' ? window.location.hostname.toLowerCase() : '';
+    const isSubplatform = hostname.includes('beta.') || hostname.includes('gamma.') || hostname.includes('delta.');
+    if (!isSubplatform && flavorId !== 'platform1') {
+      switchFlavor('platform1');
+    }
+  }, [flavorId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
