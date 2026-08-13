@@ -46,7 +46,15 @@ export const translations = {
     // Dashboard
     welcomeTitle: 'Selamat Datang Kembali, Administrator Workspace 👋',
     welcomeSubtitle: 'Kelola seluruh portofolio publik, pembaruan konten landing page, papan tugas sprint QA, serta dokumentasi sistem dalam satu kontrol terpusat.',
-    realtimeSynced: 'Ekosistem Real-Time Synced'
+    realtimeSynced: 'Ekosistem Real-Time Synced',
+
+    // Notifications
+    notifications: 'Notifikasi',
+    markAllAsRead: 'Tandai Semua Dibaca',
+    clearAll: 'Hapus Semua',
+    noNotifications: 'Tidak ada notifikasi saat ini',
+    all: 'Semua',
+    unread: 'Belum Dibaca'
   },
   en: {
     // Navigation
@@ -90,7 +98,15 @@ export const translations = {
     // Dashboard
     welcomeTitle: 'Welcome Back, Workspace Administrator 👋',
     welcomeSubtitle: 'Manage your public portfolio, landing page updates, QA sprint tasks, and system documentation in one centralized workspace.',
-    realtimeSynced: 'Real-Time Synced Ecosystem'
+    realtimeSynced: 'Real-Time Synced Ecosystem',
+
+    // Notifications
+    notifications: 'Notifications',
+    markAllAsRead: 'Mark All as Read',
+    clearAll: 'Clear All',
+    noNotifications: 'No notifications at this time',
+    all: 'All',
+    unread: 'Unread'
   }
 };
 
