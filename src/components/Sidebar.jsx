@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { 
   FiGrid, 
@@ -16,20 +16,30 @@ import {
   FiSearch,
   FiX,
   FiLayers,
-  FiUsers
+  FiUsers,
+  FiBell
 } from 'react-icons/fi';
 import { useLanguage } from '../context/LanguageContext';
 import { useFlavor } from '../context/FlavorContext';
+import { notificationService } from '../services/notificationService';
 import DesktopalieMark from './DesktopalieMark';
 
 export default function Sidebar() {
   const { t } = useLanguage();
   const { flavor, flavorId, subPlatformFlavors, isMainDesktopalie, switchFlavor, resetToMainFlavor } = useFlavor();
   const [searchQuery, setSearchQuery] = useState('');
+  const [unreadCount, setUnreadCount] = useState(() => notificationService.getUnreadCount());
   const searchInputRef = useRef(null);
   const [isCollapsed, setIsCollapsed] = useState(() => {
     return localStorage.getItem('desktopalie_sidebar_collapsed') === 'true';
   });
+
+  useEffect(() => {
+    const unsubscribe = notificationService.subscribe(() => {
+      setUnreadCount(notificationService.getUnreadCount());
+    });
+    return unsubscribe;
+  }, []);
 
   const toggleCollapse = () => {
     setIsCollapsed(prev => {
@@ -54,6 +64,7 @@ export default function Sidebar() {
   const allNavItems = [
     { label: t('dashboard'), path: '/dashboard', icon: FiGrid },
     { label: t('workspaces'), path: '/workspaces', icon: FiLayers },
+    { label: t('notifications') || 'Notifikasi', path: '/notifications', icon: FiBell, badge: unreadCount },
     { label: 'Membership', path: '/members', icon: FiUsers },
     { label: t('projects'), path: '/projects', icon: FiFolder },
     { label: t('experiments'), path: '/experiments', icon: FiCpu },
@@ -336,8 +347,34 @@ export default function Sidebar() {
                   transition: 'all 0.15s ease'
                 })}
               >
-                <Icon style={{ fontSize: '1.25rem', flexShrink: 0 }} />
-                {!isCollapsed && <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.label}</span>}
+                <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                  <Icon style={{ fontSize: '1.25rem', flexShrink: 0 }} />
+                  {isCollapsed && item.badge > 0 && (
+                    <span style={{
+                      position: 'absolute',
+                      top: '-2px',
+                      right: '-2px',
+                      width: '8px',
+                      height: '8px',
+                      borderRadius: '50%',
+                      backgroundColor: '#EF4444'
+                    }} />
+                  )}
+                </div>
+                {!isCollapsed && <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', flex: 1 }}>{item.label}</span>}
+                {!isCollapsed && item.badge > 0 && (
+                  <span style={{
+                    backgroundColor: '#EF4444',
+                    color: '#FFFFFF',
+                    fontSize: '0.7rem',
+                    fontWeight: '800',
+                    padding: '0.1rem 0.45rem',
+                    borderRadius: '99px',
+                    marginLeft: 'auto'
+                  }}>
+                    {item.badge}
+                  </span>
+                )}
               </NavLink>
             );
           })
