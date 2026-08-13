@@ -93,45 +93,71 @@ export default function MembershipManager() {
   const fetchMembers = async () => {
     setLoading(true);
     try {
-      let fetchedList = [...initialDemoMembers];
+      let map = new Map();
 
-      // If current user exists, add/upsert current user to list
-      if (currentUser) {
-        const isCurrentInList = fetchedList.some(m => m.email === currentUser.email);
-        if (!isCurrentInList) {
-          fetchedList.unshift({
-            id: currentUser.id || 'usr-current',
-            full_name: currentUser.user_metadata?.full_name || currentUser.email?.split('@')[0],
-            email: currentUser.email,
-            avatar_url: currentUser.user_metadata?.avatar_url || currentUser.user_metadata?.picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.email)}`,
-            provider: currentUser.app_metadata?.provider === 'google' ? 'Google OAuth 2.0' : 'Email & Password',
-            platform: 'platform1',
-            platformName: 'Desktopalie Main',
-            role: 'Member',
-            status: 'Active',
-            created_at: currentUser.created_at || new Date().toISOString(),
-            last_login: 'Baru Saja'
+      // 1. Prepopulate demo data
+      initialDemoMembers.forEach(m => map.set(m.email, m));
+
+      // 2. Read from localStorage registry
+      const localRegistryStr = localStorage.getItem('desktopalie_members_registry');
+      if (localRegistryStr) {
+        try {
+          const localMembers = JSON.parse(localRegistryStr);
+          localMembers.forEach(m => {
+            if (m.email) map.set(m.email, { ...map.get(m.email), ...m });
           });
+        } catch (e) {
+          console.warn('Local registry parse error:', e);
         }
       }
 
-      // Fetch profiles table from Supabase if available
+      // 3. Read from Supabase site_settings (keys starting with member_)
+      try {
+        const settings = await backofficeService.getSiteSettings();
+        if (settings) {
+          Object.keys(settings).forEach(key => {
+            if (key.startsWith('member_') || key.startsWith('profile_')) {
+              const val = settings[key];
+              if (val && val.email) {
+                map.set(val.email, {
+                  id: val.id || key,
+                  full_name: val.full_name || val.email.split('@')[0],
+                  email: val.email,
+                  avatar_url: val.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(val.email)}`,
+                  provider: val.provider || 'Google OAuth 2.0',
+                  platform: val.platform || 'platform1',
+                  platformName: val.platformName || (val.platform === 'platform2' ? 'Desktopalie Beta' : (val.platform === 'platform3' ? 'Desktopalie Gamma' : (val.platform === 'platform4' ? 'Desktopalie Delta' : 'Desktopalie Main'))),
+                  role: val.role || 'Member',
+                  status: val.status || 'Active',
+                  created_at: val.created_at || new Date().toISOString(),
+                  last_login: val.last_login || 'Baru Saja'
+                });
+              }
+            }
+          });
+        }
+      } catch (err) {
+        console.warn('Settings member fetch warning:', err);
+      }
+
+      // 4. Read from Supabase profiles table
       try {
         const { data: profiles, error } = await supabase.from('profiles').select('*');
         if (!error && profiles && profiles.length > 0) {
           profiles.forEach(p => {
-            if (!fetchedList.some(m => m.email === p.email)) {
-              fetchedList.push({
+            if (p.email) {
+              const existing = map.get(p.email) || {};
+              map.set(p.email, {
                 id: p.id,
-                full_name: p.full_name || p.email?.split('@')[0],
+                full_name: p.full_name || existing.full_name || p.email.split('@')[0],
                 email: p.email,
-                avatar_url: p.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(p.email)}`,
-                provider: p.provider || 'Google OAuth 2.0',
-                platform: p.platform || 'platform1',
-                platformName: p.platform === 'platform2' ? 'Desktopalie Beta' : (p.platform === 'platform3' ? 'Desktopalie Gamma' : (p.platform === 'platform4' ? 'Desktopalie Delta' : 'Desktopalie Main')),
-                role: 'Member',
+                avatar_url: p.avatar_url || existing.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(p.email)}`,
+                provider: p.provider || existing.provider || 'Google OAuth 2.0',
+                platform: p.platform || existing.platform || 'platform1',
+                platformName: p.platformName || existing.platformName || 'Desktopalie Main',
+                role: p.role || existing.role || 'Member',
                 status: 'Active',
-                created_at: p.created_at || new Date().toISOString(),
+                created_at: p.created_at || existing.created_at || new Date().toISOString(),
                 last_login: 'Aktif'
               });
             }
@@ -141,7 +167,25 @@ export default function MembershipManager() {
         console.warn('Profiles fetch warning:', err);
       }
 
-      setMembers(fetchedList);
+      // 5. Add current logged in user if missing
+      if (currentUser && currentUser.email) {
+        const existing = map.get(currentUser.email) || {};
+        map.set(currentUser.email, {
+          id: currentUser.id,
+          full_name: currentUser.user_metadata?.full_name || existing.full_name || currentUser.email.split('@')[0],
+          email: currentUser.email,
+          avatar_url: currentUser.user_metadata?.avatar_url || currentUser.user_metadata?.picture || existing.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.email)}`,
+          provider: currentUser.app_metadata?.provider === 'google' ? 'Google OAuth 2.0' : 'Email & Password',
+          platform: existing.platform || 'platform1',
+          platformName: existing.platformName || 'Desktopalie Main',
+          role: existing.role || 'Super Admin',
+          status: 'Active',
+          created_at: currentUser.created_at || existing.created_at || new Date().toISOString(),
+          last_login: 'Baru Saja'
+        });
+      }
+
+      setMembers(Array.from(map.values()));
     } catch (err) {
       console.error('Error fetching members:', err);
       toast.error('Gagal memuat data anggota platform.');
@@ -152,6 +196,13 @@ export default function MembershipManager() {
 
   useEffect(() => {
     fetchMembers();
+
+    const handleStorageChange = () => {
+      fetchMembers();
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, [currentUser]);
 
   const filteredMembers = members.filter(m => {

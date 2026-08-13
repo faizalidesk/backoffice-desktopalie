@@ -9,43 +9,71 @@ export const AuthProvider = ({ children }) => {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const syncGoogleUserToDatabase = async (authUser) => {
+  const syncUserToMembershipRegistry = async (authUser) => {
     if (!authUser || !authUser.id) return;
     try {
       const meta = authUser.user_metadata || {};
-      const fullName = meta.full_name || meta.name || authUser.email?.split('@')[0] || 'Google User';
-      const avatarUrl = meta.avatar_url || meta.picture || '';
+      const fullName = meta.full_name || meta.name || authUser.email?.split('@')[0] || 'User Member';
+      const avatarUrl = meta.avatar_url || meta.picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(authUser.email || 'User')}`;
+      const provider = authUser.app_metadata?.provider === 'google' ? 'Google OAuth 2.0' : 'Email & Password';
 
-      const profilePayload = {
+      const hostname = typeof window !== 'undefined' ? window.location.hostname.toLowerCase() : '';
+      let platform = 'platform1';
+      let platformName = 'Desktopalie Main';
+
+      if (hostname.includes('beta.') || (typeof window !== 'undefined' && window.location.pathname.startsWith('/beta'))) {
+        platform = 'platform2';
+        platformName = 'Desktopalie Beta';
+      } else if (hostname.includes('gamma.') || (typeof window !== 'undefined' && window.location.pathname.startsWith('/gamma'))) {
+        platform = 'platform3';
+        platformName = 'Desktopalie Gamma';
+      } else if (hostname.includes('delta.') || (typeof window !== 'undefined' && window.location.pathname.startsWith('/delta'))) {
+        platform = 'platform4';
+        platformName = 'Desktopalie Delta';
+      }
+
+      const memberPayload = {
         id: authUser.id,
+        email: authUser.email,
         full_name: fullName,
-        username: authUser.email ? authUser.email.split('@')[0] : 'user',
         avatar_url: avatarUrl,
-        bio: 'Google Authenticated User',
-        location: 'Indonesia',
-        website: '',
-        updated_at: new Date().toISOString()
+        provider: provider,
+        platform: platform,
+        platformName: platformName,
+        role: 'Member',
+        status: 'Active',
+        created_at: authUser.created_at || new Date().toISOString(),
+        last_login: new Date().toISOString()
       };
 
-      // 1. Store in localStorage
-      const localKey = `desktopalie_profile_${authUser.id}`;
-      localStorage.setItem(localKey, JSON.stringify(profilePayload));
-      localStorage.setItem('desktopalie_profile', JSON.stringify(profilePayload));
+      // 1. Save to local storage registry
+      const localKey = `desktopalie_member_${authUser.id}`;
+      localStorage.setItem(localKey, JSON.stringify(memberPayload));
+      
+      const registryStr = localStorage.getItem('desktopalie_members_registry');
+      let registry = registryStr ? JSON.parse(registryStr) : [];
+      const existingIdx = registry.findIndex(m => m.id === authUser.id || m.email === authUser.email);
+      if (existingIdx >= 0) {
+        registry[existingIdx] = { ...registry[existingIdx], ...memberPayload };
+      } else {
+        registry.unshift(memberPayload);
+      }
+      localStorage.setItem('desktopalie_members_registry', JSON.stringify(registry));
       window.dispatchEvent(new Event('storage'));
 
-      // 2. Persist full JSON to site_settings table
-      await backofficeService.saveSiteSetting(`profile_${authUser.id}`, profilePayload);
+      // 2. Persist to site_settings table
+      await backofficeService.saveSiteSetting(`member_${authUser.id}`, memberPayload);
 
       // 3. Upsert clean columns to profiles table
       await supabase.from('profiles').upsert([{
         id: authUser.id,
         full_name: fullName,
         avatar_url: avatarUrl,
-        role: 'Administrator',
+        role: 'Member',
         updated_at: new Date().toISOString()
       }], { onConflict: 'id' });
     } catch (err) {
-      console.warn('Sync Google User Profile Warning:', err);
+      console.warn('Sync User Membership Warning:', err);
     }
   };
 
@@ -55,7 +83,7 @@ export const AuthProvider = ({ children }) => {
       setUser(session?.user ?? null);
       setLoading(false);
       if (session?.user) {
-        syncGoogleUserToDatabase(session.user);
+        syncUserToMembershipRegistry(session.user);
       }
     });
 
@@ -65,7 +93,7 @@ export const AuthProvider = ({ children }) => {
         setUser(session?.user ?? null);
         setLoading(false);
         if (session?.user) {
-          syncGoogleUserToDatabase(session.user);
+          syncUserToMembershipRegistry(session.user);
         }
       }
     );
