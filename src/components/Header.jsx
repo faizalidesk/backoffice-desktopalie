@@ -4,6 +4,7 @@ import { useTheme } from '../context/ThemeContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useFlavor } from '../context/FlavorContext';
 import { Link, useNavigate } from 'react-router-dom';
+import { backofficeService } from '../services/backofficeService';
 import { 
   FiActivity, 
   FiGlobe, 
@@ -23,8 +24,29 @@ export default function Header({ title = 'Dashboard Overview' }) {
   const { language, setLanguage, t } = useLanguage();
   const { activeFlavor, flavorId } = useFlavor();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [userProfile, setUserProfile] = useState(null);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    async function loadHeaderProfile() {
+      try {
+        const p = await backofficeService.getProfile(user?.id);
+        if (p) setUserProfile(p);
+      } catch (e) {}
+    }
+
+    loadHeaderProfile();
+
+    const handleStorage = (e) => {
+      if (!e || !e.key || e.key.includes('profile')) {
+        loadHeaderProfile();
+      }
+    };
+
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
+  }, [user?.id]);
 
   const targetWebsite = flavorId === 'platform2' 
     ? 'https://beta.desktopalie.my.id' 
@@ -139,13 +161,18 @@ export default function Header({ title = 'Dashboard Overview' }) {
               alignItems: 'center',
               justifyContent: 'center',
               fontWeight: '800',
-              fontSize: '0.85rem'
+              fontSize: '0.85rem',
+              overflow: 'hidden'
             }}>
-              {user?.email?.charAt(0).toUpperCase() || 'A'}
+              {userProfile?.avatar_url ? (
+                <img src={userProfile.avatar_url} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              ) : (
+                userProfile?.full_name ? userProfile.full_name.charAt(0).toUpperCase() : (user?.email?.charAt(0).toUpperCase() || 'A')
+              )}
             </div>
 
             <span style={{ fontSize: '0.85rem', fontWeight: '700', maxWidth: '140px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-              {user?.email?.split('@')[0] || 'Admin'}
+              {userProfile?.full_name || user?.email?.split('@')[0] || 'Admin'}
             </span>
 
             <FiChevronDown style={{
@@ -194,14 +221,19 @@ export default function Header({ title = 'Dashboard Overview' }) {
                   justifyContent: 'center',
                   fontWeight: '800',
                   fontSize: '1.05rem',
-                  flexShrink: 0
+                  flexShrink: 0,
+                  overflow: 'hidden'
                 }}>
-                  {user?.email?.charAt(0).toUpperCase() || 'A'}
+                  {userProfile?.avatar_url ? (
+                    <img src={userProfile.avatar_url} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  ) : (
+                    userProfile?.full_name ? userProfile.full_name.charAt(0).toUpperCase() : (user?.email?.charAt(0).toUpperCase() || 'A')
+                  )}
                 </div>
 
                 <div style={{ overflow: 'hidden' }}>
                   <div style={{ fontSize: '0.875rem', fontWeight: '800', color: 'var(--text-main)', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
-                    {user?.email || 'Admin User'}
+                    {userProfile?.full_name || user?.email || 'Admin User'}
                   </div>
                   <span style={{
                     fontSize: '0.675rem',
