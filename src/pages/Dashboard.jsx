@@ -194,15 +194,21 @@ export default function Dashboard() {
       <Header title="Dashboard Overview" />
       <div className="page-body" style={{ paddingBottom: '4rem' }}>
         
-        {/* HERO PROFILE COVER BANNER */}
+        {/* SLEEK AMBIENT WELCOME BANNER FOR DASHBOARD OVERVIEW */}
         <div style={{
           position: 'relative',
           borderRadius: '16px',
           overflow: 'hidden',
           backgroundColor: '#0F172A',
           color: '#FFFFFF',
+          padding: '2rem 2.25rem',
           marginBottom: '2rem',
-          boxShadow: '0 8px 30px rgba(15, 23, 42, 0.12)'
+          boxShadow: '0 8px 30px rgba(15, 23, 42, 0.12)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: '1.5rem'
         }}>
           {/* Ambient Decorative Gradient & Glow */}
           <div style={{
@@ -226,201 +232,65 @@ export default function Dashboard() {
             pointerEvents: 'none'
           }} />
 
-          {/* Banner Main Content */}
-          <div style={{ position: 'relative', zIndex: 2, padding: '2rem 2.25rem 1.5rem 2.25rem' }}>
+          {/* Left Text Content */}
+          <div style={{ position: 'relative', zIndex: 2, flex: 1, minWidth: '280px' }}>
             <div style={{
-              display: 'flex',
-              alignItems: 'flex-start',
-              justifyContent: 'space-between',
-              flexWrap: 'wrap',
-              gap: '1.5rem'
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              backgroundColor: 'rgba(16, 185, 129, 0.15)',
+              border: '1px solid rgba(16, 185, 129, 0.3)',
+              padding: '0.25rem 0.75rem',
+              borderRadius: '99px',
+              fontSize: '0.725rem',
+              color: '#34D399',
+              fontWeight: '700',
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+              marginBottom: '0.75rem'
             }}>
-              
-              {/* Left Profile Identity */}
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1.5rem', flex: 1, minWidth: '300px' }}>
-                
-                {/* Avatar & Copy ID Column */}
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.85rem' }}>
-                  <div style={{ position: 'relative', width: '88px', height: '88px', flexShrink: 0 }}>
-                    <div style={{
-                      width: '100%',
-                      height: '100%',
-                      borderRadius: '50%',
-                      background: `linear-gradient(135deg, ${primaryColor}, #8B5CF6)`,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: '#FFFFFF',
-                      fontSize: '2.25rem',
-                      fontWeight: '800',
-                      border: '3.5px solid #FFFFFF',
-                      boxShadow: '0 8px 24px rgba(0, 0, 0, 0.25)',
-                      overflow: 'hidden'
-                    }}>
-                      {userProfile?.avatar_url ? (
-                        <img src={userProfile.avatar_url} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                      ) : (
-                        userProfile?.full_name ? userProfile.full_name.charAt(0).toUpperCase() : (user?.email?.charAt(0).toUpperCase() || 'F')
-                      )}
-                    </div>
-
-                    {/* Status Indicator Dot */}
-                    <span style={{
-                      position: 'absolute',
-                      bottom: '1px',
-                      right: '1px',
-                      width: '20px',
-                      height: '20px',
-                      borderRadius: '50%',
-                      backgroundColor: '#10B981',
-                      border: '3px solid #0F172A',
-                      boxShadow: '0 2px 6px rgba(0, 0, 0, 0.35)',
-                      zIndex: 3
-                    }} title="Active Online" />
-                  </div>
-
-                  {/* Copy User ID Button */}
-                  <button
-                    type="button"
-                    onClick={copyUserId}
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '0.4rem',
-                      padding: '0.35rem 0.75rem',
-                      borderRadius: '8px',
-                      backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                      border: '1px solid rgba(255, 255, 255, 0.15)',
-                      color: '#FFFFFF',
-                      fontSize: '0.75rem',
-                      fontWeight: '700',
-                      cursor: 'pointer',
-                      backdropFilter: 'blur(8px)',
-                      transition: 'all 0.2s ease',
-                      whiteSpace: 'nowrap'
-                    }}
-                  >
-                    {copiedId ? <FiCheck style={{ color: '#10B981' }} /> : <FiCopy />}
-                    <span>{copiedId ? 'ID Copied!' : 'Copy User ID'}</span>
-                  </button>
-                </div>
-
-                {/* Info Text Column */}
-                <div style={{ flex: 1 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.4rem', flexWrap: 'wrap' }}>
-                    <h1 style={{ fontSize: '1.6rem', fontWeight: '800', margin: 0, color: '#FFFFFF', letterSpacing: '-0.02em' }}>
-                      {userProfile?.full_name || 'Faiz ali'}
-                    </h1>
-                    <span style={{ fontSize: '0.9rem', color: '#94A3B8', fontWeight: '600' }}>
-                      @{userProfile?.username || 'faiezalie'}
-                    </span>
-                    <span style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '0.3rem',
-                      padding: '0.2rem 0.6rem',
-                      borderRadius: '99px',
-                      backgroundColor: 'rgba(16, 185, 129, 0.15)',
-                      color: '#34D399',
-                      border: '1px solid rgba(16, 185, 129, 0.3)',
-                      fontSize: '0.725rem',
-                      fontWeight: '700'
-                    }}>
-                      <FiShield style={{ fontSize: '0.75rem' }} />
-                      <span>Verified Admin</span>
-                    </span>
-                  </div>
-
-                  <p style={{ fontSize: '0.875rem', color: '#CBD5E1', margin: '0 0 0.85rem 0', lineHeight: '1.5', maxWidth: '850px' }}>
-                    {userProfile?.bio || defaultStudentBio}
-                  </p>
-
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', flexWrap: 'wrap', fontSize: '0.8rem', color: '#94A3B8' }}>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                      <FiMail style={{ color: primaryColor }} />
-                      <span>{user?.email || '12@gmail.com'}</span>
-                    </span>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                      <FiMapPin style={{ color: '#F59E0B' }} />
-                      <span>{userProfile?.location || 'Indonesia'}</span>
-                    </span>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                      <FiLayers style={{ color: '#A855F7' }} />
-                      <span>Workspace: {activeFlavor?.shortName || 'Beta'}</span>
-                    </span>
-                  </div>
-                </div>
-
-              </div>
-
+              <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10B981' }} />
+              <span>{activeFlavor?.shortName ? `Platform ${activeFlavor.shortName} Active` : 'Synced Workspace'}</span>
             </div>
+
+            <h1 style={{ fontSize: '1.75rem', fontWeight: '800', color: '#FFFFFF', marginBottom: '0.5rem', letterSpacing: '-0.02em' }}>
+              {activeFlavor?.name ? `Welcome to ${activeFlavor.name}` : 'Welcome Back, Workspace Administrator'}
+            </h1>
+
+            <p style={{ color: '#94A3B8', fontSize: '0.9rem', maxWidth: '700px', margin: 0, lineHeight: '1.55' }}>
+              {activeFlavor?.description || 'Manage your public portfolio, landing page updates, QA sprint tasks, and system documentation in one centralized workspace.'}
+            </p>
           </div>
 
-          {/* TABBED NAVIGATION HEADER */}
-          <div style={{
-            display: 'flex',
-            gap: '0.5rem',
-            padding: '0 2.25rem',
-            backgroundColor: 'rgba(15, 23, 42, 0.6)',
-            borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-            position: 'relative',
-            zIndex: 3
-          }}>
-            <Link
-              to="/profile"
+          {/* Right Action Buttons */}
+          <div style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+            <Link 
+              to="/todos" 
+              className="btn btn-primary"
               style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                padding: '0.85rem 1.25rem',
-                fontSize: '0.85rem',
-                fontWeight: '700',
+                background: `linear-gradient(135deg, ${primaryColor}, #8B5CF6)`,
+                border: 'none',
+                boxShadow: '0 4px 14px rgba(79, 70, 229, 0.35)',
+                fontWeight: '700'
+              }}
+            >
+              <FiCheckSquare />
+              <span>To-Do Board</span>
+            </Link>
+
+            <Link 
+              to="/documentation" 
+              className="btn btn-secondary"
+              style={{
+                backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                border: '1px solid rgba(255, 255, 255, 0.15)',
                 color: '#FFFFFF',
-                borderBottom: `2.5px solid ${primaryColor}`,
-                textDecoration: 'none',
-                transition: 'all 0.2s ease'
+                backdropFilter: 'blur(8px)',
+                fontWeight: '700'
               }}
             >
-              <FiUser style={{ fontSize: '1rem', color: primaryColor }} />
-              <span>Personal & Profile Details</span>
-            </Link>
-
-            <Link
-              to="/profile"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                padding: '0.85rem 1.25rem',
-                fontSize: '0.85rem',
-                fontWeight: '600',
-                color: '#94A3B8',
-                borderBottom: '2.5px solid transparent',
-                textDecoration: 'none',
-                transition: 'all 0.2s ease'
-              }}
-            >
-              <FiGlobe style={{ fontSize: '1rem' }} />
-              <span>Language & Regional</span>
-            </Link>
-
-            <Link
-              to="/profile"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                padding: '0.85rem 1.25rem',
-                fontSize: '0.85rem',
-                fontWeight: '600',
-                color: '#94A3B8',
-                borderBottom: '2.5px solid transparent',
-                textDecoration: 'none',
-                transition: 'all 0.2s ease'
-              }}
-            >
-              <FiShield style={{ fontSize: '1rem' }} />
-              <span>Security & Metadata</span>
+              <FiBookOpen />
+              <span>Docs</span>
             </Link>
           </div>
         </div>
