@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { LanguageProvider } from './context/LanguageContext';
-import { FlavorProvider } from './context/FlavorContext';
+import { FlavorProvider, useFlavor } from './context/FlavorContext';
 import { Toaster } from 'react-hot-toast';
 
 import Sidebar from './components/Sidebar';
@@ -22,10 +22,14 @@ import DocumentationManager from './pages/DocumentationManager';
 
 import PublicPlatformLanding from './pages/PublicPlatformLanding';
 import PlatformWorkspacesManager from './pages/PlatformWorkspacesManager';
-import { useFlavor } from './context/FlavorContext';
+import SubPlatformLogin from './pages/SubPlatformLogin';
+import PlatformBetaPortal from './pages/PlatformBetaPortal';
+import PlatformGammaPortal from './pages/PlatformGammaPortal';
+import PlatformDeltaPortal from './pages/PlatformDeltaPortal';
 
 function ProtectedLayout({ children }) {
   const { user, loading } = useAuth();
+  const { flavorId } = useFlavor();
 
   if (loading) {
     return (
@@ -37,12 +41,15 @@ function ProtectedLayout({ children }) {
         backgroundColor: 'var(--bg-main)',
         color: 'var(--text-muted)'
       }}>
-        Memuat Backoffice Workspace...
+        Memuat Workspace...
       </div>
     );
   }
 
   if (!user) {
+    if (flavorId === 'platform2') return <Navigate to="/beta/login" replace />;
+    if (flavorId === 'platform3') return <Navigate to="/gamma/login" replace />;
+    if (flavorId === 'platform4') return <Navigate to="/delta/login" replace />;
     return <Navigate to="/login" replace />;
   }
 
@@ -57,18 +64,23 @@ function ProtectedLayout({ children }) {
 }
 
 function DashboardRoute() {
-  const { hasSelectedFlavor } = useFlavor();
+  const { hasSelectedFlavor, flavorId } = useFlavor();
   if (!hasSelectedFlavor) {
     return <Navigate to="/workspaces" replace />;
   }
+  
+  if (flavorId === 'platform2') return <PlatformBetaPortal />;
+  if (flavorId === 'platform3') return <PlatformGammaPortal />;
+  if (flavorId === 'platform4') return <PlatformDeltaPortal />;
+  
   return <Dashboard />;
 }
 
 function RootRoute() {
   const { user, loading } = useAuth();
+  const { flavorId } = useFlavor();
   const hostname = typeof window !== 'undefined' ? window.location.hostname.toLowerCase() : '';
 
-  // Strictly check if domain is explicitly back.desktopalie.my.id or backoffice subdomain
   const isBackofficeDomain = hostname.startsWith('back.') || hostname.startsWith('backoffice.') || hostname === 'back.desktopalie.my.id';
 
   if (isBackofficeDomain) {
@@ -92,7 +104,6 @@ function RootRoute() {
     return <ProtectedLayout><DashboardRoute /></ProtectedLayout>;
   }
 
-  // On public subdomains (beta., gamma., delta., desktopalie.my.id), render Public Platform Landing
   return <PublicPlatformLanding />;
 }
 
@@ -116,10 +127,21 @@ export default function App() {
                   }} 
                 />
                 <Routes>
-                  {/* ROOT ROUTE: PURE BACKOFFICE LOGIN FOR BACK.DESKTOPALIE.MY.ID, PUBLIC LANDING FOR OTHER SUBDOMAINS */}
+                  {/* ROOT ROUTE */}
                   <Route path="/" element={<RootRoute />} />
 
-                  {/* AUTH & BACKOFFICE ROUTES */}
+                  {/* SUB-PLATFORM DEDICATED LOGIN ROUTES */}
+                  <Route path="/beta/login" element={<SubPlatformLogin />} />
+                  <Route path="/gamma/login" element={<SubPlatformLogin />} />
+                  <Route path="/delta/login" element={<SubPlatformLogin />} />
+                  <Route path="/platform/:platformName/login" element={<SubPlatformLogin />} />
+
+                  {/* SUB-PLATFORM DEDICATED WORKSPACE PORTALS */}
+                  <Route path="/beta/portal" element={<ProtectedLayout><PlatformBetaPortal /></ProtectedLayout>} />
+                  <Route path="/gamma/portal" element={<ProtectedLayout><PlatformGammaPortal /></ProtectedLayout>} />
+                  <Route path="/delta/portal" element={<ProtectedLayout><PlatformDeltaPortal /></ProtectedLayout>} />
+
+                  {/* AUTH & MAIN BACKOFFICE ROUTES */}
                   <Route path="/login" element={<Login />} />
                   <Route path="/register" element={<Register />} />
 
@@ -145,4 +167,3 @@ export default function App() {
     </FlavorProvider>
   );
 }
-
