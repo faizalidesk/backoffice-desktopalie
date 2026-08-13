@@ -31,12 +31,7 @@ export default function SubPlatformLogin() {
 
   const primaryColor = activeFlavor?.theme?.colorPrimary || '#3B82F6';
 
-  const targetPortalPath = (() => {
-    if (flavorId === 'platform2') return '/beta/portal';
-    if (flavorId === 'platform3') return '/gamma/portal';
-    if (flavorId === 'platform4') return '/delta/portal';
-    return '/beta/portal';
-  })();
+  const targetPortalPath = '/portal';
 
   const handleSubmit = async (e) => {
     e.preventDefault();

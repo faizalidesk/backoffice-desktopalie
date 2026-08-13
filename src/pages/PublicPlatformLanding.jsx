@@ -49,8 +49,7 @@ export default function PublicPlatformLanding() {
   const handleGoogleSignIn = async () => {
     setGoogleLoading(true);
     try {
-      const portalPath = flavorId === 'platform2' ? '/beta/portal' : (flavorId === 'platform3' ? '/gamma/portal' : '/delta/portal');
-      await signInWithGoogle(portalPath);
+      await signInWithGoogle('/portal');
     } catch (err) {
       console.error('Google Sign In Error:', err);
     } finally {
@@ -1054,7 +1053,7 @@ export default function PublicPlatformLanding() {
                 />
                 <button
                   type="button"
-                  onClick={() => navigate(flavorId === 'platform2' ? '/beta/portal' : (flavorId === 'platform3' ? '/gamma/portal' : '/delta/portal'))}
+                  onClick={() => navigate('/portal')}
                   style={{
                     display: 'inline-flex',
                     alignItems: 'center',
@@ -1101,7 +1100,7 @@ export default function PublicPlatformLanding() {
 
                 <button
                   type="button"
-                  onClick={() => navigate(flavorId === 'platform2' ? '/beta/login' : (flavorId === 'platform3' ? '/gamma/login' : '/delta/login'))}
+                  onClick={() => navigate('/login')}
                   style={{
                     display: 'inline-flex',
                     alignItems: 'center',

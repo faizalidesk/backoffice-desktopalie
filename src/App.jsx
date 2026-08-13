@@ -81,9 +81,6 @@ function SubPlatformProtectedLayout({ children }) {
   }
 
   if (!user) {
-    if (flavorId === 'platform2') return <Navigate to="/beta/login" replace />;
-    if (flavorId === 'platform3') return <Navigate to="/gamma/login" replace />;
-    if (flavorId === 'platform4') return <Navigate to="/delta/login" replace />;
     return <Navigate to="/login" replace />;
   }
 
@@ -105,6 +102,28 @@ function DashboardRoute() {
   if (flavorId === 'platform4') return <PlatformDeltaPortal />;
   
   return <Dashboard />;
+}
+
+// SMART LOGIN ROUTE FOR SUBDOMAINS AND BACKOFFICE
+function LoginRoute() {
+  const { flavorId } = useFlavor();
+  const hostname = typeof window !== 'undefined' ? window.location.hostname.toLowerCase() : '';
+  const isSubplatformDomain = hostname.startsWith('beta.') || hostname.startsWith('gamma.') || hostname.startsWith('delta.') || flavorId !== 'platform1';
+
+  if (isSubplatformDomain) {
+    return <SubPlatformLogin />;
+  }
+
+  return <Login />;
+}
+
+// SMART PORTAL ROUTE FOR SUBDOMAINS
+function PortalRoute() {
+  const { flavorId } = useFlavor();
+  if (flavorId === 'platform2') return <SubPlatformProtectedLayout><PlatformBetaPortal /></SubPlatformProtectedLayout>;
+  if (flavorId === 'platform3') return <SubPlatformProtectedLayout><PlatformGammaPortal /></SubPlatformProtectedLayout>;
+  if (flavorId === 'platform4') return <SubPlatformProtectedLayout><PlatformDeltaPortal /></SubPlatformProtectedLayout>;
+  return <Navigate to="/dashboard" replace />;
 }
 
 function RootRoute() {
@@ -161,19 +180,21 @@ export default function App() {
                   {/* ROOT ROUTE */}
                   <Route path="/" element={<RootRoute />} />
 
-                  {/* SUB-PLATFORM DEDICATED LOGIN ROUTES */}
+                  {/* SMART CLEAN ROUTES FOR ALL PLATFORMS */}
+                  <Route path="/login" element={<LoginRoute />} />
+                  <Route path="/portal" element={<PortalRoute />} />
+
+                  {/* SUB-PATH ALIAS ROUTES FOR COMPATIBILITY */}
                   <Route path="/beta/login" element={<SubPlatformLogin />} />
                   <Route path="/gamma/login" element={<SubPlatformLogin />} />
                   <Route path="/delta/login" element={<SubPlatformLogin />} />
                   <Route path="/platform/:platformName/login" element={<SubPlatformLogin />} />
 
-                  {/* SUB-PLATFORM STANDALONE PORTALS (WITHOUT BACKOFFICE SIDEBAR) */}
                   <Route path="/beta/portal" element={<SubPlatformProtectedLayout><PlatformBetaPortal /></SubPlatformProtectedLayout>} />
                   <Route path="/gamma/portal" element={<SubPlatformProtectedLayout><PlatformGammaPortal /></SubPlatformProtectedLayout>} />
                   <Route path="/delta/portal" element={<SubPlatformProtectedLayout><PlatformDeltaPortal /></SubPlatformProtectedLayout>} />
 
                   {/* AUTH & MAIN BACKOFFICE ROUTES */}
-                  <Route path="/login" element={<Login />} />
                   <Route path="/register" element={<Register />} />
 
                   <Route path="/dashboard" element={<ProtectedLayout><DashboardRoute /></ProtectedLayout>} />
