@@ -36,6 +36,7 @@ import {
   FaTerminal
 } from 'react-icons/fa';
 import DesktopalieMark from '../components/DesktopalieMark';
+import NotificationBell from '../components/NotificationBell';
 
 export default function PublicPlatformLanding() {
   const { activeFlavor, flavorId } = useFlavor();
@@ -999,6 +1000,7 @@ export default function PublicPlatformLanding() {
           {isSubPlatform && (
             user ? (
               <div className="public-user-group">
+                <NotificationBell primaryColor={primaryColor} />
                 <img
                   src={user.user_metadata?.avatar_url || user.user_metadata?.picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.email)}`}
                   alt="Avatar"

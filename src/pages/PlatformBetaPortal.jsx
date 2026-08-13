@@ -5,6 +5,7 @@ import { useFlavor } from '../context/FlavorContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import DesktopalieMark from '../components/DesktopalieMark';
+import NotificationBell from '../components/NotificationBell';
 import { 
   FiTruck, 
   FiPackage, 
@@ -131,6 +132,7 @@ export default function PlatformBetaPortal() {
 
           {user && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+              <NotificationBell primaryColor={primaryColor} />
               <img
                 src={user.user_metadata?.avatar_url || user.user_metadata?.picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.email)}`}
                 alt="Avatar"
