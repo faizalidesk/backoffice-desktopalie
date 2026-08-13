@@ -24,7 +24,13 @@ export default function Header({ title = 'Dashboard Overview' }) {
   const { language, setLanguage, t } = useLanguage();
   const { activeFlavor, flavorId } = useFlavor();
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [userProfile, setUserProfile] = useState(null);
+  const [userProfile, setUserProfile] = useState(() => {
+    try {
+      const cached = localStorage.getItem('desktopalie_profile') || localStorage.getItem(`desktopalie_profile_${user?.id}`);
+      if (cached) return JSON.parse(cached);
+    } catch (e) {}
+    return null;
+  });
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
 

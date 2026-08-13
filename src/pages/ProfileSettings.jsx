@@ -44,14 +44,32 @@ export default function ProfileSettings() {
     return id.slice(0, 8) + '••••••••••••••••' + id.slice(-4);
   };
 
-  const [profile, setProfile] = useState({
-    full_name: '',
-    username: '',
-    bio: 'Independent designer & developer',
-    avatar_url: '',
-    location: 'Indonesia',
-    website: ''
-  });
+  const getInitialProfileState = () => {
+    try {
+      const cached = localStorage.getItem('desktopalie_profile') || localStorage.getItem(`desktopalie_profile_${user?.id}`);
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        return {
+          full_name: parsed.full_name || '',
+          username: parsed.username || '',
+          bio: parsed.bio || 'Independent designer & developer',
+          avatar_url: parsed.avatar_url || '',
+          location: parsed.location || 'Indonesia',
+          website: parsed.website || ''
+        };
+      }
+    } catch (e) {}
+    return {
+      full_name: '',
+      username: '',
+      bio: 'Independent designer & developer',
+      avatar_url: '',
+      location: 'Indonesia',
+      website: ''
+    };
+  };
+
+  const [profile, setProfile] = useState(getInitialProfileState);
 
   useEffect(() => {
     loadProfile();
