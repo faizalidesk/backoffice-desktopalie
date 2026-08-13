@@ -86,6 +86,37 @@ export default function NotificationBell({ primaryColor }) {
   const filteredNotifs = notifFilter === 'unread' ? notifications.filter(n => !n.read) : notifications;
   const activeColor = primaryColor || 'var(--primary, #3B82F6)';
 
+  const handleNavigateTarget = (targetLink) => {
+    setSelectedNotif(null);
+    setNotifOpen(false);
+    if (!targetLink) return;
+
+    const backofficeRoutes = [
+      '/workspaces', '/projects', '/todos', '/documentation',
+      '/maintenance', '/dashboard', '/landing-manager',
+      '/notes', '/bookmarks', '/members', '/profile', '/experiments'
+    ];
+
+    const isBackofficeRoute = backofficeRoutes.some(r => targetLink.startsWith(r));
+    const isSubPlatformDomain = typeof window !== 'undefined' && (
+      window.location.hostname.includes('beta.') ||
+      window.location.hostname.includes('gamma.') ||
+      window.location.hostname.includes('delta.') ||
+      window.location.pathname.includes('/portal') ||
+      window.location.pathname.includes('/beta') ||
+      window.location.pathname.includes('/gamma') ||
+      window.location.pathname.includes('/delta')
+    );
+
+    if (isBackofficeRoute && isSubPlatformDomain) {
+      // Safe internal portal navigation without jumping to backoffice!
+      navigate('/portal');
+      return;
+    }
+
+    navigate(targetLink);
+  };
+
   const handleNotifClick = (notif) => {
     notificationService.markAsRead(notif.id);
     setSelectedNotif(notif);
@@ -564,11 +595,7 @@ export default function NotificationBell({ primaryColor }) {
               {selectedNotif.link && (
                 <button
                   type="button"
-                  onClick={() => {
-                    const link = selectedNotif.link;
-                    setSelectedNotif(null);
-                    navigate(link);
-                  }}
+                  onClick={() => handleNavigateTarget(selectedNotif.link)}
                   style={{
                     padding: '0.55rem 1.25rem',
                     borderRadius: '10px',
