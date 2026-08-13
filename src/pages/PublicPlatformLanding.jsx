@@ -1021,20 +1021,11 @@ export default function PublicPlatformLanding() {
               <div className="public-auth-group">
                 <button
                   type="button"
-                  onClick={handleGoogleSignIn}
-                  disabled={googleLoading}
-                  className="public-google-btn"
-                >
-                  <FaGoogle style={{ color: '#EA4335', fontSize: '1rem' }} />
-                  <span>{googleLoading ? 'Memproses...' : 'Sign in with Google'}</span>
-                </button>
-
-                <button
-                  type="button"
                   onClick={() => navigate('/login')}
                   className="public-login-btn"
                   style={{
-                    backgroundColor: primaryColor
+                    backgroundColor: primaryColor,
+                    boxShadow: `0 4px 14px ${primaryColor}40`
                   }}
                 >
                   <FiLock />
