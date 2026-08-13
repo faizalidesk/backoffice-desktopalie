@@ -49,7 +49,8 @@ export default function PublicPlatformLanding() {
   const handleGoogleSignIn = async () => {
     setGoogleLoading(true);
     try {
-      await signInWithGoogle();
+      const portalPath = flavorId === 'platform2' ? '/beta/portal' : (flavorId === 'platform3' ? '/gamma/portal' : '/delta/portal');
+      await signInWithGoogle(portalPath);
     } catch (err) {
       console.error('Google Sign In Error:', err);
     } finally {

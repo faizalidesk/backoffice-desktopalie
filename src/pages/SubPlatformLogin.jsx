@@ -74,7 +74,7 @@ export default function SubPlatformLogin() {
   const handleGoogleSignIn = async () => {
     setGoogleLoading(true);
     try {
-      await signInWithGoogle();
+      await signInWithGoogle(targetPortalPath);
     } catch (err) {
       console.error('Google Sign In Error:', err);
       toast.error('Gagal login via Google.');
