@@ -44,6 +44,8 @@ export default function ProfileSettings() {
     return id.slice(0, 8) + '••••••••••••••••' + id.slice(-4);
   };
 
+  const defaultBio = "Deskripsi student (peserta didik atau siswa) merujuk pada individu yang aktif menuntut ilmu, belajar, atau mendaftarkan diri pada suatu lembaga pendidikan (seperti sekolah, kursus, atau universitas).Peran utama seorang student adalah menyerap pengetahuan, melatih keterampilan, dan membentuk karakter melalui proses bimbingan pengajar.";
+
   const getInitialProfileState = () => {
     try {
       const cached = localStorage.getItem('desktopalie_profile') || localStorage.getItem(`desktopalie_profile_${user?.id}`);
@@ -52,7 +54,7 @@ export default function ProfileSettings() {
         return {
           full_name: parsed.full_name || '',
           username: parsed.username || '',
-          bio: parsed.bio || 'Independent designer & developer',
+          bio: parsed.bio || defaultBio,
           avatar_url: parsed.avatar_url || '',
           location: parsed.location || 'Indonesia',
           website: parsed.website || ''
@@ -62,7 +64,7 @@ export default function ProfileSettings() {
     return {
       full_name: '',
       username: '',
-      bio: 'Independent designer & developer',
+      bio: defaultBio,
       avatar_url: '',
       location: 'Indonesia',
       website: ''
@@ -83,7 +85,7 @@ export default function ProfileSettings() {
         setProfile({
           full_name: data.full_name || '',
           username: data.username || '',
-          bio: data.bio || 'Independent designer & developer',
+          bio: data.bio || defaultBio,
           avatar_url: data.avatar_url || '',
           location: data.location || 'Indonesia',
           website: data.website || ''
@@ -402,13 +404,19 @@ export default function ProfileSettings() {
 
                     {/* Short Bio Textarea */}
                     <div className="form-group" style={{ marginBottom: '1.25rem' }}>
-                      <label className="form-label" style={{ fontWeight: '700' }}>{t('shortBio')}</label>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+                        <label className="form-label" style={{ fontWeight: '700', margin: 0 }}>{t('shortBio')}</label>
+                        <span style={{ fontSize: '0.75rem', fontWeight: '700', color: (profile.bio?.length || 0) >= 350 ? '#EF4444' : 'var(--text-muted)' }}>
+                          {profile.bio?.length || 0} / 350 karakter (Maks)
+                        </span>
+                      </div>
                       <textarea
                         className="form-control"
-                        rows="3"
-                        placeholder="Write a brief intro about yourself..."
+                        rows="4"
+                        maxLength={350}
+                        placeholder="Deskripsi student (peserta didik atau siswa) merujuk pada individu yang aktif menuntut ilmu, belajar, atau mendaftarkan diri pada suatu lembaga pendidikan (seperti sekolah, kursus, atau universitas).Peran utama seorang student adalah menyerap pengetahuan, melatih keterampilan, dan membentuk karakter melalui proses bimbingan pengajar."
                         value={profile.bio}
-                        onChange={(e) => setProfile(prev => ({ ...prev, bio: e.target.value }))}
+                        onChange={(e) => setProfile(prev => ({ ...prev, bio: e.target.value.slice(0, 350) }))}
                       />
                     </div>
 
