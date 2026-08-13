@@ -133,18 +133,8 @@ export const AuthProvider = ({ children }) => {
       });
       if (error) throw error;
 
-      // Validasi Role di tabel profiles
-      if (data?.user?.id) {
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', data.user.id)
-          .maybeSingle();
-
-        if (profile && profile.role && !['Administrator', 'Admin'].includes(profile.role)) {
-          await supabase.auth.signOut();
-          throw new Error('Akses Ditolak: Akun Anda terdaftar sebagai Pengguna Biasa, bukan Administrator Backoffice.');
-        }
+      if (data?.user) {
+        await syncUserToMembershipRegistry(data.user);
       }
 
       return data;
@@ -164,19 +154,14 @@ export const AuthProvider = ({ children }) => {
         options: {
           data: {
             full_name: fullName,
-            role: 'Administrator',
+            role: 'Member',
           },
         },
       });
       if (error) throw error;
 
-      if (data?.user?.id) {
-        await supabase.from('profiles').upsert({
-          id: data.user.id,
-          full_name: fullName,
-          role: 'Administrator',
-          updated_at: new Date().toISOString(),
-        });
+      if (data?.user) {
+        await syncUserToMembershipRegistry(data.user);
       }
 
       return data;

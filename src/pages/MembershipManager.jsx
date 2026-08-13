@@ -238,6 +238,68 @@ export default function MembershipManager() {
     toast.success('Data membership berhasil diekspor ke CSV!');
   };
 
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [addName, setAddName] = useState('');
+  const [addEmail, setAddEmail] = useState('');
+  const [addPlatform, setAddPlatform] = useState('platform1');
+  const [addProvider, setAddProvider] = useState('Google OAuth 2.0');
+
+  const handleAddManualMember = async (e) => {
+    e.preventDefault();
+    if (!addEmail) {
+      toast.error('Masukkan alamat email');
+      return;
+    }
+
+    const platformNameMap = {
+      platform1: 'Desktopalie Main',
+      platform2: 'Desktopalie Beta',
+      platform3: 'Desktopalie Gamma',
+      platform4: 'Desktopalie Delta'
+    };
+
+    const newMemberPayload = {
+      id: `usr-manual-${Date.now()}`,
+      email: addEmail,
+      full_name: addName || addEmail.split('@')[0],
+      avatar_url: `https://ui-avatars.com/api/?name=${encodeURIComponent(addName || addEmail)}`,
+      provider: addProvider,
+      platform: addPlatform,
+      platformName: platformNameMap[addPlatform] || 'Desktopalie Main',
+      role: 'Member',
+      status: 'Active',
+      created_at: new Date().toISOString(),
+      last_login: 'Baru Saja'
+    };
+
+    // 1. Save to localStorage registry
+    const registryStr = localStorage.getItem('desktopalie_members_registry');
+    let registry = registryStr ? JSON.parse(registryStr) : [];
+    registry.unshift(newMemberPayload);
+    localStorage.setItem('desktopalie_members_registry', JSON.stringify(registry));
+    window.dispatchEvent(new Event('storage'));
+
+    // 2. Save to Supabase site_settings table
+    try {
+      await backofficeService.saveSiteSetting(`member_${newMemberPayload.id}`, newMemberPayload);
+      await supabase.from('profiles').upsert([{
+        id: newMemberPayload.id,
+        full_name: newMemberPayload.full_name,
+        avatar_url: newMemberPayload.avatar_url,
+        role: 'Member',
+        updated_at: new Date().toISOString()
+      }]);
+    } catch (err) {
+      console.warn('Manual member add warning:', err);
+    }
+
+    toast.success(`Berhasil mendaftarkan akun ${newMemberPayload.email}!`);
+    setShowAddModal(false);
+    setAddName('');
+    setAddEmail('');
+    fetchMembers();
+  };
+
   return (
     <>
       <Header title="Platform Membership & Account Hub" />
@@ -301,7 +363,29 @@ export default function MembershipManager() {
               </p>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+              <button
+                type="button"
+                onClick={() => setShowAddModal(true)}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  padding: '0.75rem 1.25rem',
+                  borderRadius: '12px',
+                  backgroundColor: '#10B981',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  fontWeight: '700',
+                  fontSize: '0.875rem',
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 14px rgba(16, 185, 129, 0.4)'
+                }}
+              >
+                <FiUserCheck />
+                <span>+ Sync / Tambah Akun</span>
+              </button>
+
               <button
                 type="button"
                 onClick={handleExportCSV}
@@ -689,6 +773,147 @@ export default function MembershipManager() {
               >
                 Tutup Profil
               </button>
+            </div>
+          </div>
+        )}
+
+        {/* MANUAL ADD MEMBER MODAL */}
+        {showAddModal && (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.6)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+            backdropFilter: 'blur(4px)',
+            padding: '1rem'
+          }}>
+            <div style={{
+              width: '100%',
+              maxWidth: '460px',
+              backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
+              border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+              borderRadius: '24px',
+              padding: '2rem',
+              boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)',
+              position: 'relative'
+            }}>
+              <button
+                type="button"
+                onClick={() => setShowAddModal(false)}
+                style={{
+                  position: 'absolute',
+                  top: '1.25rem',
+                  right: '1.25rem',
+                  background: 'none',
+                  border: 'none',
+                  color: 'var(--text-muted)',
+                  fontSize: '1.25rem',
+                  cursor: 'pointer'
+                }}
+              >
+                <FiX />
+              </button>
+
+              <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '1.25rem', fontWeight: '800', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+                ➕ Tambah / Sync Akun Pengguna Manual
+              </h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1.5rem' }}>
+                Masukkan data pengguna untuk didaftarkan langsung ke dalam direktori keanggotaan Supabase.
+              </p>
+
+              <form onSubmit={handleAddManualMember}>
+                <div style={{ marginBottom: '1rem' }}>
+                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '0.35rem' }}>
+                    Email Pengguna
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    value={addEmail}
+                    onChange={(e) => setAddEmail(e.target.value)}
+                    placeholder="user@gmail.com"
+                    style={{
+                      width: '100%',
+                      padding: '0.75rem 1rem',
+                      borderRadius: '12px',
+                      backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
+                      border: `1px solid ${isDarkMode ? '#334155' : '#CBD5E1'}`,
+                      color: isDarkMode ? '#F8FAFC' : '#0F172A',
+                      fontSize: '0.9rem'
+                    }}
+                  />
+                </div>
+
+                <div style={{ marginBottom: '1rem' }}>
+                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '0.35rem' }}>
+                    Nama Lengkap
+                  </label>
+                  <input
+                    type="text"
+                    value={addName}
+                    onChange={(e) => setAddName(e.target.value)}
+                    placeholder="Contoh: Budi Santoso"
+                    style={{
+                      width: '100%',
+                      padding: '0.75rem 1rem',
+                      borderRadius: '12px',
+                      backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
+                      border: `1px solid ${isDarkMode ? '#334155' : '#CBD5E1'}`,
+                      color: isDarkMode ? '#F8FAFC' : '#0F172A',
+                      fontSize: '0.9rem'
+                    }}
+                  />
+                </div>
+
+                <div style={{ marginBottom: '1.5rem' }}>
+                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '0.35rem' }}>
+                    Asal Platform Target
+                  </label>
+                  <select
+                    value={addPlatform}
+                    onChange={(e) => setAddPlatform(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '0.75rem 1rem',
+                      borderRadius: '12px',
+                      backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
+                      border: `1px solid ${isDarkMode ? '#334155' : '#CBD5E1'}`,
+                      color: isDarkMode ? '#F8FAFC' : '#0F172A',
+                      fontSize: '0.9rem',
+                      fontWeight: '600'
+                    }}
+                  >
+                    <option value="platform1">Desktopalie Main (Website Utama)</option>
+                    <option value="platform2">Desktopalie Beta (Smart Logistics)</option>
+                    <option value="platform3">Desktopalie Gamma (AI Video Transcoder)</option>
+                    <option value="platform4">Desktopalie Delta (Enterprise Cloud ERP)</option>
+                  </select>
+                </div>
+
+                <button
+                  type="submit"
+                  style={{
+                    width: '100%',
+                    padding: '0.85rem',
+                    borderRadius: '12px',
+                    backgroundColor: '#10B981',
+                    color: '#FFFFFF',
+                    border: 'none',
+                    fontWeight: '800',
+                    fontSize: '0.95rem',
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 14px rgba(16, 185, 129, 0.4)'
+                  }}
+                >
+                  Simpan Akun Anggota
+                </button>
+              </form>
             </div>
           </div>
         )}
