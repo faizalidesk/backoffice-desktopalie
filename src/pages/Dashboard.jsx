@@ -184,6 +184,9 @@ export default function Dashboard() {
   const completedTodos = recentTodos.filter(t => t.status === 'Done').length;
   const inProgressTodos = recentTodos.filter(t => t.status === 'In progress').length;
   const notStartedTodos = recentTodos.filter(t => t.status === 'Not started').length;
+  const taskProgressPercent = stats.todosCount > 0 
+    ? Math.round((completedTodos / (recentTodos.length || 1)) * 100) 
+    : 0;
   const primaryColor = activeFlavor?.theme?.colorPrimary || '#4f46e5';
 
   return (
