@@ -36,6 +36,7 @@ export default function NotificationBell({ primaryColor }) {
   const notifRef = useRef(null);
 
   useEffect(() => {
+    notificationService.syncFromSupabase();
     const unsubscribe = notificationService.subscribe(() => {
       setNotifications(notificationService.getNotifications());
     });
