@@ -183,7 +183,7 @@ export default function ProfileSettings() {
               
               {/* Left Profile Identity */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-                {/* Avatar Wrapper with Clean Online Badge */}
+                {/* Avatar Wrapper with Seamless Online Badge */}
                 <div style={{ position: 'relative', width: '88px', height: '88px', flexShrink: 0 }}>
                   <div style={{
                     width: '100%',
@@ -207,17 +207,17 @@ export default function ProfileSettings() {
                     )}
                   </div>
 
-                  {/* Status Indicator Dot (Clean Green Dot with White Border) */}
+                  {/* Status Indicator Dot (Seamlessly Integrated Notch) */}
                   <span style={{
                     position: 'absolute',
-                    bottom: '2px',
-                    right: '2px',
-                    width: '18px',
-                    height: '18px',
+                    bottom: '1px',
+                    right: '1px',
+                    width: '20px',
+                    height: '20px',
                     borderRadius: '50%',
                     backgroundColor: '#10B981',
-                    border: '2.5px solid #FFFFFF',
-                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.25)',
+                    border: '3px solid #0F172A',
+                    boxShadow: '0 2px 6px rgba(0, 0, 0, 0.35)',
                     zIndex: 3
                   }} title="Active Online" />
                 </div>
@@ -743,27 +743,43 @@ export default function ProfileSettings() {
                   background: `linear-gradient(135deg, ${primaryColor}, #8B5CF6)`
                 }} />
 
-                <div style={{
-                  width: '64px',
-                  height: '64px',
-                  borderRadius: '50%',
-                  margin: '-40px auto 0.75rem auto',
-                  background: primaryColor,
-                  border: '3px solid var(--bg-card)',
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#FFFFFF',
-                  fontSize: '1.65rem',
-                  fontWeight: '800',
-                  overflow: 'hidden'
-                }}>
-                  {profile.avatar_url ? (
-                    <img src={profile.avatar_url} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                  ) : (
-                    profile.full_name ? profile.full_name.charAt(0).toUpperCase() : 'A'
-                  )}
+                {/* Avatar Wrapper in Live Card */}
+                <div style={{ position: 'relative', width: '68px', height: '68px', margin: '-40px auto 0.75rem auto' }}>
+                  <div style={{
+                    width: '100%',
+                    height: '100%',
+                    borderRadius: '50%',
+                    background: primaryColor,
+                    border: '3.5px solid var(--bg-card)',
+                    boxShadow: '0 4px 14px rgba(0,0,0,0.12)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#FFFFFF',
+                    fontSize: '1.75rem',
+                    fontWeight: '800',
+                    overflow: 'hidden'
+                  }}>
+                    {profile.avatar_url ? (
+                      <img src={profile.avatar_url} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    ) : (
+                      profile.full_name ? profile.full_name.charAt(0).toUpperCase() : 'A'
+                    )}
+                  </div>
+
+                  {/* Matching Online Status Badge Dot */}
+                  <span style={{
+                    position: 'absolute',
+                    bottom: '0px',
+                    right: '0px',
+                    width: '16px',
+                    height: '16px',
+                    borderRadius: '50%',
+                    backgroundColor: '#10B981',
+                    border: '2.5px solid var(--bg-card)',
+                    boxShadow: '0 2px 6px rgba(0, 0, 0, 0.2)',
+                    zIndex: 3
+                  }} title="Active Online" />
                 </div>
 
                 <h4 style={{ fontSize: '1.1rem', fontWeight: '800', color: 'var(--text-main)', margin: '0 0 0.15rem 0' }}>
