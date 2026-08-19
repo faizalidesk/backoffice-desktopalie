@@ -103,11 +103,21 @@ export default function ProjectsManager() {
     }
   };
 
-  const handleDelete = async (id, title) => {
-    if (!window.confirm(`Are you sure you want to delete project "${title}"?`)) return;
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
+
+  const handleOpenDeleteModal = (id, title) => {
+    setItemToDelete({ id, title });
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!itemToDelete) return;
     try {
-      await backofficeService.deleteProject(id);
-      toast.success('Project deleted successfully');
+      await backofficeService.deleteProject(itemToDelete.id);
+      toast.success(`Project "${itemToDelete.title}" deleted successfully`);
+      setIsDeleteModalOpen(false);
+      setItemToDelete(null);
       loadProjects();
     } catch (err) {
       console.error(err);
@@ -228,7 +238,7 @@ export default function ProjectsManager() {
                         </button>
                         <button 
                           className="btn btn-danger btn-icon btn-sm"
-                          onClick={() => handleDelete(p.id, p.title)}
+                          onClick={() => handleOpenDeleteModal(p.id, p.title)}
                           title="Delete"
                         >
                           <FiTrash2 />
@@ -357,6 +367,43 @@ export default function ProjectsManager() {
             </button>
           </div>
         </form>
+      </Modal>
+
+      {/* CUSTOM REACT DELETE CONFIRMATION MODAL */}
+      <Modal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        title={
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#dc2626' }}>
+            <FiTrash2 size={20} />
+            <span>Delete Project</span>
+          </div>
+        }
+        maxWidth="460px"
+      >
+        <div style={{ padding: '8px 0' }}>
+          <p style={{ margin: '0 0 16px 0', fontSize: '14px', color: '#334155', lineHeight: 1.6 }}>
+            Are you sure you want to delete project <strong style={{ color: '#0f172a' }}>"{itemToDelete?.title}"</strong>? This action cannot be undone.
+          </p>
+
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '20px' }}>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={() => setIsDeleteModalOpen(false)}
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              className="btn btn-primary"
+              style={{ backgroundColor: '#dc2626', borderColor: '#dc2626', color: '#ffffff' }}
+              onClick={handleConfirmDelete}
+            >
+              Delete Project
+            </button>
+          </div>
+        </div>
       </Modal>
     </>
   );

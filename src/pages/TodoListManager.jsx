@@ -53,9 +53,33 @@ export default function TodoListManager() {
   const [priorityFilter, setPriorityFilter] = useState('ALL');
   const [categoryFilter, setCategoryFilter] = useState('ALL');
 
-  // Modal State
+  // Modal States
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
+
+  // Delete Confirmation Modal State
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [taskToDelete, setTaskToDelete] = useState(null);
+
+  const handleOpenDeleteModal = (id, title) => {
+    setTaskToDelete({ id, title });
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!taskToDelete) return;
+    try {
+      await backofficeService.deleteTodo(taskToDelete.id);
+      toast.success(`Tugas "${taskToDelete.title}" berhasil dihapus`);
+      setIsDeleteModalOpen(false);
+      if (isModalOpen) setIsModalOpen(false);
+      setTaskToDelete(null);
+      loadTodos();
+    } catch (err) {
+      console.error(err);
+      toast.error('Gagal menghapus tugas');
+    }
+  };
 
   // Active Detail Form State (includes subtasks)
   const [formData, setFormData] = useState({
@@ -600,7 +624,7 @@ export default function TodoListManager() {
                                   type="button"
                                   className="btn btn-danger btn-icon btn-sm"
                                   style={{ padding: '0.2rem 0.4rem', height: 'auto' }}
-                                  onClick={() => handleDelete(task.id, task.title)}
+                                  onClick={() => handleOpenDeleteModal(task.id, task.title)}
                                   title="Hapus"
                                 >
                                   <FiTrash2 style={{ fontSize: '0.85rem' }} />
@@ -730,7 +754,7 @@ export default function TodoListManager() {
                           </button>
                           <button
                             className="btn btn-danger btn-icon btn-sm"
-                            onClick={() => handleDelete(task.id, task.title)}
+                            onClick={() => handleOpenDeleteModal(task.id, task.title)}
                             title="Hapus"
                           >
                             <FiTrash2 />
@@ -1050,7 +1074,7 @@ export default function TodoListManager() {
                   <button
                     type="button"
                     className="btn btn-danger btn-sm"
-                    onClick={() => handleDelete(editingItem.id, editingItem.title)}
+                    onClick={() => handleOpenDeleteModal(editingItem.id, editingItem.title)}
                     style={{ width: '100%', justifyContent: 'center' }}
                   >
                     <FiTrash2 />
@@ -1061,6 +1085,43 @@ export default function TodoListManager() {
             </div>
           </div>
         </form>
+      </Modal>
+
+      {/* CUSTOM REACT DELETE CONFIRMATION MODAL */}
+      <Modal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        title={
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#dc2626' }}>
+            <FiTrash2 size={20} />
+            <span>Hapus Tugas</span>
+          </div>
+        }
+        maxWidth="460px"
+      >
+        <div style={{ padding: '8px 0' }}>
+          <p style={{ margin: '0 0 16px 0', fontSize: '14px', color: '#334155', lineHeight: 1.6 }}>
+            Apakah Anda yakin ingin menghapus tugas <strong style={{ color: '#0f172a' }}>"{taskToDelete?.title}"</strong>? Tindakan ini tidak dapat dibatalkan.
+          </p>
+
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '20px' }}>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={() => setIsDeleteModalOpen(false)}
+            >
+              Batal
+            </button>
+            <button
+              type="button"
+              className="btn btn-primary"
+              style={{ backgroundColor: '#dc2626', borderColor: '#dc2626', color: '#ffffff' }}
+              onClick={handleConfirmDelete}
+            >
+              Hapus Tugas
+            </button>
+          </div>
+        </div>
       </Modal>
     </>
   );
