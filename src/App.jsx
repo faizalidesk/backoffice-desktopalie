@@ -103,11 +103,10 @@ function DashboardRoute() {
 
 // SMART LOGIN ROUTE FOR SUBDOMAINS AND BACKOFFICE
 function LoginRoute() {
-  const { flavorId } = useFlavor();
   const hostname = typeof window !== 'undefined' ? window.location.hostname.toLowerCase() : '';
-  const isSubplatformDomain = hostname.startsWith('beta.') || hostname.startsWith('gamma.') || hostname.startsWith('delta.') || flavorId !== 'platform1';
+  const isSubplatformSubdomain = hostname.startsWith('beta.') || hostname.startsWith('gamma.') || hostname.startsWith('delta.');
 
-  if (isSubplatformDomain) {
+  if (isSubplatformSubdomain) {
     return <SubPlatformLogin />;
   }
 

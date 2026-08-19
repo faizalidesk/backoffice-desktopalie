@@ -22,6 +22,7 @@ export default function Login() {
     const isSubplatform = hostname.includes('beta.') || hostname.includes('gamma.') || hostname.includes('delta.');
     if (!isSubplatform && flavorId !== 'platform1') {
       switchFlavor('platform1');
+      localStorage.setItem('desktopalie_flavor', 'platform1');
     }
   }, [flavorId]);
 
