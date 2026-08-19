@@ -113,19 +113,19 @@ export const agenticAiService = {
 
     // Intent 0: Greetings (Hi / Halo / Hello)
     if (text === 'hi' || text === 'halo' || text === 'hello' || text === 'hey' || text === 'p') {
-      thoughts.push('👋 [Agent Reasoning] Menyapa pengguna & memaparkan status kesiapan Agentic AI Copilot...');
-      responseText = `Halo! 👋 Saya adalah **Agentic AI Copilot** di Desktopalie Backoffice.\n\nSaya siap membantu Anda mengeksekusi berbagai tugas otomatis:\n- 📝 **Buat Tugas Baru** (contoh: *"Buat tugas baru: Security Audit & Verifikasi CSP"*)\n- 🔄 **Sinkronkan Obsidian** (contoh: *"Singkronkan data dengan Obsidian Vault"*)\n- 📊 **Cek Telemetri** (contoh: *"Tampilkan laporan telemetri proyek"*)\n- 📄 **Buat Dokumentasi** (contoh: *"Buat catatan dokumentasi arsitektur"*)\n\nApa yang ingin Anda eksekusi hari ini? 🚀`;
+      thoughts.push('👋 [Agent Reasoning] Menyapa pengguna & memaparkan status kesiapan Desktop-Agentic...');
+      responseText = `Halo! 👋 Saya adalah **Desktop-Agentic** di Desktopalie Backoffice.\n\nSaya siap membantu Anda mengeksekusi berbagai tugas otomatis:\n- 📝 **Buat Tugas Baru** (contoh: *"Buat tugas baru: Security Audit & Verifikasi CSP"*)\n- 🔄 **Sinkronkan Obsidian** (contoh: *"Singkronkan data dengan Obsidian Vault"*)\n- 📊 **Cek Telemetri** (contoh: *"Tampilkan laporan telemetri proyek"*)\n- 📄 **Buat Dokumentasi** (contoh: *"Buat catatan dokumentasi arsitektur"*)\n\nApa yang ingin Anda eksekusi hari ini? 🚀`;
     }
     // Intent 1: Create Task (Buat Tugas)
     else if (text.includes('tugas') || text.includes('todo') || text.includes('task') || text.includes('buat tugas')) {
       thoughts.push('🔧 [Tool Selection] Terdeteksi niat manajemen tugas -> Memilih Tool create_task');
       
       let title = userInput.replace(/buat tugas|tambah tugas|tugas baru|task|todo/gi, '').trim();
-      if (!title) title = 'Tugas Baru dari Agentic AI';
+      if (!title) title = 'Tugas Baru dari Desktop-Agentic';
 
       const taskData = {
         title: title.charAt(0).toUpperCase() + title.slice(1),
-        description: `Dibuat secara otomatis oleh Agentic AI Copilot pada ${new Date().toLocaleString('id-ID')}.\n\n### 📌 Instruksi Agent\n- [ ] Lakukan verifikasi dan pengujian komponen.`,
+        description: `Dibuat secara otomatis oleh Desktop-Agentic pada ${new Date().toLocaleString('id-ID')}.\n\n### 📌 Instruksi Agent\n- [ ] Lakukan verifikasi dan pengujian komponen.`,
         priority: text.includes('tinggi') || text.includes('high') ? 'High' : (text.includes('rendah') || text.includes('low') ? 'Low' : 'Medium'),
         category: text.includes('qa') ? 'QA Checklist' : (text.includes('dev') ? 'Engineering' : 'Research'),
         status: text.includes('selesai') || text.includes('done') ? 'Done' : (text.includes('jalan') || text.includes('progress') ? 'Inprogress' : 'Not started'),
@@ -143,13 +143,13 @@ export const agenticAiService = {
         
         if (apiKey) {
           try {
-            const geminiResponse = await this.callGeminiApi(`User meminta membuat tugas: "${userInput}". Tugas berhasil dibuat dengan ID: ${created.id}, Judul: "${created.title}", Status: "${created.status}", Prioritas: "${created.priority}". Buat respons konfirmasi yang ramah dan profesional dalam Bahasa Indonesia.`);
+            const geminiResponse = await this.callGeminiApi(`User meminta membuat tugas: "${userInput}". Tugas berhasil dibuat dengan ID: ${created.id}, Judul: "${created.title}", Status: "${created.status}", Prioritas: "${created.priority}". Buat respons konfirmasi yang ramah dan profesional dalam Bahasa Indonesia sebagai Desktop-Agentic.`);
             if (geminiResponse) responseText = geminiResponse;
           } catch (e) {}
         }
         
         if (!responseText) {
-          responseText = `Tugas baru **"${created.title}"** telah berhasil dibuat oleh Agentic AI dan ditambahkan ke papan Kanban **To-Do Board**! Status: \`${created.status}\`, Prioritas: \`${created.priority}\`.`;
+          responseText = `Tugas baru **"${created.title}"** telah berhasil dibuat oleh **Desktop-Agentic** dan ditambahkan ke papan Kanban **To-Do Board**! Status: \`${created.status}\`, Prioritas: \`${created.priority}\`.`;
         }
       } catch (err) {
         thoughts.push(`❌ [Tool Error] Gagal mengeksekusi create_task: ${err.message}`);
