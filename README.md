@@ -412,5 +412,30 @@ VITE_FLAVOR=platform4
 
 ---
 
+## 🔮 8. Integrasi Obsidian Desktop-Alie Vault
+
+Proyek ini terhubung langsung dengan **Obsidian Vault** (`Desktopalie Workspace`) di komputer lokal:
+- **Lokasi Vault**: `C:\Users\Cerebrum\Documents\Obsidian Vault\Desktopalie Workspace`
+
+### 🛠️ Perintah CLI Obsidian Sync (NPM Scripts)
+
+```bash
+# 1. Sinkronisasi Dua Arah (Bi-directional Sync)
+npm run obsidian:sync
+
+# 2. Impor File Markdown Vault Obsidian ke Supabase
+npm run obsidian:import
+
+# 3. Ekspor Catatan Database Supabase ke Vault Obsidian (.md)
+npm run obsidian:export
+```
+
+### 💎 Fitur Integrasi di Panel Backoffice
+1. **Obsidian Vault Connector Modal** (Tersedia di Documentation Manager & Notes Manager).
+2. **Kategori & Tree Explorer Otomatis** (`01 - Platform`, `02 - Backoffice`, `03 - Database & Infrastructure`, `04 - Templates`, `05 - Catatan Ide & R&D`, `06 - Kanban & Sprint Board`).
+3. **Obsidian Callouts Renderer** (`> [!NOTE]`, `> [!TIP]`, `> [!IMPORTANT]`, `> [!WARNING]`).
+
+---
+
 © 2026 Desktopalie Backoffice. All rights reserved.
 

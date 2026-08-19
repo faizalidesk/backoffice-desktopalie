@@ -25,8 +25,11 @@ import {
 import Header from '../components/Header';
 import ImageUploader from '../components/ImageUploader';
 
+import { useNavigate } from 'react-router-dom';
+
 export default function ProfileSettings() {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const { language, setLanguage, t } = useLanguage();
   const { activeFlavor } = useFlavor();
   const [loading, setLoading] = useState(true);
@@ -702,7 +705,13 @@ export default function ProfileSettings() {
 
                     <button
                       type="button"
-                      onClick={logout}
+                      onClick={async () => {
+                        localStorage.setItem('desktopalie_flavor', 'platform1');
+                        try {
+                          await logout();
+                        } catch (e) {}
+                        navigate('/login');
+                      }}
                       className="btn btn-secondary"
                       style={{ backgroundColor: '#FFFFFF', color: '#991B1B', borderColor: '#FCA5A5', fontWeight: '700' }}
                     >

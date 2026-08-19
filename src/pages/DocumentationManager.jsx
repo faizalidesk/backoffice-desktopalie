@@ -19,8 +19,12 @@ import {
   FiEdit,
   FiAlertTriangle
 } from 'react-icons/fi';
+import { SiObsidian } from 'react-icons/si';
 import Header from '../components/Header';
 import Modal from '../components/Modal';
+import ObsidianSyncModal from '../components/ObsidianSyncModal';
+
+import obsidianBackup from '../config/obsidian_vault_data.json';
 
 const INITIAL_FOLDERS = ['Core', 'Backend', 'Frontend', 'Devops', 'QA', 'Meetings', 'Backlogs', 'Pending Synthesis'];
 
@@ -149,6 +153,7 @@ export default function DocumentationManager() {
   const [docToDelete, setDocToDelete] = useState(null);
 
   const [isNewDocModalOpen, setIsNewDocModalOpen] = useState(false);
+  const [isObsidianModalOpen, setIsObsidianModalOpen] = useState(false);
   const [newDocData, setNewDocData] = useState({
     title: '',
     folder: 'Core',
@@ -177,9 +182,47 @@ export default function DocumentationManager() {
     try {
       let data = await backofficeService.getDocs();
       if (!data || data.length === 0) {
-        data = DEFAULT_INITIAL_DOCS;
-        localStorage.setItem('desktopalie_docs_fallback', JSON.stringify(data));
+        data = [...DEFAULT_INITIAL_DOCS];
       }
+
+      // Merge Obsidian notes
+      let obsidianItems = [];
+      try {
+        const settingsMap = await backofficeService.getAllSiteSettings();
+        const obsidianData = settingsMap['obsidian_vault_docs'];
+        if (obsidianData && obsidianData.items) {
+          obsidianItems = obsidianData.items;
+        } else {
+          obsidianItems = obsidianBackup;
+        }
+      } catch (e) {
+        obsidianItems = obsidianBackup;
+      }
+
+      if (obsidianItems && obsidianItems.length > 0) {
+        const existingSlugs = new Set(data.map(d => d.slug || d.title));
+        const formattedObsidian = obsidianItems.map(item => ({
+          id: item.id || `obsidian-${item.slug}`,
+          title: item.title,
+          folder: item.folder || 'Core',
+          slug: item.slug,
+          author: item.author || 'Faiz Ali (Obsidian)',
+          content: item.content,
+          is_archived: false,
+          created_at: item.created_at || new Date().toISOString()
+        }));
+
+        formattedObsidian.forEach(oDoc => {
+          if (!existingSlugs.has(oDoc.slug) && !existingSlugs.has(oDoc.title)) {
+            data.push(oDoc);
+          }
+        });
+
+        // Collect new folders from Obsidian
+        const obsidianFolders = [...new Set(formattedObsidian.map(d => d.folder))];
+        setFolders(prev => [...new Set([...prev, ...obsidianFolders])]);
+      }
+
       setDocs(data);
       if (data.length > 0 && !selectedDoc) {
         setSelectedDoc(data[0]);
@@ -458,6 +501,15 @@ export default function DocumentationManager() {
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <button 
+                type="button"
+                className="btn btn-secondary btn-sm"
+                style={{ background: '#7c3aed', color: '#ffffff', border: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px', fontWeight: 600 }}
+                onClick={() => setIsObsidianModalOpen(true)}
+              >
+                <SiObsidian size={14} />
+                <span>Obsidian Vault</span>
+              </button>
               <button className="btn btn-secondary btn-sm" onClick={handleOpenCreateFolderModal}>
                 <FiFolderPlus style={{ color: 'var(--primary)' }} />
                 <span>+ Create Main Folder</span>
@@ -469,6 +521,12 @@ export default function DocumentationManager() {
             </div>
           </div>
         </div>
+
+        <ObsidianSyncModal
+          isOpen={isObsidianModalOpen}
+          onClose={() => setIsObsidianModalOpen(false)}
+          onSyncComplete={() => loadDocs()}
+        />
 
         {/* 2-Column GitBook/Obsidian Explorer Layout */}
         <div style={{

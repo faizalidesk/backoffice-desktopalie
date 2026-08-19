@@ -2,14 +2,17 @@ import { useEffect, useState } from 'react';
 import { backofficeService } from '../services/backofficeService';
 import { toast } from 'react-hot-toast';
 import { FiPlus, FiSearch, FiEdit, FiTrash2 } from 'react-icons/fi';
+import { SiObsidian } from 'react-icons/si';
 import Header from '../components/Header';
 import Modal from '../components/Modal';
+import ObsidianSyncModal from '../components/ObsidianSyncModal';
 
 export default function NotesManager() {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isObsidianModalOpen, setIsObsidianModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
 
   const [formData, setFormData] = useState({
@@ -123,11 +126,27 @@ export default function NotesManager() {
             <h1>Notes & Journal Manager</h1>
             <p className="page-subtitle">Manage learning journals, design principles, and creative thoughts.</p>
           </div>
-          <button className="btn btn-primary" onClick={() => handleOpenModal()}>
-            <FiPlus />
-            <span>Add New Note</span>
-          </button>
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <button 
+              className="btn btn-secondary" 
+              style={{ background: '#7c3aed', color: '#ffffff', border: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px', fontWeight: 600 }}
+              onClick={() => setIsObsidianModalOpen(true)}
+            >
+              <SiObsidian size={16} />
+              <span>Obsidian Vault</span>
+            </button>
+            <button className="btn btn-primary" onClick={() => handleOpenModal()}>
+              <FiPlus />
+              <span>Add New Note</span>
+            </button>
+          </div>
         </div>
+
+        <ObsidianSyncModal
+          isOpen={isObsidianModalOpen}
+          onClose={() => setIsObsidianModalOpen(false)}
+          onSyncComplete={() => loadNotes()}
+        />
 
         <div className="table-container">
           <div className="table-toolbar">

@@ -121,9 +121,13 @@ export default function Header({ title = 'Dashboard Overview' }) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setDropdownOpen(false);
-    logout();
+    localStorage.setItem('desktopalie_flavor', 'platform1');
+    try {
+      await logout();
+    } catch (e) {}
+    navigate('/login');
   };
 
   const [selectedNotif, setSelectedNotif] = useState(null);
