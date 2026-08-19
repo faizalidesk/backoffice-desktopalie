@@ -34,6 +34,30 @@ export const AGENT_TOOLS = [
   }
 ];
 
+// Rich Context Knowledge Base for Desktopalie Backoffice Ecosystem
+const BACKOFFICE_SYSTEM_PROMPT = `
+Anda adalah Desktop-Agentic, asisten AI resmi yang cerdas, ramah, dan solutif di platform Desktopalie Backoffice (back.desktopalie.my.id).
+
+IDENTITAS SISTEM & PENGEMBANG:
+- Pemilik & Developer: Faiz Ali (Full-stack Engineer & AI Practitioner).
+- Domain Utama: https://desktopalie.my.id (Website Portofolio & Showcases).
+- Backoffice Domain: https://back.desktopalie.my.id (Pusat Kendali Administrasi & Operasional).
+- Teknologi: React 19, Vite, Supabase PostgreSQL, Vercel Serverless Functions, Obsidian Vault Sync.
+
+MODUL UTAMA BACKOFFICE:
+1. Kanban To-Do Manager: Pengelolaan tugas Jira/Notion-style dengan subtasks, prioritas, dan kategori.
+2. Projects & Experiments Manager: Manajemen portofolio proyek perangkat lunak dan arsitektur kode.
+3. System Documentation & PRD: Pengelolaan dokumen spesifikasi produk (PRD) dan panduan arsitektur.
+4. Obsidian Bi-directional Sync: Sinkronisasi 30+ dokumen markdown lokal dengan database Supabase.
+5. Desktop-Agentic: Agen AI otonom untuk otomatisasi eksekusi database, audit CSP, dan pembuatan tugas.
+6. Telemetry & Security: Pemantauan kesehatan sistem, verifikasi Content Security Policy (CSP), dan performa.
+
+PANDUAN KOMUNIKASI:
+- Berikan jawaban yang sangat ramah, suportif, akurat, dan mendalam dalam Bahasa Indonesia.
+- Jika pengguna bertanya tentang hal di luar sistem (misal: coding umum, konsep AI, sains, tips kerja), jawablah dengan cerdas dan komprehensif layaknya asisten serbabisa.
+- Gunakan format Markdown yang rapi (bold, bullet points, emoji yang sesuai seperti 🚀, ✨, 💡, 📋, 😊).
+`;
+
 export const agenticAiService = {
   // Helper: Get Gemini API Key
   getApiKey() {
@@ -47,9 +71,8 @@ export const agenticAiService = {
   },
 
   // Call Google Gemini 1.5 Flash via Secure Backend Serverless API or Direct
-  async callGeminiApi(prompt, systemInstruction = '') {
-    const defaultSystem = 'Anda adalah Desktop-Agentic, rekan AI yang sangat ramah, hangat, suportif, dan cerdas di platform Desktopalie Backoffice. Sapa pengguna dengan antusias, gunakan Bahasa Indonesia yang akrab, positif, dan terstruktur rapi dengan poin-poin yang mudah dipahami serta emoji yang menyenangkan (🚀, ✨, 💡, 📋, 😊). Selalu siap sedia membantu segala kebutuhan workspace.';
-    const finalSystem = systemInstruction || defaultSystem;
+  async callGeminiApi(prompt, customSystem = '') {
+    const finalSystem = customSystem || BACKOFFICE_SYSTEM_PROMPT;
 
     // 1. First try secure Backend Serverless Route (/api/gemini)
     try {
@@ -82,7 +105,7 @@ export const agenticAiService = {
       ],
       generationConfig: {
         temperature: 0.5,
-        maxOutputTokens: 1000
+        maxOutputTokens: 1200
       },
       systemInstruction: {
         parts: [{ text: finalSystem }]
@@ -105,6 +128,26 @@ export const agenticAiService = {
     return candidate?.content?.parts?.[0]?.text || '';
   },
 
+  // Smart Built-in Fallback Knowledge Base (When offline / network issue)
+  getLocalKnowledgeAnswer(text) {
+    // Topic: What is Desktopalie Backoffice?
+    if (text.includes('backoffice') || text.includes('desktopalie') || text.includes('aplikasi ini') || text.includes('sistem ini')) {
+      return `**Desktopalie Backoffice** (\`back.desktopalie.my.id\`) adalah pusat kendali (*command center*) dan sistem manajemen terintegrasi untuk seluruh platform **Faiz Ali** (\`desktopalie.my.id\`). 🏢✨\n\n### 📌 Fitur & Modul Utama:\n1. 📋 **To-Do Kanban Board**: Pengelolaan tugas harian dengan subtasks dan prioritas (Jira/Notion style).\n2. 💼 **Projects & Experiments Manager**: Manajemen portofolio proyek dan arsitektur kode.\n3. 📄 **Documentation & Master PRD**: Pusat dokumentasi spesifikasi produk dan SOP teknis.\n4. 🔄 **Obsidian Vault Sync**: Sinkronisasi dua arah (*bi-directional*) 30+ catatan markdown lokal dengan database Supabase.\n5. 🤖 **Desktop-Agentic**: Asisten AI otonom berbasis Google Gemini 1.5 Flash untuk otomatisasi tugas dan audit sistem.\n6. 🔒 **Security & Telemetry**: Pengawasan keamanan CSP, performa, dan status kesehatan infrastruktur Vercel.\n\nAda modul tertentu yang ingin Anda jelajahi lebih dalam? 😊`;
+    }
+
+    // Topic: Who is Faiz Ali?
+    if (text.includes('faiz ali') || text.includes('pembuat') || text.includes('creator') || text.includes('developer')) {
+      return `**Faiz Ali** adalah Software Engineer dan pengembang utama dari ekosistem **Desktopalie** (\`desktopalie.my.id\`). 👨‍💻✨\n\nBeliau merancang platform ini dengan arsitektur modern (React 19, Supabase PostgreSQL, Obsidian Knowledge Graph, dan Agentic AI) untuk menyatukan portofolio, dokumentasi riset, dan sistem manajemen tugas dalam satu ekosistem yang terpadu.`;
+    }
+
+    // Topic: What is Obsidian / Knowledge Graph?
+    if (text.includes('obsidian') || text.includes('vault') || text.includes('knowledge graph')) {
+      return `**Obsidian Vault** di ekosistem Desktopalie berfungsi sebagai **Second Brain (Basis Pengetahuan Jangka Panjang)**. 📚🧠\n\nSetiap dokumentasi, arsitektur sistem, dan PRD yang Anda buat di Backoffice secara otomatis tersinkronisasi menjadi file Markdown dengan keterhubungan grafik (*Knowledge Graph*) di laptop Anda via skrip AI Intelligence kami!`;
+    }
+
+    return null;
+  },
+
   // Autonomous Agent Execution Router
   async processUserIntent(userInput) {
     const text = userInput.toLowerCase().trim();
@@ -112,14 +155,11 @@ export const agenticAiService = {
     let toolExecuted = null;
     let resultPayload = null;
     let responseText = '';
-    const apiKey = this.getApiKey();
-
-    thoughts.push(`🤖 [Agent Thought] Menganalisis intent dengan ${apiKey ? '⚡ Google Gemini 1.5 Flash' : 'Smart Rule Router'}...`);
 
     // Intent 0: Friendly Greetings (Hi / Halo / Hello / Pagi / Malam)
     if (text === 'hi' || text === 'halo' || text === 'hello' || text === 'hey' || text === 'p' || text.includes('selamat pagi') || text.includes('selamat sore') || text.includes('selamat malam')) {
       thoughts.push('👋 [Agent Reasoning] Menyapa pengguna dengan hangat & ramah...');
-      responseText = `Halo! Senang sekali bisa berjumpa dengan Anda! 👋😊\n\nSaya adalah **Desktop-Agentic**, asisten pribadi cerdas Anda di Desktopalie Backoffice. Saya siap membantu segala kebutuhan sistem Anda:\n\n- 📋 **Update PRD** (contoh: *"Update PRD: tambahkan modul baru"*)\n- 📝 **Buat Tugas Baru** (contoh: *"Buat tugas baru: Review performa database"*)\n- 🔄 **Sinkronkan Obsidian** (contoh: *"Singkronkan data dengan Obsidian Vault"*)\n- 📊 **Cek Telemetri Proyek** (contoh: *"Tampilkan laporan telemetri proyek"*)\n- 📄 **Buat Dokumentasi** (contoh: *"Buat catatan arsitektur sistem"*)\n\nAda yang bisa saya bantu eksekusi untuk memudahkan pekerjaan Anda hari ini? 🚀✨`;
+      responseText = `Halo! Senang sekali bisa berjumpa dengan Anda! 👋😊\n\nSaya adalah **Desktop-Agentic**, asisten pribadi cerdas Anda di Desktopalie Backoffice. Saya siap membantu segala kebutuhan sistem Anda:\n\n- 📋 **Update PRD** (contoh: *"Update PRD: tambahkan modul baru"*)\n- 📝 **Buat Tugas Baru** (contoh: *"Buat tugas baru: Review performa database"*)\n- 🔄 **Sinkronkan Obsidian** (contoh: *"Singkronkan data dengan Obsidian Vault"*)\n- 📊 **Cek Telemetri Proyek** (contoh: *"Tampilkan laporan telemetri proyek"*)\n- 📄 **Buat Dokumentasi** (contoh: *"Buat catatan arsitektur sistem"*)\n\nAda yang bisa saya bantu eksekusi atau jelaskan hari ini? 🚀✨`;
     }
     // Intent 1: Update PRD (Product Requirement Document)
     else if (text.includes('update prd') || text.includes('perbarui prd') || text.includes('ubah prd') || text.includes('tambah prd') || text.includes('edit prd') || (text.includes('prd') && (text.includes('tambah') || text.includes('update')))) {
@@ -180,12 +220,10 @@ export const agenticAiService = {
         resultPayload = created;
         thoughts.push(`✅ [Tool Output] Tool create_task berhasil dieksekusi! ID: ${created.id}`);
         
-        if (apiKey) {
-          try {
-            const geminiResponse = await this.callGeminiApi(`User meminta membuat tugas: "${userInput}". Tugas berhasil dibuat dengan ID: ${created.id}, Judul: "${created.title}", Status: "${created.status}", Prioritas: "${created.priority}". Buat respons konfirmasi yang sangat ramah, hangat, dan positif dalam Bahasa Indonesia sebagai Desktop-Agentic.`);
-            if (geminiResponse) responseText = geminiResponse;
-          } catch (e) {}
-        }
+        try {
+          const geminiResponse = await this.callGeminiApi(`User meminta membuat tugas: "${userInput}". Tugas berhasil dibuat dengan ID: ${created.id}, Judul: "${created.title}", Status: "${created.status}", Prioritas: "${created.priority}". Buat respons konfirmasi yang sangat ramah, hangat, dan positif dalam Bahasa Indonesia sebagai Desktop-Agentic.`);
+          if (geminiResponse) responseText = geminiResponse;
+        } catch (e) {}
         
         if (!responseText) {
           responseText = `Siap! Tugas baru **"${created.title}"** telah berhasil saya buatkan dan langsung masuk ke papan Kanban **To-Do Board** Anda! 📝✨\n\n- 🎯 **Status**: \`${created.status}\`\n- ⚡ **Prioritas**: \`${created.priority}\`\n- 📂 **Kategori**: \`${created.category}\`\n\nSemangat menyelesaikan tugasnya! Jika butuh bantuan lain, kabari saya ya! 😊`;
@@ -252,27 +290,29 @@ export const agenticAiService = {
         responseText = `Gagal mengumpulkan telemetri: ${err.message}`;
       }
     }
-    // Gemini API Direct Conversation
+    // General Questions / Conversational Queries (Gemini AI + Local Knowledge Base)
     else {
-      if (apiKey) {
-        thoughts.push('🧠 [Gemini Inference] Mengirim percakapan ke model Google Gemini 1.5 Flash...');
-        try {
-          const geminiOutput = await this.callGeminiApi(
-            userInput, 
-            'Anda adalah Desktop-Agentic, rekan AI yang sangat ramah, hangat, suportif, dan cerdas di platform Desktopalie Backoffice. Sapa pengguna dengan antusias, gunakan Bahasa Indonesia yang akrab, positif, dan terstruktur rapi dengan poin-poin yang mudah dipahami serta emoji yang menyenangkan (🚀, ✨, 💡, 📋, 😊). Selalu siap sedia membantu segala kebutuhan workspace.'
-          );
-          if (geminiOutput) {
-            responseText = geminiOutput;
-          } else {
-            responseText = 'Halo! Saya siap membantu Anda. Silakan beri tahu apa yang ingin Anda diskusikan atau kerjakan bersama saya ya! 😊✨';
-          }
-        } catch (err) {
-          thoughts.push(`⚠️ [Gemini API Warning] ${err.message}`);
-          responseText = `Halo! Saya memproses pesan Anda: "${userInput}".\n\nSaya selalu siap membantu Anda menjalankan berbagai aksi otomatis:\n- *"Update PRD: [Spesifikasi Baru]"*\n- *"Buat tugas baru: [Nama Tugas]"*\n- *"Singkronkan Obsidian Vault"*\n- *"Tampilkan laporan telemetri"* 😊✨`;
+      // 1. Try Google Gemini AI Inference with full system context
+      try {
+        thoughts.push('🧠 [Gemini Inference] Memproses pertanyaan mendalam dengan Google Gemini 1.5 Flash...');
+        const geminiOutput = await this.callGeminiApi(userInput);
+        if (geminiOutput && geminiOutput.trim()) {
+          responseText = geminiOutput;
         }
-      } else {
-        thoughts.push('💡 [Agent Reasoning] Pertanyaan umum -> Memformulasikan jawaban bantuan Desktop-Agentic...');
-        responseText = `Halo! Senang mengobrol dengan Anda! 😊 Saya adalah **Desktop-Agentic** di Desktopalie Backoffice.\n\nSaya bisa membantu Anda melakukan banyak hal hebat:\n1. 📋 *"Update PRD: tambahkan modul baru"* $\\rightarrow$ *(Otomatis memperbarui PRD)*\n2. 📝 *"Buat tugas baru: Pengujian Security Audit"* $\\rightarrow$ *(Membuat tugas Kanban)*\n3. 🔄 *"Singkronkan Obsidian Vault"* $\\rightarrow$ *(Menyelaraskan catatan markdown)*\n4. 📊 *"Tampilkan laporan telemetri proyek"* $\\rightarrow$ *(Melihat metrik kesehatan sistem)*\n\nAda yang ingin kita mulai sekarang? 🚀✨`;
+      } catch (err) {
+        thoughts.push(`⚠️ [Gemini API Note] ${err.message}`);
+      }
+
+      // 2. If Gemini didn't return (e.g. offline/no key), consult smart local knowledge base
+      if (!responseText) {
+        const localAnswer = this.getLocalKnowledgeAnswer(text);
+        if (localAnswer) {
+          thoughts.push('💡 [Local Knowledge Match] Menemukan data konteks di Basis Pengetahuan Backoffice...');
+          responseText = localAnswer;
+        } else {
+          thoughts.push('💡 [General Response] Memformulasikan tanggapan bantuan Desktop-Agentic...');
+          responseText = `Pertanyaan yang sangat menarik mengenai **"${userInput}"**! 😊\n\nSebagai asisten cerdas **Desktop-Agentic**, saya siap berdiskusi tentang topik apa saja (pemrograman, arsitektur cloud, tips produktivitas, atau manajemen proyek).\n\nSelain itu, saya juga bisa langsung mengeksekusi sistem Anda:\n- 📋 *"Update PRD: [Spesifikasi]"*\n- 📝 *"Buat tugas baru: [Judul Tugas]"*\n- 🔄 *"Singkronkan Obsidian Vault"*\n- 📊 *"Tampilkan laporan telemetri"*\n\nAda yang bisa kita bahas atau kerjakan bersama sekarang? 🚀✨`;
+        }
       }
     }
 
