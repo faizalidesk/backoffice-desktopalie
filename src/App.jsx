@@ -30,6 +30,8 @@ import MembershipManager from './pages/MembershipManager';
 import NotificationsManager from './pages/NotificationsManager';
 import TransactionsManager from './pages/TransactionsManager';
 
+import AgenticAiDrawer from './components/AgenticAiDrawer';
+
 // MAIN BACKOFFICE PROTECTED LAYOUT (WITH SIDEBAR)
 function ProtectedLayout({ children }) {
   const { user, loading } = useAuth();
@@ -59,6 +61,7 @@ function ProtectedLayout({ children }) {
       <div className="main-content">
         {children}
       </div>
+      <AgenticAiDrawer />
     </div>
   );
 }
