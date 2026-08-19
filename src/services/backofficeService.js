@@ -495,6 +495,7 @@ export const backofficeService = {
       status: todo.status || 'Not started',
       priority: todo.priority || 'Medium',
       category: todo.category || 'General',
+      subtasks: todo.subtasks || [],
       created_at: new Date().toISOString(),
       ...(user ? { user_id: user.id } : {})
     };
@@ -531,8 +532,11 @@ export const backofficeService = {
       console.warn('Supabase update todo error, updated locally:', err);
     }
 
-    const currentLocal = JSON.parse(localStorage.getItem('desktopalie_todos_fallback') || '[]');
+    const targetPlatform = updates.platform_id || getCurrentPlatformId();
+    const fallbackKey = `desktopalie_todos_fallback_${targetPlatform}`;
+    const currentLocal = JSON.parse(localStorage.getItem(fallbackKey) || localStorage.getItem('desktopalie_todos_fallback') || '[]');
     const updated = currentLocal.map(t => t.id === id ? { ...t, ...updates } : t);
+    localStorage.setItem(fallbackKey, JSON.stringify(updated));
     localStorage.setItem('desktopalie_todos_fallback', JSON.stringify(updated));
     return { id, ...updates };
   },
