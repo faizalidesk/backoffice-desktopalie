@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
@@ -35,6 +36,26 @@ import AgenticAiDrawer from './components/AgenticAiDrawer';
 // MAIN BACKOFFICE PROTECTED LAYOUT (WITH SIDEBAR)
 function ProtectedLayout({ children }) {
   const { user, loading } = useAuth();
+  
+  // Track AI sidebar collapsed state for responsive reflow
+  const [isAiCollapsed, setIsAiCollapsed] = useState(() => {
+    const saved = localStorage.getItem('desktopalie_ai_sidebar_collapsed');
+    return saved !== null ? JSON.parse(saved) : false;
+  });
+
+  useEffect(() => {
+    const handleSidebarChange = (e) => {
+      if (e && e.detail && typeof e.detail.isCollapsed === 'boolean') {
+        setIsAiCollapsed(e.detail.isCollapsed);
+      } else {
+        const saved = localStorage.getItem('desktopalie_ai_sidebar_collapsed');
+        setIsAiCollapsed(saved !== null ? JSON.parse(saved) : false);
+      }
+    };
+
+    window.addEventListener('ai-sidebar-change', handleSidebarChange);
+    return () => window.removeEventListener('ai-sidebar-change', handleSidebarChange);
+  }, []);
 
   if (loading) {
     return (
@@ -58,7 +79,14 @@ function ProtectedLayout({ children }) {
   return (
     <div className="app-container">
       <Sidebar />
-      <div className="main-content">
+      <div 
+        className="main-content"
+        style={{
+          marginRight: isAiCollapsed ? '0px' : '400px',
+          transition: 'margin-right 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+          minWidth: 0
+        }}
+      >
         {children}
       </div>
       <AgenticAiDrawer />

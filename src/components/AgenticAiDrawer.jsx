@@ -42,6 +42,7 @@ export default function AgenticAiDrawer() {
     setIsCollapsed(prev => {
       const nextState = !prev;
       localStorage.setItem('desktopalie_ai_sidebar_collapsed', JSON.stringify(nextState));
+      window.dispatchEvent(new CustomEvent('ai-sidebar-change', { detail: { isCollapsed: nextState } }));
       return nextState;
     });
   };
