@@ -77,16 +77,14 @@ function ProtectedLayout({ children }) {
   }
 
   return (
-    <div className="app-container">
+    <div 
+      className="app-container"
+      style={{
+        '--ai-sidebar-width': isAiCollapsed ? '0px' : '400px'
+      }}
+    >
       <Sidebar />
-      <div 
-        className="main-content"
-        style={{
-          marginRight: isAiCollapsed ? '0px' : '400px',
-          transition: 'margin-right 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
-          minWidth: 0
-        }}
-      >
+      <div className="main-content">
         {children}
       </div>
       <AgenticAiDrawer />

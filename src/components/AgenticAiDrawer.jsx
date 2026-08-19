@@ -121,43 +121,45 @@ export default function AgenticAiDrawer() {
         fontFamily: 'var(--font-sans)'
       }}
     >
-      {/* PERSISTENT ATTACHED TOGGLE TAB (PERMANENTLY VISIBLE ON RIGHT EDGE WITH [|] ICON) */}
-      <button
-        type="button"
-        onClick={toggleCollapse}
-        title={isCollapsed ? "Buka Agentic AI Panel [|]" : "Tutup Panel [|]"}
-        style={{
-          position: 'absolute',
-          top: '8px',
-          left: '-44px',
-          width: '44px',
-          height: '40px',
-          borderRadius: '8px 0 0 8px',
-          backgroundColor: 'var(--bg-card)',
-          border: '1px solid var(--border-color)',
-          borderRight: 'none',
-          boxShadow: '-4px 4px 12px rgba(0, 0, 0, 0.08)',
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: isCollapsed ? 'var(--primary)' : 'var(--text-main)',
-          transition: 'all 0.2s ease'
-        }}
-        onMouseOver={(e) => {
-          e.currentTarget.style.color = 'var(--primary)';
-          e.currentTarget.style.backgroundColor = 'var(--bg-card-hover)';
-        }}
-        onMouseOut={(e) => {
-          e.currentTarget.style.color = isCollapsed ? 'var(--primary)' : 'var(--text-main)';
-          e.currentTarget.style.backgroundColor = 'var(--bg-card)';
-        }}
-      >
-        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <rect x="3" y="3" width="18" height="18" rx="3" ry="3" />
-          <line x1="15" y1="3" x2="15" y2="21" />
-        </svg>
-      </button>
+      {/* PERSISTENT ATTACHED TOGGLE TAB (ONLY VISIBLE WHEN COLLAPSED ON RIGHT EDGE) */}
+      {isCollapsed && (
+        <button
+          type="button"
+          onClick={toggleCollapse}
+          title="Buka Agentic AI Panel [|]"
+          style={{
+            position: 'absolute',
+            top: '8px',
+            left: '-44px',
+            width: '44px',
+            height: '40px',
+            borderRadius: '8px 0 0 8px',
+            backgroundColor: 'var(--bg-card)',
+            border: '1px solid var(--border-color)',
+            borderRight: 'none',
+            boxShadow: '-4px 4px 12px rgba(0, 0, 0, 0.08)',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'var(--primary)',
+            transition: 'all 0.2s ease'
+          }}
+          onMouseOver={(e) => {
+            e.currentTarget.style.color = 'var(--primary)';
+            e.currentTarget.style.backgroundColor = 'var(--bg-card-hover)';
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.color = 'var(--primary)';
+            e.currentTarget.style.backgroundColor = 'var(--bg-card)';
+          }}
+        >
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="3" ry="3" />
+            <line x1="15" y1="3" x2="15" y2="21" />
+          </svg>
+        </button>
+      )}
 
       {/* TOP TOOLBAR ROW (MATCHING IDE WALKTHROUGH TOOLBAR PRECISELY) */}
       <div style={{
