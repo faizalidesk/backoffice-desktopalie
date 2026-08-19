@@ -17,7 +17,8 @@ import {
   FiX,
   FiLayers,
   FiUsers,
-  FiBell
+  FiBell,
+  FiDollarSign
 } from 'react-icons/fi';
 import { useLanguage } from '../context/LanguageContext';
 import { useFlavor } from '../context/FlavorContext';
@@ -66,6 +67,7 @@ export default function Sidebar() {
     { label: t('workspaces'), path: '/workspaces', icon: FiLayers },
     { label: t('notifications') || 'Notifikasi', path: '/notifications', icon: FiBell, badge: unreadCount },
     { label: 'Membership', path: '/members', icon: FiUsers },
+    { label: t('transactions') || 'Transaksi', path: '/transactions', icon: FiDollarSign },
     { label: t('projects'), path: '/projects', icon: FiFolder },
     { label: t('experiments'), path: '/experiments', icon: FiCpu },
     { label: t('notes'), path: '/notes', icon: FiFileText },

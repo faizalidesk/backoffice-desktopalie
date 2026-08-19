@@ -1021,5 +1021,388 @@ export const backofficeService = {
     }
 
     return payload;
+  },
+
+  // TRANSACTIONS & BILLING MANAGEMENT
+  async getTransactions(platformId = null) {
+    const targetPlatform = platformId || getCurrentPlatformId();
+    const key = `transactions_${targetPlatform}`;
+
+    try {
+      const { data, error } = await supabase
+        .from('site_settings')
+        .select('*')
+        .eq('key', key)
+        .maybeSingle();
+
+      if (data?.value) {
+        const val = typeof data.value === 'string' ? JSON.parse(data.value) : data.value;
+        if (Array.isArray(val) && val.length > 0) return val;
+      }
+    } catch (err) {
+      console.warn('Supabase transactions fetch warning:', err);
+    }
+
+    const localData = localStorage.getItem(`desktopalie_transactions_${targetPlatform}`) || localStorage.getItem('desktopalie_transactions');
+    if (localData) {
+      try {
+        const parsed = JSON.parse(localData);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      } catch (e) {}
+    }
+
+    // Default rich sample dataset
+    const defaultTransactions = [
+      {
+        id: 'TRX-982026-8819',
+        invoice_number: 'INV/2026/08/00192',
+        customer_name: 'Faiz Ali (Super Admin)',
+        customer_email: 'faizali.desk@gmail.com',
+        customer_avatar: 'https://ui-avatars.com/api/?name=Faiz+Ali&background=4F46E5&color=fff',
+        item_name: 'Enterprise Cloud Workspace Tier 4',
+        category: 'Cloud Infrastructure',
+        platform: 'platform1',
+        platform_name: 'Desktopalie Main',
+        amount: 3500000,
+        fee: 5000,
+        tax: 385000,
+        total_amount: 3890000,
+        payment_method: 'QRIS',
+        payment_channel: 'QRIS Dinamis (GPN / Bank Indonesia)',
+        status: 'Sukses',
+        created_at: '2026-08-19T09:45:00Z',
+        paid_at: '2026-08-19T09:46:12Z',
+        notes: 'Perpanjangan lisensi tahunan platform utama.'
+      },
+      {
+        id: 'TRX-771920-4412',
+        invoice_number: 'INV/2026/08/00191',
+        customer_name: 'Budi Logistics Coordinator',
+        customer_email: 'budi.logistics@cargo-beta.com',
+        customer_avatar: 'https://ui-avatars.com/api/?name=Budi+Logistics&background=10B981&color=fff',
+        item_name: 'Cold-Chain IoT Telemetry Subscription',
+        category: 'Logistics Fleet',
+        platform: 'platform2',
+        platform_name: 'Desktopalie Beta',
+        amount: 1850000,
+        fee: 4500,
+        tax: 203500,
+        total_amount: 2058000,
+        payment_method: 'BCA Virtual Account',
+        payment_channel: 'BCA Virtual Account (8077712398)',
+        status: 'Sukses',
+        created_at: '2026-08-19T08:20:00Z',
+        paid_at: '2026-08-19T08:22:30Z',
+        notes: 'Modul sensor suhu real-time 15 armada truk.'
+      },
+      {
+        id: 'TRX-551040-3321',
+        invoice_number: 'INV/2026/08/00190',
+        customer_name: 'Rian Transcoder Engineer',
+        customer_email: 'rian.transcode@gamma-stream.io',
+        customer_avatar: 'https://ui-avatars.com/api/?name=Rian+Stream&background=8B5CF6&color=fff',
+        item_name: 'Ultra HD Transcoding GPU Bandwidth 10TB',
+        category: 'Streaming Engine',
+        platform: 'platform3',
+        platform_name: 'Desktopalie Gamma',
+        amount: 4200000,
+        fee: 0,
+        tax: 462000,
+        total_amount: 4662000,
+        payment_method: 'Kartu Kredit',
+        payment_channel: 'Visa Platinum (**** 4821)',
+        status: 'Pending',
+        created_at: '2026-08-19T07:15:00Z',
+        paid_at: null,
+        notes: 'Menunggu otorisasi 3D Secure dari bank penerbit.'
+      },
+      {
+        id: 'TRX-331092-7788',
+        invoice_number: 'INV/2026/08/00189',
+        customer_name: 'Dedi Enterprise Cloud Admin',
+        customer_email: 'dedi.cloud@delta-erp.net',
+        customer_avatar: 'https://ui-avatars.com/api/?name=Dedi+Cloud&background=F59E0B&color=fff',
+        item_name: 'High-Concurrency ERP Database Node',
+        category: 'Enterprise ERP',
+        platform: 'platform4',
+        platform_name: 'Desktopalie Delta',
+        amount: 6800000,
+        fee: 6500,
+        tax: 748000,
+        total_amount: 7554500,
+        payment_method: 'Mandiri Virtual Account',
+        payment_channel: 'Mandiri VA (8899012384)',
+        status: 'Sukses',
+        created_at: '2026-08-18T22:30:00Z',
+        paid_at: '2026-08-18T22:35:10Z',
+        notes: 'Deployment cluster PostgreSQL 3-node enterprise.'
+      },
+      {
+        id: 'TRX-229104-5544',
+        invoice_number: 'INV/2026/08/00188',
+        customer_name: 'Siti Rahmawati',
+        customer_email: 'siti.rahma@fintech-asia.id',
+        customer_avatar: 'https://ui-avatars.com/api/?name=Siti+Rahma&background=EC4899&color=fff',
+        item_name: 'Payment Gateway API Integration Addon',
+        category: 'Addon & Plugin',
+        platform: 'platform1',
+        platform_name: 'Desktopalie Main',
+        amount: 750000,
+        fee: 2500,
+        tax: 82500,
+        total_amount: 835000,
+        payment_method: 'GoPay',
+        payment_channel: 'GoPay E-Wallet (08129844xxxx)',
+        status: 'Sukses',
+        created_at: '2026-08-18T19:10:00Z',
+        paid_at: '2026-08-18T19:11:05Z',
+        notes: 'Webhook otomatis terverifikasi.'
+      },
+      {
+        id: 'TRX-118833-2211',
+        invoice_number: 'INV/2026/08/00187',
+        customer_name: 'Hendro Kusuma',
+        customer_email: 'hendro.k@global-trade.co.id',
+        customer_avatar: 'https://ui-avatars.com/api/?name=Hendro+Kusuma&background=0284C7&color=fff',
+        item_name: 'Custom Domain SSL & Dedicated IP',
+        category: 'Security & Network',
+        platform: 'platform1',
+        platform_name: 'Desktopalie Main',
+        amount: 450000,
+        fee: 4000,
+        tax: 49500,
+        total_amount: 503500,
+        payment_method: 'BNI Virtual Account',
+        payment_channel: 'BNI VA (988019284)',
+        status: 'Gagal',
+        created_at: '2026-08-18T16:00:00Z',
+        paid_at: null,
+        notes: 'Waktu pembayaran kadaluarsa (Expired session).'
+      },
+      {
+        id: 'TRX-990142-6632',
+        invoice_number: 'INV/2026/08/00186',
+        customer_name: 'Maya Indah Permata',
+        customer_email: 'maya.indah@creative-studio.com',
+        customer_avatar: 'https://ui-avatars.com/api/?name=Maya+Indah&background=14B8A6&color=fff',
+        item_name: 'Annual UI Component Pro Bundle',
+        category: 'Design System',
+        platform: 'platform1',
+        platform_name: 'Desktopalie Main',
+        amount: 1200000,
+        fee: 3000,
+        tax: 132000,
+        total_amount: 1335000,
+        payment_method: 'OVO',
+        payment_channel: 'OVO E-Wallet (08569123xxxx)',
+        status: 'Refund',
+        created_at: '2026-08-18T14:12:00Z',
+        paid_at: '2026-08-18T14:15:00Z',
+        notes: 'Refund disetujui karena duplicate order oleh pelanggan.'
+      },
+      {
+        id: 'TRX-884422-9901',
+        invoice_number: 'INV/2026/08/00185',
+        customer_name: 'Ahmad Fauzi',
+        customer_email: 'fauzi.dev@techsolusi.id',
+        customer_avatar: 'https://ui-avatars.com/api/?name=Ahmad+Fauzi&background=6366F1&color=fff',
+        item_name: 'Developer Sandbox 12-Month Access',
+        category: 'Development',
+        platform: 'platform3',
+        platform_name: 'Desktopalie Gamma',
+        amount: 950000,
+        fee: 2000,
+        tax: 104500,
+        total_amount: 1056500,
+        payment_method: 'ShopeePay',
+        payment_channel: 'ShopeePay (08138891xxxx)',
+        status: 'Sukses',
+        created_at: '2026-08-18T11:05:00Z',
+        paid_at: '2026-08-18T11:06:40Z',
+        notes: 'Aktivasi instan API Sandbox.'
+      },
+      {
+        id: 'TRX-773311-5566',
+        invoice_number: 'INV/2026/08/00184',
+        customer_name: 'Dewi Lestari',
+        customer_email: 'dewi.lestari@agri-corp.com',
+        customer_avatar: 'https://ui-avatars.com/api/?name=Dewi+Lestari&background=84CC16&color=fff',
+        item_name: 'Cold Storage IoT Telemetry Sensors',
+        category: 'Logistics Fleet',
+        platform: 'platform2',
+        platform_name: 'Desktopalie Beta',
+        amount: 2900000,
+        fee: 5000,
+        tax: 319000,
+        total_amount: 3224000,
+        payment_method: 'BCA Virtual Account',
+        payment_channel: 'BCA VA (8077799102)',
+        status: 'Pending',
+        created_at: '2026-08-18T09:40:00Z',
+        paid_at: null,
+        notes: 'Menunggu transfer virtual account.'
+      },
+      {
+        id: 'TRX-662200-4477',
+        invoice_number: 'INV/2026/08/00183',
+        customer_name: 'Bambang Soedarto',
+        customer_email: 'bambang.s@maritim-log.id',
+        customer_avatar: 'https://ui-avatars.com/api/?name=Bambang+S&background=F97316&color=fff',
+        item_name: 'Fleet GPS Real-Time Dispatcher Pack',
+        category: 'Logistics Fleet',
+        platform: 'platform2',
+        platform_name: 'Desktopalie Beta',
+        amount: 3100000,
+        fee: 4500,
+        tax: 341000,
+        total_amount: 3445500,
+        payment_method: 'QRIS',
+        payment_channel: 'QRIS Dinamis',
+        status: 'Sukses',
+        created_at: '2026-08-17T20:15:00Z',
+        paid_at: '2026-08-17T20:18:22Z',
+        notes: 'Perangkat GPS 20 unit.'
+      },
+      {
+        id: 'TRX-551199-3388',
+        invoice_number: 'INV/2026/08/00182',
+        customer_name: 'Clara Natalie',
+        customer_email: 'clara.natalie@media-vox.tv',
+        customer_avatar: 'https://ui-avatars.com/api/?name=Clara+Natalie&background=A855F7&color=fff',
+        item_name: 'Live Stream CDN Edge Caching 50TB',
+        category: 'Streaming Engine',
+        platform: 'platform3',
+        platform_name: 'Desktopalie Gamma',
+        amount: 8500000,
+        fee: 0,
+        tax: 935000,
+        total_amount: 9435000,
+        payment_method: 'Kartu Kredit',
+        payment_channel: 'Mastercard World Elite (**** 9012)',
+        status: 'Sukses',
+        created_at: '2026-08-17T18:00:00Z',
+        paid_at: '2026-08-17T18:02:11Z',
+        notes: 'Auto-renewed streaming package.'
+      },
+      {
+        id: 'TRX-440088-2299',
+        invoice_number: 'INV/2026/08/00181',
+        customer_name: 'Eko Prasetyo',
+        customer_email: 'eko.p@delta-finance.org',
+        customer_avatar: 'https://ui-avatars.com/api/?name=Eko+Prasetyo&background=06B6D4&color=fff',
+        item_name: 'Enterprise Audit Trail & Ledger Sync',
+        category: 'Enterprise ERP',
+        platform: 'platform4',
+        platform_name: 'Desktopalie Delta',
+        amount: 5400000,
+        fee: 6500,
+        tax: 594000,
+        total_amount: 6000500,
+        payment_method: 'Mandiri Virtual Account',
+        payment_channel: 'Mandiri VA (8899044219)',
+        status: 'Sukses',
+        created_at: '2026-08-17T15:20:00Z',
+        paid_at: '2026-08-17T15:24:00Z',
+        notes: 'Financial ledger backup setup.'
+      },
+      {
+        id: 'TRX-339977-1100',
+        invoice_number: 'INV/2026/08/00180',
+        customer_name: 'Fitri Handayani',
+        customer_email: 'fitri.h@retail-hub.co.id',
+        customer_avatar: 'https://ui-avatars.com/api/?name=Fitri+Handayani&background=E11D48&color=fff',
+        item_name: 'Omnichannel POS Terminal License',
+        category: 'Cloud Infrastructure',
+        platform: 'platform1',
+        platform_name: 'Desktopalie Main',
+        amount: 1650000,
+        fee: 2500,
+        tax: 181500,
+        total_amount: 1834000,
+        payment_method: 'GoPay',
+        payment_channel: 'GoPay E-Wallet (08779912xxxx)',
+        status: 'Gagal',
+        created_at: '2026-08-17T12:00:00Z',
+        paid_at: null,
+        notes: 'Saldo e-wallet tidak mencukupi saat proses debit.'
+      },
+      {
+        id: 'TRX-228866-0011',
+        invoice_number: 'INV/2026/08/00179',
+        customer_name: 'Gilang Ramadhan',
+        customer_email: 'gilang.r@creative-tech.id',
+        customer_avatar: 'https://ui-avatars.com/api/?name=Gilang+R&background=3B82F6&color=fff',
+        item_name: 'Premium Design System UI Components',
+        category: 'Design System',
+        platform: 'platform1',
+        platform_name: 'Desktopalie Main',
+        amount: 890000,
+        fee: 3000,
+        tax: 97900,
+        total_amount: 990900,
+        payment_method: 'QRIS',
+        payment_channel: 'QRIS Statis/Dinamis',
+        status: 'Sukses',
+        created_at: '2026-08-16T19:30:00Z',
+        paid_at: '2026-08-16T19:31:45Z',
+        notes: 'Single developer lifetime access.'
+      },
+      {
+        id: 'TRX-117755-9922',
+        invoice_number: 'INV/2026/08/00178',
+        customer_name: 'Hadi Gunawan',
+        customer_email: 'hadi.g@supplychain-id.com',
+        customer_avatar: 'https://ui-avatars.com/api/?name=Hadi+Gunawan&background=10B981&color=fff',
+        item_name: 'Multi-Warehouse Inventory Gateway',
+        category: 'Logistics Fleet',
+        platform: 'platform2',
+        platform_name: 'Desktopalie Beta',
+        amount: 4750000,
+        fee: 5000,
+        tax: 522500,
+        total_amount: 5277500,
+        payment_method: 'BCA Virtual Account',
+        payment_channel: 'BCA VA (8077733491)',
+        status: 'Sukses',
+        created_at: '2026-08-16T14:10:00Z',
+        paid_at: '2026-08-16T14:15:02Z',
+        notes: 'Sinkronisasi 4 gudang cabang.'
+      }
+    ];
+
+    localStorage.setItem(`desktopalie_transactions_${targetPlatform}`, JSON.stringify(defaultTransactions));
+    return defaultTransactions;
+  },
+
+  async saveTransactions(transactions, platformId = null) {
+    const targetPlatform = platformId || getCurrentPlatformId();
+    const key = `transactions_${targetPlatform}`;
+
+    localStorage.setItem(`desktopalie_transactions_${targetPlatform}`, JSON.stringify(transactions));
+    localStorage.setItem('desktopalie_transactions', JSON.stringify(transactions));
+    window.dispatchEvent(new Event('storage'));
+
+    try {
+      await this.saveSiteSetting(key, transactions);
+    } catch (err) {
+      console.warn('Supabase save transactions error:', err);
+    }
+    return transactions;
+  },
+
+  async updateTransactionStatus(transactionId, newStatus, platformId = null) {
+    const transactions = await this.getTransactions(platformId);
+    const updated = transactions.map(t => {
+      if (t.id === transactionId) {
+        return {
+          ...t,
+          status: newStatus,
+          paid_at: newStatus === 'Sukses' ? (t.paid_at || new Date().toISOString()) : t.paid_at
+        };
+      }
+      return t;
+    });
+    await this.saveTransactions(updated, platformId);
+    return updated;
   }
 };

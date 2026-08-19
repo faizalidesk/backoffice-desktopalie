@@ -28,6 +28,7 @@ import PlatformGammaPortal from './pages/PlatformGammaPortal';
 import PlatformDeltaPortal from './pages/PlatformDeltaPortal';
 import MembershipManager from './pages/MembershipManager';
 import NotificationsManager from './pages/NotificationsManager';
+import TransactionsManager from './pages/TransactionsManager';
 
 // MAIN BACKOFFICE PROTECTED LAYOUT (WITH SIDEBAR)
 function ProtectedLayout({ children }) {
@@ -197,6 +198,7 @@ export default function App() {
                   <Route path="/workspaces" element={<ProtectedLayout><PlatformWorkspacesManager /></ProtectedLayout>} />
                   <Route path="/notifications" element={<ProtectedLayout><NotificationsManager /></ProtectedLayout>} />
                   <Route path="/members" element={<ProtectedLayout><MembershipManager /></ProtectedLayout>} />
+                  <Route path="/transactions" element={<ProtectedLayout><TransactionsManager /></ProtectedLayout>} />
                   <Route path="/todos" element={<ProtectedLayout><TodoListManager /></ProtectedLayout>} />
                   <Route path="/documentation" element={<ProtectedLayout><DocumentationManager /></ProtectedLayout>} />
                   <Route path="/landing-manager" element={<ProtectedLayout><LandingPageManager /></ProtectedLayout>} />

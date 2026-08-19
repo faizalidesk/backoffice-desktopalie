@@ -548,3 +548,22 @@ textarea.form-control {
     border-radius: 18px !important;
   }
 }
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spin-anim {
+  animation: spin 1s linear infinite;
+}
+
+/* Custom Table Utilities */
+.transaction-table-component .data-table th {
+  white-space: nowrap;
+}
+
+.transaction-table-component .data-table tr:hover td {
+  background-color: var(--bg-card-hover);
+}
+

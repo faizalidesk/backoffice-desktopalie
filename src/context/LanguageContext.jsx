@@ -7,6 +7,7 @@ export const translations = {
     // Navigation
     dashboard: 'Dashboard Overview',
     workspaces: 'Platform Workspaces',
+    transactions: 'Transaksi & Keuangan',
     todos: 'To-Do & Board QA',
     documentation: 'Dokumentasi System',
     landingManager: 'Landing Page Manager',
@@ -59,6 +60,7 @@ export const translations = {
   en: {
     // Navigation
     dashboard: 'Dashboard Overview',
+    transactions: 'Transactions & Billing',
     todos: 'To-Do & Board QA',
     documentation: 'System Documentation',
     landingManager: 'Landing Page Manager',
