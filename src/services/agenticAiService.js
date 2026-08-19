@@ -13,6 +13,11 @@ export const AGENT_TOOLS = [
     parameters: ['id', 'status']
   },
   {
+    name: 'update_prd',
+    description: 'Memperbarui dokumen Product Requirement Document (PRD) dengan fitur/modul baru',
+    parameters: ['section', 'content', 'updateNotes']
+  },
+  {
     name: 'create_documentation',
     description: 'Membuat catatan dokumentasi sistem / Obsidian note baru',
     parameters: ['title', 'content', 'folder']
@@ -114,9 +119,43 @@ export const agenticAiService = {
     // Intent 0: Greetings (Hi / Halo / Hello)
     if (text === 'hi' || text === 'halo' || text === 'hello' || text === 'hey' || text === 'p') {
       thoughts.push('👋 [Agent Reasoning] Menyapa pengguna & memaparkan status kesiapan Desktop-Agentic...');
-      responseText = `Halo! 👋 Saya adalah **Desktop-Agentic** di Desktopalie Backoffice.\n\nSaya siap membantu Anda mengeksekusi berbagai tugas otomatis:\n- 📝 **Buat Tugas Baru** (contoh: *"Buat tugas baru: Security Audit & Verifikasi CSP"*)\n- 🔄 **Sinkronkan Obsidian** (contoh: *"Singkronkan data dengan Obsidian Vault"*)\n- 📊 **Cek Telemetri** (contoh: *"Tampilkan laporan telemetri proyek"*)\n- 📄 **Buat Dokumentasi** (contoh: *"Buat catatan dokumentasi arsitektur"*)\n\nApa yang ingin Anda eksekusi hari ini? 🚀`;
+      responseText = `Halo! 👋 Saya adalah **Desktop-Agentic** di Desktopalie Backoffice.\n\nSaya siap membantu Anda mengeksekusi berbagai tugas otomatis:\n- 📋 **Update PRD** (contoh: *"Update PRD: tambahkan modul Desktop-Agentic & integrasi Gemini"*)\n- 📝 **Buat Tugas Baru** (contoh: *"Buat tugas baru: Security Audit & Verifikasi CSP"*)\n- 🔄 **Sinkronkan Obsidian** (contoh: *"Singkronkan data dengan Obsidian Vault"*)\n- 📊 **Cek Telemetri** (contoh: *"Tampilkan laporan telemetri proyek"*)\n- 📄 **Buat Dokumentasi** (contoh: *"Buat catatan dokumentasi arsitektur"*)\n\nApa yang ingin Anda eksekusi hari ini? 🚀`;
     }
-    // Intent 1: Create Task (Buat Tugas)
+    // Intent 1: Update PRD (Product Requirement Document)
+    else if (text.includes('update prd') || text.includes('perbarui prd') || text.includes('ubah prd') || text.includes('tambah prd') || text.includes('edit prd') || (text.includes('prd') && (text.includes('tambah') || text.includes('update')))) {
+      thoughts.push('🔧 [Tool Selection] Terdeteksi niat pembaruan PRD -> Memilih Tool update_prd');
+      try {
+        const docs = await backofficeService.getDocs();
+        let prdDoc = docs.find(d => d.title.toLowerCase().includes('prd') || d.slug.includes('prd'));
+        
+        const timestamp = new Date().toLocaleString('id-ID');
+        let updateNote = userInput.replace(/update prd|perbarui prd|ubah prd|tambah prd|edit prd|prd/gi, '').trim();
+        if (!updateNote) updateNote = 'Pembaruan Modul Desktop-Agentic & Serverless Security Architecture';
+        
+        let newContent = '';
+        if (prdDoc) {
+          newContent = `${prdDoc.content || ''}\n\n### ✦ Update PRD (${timestamp})\n- **Catatan Pembaruan**: ${updateNote}\n- **Otoritas**: Desktop-Agentic Autonomous Engine\n- **Status**: Live & Integrated with Supabase + Obsidian Vault.`;
+          await backofficeService.updateDoc(prdDoc.id, { content: newContent });
+        } else {
+          prdDoc = await backofficeService.createDoc({
+            title: '00 - Backoffice PRD (Product Requirement Document)',
+            folder: '02 - Backoffice',
+            slug: '00-backoffice-prd',
+            author: 'Desktop-Agentic',
+            content: `# 00 - Backoffice PRD (Product Requirement Document)\n\n## 📌 Ringkasan Sistem\nDokumen master PRD ini dikelola secara otonom oleh **Desktop-Agentic**.\n\n### ✦ Update PRD (${timestamp})\n- **Catatan Pembaruan**: ${updateNote}`
+          });
+        }
+        
+        toolExecuted = 'update_prd';
+        resultPayload = { docId: prdDoc.id, title: prdDoc.title };
+        thoughts.push(`✅ [Tool Output] PRD Document "${prdDoc.title}" berhasil diperbarui!`);
+        responseText = `Dokumen **PRD (Product Requirement Document)** telah berhasil diperbarui di database! 📋✨\n\n- **Dokumen Master**: \`${prdDoc.title}\`\n- **Pembaruan Ditambahkan**: "${updateNote}"\n- **Status**: Tersimpan di Supabase & siap disinkronkan ke Obsidian Vault.`;
+      } catch (err) {
+        thoughts.push(`❌ [Tool Error] Gagal memperbarui PRD: ${err.message}`);
+        responseText = `Gagal memperbarui PRD: ${err.message}`;
+      }
+    }
+    // Intent 2: Create Task (Buat Tugas)
     else if (text.includes('tugas') || text.includes('todo') || text.includes('task') || text.includes('buat tugas')) {
       thoughts.push('🔧 [Tool Selection] Terdeteksi niat manajemen tugas -> Memilih Tool create_task');
       
@@ -156,7 +195,7 @@ export const agenticAiService = {
         responseText = `Maaf, terjadi kendala saat membuat tugas: ${err.message}`;
       }
     }
-    // Intent 2: Sync Obsidian Vault
+    // Intent 3: Sync Obsidian Vault
     else if (text.includes('obsidian') || text.includes('sync') || text.includes('singkron')) {
       thoughts.push('🔧 [Tool Selection] Terdeteksi niat sinkronisasi Vault -> Memilih Tool sync_obsidian_vault');
       try {
@@ -170,7 +209,7 @@ export const agenticAiService = {
         responseText = `Gagal menyinkronkan Obsidian Vault: ${err.message}`;
       }
     }
-    // Intent 3: Create Documentation / Note
+    // Intent 4: Create Documentation / Note
     else if (text.includes('dokumentasi') || text.includes('catatan') || text.includes('doc') || text.includes('note')) {
       thoughts.push('🔧 [Tool Selection] Terdeteksi niat dokumentasi -> Memilih Tool create_documentation');
       let docTitle = userInput.replace(/buat dokumen|tambah catatan|dokumentasi baru|doc|note/gi, '').trim();
@@ -180,8 +219,8 @@ export const agenticAiService = {
         title: docTitle.charAt(0).toUpperCase() + docTitle.slice(1),
         folder: '02 - Backoffice',
         slug: docTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-        author: 'Agentic AI Copilot',
-        content: `# ✦ ${docTitle}\n\nCatatan dokumentasi ini dibuat secara otomatis oleh **Agentic AI Copilot**.\n\n## 📌 Ringkasan System\n- Timestamp: ${new Date().toISOString()}\n- Triggered by: Agentic AI Action Router.`
+        author: 'Desktop-Agentic',
+        content: `# ✦ ${docTitle}\n\nCatatan dokumentasi ini dibuat secara otomatis oleh **Desktop-Agentic**.\n\n## 📌 Ringkasan System\n- Timestamp: ${new Date().toISOString()}\n- Triggered by: Desktop-Agentic Action Router.`
       };
 
       try {
@@ -195,7 +234,7 @@ export const agenticAiService = {
         responseText = `Gagal membuat dokumentasi: ${err.message}`;
       }
     }
-    // Intent 4: Telemetry Report / Summary
+    // Intent 5: Telemetry Report / Summary
     else if (text.includes('telemetri') || text.includes('laporan') || text.includes('ringkasan') || text.includes('stat')) {
       thoughts.push('🔧 [Tool Selection] Terdeteksi niat telemetri -> Memilih Tool get_telemetry_report');
       try {
@@ -220,7 +259,7 @@ export const agenticAiService = {
         try {
           const geminiOutput = await this.callGeminiApi(
             userInput, 
-            'Anda adalah Agentic AI Copilot di platform Desktopalie Backoffice. Anda bertugas membantu developer dan administrator mengelola sistem, to-do board, portofolio proyek, dan Obsidian Vault. Berikan jawaban yang cerdas, ringkas, terstruktur, dan bersahabat dalam Bahasa Indonesia.'
+            'Anda adalah Desktop-Agentic di platform Desktopalie Backoffice. Anda bertugas membantu developer dan administrator mengelola sistem, memperbarui PRD, to-do board, portofolio proyek, dan Obsidian Vault. Berikan jawaban yang cerdas, ringkas, terstruktur, dan bersahabat dalam Bahasa Indonesia.'
           );
           if (geminiOutput) {
             responseText = geminiOutput;
@@ -229,11 +268,11 @@ export const agenticAiService = {
           }
         } catch (err) {
           thoughts.push(`⚠️ [Gemini API Warning] ${err.message}`);
-          responseText = `Halo! Saya memproses pertanyaan Anda: "${userInput}".\n\nUntuk perintah otonom langsung, Anda bisa mencoba:\n- *"Buat tugas baru: [Nama Tugas]"*\n- *"Singkronkan Obsidian Vault"*\n- *"Tampilkan laporan telemetri"*`;
+          responseText = `Halo! Saya memproses pertanyaan Anda: "${userInput}".\n\nUntuk perintah otonom langsung, Anda bisa mencoba:\n- *"Update PRD: [Spesifikasi Baru]"*\n- *"Buat tugas baru: [Nama Tugas]"*\n- *"Singkronkan Obsidian Vault"*\n- *"Tampilkan laporan telemetri"*`;
         }
       } else {
-        thoughts.push('💡 [Agent Reasoning] Pertanyaan umum -> Memformulasikan jawaban bantuan Agentic AI Copilot...');
-        responseText = `Halo! Saya adalah **Agentic AI Copilot** di Desktopalie Backoffice. Saya memiliki akses langsung ke sistem (*Tool Registry*)!\n\n**Perintah yang bisa Anda berikan:**\n1. *"Buat tugas baru: Pengujian Security Audit"* $\\rightarrow$ *(Otomatis membuat Kanban task)*\n2. *"Singkronkan Obsidian Vault"* $\\rightarrow$ *(Menjalankan sync dokumentasi)*\n3. *"Tampilkan laporan telemetri proyek"* $\\rightarrow$ *(Mengkompilasi ringkasan data)*\n4. *"Buat catatan dokumentasi arsitektur"* $\\rightarrow$ *(Membuat dokumen baru)*`;
+        thoughts.push('💡 [Agent Reasoning] Pertanyaan umum -> Memformulasikan jawaban bantuan Desktop-Agentic...');
+        responseText = `Halo! Saya adalah **Desktop-Agentic** di Desktopalie Backoffice. Saya memiliki akses langsung ke sistem (*Tool Registry*)!\n\n**Perintah yang bisa Anda berikan:**\n1. *"Update PRD: tambahkan modul Desktop-Agentic"* $\\rightarrow$ *(Otomatis memperbarui PRD)*\n2. *"Buat tugas baru: Pengujian Security Audit"* $\\rightarrow$ *(Otomatis membuat Kanban task)*\n3. *"Singkronkan Obsidian Vault"* $\\rightarrow$ *(Menjalankan sync dokumentasi)*\n4. *"Tampilkan laporan telemetri proyek"* $\\rightarrow$ *(Mengkompilasi ringkasan data)*`;
       }
     }
 

@@ -298,6 +298,15 @@ export default function AgenticAiDrawer() {
           type="button"
           className="btn btn-secondary btn-sm"
           style={{ fontSize: '0.72rem', padding: '4px 10px', whiteSpace: 'nowrap', height: 'auto', borderRadius: '20px' }}
+          onClick={() => handleSend('Update PRD: tambahkan modul Desktop-Agentic & Serverless Security')}
+        >
+          ✦ Update PRD
+        </button>
+
+        <button
+          type="button"
+          className="btn btn-secondary btn-sm"
+          style={{ fontSize: '0.72rem', padding: '4px 10px', whiteSpace: 'nowrap', height: 'auto', borderRadius: '20px' }}
           onClick={() => handleSend('Buat tugas baru: Security Audit & Verifikasi CSP')}
         >
           ✦ Buat Tugas
