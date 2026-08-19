@@ -36,7 +36,7 @@ export const AGENT_TOOLS = [
 
 // Rich Context Knowledge Base for Desktopalie Backoffice Ecosystem
 const BACKOFFICE_SYSTEM_PROMPT = `
-Anda adalah Desktop-Agentic, asisten AI resmi yang cerdas, ramah, dan solutif di platform Desktopalie Backoffice (back.desktopalie.my.id).
+Anda adalah Desktop-Agentic, asisten AI resmi di platform Desktopalie Backoffice (back.desktopalie.my.id).
 
 IDENTITAS SISTEM & PENGEMBANG:
 - Pemilik & Developer: Faiz Ali (Full-stack Engineer & AI Practitioner).
@@ -45,17 +45,17 @@ IDENTITAS SISTEM & PENGEMBANG:
 - Teknologi: React 19, Vite, Supabase PostgreSQL, Vercel Serverless Functions, Obsidian Vault Sync.
 
 MODUL UTAMA BACKOFFICE:
-1. Kanban To-Do Manager: Pengelolaan tugas Jira/Notion-style dengan subtasks, prioritas, dan kategori.
+1. Kanban To-Do Manager: Pengelolaan tugas harian dengan subtasks, prioritas, dan kategori (Jira/Notion style).
 2. Projects & Experiments Manager: Manajemen portofolio proyek perangkat lunak dan arsitektur kode.
 3. System Documentation & PRD: Pengelolaan dokumen spesifikasi produk (PRD) dan panduan arsitektur.
 4. Obsidian Bi-directional Sync: Sinkronisasi 30+ dokumen markdown lokal dengan database Supabase.
 5. Desktop-Agentic: Agen AI otonom untuk otomatisasi eksekusi database, audit CSP, dan pembuatan tugas.
 6. Telemetry & Security: Pemantauan kesehatan sistem, verifikasi Content Security Policy (CSP), dan performa.
 
-PANDUAN KOMUNIKASI:
-- Berikan jawaban yang sangat ramah, suportif, akurat, dan mendalam dalam Bahasa Indonesia.
-- Jika pengguna bertanya tentang hal di luar sistem (misal: coding umum, konsep AI, sains, tips kerja), jawablah dengan cerdas dan komprehensif layaknya asisten serbabisa.
-- Gunakan format Markdown yang rapi (bold, bullet points, emoji yang sesuai seperti 🚀, ✨, 💡, 📋, 😊).
+PANDUAN GAYA PENULISAN:
+- Tuliskan jawaban dalam format paragraf yang mengalir rapi dan poin-poin sederhana yang bersih (- atau penomoran).
+- JANGAN menggunakan banyak emoji, icon dekoratif, atau tanda yang berlebihan di setiap baris.
+- Utamakan kejelasan, keterbacaan, ketepatan konteks, dan bahasa Indonesia yang profesional serta bersahabat.
 `;
 
 export const agenticAiService = {
@@ -104,7 +104,7 @@ export const agenticAiService = {
         }
       ],
       generationConfig: {
-        temperature: 0.5,
+        temperature: 0.4,
         maxOutputTokens: 1200
       },
       systemInstruction: {
@@ -128,21 +128,21 @@ export const agenticAiService = {
     return candidate?.content?.parts?.[0]?.text || '';
   },
 
-  // Smart Built-in Fallback Knowledge Base (When offline / network issue)
+  // Smart Built-in Fallback Knowledge Base (Clean paragraphs & simple bullet points)
   getLocalKnowledgeAnswer(text) {
     // Topic: What is Desktopalie Backoffice?
     if (text.includes('backoffice') || text.includes('desktopalie') || text.includes('aplikasi ini') || text.includes('sistem ini')) {
-      return `**Desktopalie Backoffice** (\`back.desktopalie.my.id\`) adalah pusat kendali (*command center*) dan sistem manajemen terintegrasi untuk seluruh platform **Faiz Ali** (\`desktopalie.my.id\`). 🏢✨\n\n### 📌 Fitur & Modul Utama:\n1. 📋 **To-Do Kanban Board**: Pengelolaan tugas harian dengan subtasks dan prioritas (Jira/Notion style).\n2. 💼 **Projects & Experiments Manager**: Manajemen portofolio proyek dan arsitektur kode.\n3. 📄 **Documentation & Master PRD**: Pusat dokumentasi spesifikasi produk dan SOP teknis.\n4. 🔄 **Obsidian Vault Sync**: Sinkronisasi dua arah (*bi-directional*) 30+ catatan markdown lokal dengan database Supabase.\n5. 🤖 **Desktop-Agentic**: Asisten AI otonom berbasis Google Gemini 1.5 Flash untuk otomatisasi tugas dan audit sistem.\n6. 🔒 **Security & Telemetry**: Pengawasan keamanan CSP, performa, dan status kesehatan infrastruktur Vercel.\n\nAda modul tertentu yang ingin Anda jelajahi lebih dalam? 😊`;
+      return `Desktopalie Backoffice (back.desktopalie.my.id) adalah pusat kendali dan sistem manajemen internal terpadu untuk platform Faiz Ali (desktopalie.my.id). Sistem ini dirancang untuk mengelola seluruh aspek operasional, dokumentasi arsitektur, dan alur kerja pengembangan aplikasi dalam satu tempat.\n\nFitur dan modul utama yang tersedia meliputi:\n- To-Do Kanban Board: Pengelolaan tugas harian dengan subtask dan prioritas ala Jira atau Notion.\n- Projects & Experiments Manager: Manajemen portofolio proyek perangkat lunak dan arsitektur kode.\n- Documentation & Master PRD: Pengelolaan dokumen Product Requirement Document dan SOP teknis.\n- Obsidian Vault Sync: Sinkronisasi dua arah antara catatan markdown lokal dengan database Supabase.\n- Desktop-Agentic: Asisten AI otonom untuk otomatisasi eksekusi sistem dan pembaruan dokumen.\n- Security & Telemetry: Pemantauan keamanan Content Security Policy (CSP) dan metrik kesehatan infrastruktur.\n\nApakah ada modul tertentu yang ingin Anda diskusikan atau gunakan sekarang?`;
     }
 
     // Topic: Who is Faiz Ali?
     if (text.includes('faiz ali') || text.includes('pembuat') || text.includes('creator') || text.includes('developer')) {
-      return `**Faiz Ali** adalah Software Engineer dan pengembang utama dari ekosistem **Desktopalie** (\`desktopalie.my.id\`). 👨‍💻✨\n\nBeliau merancang platform ini dengan arsitektur modern (React 19, Supabase PostgreSQL, Obsidian Knowledge Graph, dan Agentic AI) untuk menyatukan portofolio, dokumentasi riset, dan sistem manajemen tugas dalam satu ekosistem yang terpadu.`;
+      return `Faiz Ali adalah Software Engineer dan pengembang utama dari ekosistem Desktopalie (desktopalie.my.id).\n\nBeliau merancang platform ini dengan arsitektur modern (React 19, Supabase PostgreSQL, Obsidian Knowledge Graph, dan Agentic AI) untuk menyatukan portofolio, dokumentasi riset, dan sistem manajemen tugas dalam satu ekosistem yang terpadu.`;
     }
 
     // Topic: What is Obsidian / Knowledge Graph?
     if (text.includes('obsidian') || text.includes('vault') || text.includes('knowledge graph')) {
-      return `**Obsidian Vault** di ekosistem Desktopalie berfungsi sebagai **Second Brain (Basis Pengetahuan Jangka Panjang)**. 📚🧠\n\nSetiap dokumentasi, arsitektur sistem, dan PRD yang Anda buat di Backoffice secara otomatis tersinkronisasi menjadi file Markdown dengan keterhubungan grafik (*Knowledge Graph*) di laptop Anda via skrip AI Intelligence kami!`;
+      return `Obsidian Vault di ekosistem Desktopalie berfungsi sebagai basis pengetahuan jangka panjang (Second Brain).\n\nSetiap dokumentasi, arsitektur sistem, dan PRD yang Anda buat di Backoffice secara otomatis tersinkronisasi menjadi file Markdown dengan grafik relasi (Knowledge Graph) di laptop Anda via skrip sinkronisasi AI kami.`;
     }
 
     return null;
@@ -158,8 +158,8 @@ export const agenticAiService = {
 
     // Intent 0: Friendly Greetings (Hi / Halo / Hello / Pagi / Malam)
     if (text === 'hi' || text === 'halo' || text === 'hello' || text === 'hey' || text === 'p' || text.includes('selamat pagi') || text.includes('selamat sore') || text.includes('selamat malam')) {
-      thoughts.push('👋 [Agent Reasoning] Menyapa pengguna dengan hangat & ramah...');
-      responseText = `Halo! Senang sekali bisa berjumpa dengan Anda! 👋😊\n\nSaya adalah **Desktop-Agentic**, asisten pribadi cerdas Anda di Desktopalie Backoffice. Saya siap membantu segala kebutuhan sistem Anda:\n\n- 📋 **Update PRD** (contoh: *"Update PRD: tambahkan modul baru"*)\n- 📝 **Buat Tugas Baru** (contoh: *"Buat tugas baru: Review performa database"*)\n- 🔄 **Sinkronkan Obsidian** (contoh: *"Singkronkan data dengan Obsidian Vault"*)\n- 📊 **Cek Telemetri Proyek** (contoh: *"Tampilkan laporan telemetri proyek"*)\n- 📄 **Buat Dokumentasi** (contoh: *"Buat catatan arsitektur sistem"*)\n\nAda yang bisa saya bantu eksekusi atau jelaskan hari ini? 🚀✨`;
+      thoughts.push('👋 [Agent Reasoning] Menyapa pengguna dengan santun...');
+      responseText = `Halo, selamat datang di Desktopalie Backoffice. Saya adalah Desktop-Agentic, asisten AI internal Anda.\n\nSaya dapat membantu Anda mengeksekusi berbagai tugas otomatis:\n- Update PRD: Memperbarui dokumen Product Requirement Document di database.\n- Buat Tugas: Menambahkan tugas baru ke papan To-Do Kanban.\n- Sinkronkan Obsidian: Menyelaraskan catatan dokumentasi dengan Obsidian Vault.\n- Cek Telemetri: Menampilkan ringkasan status kesehatan dan data proyek.\n- Buat Dokumentasi: Menulis catatan arsitektur sistem baru.\n\nApa yang ingin Anda kerjakan hari ini?`;
     }
     // Intent 1: Update PRD (Product Requirement Document)
     else if (text.includes('update prd') || text.includes('perbarui prd') || text.includes('ubah prd') || text.includes('tambah prd') || text.includes('edit prd') || (text.includes('prd') && (text.includes('tambah') || text.includes('update')))) {
@@ -174,7 +174,7 @@ export const agenticAiService = {
         
         let newContent = '';
         if (prdDoc) {
-          newContent = `${prdDoc.content || ''}\n\n### ✦ Update PRD (${timestamp})\n- **Catatan Pembaruan**: ${updateNote}\n- **Otoritas**: Desktop-Agentic Autonomous Engine\n- **Status**: Live & Integrated with Supabase + Obsidian Vault.`;
+          newContent = `${prdDoc.content || ''}\n\n### ✦ Update PRD (${timestamp})\n- Catatan Pembaruan: ${updateNote}\n- Otoritas: Desktop-Agentic Autonomous Engine\n- Status: Live & Integrated with Supabase + Obsidian Vault.`;
           await backofficeService.updateDoc(prdDoc.id, { content: newContent });
         } else {
           prdDoc = await backofficeService.createDoc({
@@ -182,17 +182,17 @@ export const agenticAiService = {
             folder: '02 - Backoffice',
             slug: '00-backoffice-prd',
             author: 'Desktop-Agentic',
-            content: `# 00 - Backoffice PRD (Product Requirement Document)\n\n## 📌 Ringkasan Sistem\nDokumen master PRD ini dikelola secara otonom oleh **Desktop-Agentic**.\n\n### ✦ Update PRD (${timestamp})\n- **Catatan Pembaruan**: ${updateNote}`
+            content: `# 00 - Backoffice PRD (Product Requirement Document)\n\n## Ringkasan Sistem\nDokumen master PRD ini dikelola secara otonom oleh Desktop-Agentic.\n\n### Update PRD (${timestamp})\n- Catatan Pembaruan: ${updateNote}`
           });
         }
         
         toolExecuted = 'update_prd';
         resultPayload = { docId: prdDoc.id, title: prdDoc.title };
         thoughts.push(`✅ [Tool Output] PRD Document "${prdDoc.title}" berhasil diperbarui!`);
-        responseText = `Bagus sekali! Dokumen **PRD (Product Requirement Document)** telah berhasil saya perbarui di database! 📋✨\n\n- 📄 **Dokumen Master**: \`${prdDoc.title}\`\n- 💡 **Pembaruan Ditambahkan**: "${updateNote}"\n- 🔄 **Status Sinkronisasi**: Data tersimpan aman di Supabase & siap Anda sinkronkan ke Obsidian Vault.\n\nAda bagian lain dari PRD yang ingin Anda sempurnakan? 😊`;
+        responseText = `Dokumen Product Requirement Document (PRD) telah berhasil diperbarui di database:\n\n- Dokumen: ${prdDoc.title}\n- Catatan Pembaruan: ${updateNote}\n- Status: Tersimpan di Supabase dan siap disinkronkan ke Obsidian Vault.\n\nApakah ada bagian lain dari PRD yang ingin Anda tambahkan?`;
       } catch (err) {
         thoughts.push(`❌ [Tool Error] Gagal memperbarui PRD: ${err.message}`);
-        responseText = `Mohon maaf, terjadi kendala saat memperbarui PRD: ${err.message}. Mari kita coba sekali lagi ya! 😊`;
+        responseText = `Terjadi kendala saat memperbarui PRD: ${err.message}.`;
       }
     }
     // Intent 2: Create Task (Buat Tugas)
@@ -204,7 +204,7 @@ export const agenticAiService = {
 
       const taskData = {
         title: title.charAt(0).toUpperCase() + title.slice(1),
-        description: `Dibuat secara otomatis oleh Desktop-Agentic pada ${new Date().toLocaleString('id-ID')}.\n\n### 📌 Instruksi Agent\n- [ ] Lakukan verifikasi dan pengujian komponen.`,
+        description: `Dibuat secara otomatis oleh Desktop-Agentic pada ${new Date().toLocaleString('id-ID')}.\n\nInstruksi:\n- Verifikasi dan pengujian komponen.`,
         priority: text.includes('tinggi') || text.includes('high') ? 'High' : (text.includes('rendah') || text.includes('low') ? 'Low' : 'Medium'),
         category: text.includes('qa') ? 'QA Checklist' : (text.includes('dev') ? 'Engineering' : 'Research'),
         status: text.includes('selesai') || text.includes('done') ? 'Done' : (text.includes('jalan') || text.includes('progress') ? 'Inprogress' : 'Not started'),
@@ -221,16 +221,16 @@ export const agenticAiService = {
         thoughts.push(`✅ [Tool Output] Tool create_task berhasil dieksekusi! ID: ${created.id}`);
         
         try {
-          const geminiResponse = await this.callGeminiApi(`User meminta membuat tugas: "${userInput}". Tugas berhasil dibuat dengan ID: ${created.id}, Judul: "${created.title}", Status: "${created.status}", Prioritas: "${created.priority}". Buat respons konfirmasi yang sangat ramah, hangat, dan positif dalam Bahasa Indonesia sebagai Desktop-Agentic.`);
+          const geminiResponse = await this.callGeminiApi(`User meminta membuat tugas: "${userInput}". Tugas berhasil dibuat dengan ID: ${created.id}, Judul: "${created.title}", Status: "${created.status}", Prioritas: "${created.priority}". Buat respons konfirmasi yang rapi dalam Bahasa Indonesia dengan format paragraf pengantar dan poin-poin detail tanpa emoji berlebihan.`);
           if (geminiResponse) responseText = geminiResponse;
         } catch (e) {}
         
         if (!responseText) {
-          responseText = `Siap! Tugas baru **"${created.title}"** telah berhasil saya buatkan dan langsung masuk ke papan Kanban **To-Do Board** Anda! 📝✨\n\n- 🎯 **Status**: \`${created.status}\`\n- ⚡ **Prioritas**: \`${created.priority}\`\n- 📂 **Kategori**: \`${created.category}\`\n\nSemangat menyelesaikan tugasnya! Jika butuh bantuan lain, kabari saya ya! 😊`;
+          responseText = `Tugas baru telah berhasil dibuat dan ditambahkan ke papan To-Do Board:\n\n- Judul: ${created.title}\n- Status: ${created.status}\n- Prioritas: ${created.priority}\n- Kategori: ${created.category}\n\nTugas ini sudah tersimpan dan siap dikerjakan. Apakah ada hal lain yang perlu dipersiapkan?`;
         }
       } catch (err) {
         thoughts.push(`❌ [Tool Error] Gagal mengeksekusi create_task: ${err.message}`);
-        responseText = `Mohon maaf, terjadi kendala saat membuat tugas: ${err.message}. Kita coba ulangi ya! 😊`;
+        responseText = `Terjadi kendala saat membuat tugas: ${err.message}.`;
       }
     }
     // Intent 3: Sync Obsidian Vault
@@ -241,10 +241,10 @@ export const agenticAiService = {
         toolExecuted = 'sync_obsidian_vault';
         resultPayload = { count: docs.length };
         thoughts.push(`✅ [Tool Output] Tool sync_obsidian_vault selesai! Total ${docs.length} dokumen tersinkron.`);
-        responseText = `Hebat! Sinkronisasi data dengan **Obsidian Vault** berhasil diselesaikan! 🔄✨\n\nSebanyak **${docs.length} catatan dokumentasi & PRD** kini telah sepenuhnya selaras dengan basis data Backoffice Anda. Semua catatan siap Anda buka di Obsidian lokal! 🚀`;
+        responseText = `Sinkronisasi data dengan Obsidian Vault telah berhasil diselesaikan.\n\nSebanyak ${docs.length} catatan dokumentasi dan PRD saat ini telah selaras dengan database Backoffice. Seluruh file siap dibuka melalui aplikasi Obsidian lokal.`;
       } catch (err) {
         thoughts.push(`❌ [Tool Error] ${err.message}`);
-        responseText = `Mohon maaf, sinkronisasi Obsidian mengalami kendala: ${err.message}.`;
+        responseText = `Sinkronisasi Obsidian mengalami kendala: ${err.message}.`;
       }
     }
     // Intent 4: Create Documentation / Note
@@ -258,7 +258,7 @@ export const agenticAiService = {
         folder: '02 - Backoffice',
         slug: docTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
         author: 'Desktop-Agentic',
-        content: `# ✦ ${docTitle}\n\nCatatan dokumentasi ini dibuat secara otomatis oleh **Desktop-Agentic**.\n\n## 📌 Ringkasan System\n- Timestamp: ${new Date().toISOString()}\n- Triggered by: Desktop-Agentic Action Router.`
+        content: `# ${docTitle}\n\nCatatan dokumentasi ini dibuat secara otomatis oleh Desktop-Agentic.\n\nRingkasan Sistem:\n- Waktu Pembuatan: ${new Date().toISOString()}\n- Dikelola oleh: Desktop-Agentic Action Router.`
       };
 
       try {
@@ -266,7 +266,7 @@ export const agenticAiService = {
         toolExecuted = 'create_documentation';
         resultPayload = createdDoc;
         thoughts.push(`✅ [Tool Output] Tool create_documentation berhasil dieksekusi! ID: ${createdDoc.id}`);
-        responseText = `Dokumentasi baru bertajuk **"${createdDoc.title}"** telah berhasil saya buatkan! 📄✨\n\nCatatan ini otomatis tersimpan rapi di menu **System Documentation Manager** dan siap diakses di Obsidian Vault. Ada materi lain yang ingin ditambahkan ke dalamnya? 😊`;
+        responseText = `Dokumentasi baru "${createdDoc.title}" telah berhasil dibuat.\n\nCatatan ini otomatis tersimpan di menu System Documentation Manager dan siap disinkronkan ke Obsidian Vault.`;
       } catch (err) {
         thoughts.push(`❌ [Tool Error] ${err.message}`);
         responseText = `Gagal membuat dokumentasi: ${err.message}`;
@@ -284,7 +284,7 @@ export const agenticAiService = {
         toolExecuted = 'get_telemetry_report';
         resultPayload = { todos: todos.length, projects: projects.length, docs: docs.length };
         thoughts.push('✅ [Tool Output] Telemetri berhasil dikumpulkan.');
-        responseText = `Berikut adalah **Laporan Ringkasan Eksekutif Sistem Backoffice** Anda saat ini: 📊✨\n\n- 📝 **Tugas Kanban Aktif**: ${todos.length} item\n- 💼 **Portofolio Proyek Live**: ${projects.length} proyek\n- 📄 **Dokumentasi & PRD**: ${docs.length} dokumen\n- 🟢 **Status Infrastruktur**: 100% Operational & Live di Vercel Global Network\n\nSistem berjalan dengan sangat prima! Ada bagian tertentu yang ingin Anda teliti lebih dalam? 😊`;
+        responseText = `Berikut adalah ringkasan laporan telemetri sistem Backoffice saat ini:\n\n- Total Tugas Kanban: ${todos.length} item\n- Portofolio Proyek Aktif: ${projects.length} proyek\n- Dokumen Dokumentasi & PRD: ${docs.length} dokumen\n- Status Infrastruktur: 100% Beroperasi normal di Vercel Global Network\n\nSeluruh layanan berjalan stabil. Ada data spesifik lain yang ingin Anda periksa?`;
       } catch (err) {
         thoughts.push(`❌ [Tool Error] ${err.message}`);
         responseText = `Gagal mengumpulkan telemetri: ${err.message}`;
@@ -311,7 +311,7 @@ export const agenticAiService = {
           responseText = localAnswer;
         } else {
           thoughts.push('💡 [General Response] Memformulasikan tanggapan bantuan Desktop-Agentic...');
-          responseText = `Pertanyaan yang sangat menarik mengenai **"${userInput}"**! 😊\n\nSebagai asisten cerdas **Desktop-Agentic**, saya siap berdiskusi tentang topik apa saja (pemrograman, arsitektur cloud, tips produktivitas, atau manajemen proyek).\n\nSelain itu, saya juga bisa langsung mengeksekusi sistem Anda:\n- 📋 *"Update PRD: [Spesifikasi]"*\n- 📝 *"Buat tugas baru: [Judul Tugas]"*\n- 🔄 *"Singkronkan Obsidian Vault"*\n- 📊 *"Tampilkan laporan telemetri"*\n\nAda yang bisa kita bahas atau kerjakan bersama sekarang? 🚀✨`;
+          responseText = `Mengenai pertanyaan Anda tentang "${userInput}":\n\nSaya dapat membantu Anda berdiskusi seputar arsitektur sistem, pemrograman, manajemen portofolio, maupun manajemen tugas.\n\nBeberapa aksi otomatis yang dapat langsung saya jalankan meliputi:\n- Update PRD: Memperbarui dokumen spesifikasi produk di database.\n- Buat Tugas: Menambahkan tugas baru ke papan Kanban To-Do.\n- Sinkronkan Obsidian: Menyelaraskan catatan dokumentasi dengan Obsidian Vault.\n- Cek Telemetri: Menampilkan status kesehatan dan ringkasan sistem.\n\nApakah ada hal tertentu yang ingin kita mulai sekarang?`;
         }
       }
     }

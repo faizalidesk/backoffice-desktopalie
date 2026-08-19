@@ -22,7 +22,7 @@ export default function AgenticAiDrawer() {
   const [messages, setMessages] = useState([
     {
       sender: 'ai',
-      text: 'Halo! 👋 Saya adalah **Desktop-Agentic** di Desktopalie Backoffice.\n\nSaya siap membantu Anda mengeksekusi berbagai tugas otomatis:\n- 📝 **Buat Tugas Baru** (contoh: *"Buat tugas baru: Security Audit & Verifikasi CSP"*)\n- 🔄 **Sinkronkan Obsidian** (contoh: *"Singkronkan data dengan Obsidian Vault"*)\n- 📊 **Cek Telemetri** (contoh: *"Tampilkan laporan telemetri proyek"*)\n- 📄 **Buat Dokumentasi** (contoh: *"Buat catatan dokumentasi arsitektur"*)\n\nApa yang ingin Anda eksekusi hari ini? 🚀'
+      text: 'Halo, selamat datang di Desktopalie Backoffice. Saya adalah Desktop-Agentic, asisten AI internal Anda.\n\nSaya dapat membantu Anda mengeksekusi berbagai tugas otomatis:\n- Update PRD: Memperbarui dokumen Product Requirement Document di database.\n- Buat Tugas: Menambahkan tugas baru ke papan To-Do Kanban.\n- Sinkronkan Obsidian: Menyelaraskan catatan dokumentasi dengan Obsidian Vault.\n- Cek Telemetri: Menampilkan ringkasan status kesehatan dan data proyek.\n- Buat Dokumentasi: Menulis catatan arsitektur sistem baru.\n\nApa yang ingin Anda kerjakan hari ini?'
     }
   ]);
 
@@ -41,7 +41,7 @@ export default function AgenticAiDrawer() {
     setMessages([
       {
         sender: 'ai',
-        text: 'Halo! 👋 Sesi baru telah dimulai bersama **Desktop-Agentic**.\n\nApa yang ingin Anda analisis atau eksekusi sekarang?'
+        text: 'Halo, sesi baru telah dimulai bersama Desktop-Agentic.\n\nApa yang ingin Anda analisis atau eksekusi sekarang?'
       }
     ]);
   };
