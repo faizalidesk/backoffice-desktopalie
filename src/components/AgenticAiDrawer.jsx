@@ -12,7 +12,9 @@ import {
   FiBookOpen,
   FiPlus,
   FiMoreVertical,
-  FiList
+  FiList,
+  FiKey,
+  FiCheck
 } from 'react-icons/fi';
 
 export default function AgenticAiDrawer() {
@@ -25,12 +27,16 @@ export default function AgenticAiDrawer() {
   });
 
   const [showToolsList, setShowToolsList] = useState(false);
+  const [showKeyModal, setShowKeyModal] = useState(false);
+  const [apiKeyInput, setApiKeyInput] = useState(() => agenticAiService.getApiKey());
+  const [keySaved, setKeySaved] = useState(false);
+
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState([
     {
       sender: 'ai',
-      text: '✦ **Agentic AI Copilot & Knowledge Intelligence**\n\nSelamat datang di panel **Agentic AI Copilot**. Saya terintegrasi penuh dengan seluruh lapisan sistem Backoffice (*Tool Registry* & *Obsidian Vault*).\n\nSilakan berikan instruksi langsung (misal: buat tugas baru, sinkronisasi Obsidian Vault, atau ringkasan telemetri).',
+      text: '✦ **Agentic AI Copilot & Knowledge Intelligence**\n\nSelamat datang di panel **Agentic AI Copilot** (didukung oleh *Google Gemini 1.5 Flash & Tool Registry*).\n\nSaya terintegrasi penuh dengan seluruh lapisan sistem Backoffice dan Obsidian Vault.\n\nSilakan berikan instruksi langsung (misal: buat tugas baru, sinkronisasi Obsidian Vault, atau ringkasan telemetri).',
       thoughts: [],
       toolExecuted: null
     }
@@ -56,6 +62,16 @@ export default function AgenticAiDrawer() {
         toolExecuted: null
       }
     ]);
+  };
+
+  const handleSaveApiKey = (e) => {
+    e.preventDefault();
+    agenticAiService.setApiKey(apiKeyInput);
+    setKeySaved(true);
+    setTimeout(() => {
+      setKeySaved(false);
+      setShowKeyModal(false);
+    }, 1500);
   };
 
   useEffect(() => {
@@ -211,7 +227,7 @@ export default function AgenticAiDrawer() {
 
           <div style={{ width: '1px', height: '14px', backgroundColor: 'var(--border-color)', margin: '0 2px' }} />
 
-          {/* Active Tab Pill Button (Matching [ 📖 Walkthrough ] pill in Image) */}
+          {/* Active Tab Pill Button */}
           <div style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -229,7 +245,7 @@ export default function AgenticAiDrawer() {
           </div>
         </div>
 
-        {/* Right Action Icons (New '+' and Split-Panel Toggle '[|]') */}
+        {/* Right Action Icons */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
           <button
             type="button"
@@ -277,7 +293,7 @@ export default function AgenticAiDrawer() {
         </div>
       </div>
 
-      {/* SUBHEADER TITLE ROW (MATCHING IDE SUBHEADER) */}
+      {/* SUBHEADER TITLE ROW */}
       <div style={{
         height: '36px',
         minHeight: '36px',
@@ -312,12 +328,12 @@ export default function AgenticAiDrawer() {
 
           <button
             type="button"
-            onClick={handleResetChat}
-            title="Menu Opsi"
+            onClick={() => setShowKeyModal(prev => !prev)}
+            title="Pengaturan Google Gemini API Key"
             style={{
               background: 'none',
               border: 'none',
-              color: 'var(--text-muted)',
+              color: showKeyModal ? 'var(--primary)' : 'var(--text-muted)',
               cursor: 'pointer',
               padding: '2px',
               display: 'flex',
@@ -328,6 +344,53 @@ export default function AgenticAiDrawer() {
           </button>
         </div>
       </div>
+
+      {/* GEMINI API KEY CONFIGURATION MODAL / DRAWER */}
+      {showKeyModal && (
+        <div style={{
+          padding: '12px 14px',
+          backgroundColor: 'var(--bg-main)',
+          borderBottom: '1px solid var(--border-color)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '8px'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '5px' }}>
+              <FiKey style={{ color: 'var(--primary)' }} />
+              <span>Google Gemini API Key (Gratis)</span>
+            </span>
+            <button
+              type="button"
+              onClick={() => setShowKeyModal(false)}
+              style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}
+            >
+              <FiX size={14} />
+            </button>
+          </div>
+
+          <form onSubmit={handleSaveApiKey} style={{ display: 'flex', gap: '6px' }}>
+            <input
+              type="password"
+              className="form-control"
+              style={{ fontSize: '0.78rem', height: '32px' }}
+              placeholder="Paste Gemini API Key (AIzaSy...)"
+              value={apiKeyInput}
+              onChange={(e) => setApiKeyInput(e.target.value)}
+            />
+            <button
+              type="submit"
+              className="btn btn-primary btn-sm"
+              style={{ height: '32px', padding: '0 10px', fontSize: '0.75rem', whiteSpace: 'nowrap' }}
+            >
+              {keySaved ? <FiCheck /> : 'Simpan'}
+            </button>
+          </form>
+          <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>
+            Dapatkan API Key gratis di <a href="https://aistudio.google.com/" target="_blank" rel="noreferrer" style={{ color: 'var(--primary)', fontWeight: '600' }}>aistudio.google.com</a>
+          </span>
+        </div>
+      )}
 
       {/* OPTIONAL TOOL REGISTRY DROPDOWN BANNER */}
       {showToolsList && (

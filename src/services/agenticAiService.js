@@ -30,6 +30,57 @@ export const AGENT_TOOLS = [
 ];
 
 export const agenticAiService = {
+  // Helper: Get Gemini API Key
+  getApiKey() {
+    return import.meta.env.VITE_GEMINI_API_KEY || localStorage.getItem('desktopalie_gemini_api_key') || '';
+  },
+
+  // Save user API key to localStorage
+  setApiKey(key) {
+    localStorage.setItem('desktopalie_gemini_api_key', key.trim());
+  },
+
+  // Call Google Gemini 1.5 Flash via REST API
+  async callGeminiApi(prompt, systemInstruction = '') {
+    const apiKey = this.getApiKey();
+    if (!apiKey) return null;
+
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    
+    const body = {
+      contents: [
+        {
+          parts: [{ text: prompt }]
+        }
+      ],
+      generationConfig: {
+        temperature: 0.4,
+        maxOutputTokens: 1000
+      }
+    };
+
+    if (systemInstruction) {
+      body.systemInstruction = {
+        parts: [{ text: systemInstruction }]
+      };
+    }
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+
+    if (!response.ok) {
+      const errData = await response.json().catch(() => ({}));
+      throw new Error(errData.error?.message || `HTTP error ${response.status}`);
+    }
+
+    const data = await response.json();
+    const candidate = data.candidates?.[0];
+    return candidate?.content?.parts?.[0]?.text || '';
+  },
+
   // Autonomous Agent Execution Router
   async processUserIntent(userInput) {
     const text = userInput.toLowerCase();
@@ -37,8 +88,9 @@ export const agenticAiService = {
     let toolExecuted = null;
     let resultPayload = null;
     let responseText = '';
+    const apiKey = this.getApiKey();
 
-    thoughts.push('🤖 [Agent Thought] Menganalisis niat pengguna & mencocokkan skema Tool Registry...');
+    thoughts.push(`🤖 [Agent Thought] Menganalisis intent dengan ${apiKey ? '⚡ Google Gemini 1.5 Flash' : 'Smart Rule Router'}...`);
 
     // Intent 1: Create Task (Buat Tugas)
     if (text.includes('tugas') || text.includes('todo') || text.includes('task') || text.includes('buat tugas')) {
@@ -64,7 +116,17 @@ export const agenticAiService = {
         toolExecuted = 'create_task';
         resultPayload = created;
         thoughts.push(`✅ [Tool Output] Tool create_task berhasil dieksekusi! ID: ${created.id}`);
-        responseText = `Tugas baru **"${created.title}"** telah berhasil dibuat oleh Agentic AI dan ditambahkan ke papan Kanban **To-Do Board**! Status: \`${created.status}\`, Prioritas: \`${created.priority}\`.`;
+        
+        if (apiKey) {
+          try {
+            const geminiResponse = await this.callGeminiApi(`User meminta membuat tugas: "${userInput}". Tugas berhasil dibuat dengan ID: ${created.id}, Judul: "${created.title}", Status: "${created.status}", Prioritas: "${created.priority}". Buat respons konfirmasi yang ramah dan profesional dalam Bahasa Indonesia.`);
+            if (geminiResponse) responseText = geminiResponse;
+          } catch (e) {}
+        }
+        
+        if (!responseText) {
+          responseText = `Tugas baru **"${created.title}"** telah berhasil dibuat oleh Agentic AI dan ditambahkan ke papan Kanban **To-Do Board**! Status: \`${created.status}\`, Prioritas: \`${created.priority}\`.`;
+        }
       } catch (err) {
         thoughts.push(`❌ [Tool Error] Gagal mengeksekusi create_task: ${err.message}`);
         responseText = `Maaf, terjadi kendala saat membuat tugas: ${err.message}`;
@@ -127,10 +189,24 @@ export const agenticAiService = {
         responseText = `Gagal mengumpulkan telemetri: ${err.message}`;
       }
     }
-    // Default Fallback Response
+    // Gemini API Direct Conversation
     else {
-      thoughts.push('💡 [Agent Reasoning] Pertanyaan umum -> Memformulasikan jawaban bantuan Agentic AI Copilot...');
-      responseText = `Halo! Saya adalah **Agentic AI Copilot** di Desktopalie Backoffice. Saya tidak hanya bisa menjawab pertanyaan, tetapi juga bisa **diberikan perintah langsung untuk mengeksekusi tugas pada aplikasi**!\n\n**Perintah yang bisa Anda berikan:**\n1. *"Buat tugas baru: Pengujian Security Audit"* $\\rightarrow$ *(Otomatis membuat Kanban task)*\n2. *"Singkronkan Obsidian Vault"* $\\rightarrow$ *(Menjalankan sync dokumentasi)*\n3. *"Tampilkan laporan telemetri proyek"* $\\rightarrow$ *(Mengkompilasi ringkasan data)*\n4. *"Buat catatan dokumentasi arsitektur"* $\\rightarrow$ *(Membuat dokumen baru)*`;
+      if (apiKey) {
+        thoughts.push('🧠 [Gemini Inference] Mengirim percakapan ke model Google Gemini 1.5 Flash...');
+        try {
+          const geminiOutput = await this.callGeminiApi(
+            userInput, 
+            'Anda adalah Agentic AI Copilot di platform Desktopalie Backoffice. Anda bertugas membantu developer dan administrator mengelola sistem, to-do board, portofolio proyek, dan Obsidian Vault. Berikan jawaban yang cerdas, ringkas, terstruktur, dan bersahabat dalam Bahasa Indonesia.'
+          );
+          responseText = geminiOutput;
+        } catch (err) {
+          thoughts.push(`⚠️ [Gemini API Warning] ${err.message}`);
+          responseText = `Gagal menghubungi Gemini API: ${err.message}. Pastikan API Key valid.`;
+        }
+      } else {
+        thoughts.push('💡 [Agent Reasoning] Pertanyaan umum -> Memformulasikan jawaban bantuan Agentic AI Copilot...');
+        responseText = `Halo! Saya adalah **Agentic AI Copilot** di Desktopalie Backoffice. Saya memiliki akses langsung ke sistem (*Tool Registry*)!\n\n**Perintah yang bisa Anda berikan:**\n1. *"Buat tugas baru: Pengujian Security Audit"* $\\rightarrow$ *(Otomatis membuat Kanban task)*\n2. *"Singkronkan Obsidian Vault"* $\\rightarrow$ *(Menjalankan sync dokumentasi)*\n3. *"Tampilkan laporan telemetri proyek"* $\\rightarrow$ *(Mengkompilasi ringkasan data)*\n4. *"Buat catatan dokumentasi arsitektur"* $\\rightarrow$ *(Membuat dokumen baru)*\n\n💡 *Tips: Anda bisa menyambungkan Google Gemini API Key gratis dari Google AI Studio untuk kecerdasan tanpa batas!*`;
+      }
     }
 
     return {
