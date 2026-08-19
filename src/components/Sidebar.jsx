@@ -31,9 +31,29 @@ export default function Sidebar() {
   const [searchQuery, setSearchQuery] = useState('');
   const [unreadCount, setUnreadCount] = useState(() => notificationService.getUnreadCount());
   const searchInputRef = useRef(null);
+
+  // Desktop collapse state
   const [isCollapsed, setIsCollapsed] = useState(() => {
     return localStorage.getItem('desktopalie_sidebar_collapsed') === 'true';
   });
+
+  // Tablet & Mobile detection & drawer toggle
+  const [isTabletOrMobile, setIsTabletOrMobile] = useState(() => {
+    return typeof window !== 'undefined' ? window.innerWidth <= 1024 : false;
+  });
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const isTablet = window.innerWidth <= 1024;
+      setIsTabletOrMobile(isTablet);
+      if (!isTablet) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const unsubscribe = notificationService.subscribe(() => {
@@ -43,15 +63,19 @@ export default function Sidebar() {
   }, []);
 
   const toggleCollapse = () => {
-    setIsCollapsed(prev => {
-      const next = !prev;
-      localStorage.setItem('desktopalie_sidebar_collapsed', String(next));
-      return next;
-    });
+    if (isTabletOrMobile) {
+      setIsMobileMenuOpen(prev => !prev);
+    } else {
+      setIsCollapsed(prev => {
+        const next = !prev;
+        localStorage.setItem('desktopalie_sidebar_collapsed', String(next));
+        return next;
+      });
+    }
   };
 
   const handleSearchIconClick = () => {
-    if (isCollapsed) {
+    if (isCollapsed && !isTabletOrMobile) {
       setIsCollapsed(false);
       localStorage.setItem('desktopalie_sidebar_collapsed', 'false');
       setTimeout(() => {
@@ -83,6 +107,285 @@ export default function Sidebar() {
     item.label.toLowerCase().includes(searchQuery.toLowerCase().trim())
   );
 
+  // RENDERING NAVIGATION CONTENT (Used for both Desktop Sidebar and Mobile Overlay Drawer)
+  const renderNavContent = (isMobileView = false) => (
+    <>
+      {/* SUB-PLATFORM SWITCHER */}
+      <div style={{ marginBottom: '0.85rem' }}>
+        <select
+          value={flavorId}
+          onChange={(e) => {
+            const selectedVal = e.target.value;
+            if (selectedVal === 'platform1') {
+              resetToMainFlavor();
+            } else if (selectedVal) {
+              switchFlavor(selectedVal);
+            }
+          }}
+          style={{
+            width: '100%',
+            padding: '0.45rem 0.65rem',
+            fontSize: '0.775rem',
+            fontWeight: '600',
+            borderRadius: 'var(--radius-sm)',
+            border: '1px solid var(--border-color)',
+            backgroundColor: 'var(--bg-card-hover)',
+            color: 'var(--text-main)',
+            cursor: 'pointer',
+            outline: 'none',
+            transition: 'all 0.15s ease'
+          }}
+        >
+          <option value="platform1">
+            🏠 Desktopalie Main
+          </option>
+          {subPlatformFlavors?.map((f) => (
+            <option key={f.id} value={f.id}>
+              ⚡ Platform {f.shortName}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* SEARCH INPUT BOX */}
+      <div style={{
+        position: 'relative',
+        marginBottom: '0.85rem',
+        display: 'flex',
+        alignItems: 'center'
+      }}>
+        <FiSearch style={{
+          position: 'absolute',
+          left: '0.75rem',
+          color: 'var(--text-muted)',
+          fontSize: '0.9rem',
+          pointerEvents: 'none'
+        }} />
+        <input
+          ref={searchInputRef}
+          type="text"
+          placeholder={t('searchMenu')}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          style={{
+            width: '100%',
+            padding: '0.45rem 2rem 0.45rem 2.1rem',
+            fontSize: '0.825rem',
+            borderRadius: 'var(--radius-sm)',
+            border: '1px solid var(--border-color)',
+            backgroundColor: 'transparent',
+            color: 'var(--text-main)',
+            outline: 'none',
+            transition: 'border-color 0.15s ease, box-shadow 0.15s ease'
+          }}
+          onFocus={(e) => e.target.style.borderColor = 'var(--primary)'}
+          onBlur={(e) => e.target.style.borderColor = 'var(--border-color)'}
+        />
+        {searchQuery && (
+          <button
+            onClick={() => setSearchQuery('')}
+            title="Clear search"
+            style={{
+              position: 'absolute',
+              right: '0.4rem',
+              background: 'transparent',
+              border: 'none',
+              color: 'var(--text-muted)',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '0.2rem',
+              borderRadius: '50%'
+            }}
+          >
+            <FiX style={{ fontSize: '0.9rem' }} />
+          </button>
+        )}
+      </div>
+
+      {/* NAV LIST */}
+      <nav style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+        {filteredNavItems.length > 0 ? (
+          filteredNavItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                end={item.path === '/'}
+                onClick={() => {
+                  if (isMobileView) {
+                    setIsMobileMenuOpen(false);
+                  }
+                }}
+                style={({ isActive }) => ({
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.75rem',
+                  padding: '0.75rem 1rem',
+                  borderRadius: 'var(--radius-sm)',
+                  fontSize: '0.875rem',
+                  fontWeight: '500',
+                  textDecoration: 'none',
+                  color: isActive ? 'var(--primary)' : 'var(--text-muted)',
+                  backgroundColor: isActive ? 'var(--primary-light)' : 'transparent',
+                  borderLeft: isActive ? '3px solid var(--primary)' : '3px solid transparent',
+                  transition: 'all 0.15s ease'
+                })}
+              >
+                <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                  <Icon style={{ fontSize: '1.25rem', flexShrink: 0 }} />
+                </div>
+                <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', flex: 1 }}>{item.label}</span>
+                {item.badge > 0 && (
+                  <span style={{
+                    backgroundColor: '#EF4444',
+                    color: '#FFFFFF',
+                    fontSize: '0.7rem',
+                    fontWeight: '800',
+                    padding: '0.1rem 0.45rem',
+                    borderRadius: '99px',
+                    marginLeft: 'auto'
+                  }}>
+                    {item.badge}
+                  </span>
+                )}
+              </NavLink>
+            );
+          })
+        ) : (
+          <div style={{
+            padding: '1rem 0.5rem',
+            textAlign: 'center',
+            fontSize: '0.8rem',
+            color: 'var(--text-subtle)',
+            fontStyle: 'italic'
+          }}>
+            {t('noMenuFound')}
+          </div>
+        )}
+      </nav>
+
+      {/* FOOTER */}
+      <div style={{
+        paddingTop: '0.75rem',
+        marginTop: '0.5rem',
+        borderTop: '1px solid var(--border-color)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        fontSize: '0.725rem',
+        color: 'var(--text-subtle)',
+        fontWeight: '600',
+        paddingLeft: '0.25rem',
+        paddingRight: '0.25rem'
+      }}>
+        <span>Desktopalie Backoffice</span>
+        <span>v2.5.0</span>
+      </div>
+    </>
+  );
+
+  // TABLET & MOBILE VIEW (TOP HEADER WITH HAMBURGER MENU & SLIDE-DOWN DRAWER)
+  if (isTabletOrMobile) {
+    return (
+      <aside style={{
+        width: '100%',
+        backgroundColor: 'var(--bg-sidebar)',
+        borderBottom: '1px solid var(--border-color)',
+        display: 'flex',
+        flexDirection: 'column',
+        position: 'sticky',
+        top: 0,
+        left: 0,
+        zIndex: 500,
+        padding: '0.65rem 1rem',
+        flexShrink: 0
+      }}>
+        {/* TABLET / MOBILE TOP BAR */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          width: '100%'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+            <DesktopalieMark size={28} style={{ color: 'var(--text-main)', flexShrink: 0 }} />
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <h2 style={{
+                fontSize: '0.9rem',
+                fontWeight: '800',
+                letterSpacing: '0.06em',
+                textTransform: 'uppercase',
+                color: 'var(--text-main)',
+                lineHeight: '1.1',
+                margin: 0
+              }}>
+                Desktopalie
+              </h2>
+              <span style={{
+                fontSize: '0.625rem',
+                color: isMainDesktopalie ? 'var(--color-primary, var(--primary))' : '#E11D48',
+                fontWeight: '700',
+                textTransform: 'uppercase',
+                letterSpacing: '0.08em',
+                lineHeight: '1.2',
+                marginTop: '0.1rem'
+              }}>
+                {isMainDesktopalie ? 'Main Backoffice' : `Platform ${flavor.shortName}`}
+              </span>
+            </div>
+          </div>
+
+          <button
+            onClick={toggleCollapse}
+            aria-label="Toggle Menu Navigation"
+            title="Toggle Menu Navigation"
+            style={{
+              background: 'var(--bg-card-hover)',
+              border: '1px solid var(--border-color)',
+              color: 'var(--text-main)',
+              cursor: 'pointer',
+              padding: '0.5rem',
+              borderRadius: 'var(--radius-sm)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '1.25rem',
+              transition: 'all 0.15s ease'
+            }}
+          >
+            {isMobileMenuOpen ? <FiX /> : <FiMenu />}
+          </button>
+        </div>
+
+        {/* TABLET / MOBILE SLIDE-DOWN DRAWER OVERLAY */}
+        {isMobileMenuOpen && (
+          <div style={{
+            position: 'absolute',
+            top: '100%',
+            left: 0,
+            right: 0,
+            backgroundColor: 'var(--bg-sidebar)',
+            borderBottom: '1px solid var(--border-color)',
+            boxShadow: '0 12px 30px rgba(0, 0, 0, 0.15)',
+            padding: '1rem',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.5rem',
+            maxHeight: 'calc(85vh - 60px)',
+            overflowY: 'auto',
+            zIndex: 500
+          }}>
+            {renderNavContent(true)}
+          </div>
+        )}
+      </aside>
+    );
+  }
+
+  // DESKTOP VIEW (STICKY SIDEBAR WITH EXPAND / COLLAPSE TOGGLE)
   return (
     <aside style={{
       width: isCollapsed ? '80px' : '260px',
@@ -165,7 +468,7 @@ export default function Sidebar() {
         </button>
       </div>
 
-      {/* SUB-PLATFORM SWITCHER (Ultra Minimalist & Syncs Active Flavor) */}
+      {/* SUB-PLATFORM SWITCHER */}
       {!isCollapsed && (
         <div style={{ marginBottom: '0.85rem' }}>
           <select
@@ -240,7 +543,7 @@ export default function Sidebar() {
         </button>
       )}
 
-      {/* Search Input Box */}
+      {/* SEARCH INPUT BOX */}
       {!isCollapsed ? (
         <div style={{
           position: 'relative',
@@ -322,7 +625,7 @@ export default function Sidebar() {
         </button>
       )}
 
-      {/* Nav List */}
+      {/* NAV LIST */}
       <nav style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
         {filteredNavItems.length > 0 ? (
           filteredNavItems.map((item) => {
@@ -395,7 +698,7 @@ export default function Sidebar() {
         )}
       </nav>
 
-      {/* FOOTER: PLAIN VERSION TEXT ONLY (NO CARDS) */}
+      {/* FOOTER */}
       <div style={{
         paddingTop: '0.75rem',
         borderTop: '1px solid var(--border-color)',
