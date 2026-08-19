@@ -5,7 +5,7 @@ export default function DesktopalieMark({ className = "", size = 28, style = {} 
   return (
     <span className={className} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, ...style }}>
       <img
-        src={logoImg}
+        src="/Desktopalie.jpg"
         alt="Desktopalie Logo"
         style={{
           width: pixelSize,
@@ -17,7 +17,7 @@ export default function DesktopalieMark({ className = "", size = 28, style = {} 
         }}
         onError={(e) => {
           e.currentTarget.onerror = null;
-          e.currentTarget.src = '/Desktopalie.jpg';
+          e.currentTarget.src = logoImg;
         }}
       />
     </span>
