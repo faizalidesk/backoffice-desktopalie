@@ -32,7 +32,8 @@ export const AGENT_TOOLS = [
 export const agenticAiService = {
   // Helper: Get Gemini API Key
   getApiKey() {
-    return import.meta.env.VITE_GEMINI_API_KEY || localStorage.getItem('desktopalie_gemini_api_key') || '';
+    const key = import.meta.env.VITE_GEMINI_API_KEY || localStorage.getItem('desktopalie_gemini_api_key') || '';
+    return key.trim();
   },
 
   // Save user API key to localStorage
@@ -50,6 +51,7 @@ export const agenticAiService = {
     const body = {
       contents: [
         {
+          role: 'user',
           parts: [{ text: prompt }]
         }
       ],
@@ -83,7 +85,7 @@ export const agenticAiService = {
 
   // Autonomous Agent Execution Router
   async processUserIntent(userInput) {
-    const text = userInput.toLowerCase();
+    const text = userInput.toLowerCase().trim();
     const thoughts = [];
     let toolExecuted = null;
     let resultPayload = null;
@@ -92,8 +94,13 @@ export const agenticAiService = {
 
     thoughts.push(`🤖 [Agent Thought] Menganalisis intent dengan ${apiKey ? '⚡ Google Gemini 1.5 Flash' : 'Smart Rule Router'}...`);
 
+    // Intent 0: Greetings (Hi / Halo / Hello)
+    if (text === 'hi' || text === 'halo' || text === 'hello' || text === 'hey' || text === 'p') {
+      thoughts.push('👋 [Agent Reasoning] Menyapa pengguna & memaparkan status kesiapan Agentic AI Copilot...');
+      responseText = `Halo! 👋 Saya adalah **Agentic AI Copilot** di Desktopalie Backoffice.\n\nSaya siap membantu Anda mengeksekusi berbagai tugas otomatis:\n- 📝 **Buat Tugas Baru** (contoh: *"Buat tugas baru: Security Audit & Verifikasi CSP"*)\n- 🔄 **Sinkronkan Obsidian** (contoh: *"Singkronkan data dengan Obsidian Vault"*)\n- 📊 **Cek Telemetri** (contoh: *"Tampilkan laporan telemetri proyek"*)\n- 📄 **Buat Dokumentasi** (contoh: *"Buat catatan dokumentasi arsitektur"*)\n\nApa yang ingin Anda eksekusi hari ini? 🚀`;
+    }
     // Intent 1: Create Task (Buat Tugas)
-    if (text.includes('tugas') || text.includes('todo') || text.includes('task') || text.includes('buat tugas')) {
+    else if (text.includes('tugas') || text.includes('todo') || text.includes('task') || text.includes('buat tugas')) {
       thoughts.push('🔧 [Tool Selection] Terdeteksi niat manajemen tugas -> Memilih Tool create_task');
       
       let title = userInput.replace(/buat tugas|tambah tugas|tugas baru|task|todo/gi, '').trim();
@@ -198,14 +205,18 @@ export const agenticAiService = {
             userInput, 
             'Anda adalah Agentic AI Copilot di platform Desktopalie Backoffice. Anda bertugas membantu developer dan administrator mengelola sistem, to-do board, portofolio proyek, dan Obsidian Vault. Berikan jawaban yang cerdas, ringkas, terstruktur, dan bersahabat dalam Bahasa Indonesia.'
           );
-          responseText = geminiOutput;
+          if (geminiOutput) {
+            responseText = geminiOutput;
+          } else {
+            responseText = 'Gemini tidak memberikan respons teks. Silakan coba pertanyaan lain.';
+          }
         } catch (err) {
           thoughts.push(`⚠️ [Gemini API Warning] ${err.message}`);
-          responseText = `Gagal menghubungi Gemini API: ${err.message}. Pastikan API Key valid.`;
+          responseText = `Halo! Saya memproses pertanyaan Anda: "${userInput}".\n\nUntuk perintah otonom langsung, Anda bisa mencoba:\n- *"Buat tugas baru: [Nama Tugas]"*\n- *"Singkronkan Obsidian Vault"*\n- *"Tampilkan laporan telemetri"*`;
         }
       } else {
         thoughts.push('💡 [Agent Reasoning] Pertanyaan umum -> Memformulasikan jawaban bantuan Agentic AI Copilot...');
-        responseText = `Halo! Saya adalah **Agentic AI Copilot** di Desktopalie Backoffice. Saya memiliki akses langsung ke sistem (*Tool Registry*)!\n\n**Perintah yang bisa Anda berikan:**\n1. *"Buat tugas baru: Pengujian Security Audit"* $\\rightarrow$ *(Otomatis membuat Kanban task)*\n2. *"Singkronkan Obsidian Vault"* $\\rightarrow$ *(Menjalankan sync dokumentasi)*\n3. *"Tampilkan laporan telemetri proyek"* $\\rightarrow$ *(Mengkompilasi ringkasan data)*\n4. *"Buat catatan dokumentasi arsitektur"* $\\rightarrow$ *(Membuat dokumen baru)*\n\n💡 *Tips: Anda bisa menyambungkan Google Gemini API Key gratis dari Google AI Studio untuk kecerdasan tanpa batas!*`;
+        responseText = `Halo! Saya adalah **Agentic AI Copilot** di Desktopalie Backoffice. Saya memiliki akses langsung ke sistem (*Tool Registry*)!\n\n**Perintah yang bisa Anda berikan:**\n1. *"Buat tugas baru: Pengujian Security Audit"* $\\rightarrow$ *(Otomatis membuat Kanban task)*\n2. *"Singkronkan Obsidian Vault"* $\\rightarrow$ *(Menjalankan sync dokumentasi)*\n3. *"Tampilkan laporan telemetri proyek"* $\\rightarrow$ *(Mengkompilasi ringkasan data)*\n4. *"Buat catatan dokumentasi arsitektur"* $\\rightarrow$ *(Membuat dokumen baru)*`;
       }
     }
 
