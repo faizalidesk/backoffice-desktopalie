@@ -134,21 +134,21 @@ export default function AgenticAiDrawer() {
         </button>
       )}
 
-      {/* EXPANDED RIGHT SIDEBAR PANEL MATCHING BACKOFFICE THEME */}
+      {/* EXPANDED RIGHT SIDEBAR PANEL MATCHING BACKOFFICE THEME BELOW NAVBAR */}
       {!isCollapsed && (
         <aside
           style={{
             width: '380px',
-            height: '100vh',
-            position: 'sticky',
-            top: 0,
+            height: 'calc(100vh - 64px)',
+            position: 'fixed',
+            top: '64px',
             right: 0,
-            zIndex: 900,
+            zIndex: 90,
             backgroundColor: 'var(--bg-card)',
             borderLeft: '1px solid var(--border-color)',
             display: 'flex',
             flexDirection: 'column',
-            flexShrink: 0,
+            boxShadow: 'var(--shadow-md)',
             transition: 'all 0.25s ease'
           }}
         >
