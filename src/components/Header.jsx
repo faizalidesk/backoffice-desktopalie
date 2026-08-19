@@ -26,7 +26,8 @@ import {
   FiClock,
   FiLayers,
   FiCpu,
-  FiSidebar
+  FiSidebar,
+  FiMoreVertical
 } from 'react-icons/fi';
 
 function formatFullDateTime(dateString) {
@@ -499,34 +500,76 @@ export default function Header({ title = 'Dashboard Overview' }) {
           )}
         </div>
 
-        {/* TOP BAR AGENTIC AI SIDEBAR TOGGLE ICON BUTTON */}
-        <button
-          type="button"
-          onClick={() => window.dispatchEvent(new CustomEvent('toggle-ai-sidebar'))}
-          title="Toggle Agentic AI Copilot Sidebar"
-          style={{
-            height: '38px',
-            padding: '0 0.85rem',
-            borderRadius: 'var(--radius-sm)',
-            backgroundColor: isDarkMode ? '#1E293B' : 'var(--primary-light)',
-            border: `1px solid ${isDarkMode ? '#334155' : 'var(--border-color)'}`,
-            color: 'var(--primary)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.45rem',
-            cursor: 'pointer',
-            fontSize: '0.8rem',
-            fontWeight: '700',
-            transition: 'all 0.15s ease'
-          }}
-        >
-          <FiCpu style={{ fontSize: '1rem', color: 'var(--primary)' }} />
-          <span>AI Copilot</span>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.9 }}>
-            <rect x="3" y="3" width="18" height="18" rx="3" ry="3" />
-            <line x1="15" y1="3" x2="15" y2="21" />
-          </svg>
-        </button>
+        {/* TOP BAR AGENTIC AI GROUP (MATCHING IMAGE 1 PRECISELY) */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+          {/* Three dots vertical */}
+          <button
+            type="button"
+            title="Options"
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'var(--text-muted)',
+              cursor: 'pointer',
+              padding: '6px 4px',
+              display: 'flex',
+              alignItems: 'center'
+            }}
+          >
+            <FiMoreVertical size={16} />
+          </button>
+
+          {/* AI Copilot Pill Button (Image 1 replica) */}
+          <button
+            type="button"
+            onClick={() => window.dispatchEvent(new CustomEvent('toggle-ai-sidebar'))}
+            title="Open Agentic AI Copilot"
+            style={{
+              height: '34px',
+              padding: '0 12px',
+              borderRadius: '6px',
+              backgroundColor: 'var(--bg-main)',
+              border: '1px solid var(--border-color)',
+              color: 'var(--text-main)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              cursor: 'pointer',
+              fontSize: '0.8rem',
+              fontWeight: '600',
+              transition: 'all 0.15s ease'
+            }}
+            onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'var(--bg-card-hover)'}
+            onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'var(--bg-main)'}
+          >
+            <FiCpu style={{ fontSize: '0.95rem', color: 'var(--primary)' }} />
+            <span>AI Copilot</span>
+          </button>
+
+          {/* Split-Panel Toggle Icon [|] (Image 1 replica) */}
+          <button
+            type="button"
+            onClick={() => window.dispatchEvent(new CustomEvent('toggle-ai-sidebar'))}
+            title="Toggle Right Panel [|]"
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'var(--text-muted)',
+              cursor: 'pointer',
+              padding: '6px 6px',
+              display: 'flex',
+              alignItems: 'center',
+              borderRadius: '4px'
+            }}
+            onMouseOver={(e) => e.currentTarget.style.color = 'var(--text-main)'}
+            onMouseOut={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="3" ry="3" />
+              <line x1="15" y1="3" x2="15" y2="21" />
+            </svg>
+          </button>
+        </div>
 
         {/* TOP RIGHT PROFILE AVATAR & DROPDOWN TRIGGER */}
         <div style={{ position: 'relative' }} ref={dropdownRef}>

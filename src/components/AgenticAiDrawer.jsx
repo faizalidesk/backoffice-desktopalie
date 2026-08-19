@@ -105,61 +105,7 @@ export default function AgenticAiDrawer() {
 
   return (
     <>
-      {/* 1. COLLAPSED FLOATING BADGE ON RIGHT EDGE (MATCHING IMAGE 1 EXACTLY) */}
-      {isCollapsed && (
-        <button
-          type="button"
-          onClick={toggleCollapse}
-          title="Buka Agentic AI Panel"
-          style={{
-            position: 'fixed',
-            top: '80px',
-            right: '16px',
-            zIndex: 9980,
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '8px',
-            padding: '7px 14px',
-            borderRadius: '20px',
-            backgroundColor: 'var(--bg-card)',
-            color: 'var(--primary)',
-            border: '1px solid var(--border-color)',
-            boxShadow: '0 4px 14px rgba(0, 0, 0, 0.08)',
-            cursor: 'pointer',
-            fontWeight: '600',
-            fontSize: '0.8rem',
-            transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
-          }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.transform = 'scale(1.04)';
-            e.currentTarget.style.boxShadow = '0 6px 18px rgba(0, 0, 0, 0.12)';
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.transform = 'scale(1)';
-            e.currentTarget.style.boxShadow = '0 4px 14px rgba(0, 0, 0, 0.08)';
-          }}
-        >
-          <FiChevronLeft style={{ fontSize: '0.95rem', color: 'var(--primary)' }} />
-          <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-            <FiCpu style={{ fontSize: '1.05rem', color: 'var(--primary)' }} />
-            <span style={{
-              position: 'absolute',
-              top: '-3px',
-              right: '-3px',
-              width: '7px',
-              height: '7px',
-              borderRadius: '50%',
-              backgroundColor: '#10B981',
-              boxShadow: '0 0 6px rgba(16, 185, 129, 0.8)'
-            }} />
-          </div>
-          <span style={{ color: 'var(--primary)', fontWeight: '700', letterSpacing: '-0.01em' }}>
-            AI Copilot
-          </span>
-        </button>
-      )}
-
-      {/* 2. EXPANDED RIGHT SIDEBAR PANEL (MATCHING IMAGE 2 EXACTLY) */}
+      {/* EXPANDED RIGHT SIDEBAR PANEL (MATCHING IMAGE 2 EXACTLY) */}
       {!isCollapsed && (
         <aside
           style={{
