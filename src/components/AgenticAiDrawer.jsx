@@ -5,12 +5,15 @@ import {
   FiCpu, 
   FiSend, 
   FiX, 
-  FiChevronRight, 
   FiChevronLeft, 
   FiRefreshCw,
-  FiSidebar,
-  FiZap,
-  FiCheckCircle
+  FiFileText,
+  FiFilePlus,
+  FiBookOpen,
+  FiPlus,
+  FiMoreVertical,
+  FiList,
+  FiActivity
 } from 'react-icons/fi';
 
 export default function AgenticAiDrawer() {
@@ -22,12 +25,14 @@ export default function AgenticAiDrawer() {
     return saved !== null ? JSON.parse(saved) : false;
   });
 
+  const [activeTab, setActiveTab] = useState('copilot'); // 'copilot' | 'walkthrough'
+  const [showToolsList, setShowToolsList] = useState(false);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState([
     {
       sender: 'ai',
-      text: 'Halo! Saya **Agentic AI Copilot** di Sidebar Kanan. Saya terintegrasi langsung dengan sistem Backoffice (*Tool Registry*) untuk membuat tugas, mengelola dokumentasi, dan menyinkronkan Obsidian Vault.\n\nApa yang ingin Anda eksekusi hari ini?',
+      text: '✦ **Agentic AI Copilot & Knowledge Intelligence**\n\nSelamat datang di panel **Agentic AI Copilot**. Saya terintegrasi penuh dengan seluruh lapisan sistem Backoffice (*Tool Registry* & *Obsidian Vault*).\n\nSilakan berikan instruksi langsung (misal: buat tugas baru, sinkronisasi Obsidian Vault, atau ringkasan telemetri).',
       thoughts: [],
       toolExecuted: null
     }
@@ -41,6 +46,17 @@ export default function AgenticAiDrawer() {
       localStorage.setItem('desktopalie_ai_sidebar_collapsed', JSON.stringify(nextState));
       return nextState;
     });
+  };
+
+  const handleResetChat = () => {
+    setMessages([
+      {
+        sender: 'ai',
+        text: '✦ **Agentic AI Copilot Siap**\n\nSesi baru telah dimulai. Apa yang ingin Anda eksekusi atau analisis sekarang?',
+        thoughts: [],
+        toolExecuted: null
+      }
+    ]);
   };
 
   useEffect(() => {
@@ -89,56 +105,65 @@ export default function AgenticAiDrawer() {
 
   return (
     <>
-      {/* COLLAPSED FLOATING TRIGGER ON RIGHT EDGE */}
+      {/* 1. COLLAPSED FLOATING BADGE ON RIGHT EDGE (MATCHING IMAGE 1 EXACTLY) */}
       {isCollapsed && (
         <button
           type="button"
           onClick={toggleCollapse}
-          title="Buka Agentic AI Sidebar (Kanan)"
+          title="Buka Agentic AI Panel"
           style={{
             position: 'fixed',
-            top: '84px',
-            right: 0,
+            top: '80px',
+            right: '16px',
             zIndex: 9980,
-            display: 'flex',
+            display: 'inline-flex',
             alignItems: 'center',
             gap: '8px',
-            padding: '10px 14px',
-            borderRadius: '10px 0 0 10px',
+            padding: '7px 14px',
+            borderRadius: '20px',
             backgroundColor: 'var(--bg-card)',
             color: 'var(--primary)',
             border: '1px solid var(--border-color)',
-            borderRight: 'none',
-            boxShadow: 'var(--shadow-md)',
+            boxShadow: '0 4px 14px rgba(0, 0, 0, 0.08)',
             cursor: 'pointer',
-            fontWeight: '700',
-            fontSize: '0.825rem',
+            fontWeight: '600',
+            fontSize: '0.8rem',
             transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
           }}
+          onMouseOver={(e) => {
+            e.currentTarget.style.transform = 'scale(1.04)';
+            e.currentTarget.style.boxShadow = '0 6px 18px rgba(0, 0, 0, 0.12)';
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.transform = 'scale(1)';
+            e.currentTarget.style.boxShadow = '0 4px 14px rgba(0, 0, 0, 0.08)';
+          }}
         >
-          <FiChevronLeft style={{ fontSize: '1.1rem' }} />
+          <FiChevronLeft style={{ fontSize: '0.95rem', color: 'var(--primary)' }} />
           <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-            <FiCpu style={{ fontSize: '1.15rem' }} />
+            <FiCpu style={{ fontSize: '1.05rem', color: 'var(--primary)' }} />
             <span style={{
               position: 'absolute',
-              top: '-2px',
-              right: '-2px',
+              top: '-3px',
+              right: '-3px',
               width: '7px',
               height: '7px',
               borderRadius: '50%',
               backgroundColor: '#10B981',
-              boxShadow: '0 0 6px #10B981'
+              boxShadow: '0 0 6px rgba(16, 185, 129, 0.8)'
             }} />
           </div>
-          <span>AI Copilot</span>
+          <span style={{ color: 'var(--primary)', fontWeight: '700', letterSpacing: '-0.01em' }}>
+            AI Copilot
+          </span>
         </button>
       )}
 
-      {/* EXPANDED RIGHT SIDEBAR PANEL MATCHING BACKOFFICE THEME BELOW NAVBAR */}
+      {/* 2. EXPANDED RIGHT SIDEBAR PANEL (MATCHING IMAGE 2 EXACTLY) */}
       {!isCollapsed && (
         <aside
           style={{
-            width: '380px',
+            width: '400px',
             height: 'calc(100vh - 64px)',
             position: 'fixed',
             top: '64px',
@@ -149,133 +174,240 @@ export default function AgenticAiDrawer() {
             display: 'flex',
             flexDirection: 'column',
             boxShadow: 'var(--shadow-md)',
-            transition: 'all 0.25s ease'
+            transition: 'all 0.2s ease',
+            fontFamily: 'var(--font-sans)'
           }}
         >
-          {/* SIDEBAR PANEL HEADER */}
+          {/* TOP TOOLBAR ROW (IMAGE 2 REPLICA) */}
           <div style={{
-            padding: '1.1rem 1.25rem',
-            backgroundColor: 'var(--bg-card)',
+            height: '40px',
+            minHeight: '40px',
+            padding: '0 10px',
             borderBottom: '1px solid var(--border-color)',
+            backgroundColor: 'var(--bg-card)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '8px'
+          }}>
+            {/* Left Toolbar Icons & Tab Pill */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <button
+                type="button"
+                title="Notes / Documentation"
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: 'var(--text-muted)',
+                  cursor: 'pointer',
+                  padding: '4px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  borderRadius: '4px'
+                }}
+              >
+                <FiFileText size={14} />
+              </button>
+
+              <button
+                type="button"
+                title="Templates / Tasks"
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: 'var(--text-muted)',
+                  cursor: 'pointer',
+                  padding: '4px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  borderRadius: '4px'
+                }}
+              >
+                <FiFilePlus size={14} />
+              </button>
+
+              <div style={{ width: '1px', height: '14px', backgroundColor: 'var(--border-color)', margin: '0 2px' }} />
+
+              {/* Active Tab Pill Button (Matching [ 📖 Walkthrough ] pill in Image 2) */}
+              <div style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '3px 10px',
+                borderRadius: '6px',
+                backgroundColor: 'var(--bg-main)',
+                border: '1px solid var(--border-color)',
+                fontSize: '0.75rem',
+                fontWeight: '600',
+                color: 'var(--text-main)'
+              }}>
+                <FiBookOpen size={13} style={{ color: 'var(--primary)' }} />
+                <span>Walkthrough</span>
+              </div>
+            </div>
+
+            {/* Right Action Icons (New '+' and Split-Panel Toggle '[|]') */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <button
+                type="button"
+                onClick={handleResetChat}
+                title="Sesi Baru (New Chat / Reset)"
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: 'var(--text-muted)',
+                  cursor: 'pointer',
+                  padding: '4px 6px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  borderRadius: '4px'
+                }}
+                onMouseOver={(e) => e.currentTarget.style.color = 'var(--text-main)'}
+                onMouseOut={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
+              >
+                <FiPlus size={16} />
+              </button>
+
+              {/* Split-Panel Toggle Icon [|] (Matches Image 2 exactly) */}
+              <button
+                type="button"
+                onClick={toggleCollapse}
+                title="Tutup / Collapse Panel"
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: 'var(--text-muted)',
+                  cursor: 'pointer',
+                  padding: '4px 6px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  borderRadius: '4px'
+                }}
+                onMouseOver={(e) => e.currentTarget.style.color = 'var(--text-main)'}
+                onMouseOut={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
+              >
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="3" ry="3" />
+                  <line x1="15" y1="3" x2="15" y2="21" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          {/* SUBHEADER TITLE ROW (MATCHING IMAGE 2 SUBHEADER) */}
+          <div style={{
+            height: '36px',
+            minHeight: '36px',
+            padding: '0 14px',
+            borderBottom: '1px solid var(--border-color)',
+            backgroundColor: 'var(--bg-card)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between'
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-              <div style={{
-                padding: '0.45rem',
-                borderRadius: 'var(--radius-sm)',
-                backgroundColor: 'var(--primary-light)',
-                color: 'var(--primary)',
-                display: 'flex'
-              }}>
-                <FiCpu size={18} />
-              </div>
-              <div>
-                <h3 style={{ margin: 0, fontSize: '0.925rem', fontWeight: '700', color: 'var(--text-main)' }}>
-                  Agentic AI Copilot
-                </h3>
-                <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10B981' }} />
-                  <span>Right Panel • Integrated</span>
-                </div>
-              </div>
-            </div>
+            <span style={{ fontSize: '0.85rem', fontWeight: '600', color: 'var(--text-main)' }}>
+              Walkthrough
+            </span>
 
-            {/* COLLAPSE CLOSE BUTTON */}
-            <button
-              type="button"
-              onClick={toggleCollapse}
-              title="Ciutkan Panel Sidebar"
-              style={{
-                background: 'var(--bg-main)',
-                border: '1px solid var(--border-color)',
-                borderRadius: 'var(--radius-sm)',
-                color: 'var(--text-main)',
-                cursor: 'pointer',
-                padding: '0.35rem 0.5rem',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                fontSize: '0.725rem',
-                fontWeight: '600'
-              }}
-            >
-              <span>Collapse</span>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="3" width="18" height="18" rx="3" ry="3" />
-                <line x1="15" y1="3" x2="15" y2="21" />
-              </svg>
-            </button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <button
+                type="button"
+                onClick={() => setShowToolsList(prev => !prev)}
+                title="Daftar Tool Registry AI"
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: showToolsList ? 'var(--primary)' : 'var(--text-muted)',
+                  cursor: 'pointer',
+                  padding: '2px',
+                  display: 'flex',
+                  alignItems: 'center'
+                }}
+              >
+                <FiList size={14} />
+              </button>
+
+              <button
+                type="button"
+                onClick={handleResetChat}
+                title="Menu Opsi"
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: 'var(--text-muted)',
+                  cursor: 'pointer',
+                  padding: '2px',
+                  display: 'flex',
+                  alignItems: 'center'
+                }}
+              >
+                <FiMoreVertical size={14} />
+              </button>
+            </div>
           </div>
 
-          {/* REGISTERED TOOL BADGES */}
-          <div style={{
-            padding: '0.5rem 1rem',
-            backgroundColor: 'var(--bg-main)',
-            borderBottom: '1px solid var(--border-color)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.4rem',
-            overflowX: 'auto'
-          }}>
-            <span style={{ fontSize: '0.68rem', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', flexShrink: 0 }}>
-              Tools:
-            </span>
-            {AGENT_TOOLS.map(tool => (
-              <span
-                key={tool.name}
-                style={{
+          {/* OPTIONAL TOOL REGISTRY DROPDOWN BANNER */}
+          {showToolsList && (
+            <div style={{
+              padding: '8px 12px',
+              backgroundColor: 'var(--bg-main)',
+              borderBottom: '1px solid var(--border-color)',
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '4px'
+            }}>
+              <span style={{ fontSize: '0.68rem', fontWeight: '700', color: 'var(--text-muted)', width: '100%', textTransform: 'uppercase' }}>
+                Active Agentic Tools:
+              </span>
+              {AGENT_TOOLS.map(t => (
+                <span key={t.name} style={{
                   fontSize: '0.65rem',
-                  fontWeight: '600',
-                  padding: '0.12rem 0.4rem',
+                  padding: '1px 6px',
                   borderRadius: '4px',
                   backgroundColor: 'var(--bg-card)',
                   border: '1px solid var(--border-color)',
                   color: 'var(--text-main)',
-                  whiteSpace: 'nowrap',
                   fontFamily: 'var(--font-mono)'
-                }}
-              >
-                ⚡ {tool.name}
-              </span>
-            ))}
-          </div>
+                }}>
+                  ⚡ {t.name}
+                </span>
+              ))}
+            </div>
+          )}
 
-          {/* CHAT MESSAGES BODY */}
+          {/* CHAT / WALKTHROUGH CONTENT BODY */}
           <div style={{
             flex: 1,
-            padding: '1rem',
+            padding: '16px',
             overflowY: 'auto',
-            backgroundColor: 'var(--bg-main)',
+            backgroundColor: 'var(--bg-card)',
             display: 'flex',
             flexDirection: 'column',
-            gap: '0.875rem'
+            gap: '12px'
           }}>
             {messages.map((msg, index) => (
               <div
                 key={index}
                 style={{
                   alignSelf: msg.sender === 'user' ? 'flex-end' : 'flex-start',
-                  maxWidth: '92%'
+                  maxWidth: '96%'
                 }}
               >
                 {/* THOUGHT PROCESS & TOOL LOG BADGE */}
                 {msg.sender === 'ai' && msg.thoughts && msg.thoughts.length > 0 && (
                   <div style={{
-                    backgroundColor: 'var(--bg-card)',
+                    backgroundColor: 'var(--bg-main)',
                     borderRadius: 'var(--radius-sm)',
-                    padding: '0.5rem 0.75rem',
-                    marginBottom: '0.4rem',
+                    padding: '6px 10px',
+                    marginBottom: '6px',
                     fontSize: '0.7rem',
                     fontFamily: 'var(--font-mono)',
                     color: 'var(--primary)',
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: '0.2rem',
-                    borderLeft: '3px solid var(--primary)',
+                    gap: '2px',
                     border: '1px solid var(--border-color)',
-                    borderLeftWidth: '3px'
+                    borderLeft: '3px solid var(--primary)'
                   }}>
                     {msg.thoughts.map((th, tIdx) => (
                       <div key={tIdx} style={{ lineHeight: 1.35 }}>
@@ -286,14 +418,13 @@ export default function AgenticAiDrawer() {
                 )}
 
                 <div style={{
-                  padding: '0.75rem 1rem',
-                  borderRadius: msg.sender === 'user' ? '14px 14px 2px 14px' : '14px 14px 14px 2px',
-                  backgroundColor: msg.sender === 'user' ? 'var(--primary)' : 'var(--bg-card)',
+                  padding: '10px 14px',
+                  borderRadius: msg.sender === 'user' ? '12px 12px 2px 12px' : '10px',
+                  backgroundColor: msg.sender === 'user' ? 'var(--primary)' : 'var(--bg-main)',
                   color: msg.sender === 'user' ? '#FFFFFF' : 'var(--text-main)',
-                  boxShadow: 'var(--shadow-sm)',
                   border: msg.sender === 'user' ? 'none' : '1px solid var(--border-color)',
                   fontSize: '0.825rem',
-                  lineHeight: '1.45',
+                  lineHeight: '1.55',
                   whiteSpace: 'pre-wrap'
                 }}>
                   {msg.text}
@@ -304,37 +435,37 @@ export default function AgenticAiDrawer() {
             {loading && (
               <div style={{
                 alignSelf: 'flex-start',
-                backgroundColor: 'var(--bg-card)',
+                backgroundColor: 'var(--bg-main)',
                 border: '1px solid var(--border-color)',
-                borderRadius: 'var(--radius-sm)',
-                padding: '0.75rem 1rem',
+                borderRadius: '8px',
+                padding: '8px 12px',
                 fontSize: '0.78rem',
                 color: 'var(--text-muted)',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.4rem'
+                gap: '6px'
               }}>
                 <FiRefreshCw className="spin" style={{ color: 'var(--primary)' }} />
-                <span>Agentic AI sedang mengeksekusi tool...</span>
+                <span>Agentic AI sedang menganalisis & mengeksekusi...</span>
               </div>
             )}
             <div ref={chatEndRef} />
           </div>
 
-          {/* PRESET SHORTCUT BUTTONS */}
+          {/* PRESET SHORTCUT ACTIONS ROW */}
           <div style={{
-            padding: '0.5rem 0.875rem',
+            padding: '6px 12px',
             backgroundColor: 'var(--bg-card)',
             borderTop: '1px solid var(--border-color)',
             display: 'flex',
-            gap: '0.4rem',
+            gap: '6px',
             overflowX: 'auto'
           }}>
             <button
               type="button"
               className="btn btn-secondary btn-sm"
-              style={{ fontSize: '0.7rem', padding: '0.2rem 0.5rem', whiteSpace: 'nowrap', height: 'auto' }}
-              onClick={() => handleSend('Buat tugas baru: Security Audit CSP')}
+              style={{ fontSize: '0.7rem', padding: '3px 8px', whiteSpace: 'nowrap', height: 'auto', borderRadius: '4px' }}
+              onClick={() => handleSend('Buat tugas baru: Security Audit & CSP Verification')}
             >
               ✦ Task Security
             </button>
@@ -342,7 +473,7 @@ export default function AgenticAiDrawer() {
             <button
               type="button"
               className="btn btn-secondary btn-sm"
-              style={{ fontSize: '0.7rem', padding: '0.2rem 0.5rem', whiteSpace: 'nowrap', height: 'auto' }}
+              style={{ fontSize: '0.7rem', padding: '3px 8px', whiteSpace: 'nowrap', height: 'auto', borderRadius: '4px' }}
               onClick={() => handleSend('Singkronkan data dengan Obsidian Vault')}
             >
               ✦ Sync Vault
@@ -351,32 +482,32 @@ export default function AgenticAiDrawer() {
             <button
               type="button"
               className="btn btn-secondary btn-sm"
-              style={{ fontSize: '0.7rem', padding: '0.2rem 0.5rem', whiteSpace: 'nowrap', height: 'auto' }}
+              style={{ fontSize: '0.7rem', padding: '3px 8px', whiteSpace: 'nowrap', height: 'auto', borderRadius: '4px' }}
               onClick={() => handleSend('Tampilkan laporan telemetri proyek')}
             >
               ✦ Telemetri
             </button>
           </div>
 
-          {/* INPUT FORM */}
+          {/* INPUT FORM (COMPACT BOTTOM DOCK) */}
           <form
             onSubmit={(e) => {
               e.preventDefault();
               handleSend();
             }}
             style={{
-              padding: '0.875rem 1rem',
+              padding: '10px 12px',
               backgroundColor: 'var(--bg-card)',
               borderTop: '1px solid var(--border-color)',
               display: 'flex',
-              gap: '0.5rem'
+              gap: '6px'
             }}
           >
             <input
               type="text"
               className="form-control"
-              style={{ fontSize: '0.825rem', borderRadius: 'var(--radius-sm)' }}
-              placeholder="Ketik perintah untuk Agentic AI..."
+              style={{ fontSize: '0.825rem', borderRadius: '6px', padding: '7px 10px', height: '36px' }}
+              placeholder="Ketik instruksi untuk Agentic AI..."
               value={input}
               onChange={(e) => setInput(e.target.value)}
               disabled={loading}
@@ -384,10 +515,10 @@ export default function AgenticAiDrawer() {
             <button
               type="submit"
               className="btn btn-primary"
-              style={{ padding: '0 1rem', borderRadius: 'var(--radius-sm)', flexShrink: 0 }}
+              style={{ width: '36px', height: '36px', padding: 0, borderRadius: '6px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
               disabled={loading || !input.trim()}
             >
-              <FiSend />
+              <FiSend size={14} />
             </button>
           </form>
         </aside>
