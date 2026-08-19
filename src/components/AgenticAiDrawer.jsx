@@ -191,18 +191,21 @@ export default function AgenticAiDrawer() {
                 background: 'var(--bg-main)',
                 border: '1px solid var(--border-color)',
                 borderRadius: 'var(--radius-sm)',
-                color: 'var(--text-muted)',
+                color: 'var(--text-main)',
                 cursor: 'pointer',
                 padding: '0.35rem 0.5rem',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '4px',
+                gap: '6px',
                 fontSize: '0.725rem',
                 fontWeight: '600'
               }}
             >
               <span>Collapse</span>
-              <FiChevronRight size={16} />
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="3" ry="3" />
+                <line x1="15" y1="3" x2="15" y2="21" />
+              </svg>
             </button>
           </div>
 
