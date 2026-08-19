@@ -41,8 +41,25 @@ export const agenticAiService = {
     localStorage.setItem('desktopalie_gemini_api_key', key.trim());
   },
 
-  // Call Google Gemini 1.5 Flash via REST API
+  // Call Google Gemini 1.5 Flash via Secure Backend Serverless API or Direct
   async callGeminiApi(prompt, systemInstruction = '') {
+    // 1. First try secure Backend Serverless Route (/api/gemini)
+    try {
+      const backendResponse = await fetch('/api/gemini', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt, systemInstruction })
+      });
+
+      if (backendResponse.ok) {
+        const backendData = await backendResponse.json();
+        if (backendData.text) return backendData.text;
+      }
+    } catch (e) {
+      // Backend route not available or running in pure Vite dev mode
+    }
+
+    // 2. Fallback to direct client API Key if configured
     const apiKey = this.getApiKey();
     if (!apiKey) return null;
 
