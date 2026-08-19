@@ -507,21 +507,20 @@ export default function Header({ title = 'Dashboard Overview' }) {
           style={{
             height: '38px',
             padding: '0 0.85rem',
-            borderRadius: '999px',
-            backgroundColor: isDarkMode ? '#1E293B' : '#0F172A',
-            border: `1px solid ${isDarkMode ? '#334155' : '#0284C7'}`,
-            color: '#38BDF8',
+            borderRadius: 'var(--radius-sm)',
+            backgroundColor: isDarkMode ? '#1E293B' : 'var(--primary-light)',
+            border: `1px solid ${isDarkMode ? '#334155' : 'var(--border-color)'}`,
+            color: 'var(--primary)',
             display: 'flex',
             alignItems: 'center',
             gap: '0.45rem',
             cursor: 'pointer',
-            boxShadow: '0 2px 8px rgba(14, 165, 233, 0.25)',
             fontSize: '0.8rem',
             fontWeight: '700',
             transition: 'all 0.15s ease'
           }}
         >
-          <FiCpu style={{ fontSize: '1rem', color: '#38BDF8' }} />
+          <FiCpu style={{ fontSize: '1rem', color: 'var(--primary)' }} />
           <span>AI Copilot</span>
           <FiSidebar style={{ fontSize: '0.9rem', opacity: 0.8, transform: 'rotate(180deg)' }} />
         </button>

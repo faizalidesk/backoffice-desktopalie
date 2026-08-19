@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { agenticAiService, AGENT_TOOLS } from '../services/agenticAiService';
+import { useTheme } from '../context/ThemeContext';
 import { 
   FiCpu, 
   FiSend, 
@@ -8,11 +9,14 @@ import {
   FiChevronLeft, 
   FiRefreshCw,
   FiSidebar,
-  FiZap
+  FiZap,
+  FiCheckCircle
 } from 'react-icons/fi';
 
 export default function AgenticAiDrawer() {
-  // Read initial collapsed state from localStorage (default: expanded on desktop, collapsible)
+  const { isDarkMode } = useTheme();
+
+  // Read initial collapsed state from localStorage
   const [isCollapsed, setIsCollapsed] = useState(() => {
     const saved = localStorage.getItem('desktopalie_ai_sidebar_collapsed');
     return saved !== null ? JSON.parse(saved) : false;
@@ -23,7 +27,7 @@ export default function AgenticAiDrawer() {
   const [messages, setMessages] = useState([
     {
       sender: 'ai',
-      text: 'Halo! Saya **Agentic AI Copilot** di Sidebar Kanan Backoffice. Saya memiliki akses langsung ke sistem (*Tool Execution Registry*) untuk membuat tugas, mengelola dokumentasi, dan menyinkronkan Obsidian Vault.\n\nApa yang bisa saya eksekusi untuk Anda hari ini?',
+      text: 'Halo! Saya **Agentic AI Copilot** di Sidebar Kanan. Saya terintegrasi langsung dengan sistem Backoffice (*Tool Registry*) untuk membuat tugas, mengelola dokumentasi, dan menyinkronkan Obsidian Vault.\n\nApa yang ingin Anda eksekusi hari ini?',
       thoughts: [],
       toolExecuted: null
     }
@@ -85,7 +89,7 @@ export default function AgenticAiDrawer() {
 
   return (
     <>
-      {/* COLLAPSED FLOATING STRIP / TOGGLE TRIGGER ON RIGHT EDGE */}
+      {/* COLLAPSED FLOATING TRIGGER ON RIGHT EDGE */}
       {isCollapsed && (
         <button
           type="button"
@@ -99,28 +103,20 @@ export default function AgenticAiDrawer() {
             display: 'flex',
             alignItems: 'center',
             gap: '8px',
-            padding: '12px 14px 12px 16px',
-            borderRadius: '12px 0 0 12px',
-            backgroundColor: '#0F172A',
-            color: '#38BDF8',
-            border: '1px solid #0284C7',
+            padding: '10px 14px',
+            borderRadius: '10px 0 0 10px',
+            backgroundColor: 'var(--bg-card)',
+            color: 'var(--primary)',
+            border: '1px solid var(--border-color)',
             borderRight: 'none',
-            boxShadow: '-6px 6px 20px rgba(14, 165, 233, 0.35)',
+            boxShadow: 'var(--shadow-md)',
             cursor: 'pointer',
             fontWeight: '700',
             fontSize: '0.825rem',
             transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
           }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.transform = 'translateX(-4px)';
-            e.currentTarget.style.boxShadow = '-8px 8px 25px rgba(14, 165, 233, 0.5)';
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.transform = 'translateX(0)';
-            e.currentTarget.style.boxShadow = '-6px 6px 20px rgba(14, 165, 233, 0.35)';
-          }}
         >
-          <FiChevronLeft style={{ fontSize: '1.1rem', color: '#38BDF8' }} />
+          <FiChevronLeft style={{ fontSize: '1.1rem' }} />
           <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
             <FiCpu style={{ fontSize: '1.15rem' }} />
             <span style={{
@@ -134,69 +130,68 @@ export default function AgenticAiDrawer() {
               boxShadow: '0 0 6px #10B981'
             }} />
           </div>
-          <span style={{ letterSpacing: '0.02em' }}>AI Copilot</span>
+          <span>AI Copilot</span>
         </button>
       )}
 
-      {/* EXPANDED RIGHT SIDEBAR PANEL */}
+      {/* EXPANDED RIGHT SIDEBAR PANEL MATCHING BACKOFFICE THEME */}
       {!isCollapsed && (
         <aside
           style={{
-            position: 'fixed',
-            top: 0,
-            right: 0,
             width: '380px',
             height: '100vh',
-            zIndex: 9985,
-            backgroundColor: '#FFFFFF',
+            position: 'sticky',
+            top: 0,
+            right: 0,
+            zIndex: 900,
+            backgroundColor: 'var(--bg-card)',
             borderLeft: '1px solid var(--border-color)',
-            boxShadow: '-8px 0 25px rgba(15, 23, 42, 0.12)',
             display: 'flex',
             flexDirection: 'column',
-            transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)'
+            flexShrink: 0,
+            transition: 'all 0.25s ease'
           }}
         >
-          {/* SIDEBAR HEADER */}
+          {/* SIDEBAR PANEL HEADER */}
           <div style={{
-            padding: '1rem 1.25rem',
-            backgroundColor: '#0F172A',
-            color: '#FFFFFF',
+            padding: '1.1rem 1.25rem',
+            backgroundColor: 'var(--bg-card)',
+            borderBottom: '1px solid var(--border-color)',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'space-between',
-            borderBottom: '1px solid #1E293B'
+            justifyContent: 'space-between'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
               <div style={{
                 padding: '0.45rem',
-                borderRadius: '8px',
-                backgroundColor: 'rgba(56, 189, 248, 0.15)',
-                color: '#38BDF8',
+                borderRadius: 'var(--radius-sm)',
+                backgroundColor: 'var(--primary-light)',
+                color: 'var(--primary)',
                 display: 'flex'
               }}>
                 <FiCpu size={18} />
               </div>
               <div>
-                <h3 style={{ margin: 0, fontSize: '0.925rem', fontWeight: '700', color: '#FFFFFF' }}>
+                <h3 style={{ margin: 0, fontSize: '0.925rem', fontWeight: '700', color: 'var(--text-main)' }}>
                   Agentic AI Copilot
                 </h3>
-                <div style={{ fontSize: '0.7rem', color: '#94A3B8', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px' }}>
                   <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10B981' }} />
-                  <span>Right Sidebar • Active</span>
+                  <span>Right Panel • Integrated</span>
                 </div>
               </div>
             </div>
 
-            {/* COLLAPSE BUTTON */}
+            {/* COLLAPSE CLOSE BUTTON */}
             <button
               type="button"
               onClick={toggleCollapse}
-              title="Ciutkan Sidebar (Collapse)"
+              title="Ciutkan Panel Sidebar"
               style={{
-                background: 'rgba(255, 255, 255, 0.08)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
-                borderRadius: '6px',
-                color: '#94A3B8',
+                background: 'var(--bg-main)',
+                border: '1px solid var(--border-color)',
+                borderRadius: 'var(--radius-sm)',
+                color: 'var(--text-muted)',
                 cursor: 'pointer',
                 padding: '0.35rem 0.5rem',
                 display: 'flex',
@@ -205,8 +200,6 @@ export default function AgenticAiDrawer() {
                 fontSize: '0.725rem',
                 fontWeight: '600'
               }}
-              onMouseOver={(e) => e.currentTarget.style.color = '#FFFFFF'}
-              onMouseOut={(e) => e.currentTarget.style.color = '#94A3B8'}
             >
               <span>Collapse</span>
               <FiChevronRight size={16} />
@@ -216,14 +209,14 @@ export default function AgenticAiDrawer() {
           {/* REGISTERED TOOL BADGES */}
           <div style={{
             padding: '0.5rem 1rem',
-            backgroundColor: '#1E293B',
-            borderBottom: '1px solid #334155',
+            backgroundColor: 'var(--bg-main)',
+            borderBottom: '1px solid var(--border-color)',
             display: 'flex',
             alignItems: 'center',
             gap: '0.4rem',
             overflowX: 'auto'
           }}>
-            <span style={{ fontSize: '0.68rem', fontWeight: '700', color: '#94A3B8', textTransform: 'uppercase', flexShrink: 0 }}>
+            <span style={{ fontSize: '0.68rem', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', flexShrink: 0 }}>
               Tools:
             </span>
             {AGENT_TOOLS.map(tool => (
@@ -234,10 +227,11 @@ export default function AgenticAiDrawer() {
                   fontWeight: '600',
                   padding: '0.12rem 0.4rem',
                   borderRadius: '4px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                  color: '#E2E8F0',
+                  backgroundColor: 'var(--bg-card)',
+                  border: '1px solid var(--border-color)',
+                  color: 'var(--text-main)',
                   whiteSpace: 'nowrap',
-                  fontFamily: 'monospace'
+                  fontFamily: 'var(--font-mono)'
                 }}
               >
                 ⚡ {tool.name}
@@ -250,7 +244,7 @@ export default function AgenticAiDrawer() {
             flex: 1,
             padding: '1rem',
             overflowY: 'auto',
-            backgroundColor: '#F8FAFC',
+            backgroundColor: 'var(--bg-main)',
             display: 'flex',
             flexDirection: 'column',
             gap: '0.875rem'
@@ -266,17 +260,19 @@ export default function AgenticAiDrawer() {
                 {/* THOUGHT PROCESS & TOOL LOG BADGE */}
                 {msg.sender === 'ai' && msg.thoughts && msg.thoughts.length > 0 && (
                   <div style={{
-                    backgroundColor: '#1E293B',
-                    borderRadius: '8px',
+                    backgroundColor: 'var(--bg-card)',
+                    borderRadius: 'var(--radius-sm)',
                     padding: '0.5rem 0.75rem',
                     marginBottom: '0.4rem',
                     fontSize: '0.7rem',
-                    fontFamily: 'monospace',
-                    color: '#38BDF8',
+                    fontFamily: 'var(--font-mono)',
+                    color: 'var(--primary)',
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '0.2rem',
-                    borderLeft: '3px solid #0284C7'
+                    borderLeft: '3px solid var(--primary)',
+                    border: '1px solid var(--border-color)',
+                    borderLeftWidth: '3px'
                   }}>
                     {msg.thoughts.map((th, tIdx) => (
                       <div key={tIdx} style={{ lineHeight: 1.35 }}>
@@ -289,10 +285,10 @@ export default function AgenticAiDrawer() {
                 <div style={{
                   padding: '0.75rem 1rem',
                   borderRadius: msg.sender === 'user' ? '14px 14px 2px 14px' : '14px 14px 14px 2px',
-                  backgroundColor: msg.sender === 'user' ? '#0284C7' : '#FFFFFF',
-                  color: msg.sender === 'user' ? '#FFFFFF' : '#0F172A',
-                  boxShadow: '0 2px 6px rgba(0, 0, 0, 0.05)',
-                  border: msg.sender === 'user' ? 'none' : '1px solid #E2E8F0',
+                  backgroundColor: msg.sender === 'user' ? 'var(--primary)' : 'var(--bg-card)',
+                  color: msg.sender === 'user' ? '#FFFFFF' : 'var(--text-main)',
+                  boxShadow: 'var(--shadow-sm)',
+                  border: msg.sender === 'user' ? 'none' : '1px solid var(--border-color)',
                   fontSize: '0.825rem',
                   lineHeight: '1.45',
                   whiteSpace: 'pre-wrap'
@@ -305,17 +301,17 @@ export default function AgenticAiDrawer() {
             {loading && (
               <div style={{
                 alignSelf: 'flex-start',
-                backgroundColor: '#FFFFFF',
-                border: '1px solid #E2E8F0',
-                borderRadius: '12px',
+                backgroundColor: 'var(--bg-card)',
+                border: '1px solid var(--border-color)',
+                borderRadius: 'var(--radius-sm)',
                 padding: '0.75rem 1rem',
                 fontSize: '0.78rem',
-                color: '#64748b',
+                color: 'var(--text-muted)',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.4rem'
               }}>
-                <FiRefreshCw className="spin" style={{ color: '#0284C7' }} />
+                <FiRefreshCw className="spin" style={{ color: 'var(--primary)' }} />
                 <span>Agentic AI sedang mengeksekusi tool...</span>
               </div>
             )}
@@ -325,8 +321,8 @@ export default function AgenticAiDrawer() {
           {/* PRESET SHORTCUT BUTTONS */}
           <div style={{
             padding: '0.5rem 0.875rem',
-            backgroundColor: '#FFFFFF',
-            borderTop: '1px solid #E2E8F0',
+            backgroundColor: 'var(--bg-card)',
+            borderTop: '1px solid var(--border-color)',
             display: 'flex',
             gap: '0.4rem',
             overflowX: 'auto'
@@ -367,8 +363,8 @@ export default function AgenticAiDrawer() {
             }}
             style={{
               padding: '0.875rem 1rem',
-              backgroundColor: '#FFFFFF',
-              borderTop: '1px solid #E2E8F0',
+              backgroundColor: 'var(--bg-card)',
+              borderTop: '1px solid var(--border-color)',
               display: 'flex',
               gap: '0.5rem'
             }}
@@ -376,7 +372,7 @@ export default function AgenticAiDrawer() {
             <input
               type="text"
               className="form-control"
-              style={{ fontSize: '0.825rem', borderRadius: '6px' }}
+              style={{ fontSize: '0.825rem', borderRadius: 'var(--radius-sm)' }}
               placeholder="Ketik perintah untuk Agentic AI..."
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -385,7 +381,7 @@ export default function AgenticAiDrawer() {
             <button
               type="submit"
               className="btn btn-primary"
-              style={{ padding: '0 1rem', borderRadius: '6px', flexShrink: 0 }}
+              style={{ padding: '0 1rem', borderRadius: 'var(--radius-sm)', flexShrink: 0 }}
               disabled={loading || !input.trim()}
             >
               <FiSend />
