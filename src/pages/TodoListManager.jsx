@@ -223,11 +223,14 @@ export default function TodoListManager() {
         await backofficeService.updateTodo(editingItem.id, formData);
         toast.success('Tugas berhasil diperbarui!');
       } else {
-        await backofficeService.createTodo(formData);
+        const created = await backofficeService.createTodo(formData);
         toast.success('Tugas baru berhasil ditambahkan!');
+        if (created) {
+          setTodos(prev => [created, ...prev.filter(t => t.id !== created.id)]);
+        }
       }
       setIsModalOpen(false);
-      loadTodos();
+      await loadTodos();
     } catch (err) {
       console.error(err);
       toast.error('Gagal menyimpan tugas');

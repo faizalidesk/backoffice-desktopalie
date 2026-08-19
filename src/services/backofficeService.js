@@ -460,6 +460,8 @@ export const backofficeService = {
   // TODOS CRUD (Notion / Jira style Task Board)
   async getTodos(platformId = null) {
     const targetPlatform = platformId || getCurrentPlatformId();
+    let supabaseData = [];
+
     try {
       const { data, error } = await supabase
         .from('todos')
@@ -467,28 +469,31 @@ export const backofficeService = {
         .eq('platform_id', targetPlatform)
         .order('created_at', { ascending: false });
 
-      if (!error && data && data.length > 0) {
-        return data;
+      if (!error && data) {
+        supabaseData = data;
       }
     } catch (err) {
-      console.warn('Supabase todos table error, reading fallback:', err);
+      console.warn('Supabase todos query error:', err);
     }
 
-    const localData = localStorage.getItem(`desktopalie_todos_fallback_${targetPlatform}`);
-    if (localData) {
-      try {
-        return JSON.parse(localData);
-      } catch (e) {}
-    }
+    const fallbackKey = `desktopalie_todos_fallback_${targetPlatform}`;
+    const localDataStr = localStorage.getItem(fallbackKey) || localStorage.getItem('desktopalie_todos_fallback');
+    const localData = localDataStr ? JSON.parse(localDataStr) : [];
 
-    return [];
+    // Merge Supabase & Local fallback items to prevent task loss
+    const mergedMap = new Map();
+    localData.forEach(item => mergedMap.set(item.id, item));
+    supabaseData.forEach(item => mergedMap.set(item.id, item));
+
+    const result = Array.from(mergedMap.values()).sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+    return result;
   },
 
   async createTodo(todo) {
     const { data: { user } } = await supabase.auth.getUser();
     const targetPlatform = todo.platform_id || getCurrentPlatformId();
     const payload = {
-      id: crypto.randomUUID(),
+      id: todo.id || crypto.randomUUID(),
       platform_id: targetPlatform,
       title: todo.title,
       description: todo.description || '',
@@ -500,25 +505,47 @@ export const backofficeService = {
       ...(user ? { user_id: user.id } : {})
     };
 
+    // Update local storage fallback immediately (optimistic local save)
+    const fallbackKey = `desktopalie_todos_fallback_${targetPlatform}`;
+    const currentLocal = JSON.parse(localStorage.getItem(fallbackKey) || localStorage.getItem('desktopalie_todos_fallback') || '[]');
+    const updatedLocal = [payload, ...currentLocal.filter(t => t.id !== payload.id)];
+    localStorage.setItem(fallbackKey, JSON.stringify(updatedLocal));
+    localStorage.setItem('desktopalie_todos_fallback', JSON.stringify(updatedLocal));
+
     try {
+      const { subtasks, ...dbPayload } = payload;
       const { data, error } = await supabase
         .from('todos')
-        .insert([payload])
+        .insert([{ ...dbPayload, subtasks }])
         .select()
         .single();
 
-      if (!error && data) return data;
+      if (!error && data) return { ...data, subtasks: payload.subtasks };
+
+      // Retry without subtasks column if DB schema differs
+      if (error && (error.message?.includes('column') || error.code === 'PGRST204')) {
+        const { data: retryData, error: retryErr } = await supabase
+          .from('todos')
+          .insert([dbPayload])
+          .select()
+          .single();
+        if (!retryErr && retryData) return { ...retryData, subtasks: payload.subtasks };
+      }
     } catch (err) {
       console.warn('Supabase insert todo error, saved to local state fallback:', err);
     }
 
-    const currentLocal = JSON.parse(localStorage.getItem(`desktopalie_todos_fallback_${targetPlatform}`) || '[]');
-    const updated = [payload, ...currentLocal];
-    localStorage.setItem(`desktopalie_todos_fallback_${targetPlatform}`, JSON.stringify(updated));
     return payload;
   },
 
   async updateTodo(id, updates) {
+    const targetPlatform = updates.platform_id || getCurrentPlatformId();
+    const fallbackKey = `desktopalie_todos_fallback_${targetPlatform}`;
+    const currentLocal = JSON.parse(localStorage.getItem(fallbackKey) || localStorage.getItem('desktopalie_todos_fallback') || '[]');
+    const updatedLocal = currentLocal.map(t => t.id === id ? { ...t, ...updates } : t);
+    localStorage.setItem(fallbackKey, JSON.stringify(updatedLocal));
+    localStorage.setItem('desktopalie_todos_fallback', JSON.stringify(updatedLocal));
+
     try {
       const { data, error } = await supabase
         .from('todos')
@@ -532,12 +559,6 @@ export const backofficeService = {
       console.warn('Supabase update todo error, updated locally:', err);
     }
 
-    const targetPlatform = updates.platform_id || getCurrentPlatformId();
-    const fallbackKey = `desktopalie_todos_fallback_${targetPlatform}`;
-    const currentLocal = JSON.parse(localStorage.getItem(fallbackKey) || localStorage.getItem('desktopalie_todos_fallback') || '[]');
-    const updated = currentLocal.map(t => t.id === id ? { ...t, ...updates } : t);
-    localStorage.setItem(fallbackKey, JSON.stringify(updated));
-    localStorage.setItem('desktopalie_todos_fallback', JSON.stringify(updated));
     return { id, ...updates };
   },
 
@@ -548,8 +569,11 @@ export const backofficeService = {
       console.warn('Supabase delete todo error:', err);
     }
 
-    const currentLocal = JSON.parse(localStorage.getItem('desktopalie_todos_fallback') || '[]');
+    const currentPlatform = getCurrentPlatformId();
+    const fallbackKey = `desktopalie_todos_fallback_${currentPlatform}`;
+    const currentLocal = JSON.parse(localStorage.getItem(fallbackKey) || localStorage.getItem('desktopalie_todos_fallback') || '[]');
     const updated = currentLocal.filter(t => t.id !== id);
+    localStorage.setItem(fallbackKey, JSON.stringify(updated));
     localStorage.setItem('desktopalie_todos_fallback', JSON.stringify(updated));
     return true;
   },
