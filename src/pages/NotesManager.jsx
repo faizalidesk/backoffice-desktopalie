@@ -300,9 +300,25 @@ export default function NotesManager() {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Note Content / Summary</label>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+              <label className="form-label" style={{ margin: 0 }}>Note Content / Summary</label>
+              <button
+                type="button"
+                className="btn btn-secondary btn-sm"
+                style={{ fontSize: '0.725rem', padding: '0.2rem 0.6rem', height: 'auto', background: '#F1F5F9', color: '#475569', fontWeight: 600, border: '1px solid #CBD5E1', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                onClick={() => setFormData(prev => ({
+                  ...prev,
+                  description: prev.description 
+                    ? `${prev.description}\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`
+                    : `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.`
+                }))}
+              >
+                <span>✦ Generate Lorem Template</span>
+              </button>
+            </div>
             <textarea
               className="form-control"
+              rows="5"
               placeholder="Write summary or main content of the note here..."
               value={formData.description}
               onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}

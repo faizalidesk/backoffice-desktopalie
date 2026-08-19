@@ -804,12 +804,27 @@ export default function TodoListManager() {
 
               {/* Deskripsi */}
               <div className="form-group">
-                <label className="form-label" style={{ fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-muted)' }}>
-                  Catatan & Deskripsi Detail
-                </label>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+                  <label className="form-label" style={{ fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-muted)', margin: 0 }}>
+                    Catatan & Deskripsi Detail
+                  </label>
+                  <button
+                    type="button"
+                    className="btn btn-secondary btn-sm"
+                    style={{ fontSize: '0.725rem', padding: '0.2rem 0.6rem', height: 'auto', background: '#F1F5F9', color: '#475569', fontWeight: 600, border: '1px solid #CBD5E1', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                    onClick={() => setFormData(prev => ({
+                      ...prev,
+                      description: prev.description 
+                        ? `${prev.description}\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.`
+                        : `### 📌 Ringkasan Deskripsi\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n\n### 🎯 Kriteria Penerimaan & QA\n- [ ] Pengujian integrasi modul dan alur data Supabase realtime.\n- [ ] Validasi penanganan error dan respon UI pada layar desktop & mobile.\n- [ ] Uji coba pelepasan rilis dan verifikasi Jejak Audit.`
+                    }))}
+                  >
+                    <span>✦ Generate Lorem Template</span>
+                  </button>
+                </div>
                 <textarea
                   className="form-control"
-                  rows="4"
+                  rows="5"
                   placeholder="Tambahkan kriteria penerimaan, catatan QA, atau rincian pengujian..."
                   value={formData.description}
                   onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
