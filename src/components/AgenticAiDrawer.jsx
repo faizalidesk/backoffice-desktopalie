@@ -436,42 +436,21 @@ export default function AgenticAiDrawer() {
             key={index}
             style={{
               alignSelf: msg.sender === 'user' ? 'flex-end' : 'flex-start',
-              maxWidth: '96%'
+              maxWidth: '92%',
+              display: 'flex',
+              flexDirection: 'column'
             }}
           >
-            {/* THOUGHT PROCESS & TOOL LOG BADGE */}
-            {msg.sender === 'ai' && msg.thoughts && msg.thoughts.length > 0 && (
-              <div style={{
-                backgroundColor: 'var(--bg-main)',
-                borderRadius: 'var(--radius-sm)',
-                padding: '6px 10px',
-                marginBottom: '6px',
-                fontSize: '0.7rem',
-                fontFamily: 'var(--font-mono)',
-                color: 'var(--primary)',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '2px',
-                border: '1px solid var(--border-color)',
-                borderLeft: '3px solid var(--primary)'
-              }}>
-                {msg.thoughts.map((th, tIdx) => (
-                  <div key={tIdx} style={{ lineHeight: 1.35 }}>
-                    {th}
-                  </div>
-                ))}
-              </div>
-            )}
-
             <div style={{
               padding: '10px 14px',
-              borderRadius: msg.sender === 'user' ? '12px 12px 2px 12px' : '10px',
+              borderRadius: msg.sender === 'user' ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
               backgroundColor: msg.sender === 'user' ? 'var(--primary)' : 'var(--bg-main)',
               color: msg.sender === 'user' ? '#FFFFFF' : 'var(--text-main)',
               border: msg.sender === 'user' ? 'none' : '1px solid var(--border-color)',
-              fontSize: '0.825rem',
+              fontSize: '0.84rem',
               lineHeight: '1.55',
-              whiteSpace: 'pre-wrap'
+              whiteSpace: 'pre-wrap',
+              boxShadow: msg.sender === 'user' ? '0 2px 6px rgba(79, 70, 229, 0.15)' : 'none'
             }}>
               {msg.text}
             </div>
