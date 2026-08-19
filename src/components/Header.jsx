@@ -24,7 +24,9 @@ import {
   FiTrash2,
   FiX,
   FiClock,
-  FiLayers
+  FiLayers,
+  FiCpu,
+  FiSidebar
 } from 'react-icons/fi';
 
 function formatFullDateTime(dateString) {
@@ -496,6 +498,33 @@ export default function Header({ title = 'Dashboard Overview' }) {
             </div>
           )}
         </div>
+
+        {/* TOP BAR AGENTIC AI SIDEBAR TOGGLE ICON BUTTON */}
+        <button
+          type="button"
+          onClick={() => window.dispatchEvent(new CustomEvent('toggle-ai-sidebar'))}
+          title="Toggle Agentic AI Copilot Sidebar"
+          style={{
+            height: '38px',
+            padding: '0 0.85rem',
+            borderRadius: '999px',
+            backgroundColor: isDarkMode ? '#1E293B' : '#0F172A',
+            border: `1px solid ${isDarkMode ? '#334155' : '#0284C7'}`,
+            color: '#38BDF8',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.45rem',
+            cursor: 'pointer',
+            boxShadow: '0 2px 8px rgba(14, 165, 233, 0.25)',
+            fontSize: '0.8rem',
+            fontWeight: '700',
+            transition: 'all 0.15s ease'
+          }}
+        >
+          <FiCpu style={{ fontSize: '1rem', color: '#38BDF8' }} />
+          <span>AI Copilot</span>
+          <FiSidebar style={{ fontSize: '0.9rem', opacity: 0.8, transform: 'rotate(180deg)' }} />
+        </button>
 
         {/* TOP RIGHT PROFILE AVATAR & DROPDOWN TRIGGER */}
         <div style={{ position: 'relative' }} ref={dropdownRef}>

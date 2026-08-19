@@ -40,6 +40,14 @@ export default function AgenticAiDrawer() {
   };
 
   useEffect(() => {
+    const handleToggleEvent = () => {
+      toggleCollapse();
+    };
+    window.addEventListener('toggle-ai-sidebar', handleToggleEvent);
+    return () => window.removeEventListener('toggle-ai-sidebar', handleToggleEvent);
+  }, []);
+
+  useEffect(() => {
     if (!isCollapsed) {
       chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
