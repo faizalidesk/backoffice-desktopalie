@@ -44,6 +44,10 @@
   ],
   "rewrites": [
     {
+      "source": "/googled14ed4bd74e5ed4f.html",
+      "destination": "/googled14ed4bd74e5ed4f.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
