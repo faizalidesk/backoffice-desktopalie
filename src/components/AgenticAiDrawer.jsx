@@ -1,15 +1,29 @@
 import { useState, useRef, useEffect } from 'react';
 import { agenticAiService, AGENT_TOOLS } from '../services/agenticAiService';
-import { FiCpu, FiSend, FiX, FiCheckCircle, FiTool, FiZap, FiLayers, FiRefreshCw } from 'react-icons/fi';
+import { 
+  FiCpu, 
+  FiSend, 
+  FiX, 
+  FiChevronRight, 
+  FiChevronLeft, 
+  FiRefreshCw,
+  FiSidebar,
+  FiZap
+} from 'react-icons/fi';
 
 export default function AgenticAiDrawer() {
-  const [isOpen, setIsOpen] = useState(false);
+  // Read initial collapsed state from localStorage (default: expanded on desktop, collapsible)
+  const [isCollapsed, setIsCollapsed] = useState(() => {
+    const saved = localStorage.getItem('desktopalie_ai_sidebar_collapsed');
+    return saved !== null ? JSON.parse(saved) : false;
+  });
+
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState([
     {
       sender: 'ai',
-      text: 'Halo! Saya **Agentic AI Copilot** di Backoffice. Saya memiliki akses langsung ke sistem (*Tool Execution Registry*) untuk membuat tugas, mengelola dokumentasi, dan menyinkronkan Obsidian Vault.\n\nApa yang bisa saya eksekusi untuk Anda hari ini?',
+      text: 'Halo! Saya **Agentic AI Copilot** di Sidebar Kanan Backoffice. Saya memiliki akses langsung ke sistem (*Tool Execution Registry*) untuk membuat tugas, mengelola dokumentasi, dan menyinkronkan Obsidian Vault.\n\nApa yang bisa saya eksekusi untuk Anda hari ini?',
       thoughts: [],
       toolExecuted: null
     }
@@ -17,11 +31,19 @@ export default function AgenticAiDrawer() {
 
   const chatEndRef = useRef(null);
 
+  const toggleCollapse = () => {
+    setIsCollapsed(prev => {
+      const nextState = !prev;
+      localStorage.setItem('desktopalie_ai_sidebar_collapsed', JSON.stringify(nextState));
+      return nextState;
+    });
+  };
+
   useEffect(() => {
-    if (isOpen) {
+    if (!isCollapsed) {
       chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [messages, isOpen]);
+  }, [messages, isCollapsed]);
 
   const handleSend = async (textToSend = null) => {
     const query = textToSend || input;
@@ -55,320 +77,313 @@ export default function AgenticAiDrawer() {
 
   return (
     <>
-      {/* FLOATING ACTION TRIGGER BUTTON */}
-      <button
-        type="button"
-        onClick={() => setIsOpen(true)}
-        style={{
-          position: 'fixed',
-          bottom: '24px',
-          right: '24px',
-          zIndex: 9990,
-          display: 'flex',
-          alignItems: 'center',
-          gap: '10px',
-          padding: '12px 20px',
-          borderRadius: '999px',
-          backgroundColor: '#0F172A',
-          color: '#38BDF8',
-          border: '1px solid #0284C7',
-          boxShadow: '0 10px 25px -5px rgba(14, 165, 233, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
-          cursor: 'pointer',
-          fontWeight: '700',
-          fontSize: '0.875rem',
-          transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
-        }}
-        onMouseOver={(e) => {
-          e.currentTarget.style.transform = 'translateY(-2px) scale(1.03)';
-          e.currentTarget.style.boxShadow = '0 14px 30px -5px rgba(14, 165, 233, 0.6)';
-        }}
-        onMouseOut={(e) => {
-          e.currentTarget.style.transform = 'translateY(0) scale(1)';
-          e.currentTarget.style.boxShadow = '0 10px 25px -5px rgba(14, 165, 233, 0.4)';
-        }}
-      >
-        <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-          <FiCpu style={{ fontSize: '1.25rem', color: '#38BDF8' }} />
-          <span style={{
-            position: 'absolute',
-            top: '-2px',
-            right: '-2px',
-            width: '8px',
-            height: '8px',
-            borderRadius: '50%',
-            backgroundColor: '#10B981',
-            boxShadow: '0 0 8px #10B981'
-          }} />
-        </div>
-        <span>Agentic AI Copilot</span>
-        <span style={{
-          fontSize: '0.68rem',
-          fontWeight: '800',
-          padding: '2px 6px',
-          borderRadius: '4px',
-          backgroundColor: 'rgba(56, 189, 248, 0.15)',
-          color: '#38BDF8',
-          textTransform: 'uppercase'
-        }}>
-          Tools Active
-        </span>
-      </button>
+      {/* COLLAPSED FLOATING STRIP / TOGGLE TRIGGER ON RIGHT EDGE */}
+      {isCollapsed && (
+        <button
+          type="button"
+          onClick={toggleCollapse}
+          title="Buka Agentic AI Sidebar (Kanan)"
+          style={{
+            position: 'fixed',
+            top: '84px',
+            right: 0,
+            zIndex: 9980,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            padding: '12px 14px 12px 16px',
+            borderRadius: '12px 0 0 12px',
+            backgroundColor: '#0F172A',
+            color: '#38BDF8',
+            border: '1px solid #0284C7',
+            borderRight: 'none',
+            boxShadow: '-6px 6px 20px rgba(14, 165, 233, 0.35)',
+            cursor: 'pointer',
+            fontWeight: '700',
+            fontSize: '0.825rem',
+            transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
+          }}
+          onMouseOver={(e) => {
+            e.currentTarget.style.transform = 'translateX(-4px)';
+            e.currentTarget.style.boxShadow = '-8px 8px 25px rgba(14, 165, 233, 0.5)';
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.transform = 'translateX(0)';
+            e.currentTarget.style.boxShadow = '-6px 6px 20px rgba(14, 165, 233, 0.35)';
+          }}
+        >
+          <FiChevronLeft style={{ fontSize: '1.1rem', color: '#38BDF8' }} />
+          <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+            <FiCpu style={{ fontSize: '1.15rem' }} />
+            <span style={{
+              position: 'absolute',
+              top: '-2px',
+              right: '-2px',
+              width: '7px',
+              height: '7px',
+              borderRadius: '50%',
+              backgroundColor: '#10B981',
+              boxShadow: '0 0 6px #10B981'
+            }} />
+          </div>
+          <span style={{ letterSpacing: '0.02em' }}>AI Copilot</span>
+        </button>
+      )}
 
-      {/* AGENTIC AI DRAWER PANEL */}
-      {isOpen && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          zIndex: 9999,
-          backgroundColor: 'rgba(15, 23, 42, 0.6)',
-          backdropFilter: 'blur(4px)',
-          display: 'flex',
-          justifyContent: 'flex-end',
-          animation: 'fadeIn 0.2s ease'
-        }} onClick={() => setIsOpen(false)}>
-          <div
-            style={{
-              width: '100%',
-              maxWidth: '460px',
-              height: '100%',
-              backgroundColor: '#FFFFFF',
-              boxShadow: '-10px 0 30px rgba(0, 0, 0, 0.25)',
-              display: 'flex',
-              flexDirection: 'column',
-              zIndex: 10000
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* DRAWER HEADER */}
-            <div style={{
-              padding: '1.25rem 1.5rem',
-              backgroundColor: '#0F172A',
-              color: '#FFFFFF',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              borderBottom: '1px solid #1E293B'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <div style={{
-                  padding: '0.5rem',
-                  borderRadius: '10px',
-                  backgroundColor: 'rgba(56, 189, 248, 0.15)',
-                  color: '#38BDF8',
-                  display: 'flex'
-                }}>
-                  <FiCpu size={20} />
-                </div>
-                <div>
-                  <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: '700', color: '#FFFFFF' }}>
-                    Agentic AI Copilot
-                  </h3>
-                  <div style={{ fontSize: '0.725rem', color: '#94A3B8', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10B981' }} />
-                    <span>Autonomous Tool Execution Engine</span>
-                  </div>
+      {/* EXPANDED RIGHT SIDEBAR PANEL */}
+      {!isCollapsed && (
+        <aside
+          style={{
+            position: 'fixed',
+            top: 0,
+            right: 0,
+            width: '380px',
+            height: '100vh',
+            zIndex: 9985,
+            backgroundColor: '#FFFFFF',
+            borderLeft: '1px solid var(--border-color)',
+            boxShadow: '-8px 0 25px rgba(15, 23, 42, 0.12)',
+            display: 'flex',
+            flexDirection: 'column',
+            transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)'
+          }}
+        >
+          {/* SIDEBAR HEADER */}
+          <div style={{
+            padding: '1rem 1.25rem',
+            backgroundColor: '#0F172A',
+            color: '#FFFFFF',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            borderBottom: '1px solid #1E293B'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+              <div style={{
+                padding: '0.45rem',
+                borderRadius: '8px',
+                backgroundColor: 'rgba(56, 189, 248, 0.15)',
+                color: '#38BDF8',
+                display: 'flex'
+              }}>
+                <FiCpu size={18} />
+              </div>
+              <div>
+                <h3 style={{ margin: 0, fontSize: '0.925rem', fontWeight: '700', color: '#FFFFFF' }}>
+                  Agentic AI Copilot
+                </h3>
+                <div style={{ fontSize: '0.7rem', color: '#94A3B8', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10B981' }} />
+                  <span>Right Sidebar • Active</span>
                 </div>
               </div>
+            </div>
 
-              <button
-                type="button"
-                onClick={() => setIsOpen(false)}
+            {/* COLLAPSE BUTTON */}
+            <button
+              type="button"
+              onClick={toggleCollapse}
+              title="Ciutkan Sidebar (Collapse)"
+              style={{
+                background: 'rgba(255, 255, 255, 0.08)',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                borderRadius: '6px',
+                color: '#94A3B8',
+                cursor: 'pointer',
+                padding: '0.35rem 0.5rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+                fontSize: '0.725rem',
+                fontWeight: '600'
+              }}
+              onMouseOver={(e) => e.currentTarget.style.color = '#FFFFFF'}
+              onMouseOut={(e) => e.currentTarget.style.color = '#94A3B8'}
+            >
+              <span>Collapse</span>
+              <FiChevronRight size={16} />
+            </button>
+          </div>
+
+          {/* REGISTERED TOOL BADGES */}
+          <div style={{
+            padding: '0.5rem 1rem',
+            backgroundColor: '#1E293B',
+            borderBottom: '1px solid #334155',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.4rem',
+            overflowX: 'auto'
+          }}>
+            <span style={{ fontSize: '0.68rem', fontWeight: '700', color: '#94A3B8', textTransform: 'uppercase', flexShrink: 0 }}>
+              Tools:
+            </span>
+            {AGENT_TOOLS.map(tool => (
+              <span
+                key={tool.name}
                 style={{
-                  background: 'transparent',
-                  border: 'none',
-                  color: '#94A3B8',
-                  cursor: 'pointer',
-                  padding: '0.35rem',
-                  display: 'flex'
+                  fontSize: '0.65rem',
+                  fontWeight: '600',
+                  padding: '0.12rem 0.4rem',
+                  borderRadius: '4px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                  color: '#E2E8F0',
+                  whiteSpace: 'nowrap',
+                  fontFamily: 'monospace'
                 }}
               >
-                <FiX size={20} />
-              </button>
-            </div>
-
-            {/* REGISTERED TOOLS BADGES */}
-            <div style={{
-              padding: '0.625rem 1.25rem',
-              backgroundColor: '#1E293B',
-              borderBottom: '1px solid #334155',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              overflowX: 'auto'
-            }}>
-              <span style={{ fontSize: '0.7rem', fontWeight: '700', color: '#94A3B8', textTransform: 'uppercase', flexShrink: 0 }}>
-                Available Tools:
+                ⚡ {tool.name}
               </span>
-              {AGENT_TOOLS.map(tool => (
-                <span
-                  key={tool.name}
-                  style={{
-                    fontSize: '0.68rem',
-                    fontWeight: '600',
-                    padding: '0.15rem 0.45rem',
-                    borderRadius: '4px',
-                    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                    color: '#E2E8F0',
-                    whiteSpace: 'nowrap',
-                    fontFamily: 'monospace'
-                  }}
-                >
-                  ⚡ {tool.name}
-                </span>
-              ))}
-            </div>
+            ))}
+          </div>
 
-            {/* CHAT MESSAGES BODY */}
-            <div style={{
-              flex: 1,
-              padding: '1.25rem',
-              overflowY: 'auto',
-              backgroundColor: '#F8FAFC',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '1rem'
-            }}>
-              {messages.map((msg, index) => (
-                <div
-                  key={index}
-                  style={{
-                    alignSelf: msg.sender === 'user' ? 'flex-end' : 'flex-start',
-                    maxWidth: '90%'
-                  }}
-                >
-                  {/* THOUGHT PROCESS & TOOL EXECUTION LOG BADGE */}
-                  {msg.sender === 'ai' && msg.thoughts && msg.thoughts.length > 0 && (
-                    <div style={{
-                      backgroundColor: '#1E293B',
-                      borderRadius: '8px',
-                      padding: '0.625rem 0.875rem',
-                      marginBottom: '0.5rem',
-                      fontSize: '0.725rem',
-                      fontFamily: 'monospace',
-                      color: '#38BDF8',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '0.25rem',
-                      borderLeft: '3px solid #0284C7'
-                    }}>
-                      {msg.thoughts.map((th, tIdx) => (
-                        <div key={tIdx} style={{ lineHeight: 1.4 }}>
-                          {th}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
+          {/* CHAT MESSAGES BODY */}
+          <div style={{
+            flex: 1,
+            padding: '1rem',
+            overflowY: 'auto',
+            backgroundColor: '#F8FAFC',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.875rem'
+          }}>
+            {messages.map((msg, index) => (
+              <div
+                key={index}
+                style={{
+                  alignSelf: msg.sender === 'user' ? 'flex-end' : 'flex-start',
+                  maxWidth: '92%'
+                }}
+              >
+                {/* THOUGHT PROCESS & TOOL LOG BADGE */}
+                {msg.sender === 'ai' && msg.thoughts && msg.thoughts.length > 0 && (
                   <div style={{
-                    padding: '0.875rem 1.15rem',
-                    borderRadius: msg.sender === 'user' ? '16px 16px 2px 16px' : '16px 16px 16px 2px',
-                    backgroundColor: msg.sender === 'user' ? '#0284C7' : '#FFFFFF',
-                    color: msg.sender === 'user' ? '#FFFFFF' : '#0F172A',
-                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
-                    border: msg.sender === 'user' ? 'none' : '1px solid #E2E8F0',
-                    fontSize: '0.875rem',
-                    lineHeight: '1.5',
-                    whiteSpace: 'pre-wrap'
+                    backgroundColor: '#1E293B',
+                    borderRadius: '8px',
+                    padding: '0.5rem 0.75rem',
+                    marginBottom: '0.4rem',
+                    fontSize: '0.7rem',
+                    fontFamily: 'monospace',
+                    color: '#38BDF8',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.2rem',
+                    borderLeft: '3px solid #0284C7'
                   }}>
-                    {msg.text}
+                    {msg.thoughts.map((th, tIdx) => (
+                      <div key={tIdx} style={{ lineHeight: 1.35 }}>
+                        {th}
+                      </div>
+                    ))}
                   </div>
-                </div>
-              ))}
+                )}
 
-              {loading && (
                 <div style={{
-                  alignSelf: 'flex-start',
-                  backgroundColor: '#FFFFFF',
-                  border: '1px solid #E2E8F0',
-                  borderRadius: '16px',
-                  padding: '0.875rem 1.15rem',
+                  padding: '0.75rem 1rem',
+                  borderRadius: msg.sender === 'user' ? '14px 14px 2px 14px' : '14px 14px 14px 2px',
+                  backgroundColor: msg.sender === 'user' ? '#0284C7' : '#FFFFFF',
+                  color: msg.sender === 'user' ? '#FFFFFF' : '#0F172A',
+                  boxShadow: '0 2px 6px rgba(0, 0, 0, 0.05)',
+                  border: msg.sender === 'user' ? 'none' : '1px solid #E2E8F0',
                   fontSize: '0.825rem',
-                  color: '#64748b',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.5rem'
+                  lineHeight: '1.45',
+                  whiteSpace: 'pre-wrap'
                 }}>
-                  <FiRefreshCw className="spin" style={{ color: '#0284C7' }} />
-                  <span>Agentic AI sedang berpikir & mengeksekusi tool...</span>
+                  {msg.text}
                 </div>
-              )}
-              <div ref={chatEndRef} />
-            </div>
+              </div>
+            ))}
 
-            {/* PRESET SHORTCUT BUTTONS */}
-            <div style={{
-              padding: '0.625rem 1rem',
+            {loading && (
+              <div style={{
+                alignSelf: 'flex-start',
+                backgroundColor: '#FFFFFF',
+                border: '1px solid #E2E8F0',
+                borderRadius: '12px',
+                padding: '0.75rem 1rem',
+                fontSize: '0.78rem',
+                color: '#64748b',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.4rem'
+              }}>
+                <FiRefreshCw className="spin" style={{ color: '#0284C7' }} />
+                <span>Agentic AI sedang mengeksekusi tool...</span>
+              </div>
+            )}
+            <div ref={chatEndRef} />
+          </div>
+
+          {/* PRESET SHORTCUT BUTTONS */}
+          <div style={{
+            padding: '0.5rem 0.875rem',
+            backgroundColor: '#FFFFFF',
+            borderTop: '1px solid #E2E8F0',
+            display: 'flex',
+            gap: '0.4rem',
+            overflowX: 'auto'
+          }}>
+            <button
+              type="button"
+              className="btn btn-secondary btn-sm"
+              style={{ fontSize: '0.7rem', padding: '0.2rem 0.5rem', whiteSpace: 'nowrap', height: 'auto' }}
+              onClick={() => handleSend('Buat tugas baru: Security Audit CSP')}
+            >
+              ✦ Task Security
+            </button>
+
+            <button
+              type="button"
+              className="btn btn-secondary btn-sm"
+              style={{ fontSize: '0.7rem', padding: '0.2rem 0.5rem', whiteSpace: 'nowrap', height: 'auto' }}
+              onClick={() => handleSend('Singkronkan data dengan Obsidian Vault')}
+            >
+              ✦ Sync Vault
+            </button>
+
+            <button
+              type="button"
+              className="btn btn-secondary btn-sm"
+              style={{ fontSize: '0.7rem', padding: '0.2rem 0.5rem', whiteSpace: 'nowrap', height: 'auto' }}
+              onClick={() => handleSend('Tampilkan laporan telemetri proyek')}
+            >
+              ✦ Telemetri
+            </button>
+          </div>
+
+          {/* INPUT FORM */}
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSend();
+            }}
+            style={{
+              padding: '0.875rem 1rem',
               backgroundColor: '#FFFFFF',
               borderTop: '1px solid #E2E8F0',
               display: 'flex',
-              gap: '0.5rem',
-              overflowX: 'auto'
-            }}>
-              <button
-                type="button"
-                className="btn btn-secondary btn-sm"
-                style={{ fontSize: '0.725rem', padding: '0.25rem 0.55rem', whiteSpace: 'nowrap', height: 'auto' }}
-                onClick={() => handleSend('Buat tugas baru: Security Audit & Verifikasi CSP')}
-              >
-                ✦ Buat Tugas Security
-              </button>
-
-              <button
-                type="button"
-                className="btn btn-secondary btn-sm"
-                style={{ fontSize: '0.725rem', padding: '0.25rem 0.55rem', whiteSpace: 'nowrap', height: 'auto' }}
-                onClick={() => handleSend('Singkronkan data dengan Obsidian Vault')}
-              >
-                ✦ Sync Obsidian
-              </button>
-
-              <button
-                type="button"
-                className="btn btn-secondary btn-sm"
-                style={{ fontSize: '0.725rem', padding: '0.25rem 0.55rem', whiteSpace: 'nowrap', height: 'auto' }}
-                onClick={() => handleSend('Tampilkan laporan telemetri proyek')}
-              >
-                ✦ Report Telemetri
-              </button>
-            </div>
-
-            {/* INPUT FORM */}
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleSend();
-              }}
-              style={{
-                padding: '1rem 1.25rem',
-                backgroundColor: '#FFFFFF',
-                borderTop: '1px solid #E2E8F0',
-                display: 'flex',
-                gap: '0.625rem'
-              }}
+              gap: '0.5rem'
+            }}
+          >
+            <input
+              type="text"
+              className="form-control"
+              style={{ fontSize: '0.825rem', borderRadius: '6px' }}
+              placeholder="Ketik perintah untuk Agentic AI..."
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              disabled={loading}
+            />
+            <button
+              type="submit"
+              className="btn btn-primary"
+              style={{ padding: '0 1rem', borderRadius: '6px', flexShrink: 0 }}
+              disabled={loading || !input.trim()}
             >
-              <input
-                type="text"
-                className="form-control"
-                style={{ fontSize: '0.875rem', borderRadius: '8px' }}
-                placeholder="Berikan perintah kepada Agentic AI (cth: Buat tugas baru...)..."
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                disabled={loading}
-              />
-              <button
-                type="submit"
-                className="btn btn-primary"
-                style={{ padding: '0 1.15rem', borderRadius: '8px', flexShrink: 0 }}
-                disabled={loading || !input.trim()}
-              >
-                <FiSend />
-              </button>
-            </form>
-          </div>
-        </div>
+              <FiSend />
+            </button>
+          </form>
+        </aside>
       )}
     </>
   );
