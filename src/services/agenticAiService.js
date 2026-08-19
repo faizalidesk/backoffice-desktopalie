@@ -48,12 +48,15 @@ export const agenticAiService = {
 
   // Call Google Gemini 1.5 Flash via Secure Backend Serverless API or Direct
   async callGeminiApi(prompt, systemInstruction = '') {
+    const defaultSystem = 'Anda adalah Desktop-Agentic, rekan AI yang sangat ramah, hangat, suportif, dan cerdas di platform Desktopalie Backoffice. Sapa pengguna dengan antusias, gunakan Bahasa Indonesia yang akrab, positif, dan terstruktur rapi dengan poin-poin yang mudah dipahami serta emoji yang menyenangkan (🚀, ✨, 💡, 📋, 😊). Selalu siap sedia membantu segala kebutuhan workspace.';
+    const finalSystem = systemInstruction || defaultSystem;
+
     // 1. First try secure Backend Serverless Route (/api/gemini)
     try {
       const backendResponse = await fetch('/api/gemini', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt, systemInstruction })
+        body: JSON.stringify({ prompt, systemInstruction: finalSystem })
       });
 
       if (backendResponse.ok) {
@@ -78,16 +81,13 @@ export const agenticAiService = {
         }
       ],
       generationConfig: {
-        temperature: 0.4,
+        temperature: 0.5,
         maxOutputTokens: 1000
+      },
+      systemInstruction: {
+        parts: [{ text: finalSystem }]
       }
     };
-
-    if (systemInstruction) {
-      body.systemInstruction = {
-        parts: [{ text: systemInstruction }]
-      };
-    }
 
     const response = await fetch(url, {
       method: 'POST',
@@ -116,10 +116,10 @@ export const agenticAiService = {
 
     thoughts.push(`🤖 [Agent Thought] Menganalisis intent dengan ${apiKey ? '⚡ Google Gemini 1.5 Flash' : 'Smart Rule Router'}...`);
 
-    // Intent 0: Greetings (Hi / Halo / Hello)
-    if (text === 'hi' || text === 'halo' || text === 'hello' || text === 'hey' || text === 'p') {
-      thoughts.push('👋 [Agent Reasoning] Menyapa pengguna & memaparkan status kesiapan Desktop-Agentic...');
-      responseText = `Halo! 👋 Saya adalah **Desktop-Agentic** di Desktopalie Backoffice.\n\nSaya siap membantu Anda mengeksekusi berbagai tugas otomatis:\n- 📋 **Update PRD** (contoh: *"Update PRD: tambahkan modul Desktop-Agentic & integrasi Gemini"*)\n- 📝 **Buat Tugas Baru** (contoh: *"Buat tugas baru: Security Audit & Verifikasi CSP"*)\n- 🔄 **Sinkronkan Obsidian** (contoh: *"Singkronkan data dengan Obsidian Vault"*)\n- 📊 **Cek Telemetri** (contoh: *"Tampilkan laporan telemetri proyek"*)\n- 📄 **Buat Dokumentasi** (contoh: *"Buat catatan dokumentasi arsitektur"*)\n\nApa yang ingin Anda eksekusi hari ini? 🚀`;
+    // Intent 0: Friendly Greetings (Hi / Halo / Hello / Pagi / Malam)
+    if (text === 'hi' || text === 'halo' || text === 'hello' || text === 'hey' || text === 'p' || text.includes('selamat pagi') || text.includes('selamat sore') || text.includes('selamat malam')) {
+      thoughts.push('👋 [Agent Reasoning] Menyapa pengguna dengan hangat & ramah...');
+      responseText = `Halo! Senang sekali bisa berjumpa dengan Anda! 👋😊\n\nSaya adalah **Desktop-Agentic**, asisten pribadi cerdas Anda di Desktopalie Backoffice. Saya siap membantu segala kebutuhan sistem Anda:\n\n- 📋 **Update PRD** (contoh: *"Update PRD: tambahkan modul baru"*)\n- 📝 **Buat Tugas Baru** (contoh: *"Buat tugas baru: Review performa database"*)\n- 🔄 **Sinkronkan Obsidian** (contoh: *"Singkronkan data dengan Obsidian Vault"*)\n- 📊 **Cek Telemetri Proyek** (contoh: *"Tampilkan laporan telemetri proyek"*)\n- 📄 **Buat Dokumentasi** (contoh: *"Buat catatan arsitektur sistem"*)\n\nAda yang bisa saya bantu eksekusi untuk memudahkan pekerjaan Anda hari ini? 🚀✨`;
     }
     // Intent 1: Update PRD (Product Requirement Document)
     else if (text.includes('update prd') || text.includes('perbarui prd') || text.includes('ubah prd') || text.includes('tambah prd') || text.includes('edit prd') || (text.includes('prd') && (text.includes('tambah') || text.includes('update')))) {
@@ -149,10 +149,10 @@ export const agenticAiService = {
         toolExecuted = 'update_prd';
         resultPayload = { docId: prdDoc.id, title: prdDoc.title };
         thoughts.push(`✅ [Tool Output] PRD Document "${prdDoc.title}" berhasil diperbarui!`);
-        responseText = `Dokumen **PRD (Product Requirement Document)** telah berhasil diperbarui di database! 📋✨\n\n- **Dokumen Master**: \`${prdDoc.title}\`\n- **Pembaruan Ditambahkan**: "${updateNote}"\n- **Status**: Tersimpan di Supabase & siap disinkronkan ke Obsidian Vault.`;
+        responseText = `Bagus sekali! Dokumen **PRD (Product Requirement Document)** telah berhasil saya perbarui di database! 📋✨\n\n- 📄 **Dokumen Master**: \`${prdDoc.title}\`\n- 💡 **Pembaruan Ditambahkan**: "${updateNote}"\n- 🔄 **Status Sinkronisasi**: Data tersimpan aman di Supabase & siap Anda sinkronkan ke Obsidian Vault.\n\nAda bagian lain dari PRD yang ingin Anda sempurnakan? 😊`;
       } catch (err) {
         thoughts.push(`❌ [Tool Error] Gagal memperbarui PRD: ${err.message}`);
-        responseText = `Gagal memperbarui PRD: ${err.message}`;
+        responseText = `Mohon maaf, terjadi kendala saat memperbarui PRD: ${err.message}. Mari kita coba sekali lagi ya! 😊`;
       }
     }
     // Intent 2: Create Task (Buat Tugas)
@@ -182,17 +182,17 @@ export const agenticAiService = {
         
         if (apiKey) {
           try {
-            const geminiResponse = await this.callGeminiApi(`User meminta membuat tugas: "${userInput}". Tugas berhasil dibuat dengan ID: ${created.id}, Judul: "${created.title}", Status: "${created.status}", Prioritas: "${created.priority}". Buat respons konfirmasi yang ramah dan profesional dalam Bahasa Indonesia sebagai Desktop-Agentic.`);
+            const geminiResponse = await this.callGeminiApi(`User meminta membuat tugas: "${userInput}". Tugas berhasil dibuat dengan ID: ${created.id}, Judul: "${created.title}", Status: "${created.status}", Prioritas: "${created.priority}". Buat respons konfirmasi yang sangat ramah, hangat, dan positif dalam Bahasa Indonesia sebagai Desktop-Agentic.`);
             if (geminiResponse) responseText = geminiResponse;
           } catch (e) {}
         }
         
         if (!responseText) {
-          responseText = `Tugas baru **"${created.title}"** telah berhasil dibuat oleh **Desktop-Agentic** dan ditambahkan ke papan Kanban **To-Do Board**! Status: \`${created.status}\`, Prioritas: \`${created.priority}\`.`;
+          responseText = `Siap! Tugas baru **"${created.title}"** telah berhasil saya buatkan dan langsung masuk ke papan Kanban **To-Do Board** Anda! 📝✨\n\n- 🎯 **Status**: \`${created.status}\`\n- ⚡ **Prioritas**: \`${created.priority}\`\n- 📂 **Kategori**: \`${created.category}\`\n\nSemangat menyelesaikan tugasnya! Jika butuh bantuan lain, kabari saya ya! 😊`;
         }
       } catch (err) {
         thoughts.push(`❌ [Tool Error] Gagal mengeksekusi create_task: ${err.message}`);
-        responseText = `Maaf, terjadi kendala saat membuat tugas: ${err.message}`;
+        responseText = `Mohon maaf, terjadi kendala saat membuat tugas: ${err.message}. Kita coba ulangi ya! 😊`;
       }
     }
     // Intent 3: Sync Obsidian Vault
@@ -203,10 +203,10 @@ export const agenticAiService = {
         toolExecuted = 'sync_obsidian_vault';
         resultPayload = { count: docs.length };
         thoughts.push(`✅ [Tool Output] Tool sync_obsidian_vault selesai! Total ${docs.length} dokumen tersinkron.`);
-        responseText = `Berhasil menyinkronkan data dengan **Obsidian Vault**! **${docs.length} catatan dokumentasi** telah diperbarui dan disesuaikan dengan database.`;
+        responseText = `Hebat! Sinkronisasi data dengan **Obsidian Vault** berhasil diselesaikan! 🔄✨\n\nSebanyak **${docs.length} catatan dokumentasi & PRD** kini telah sepenuhnya selaras dengan basis data Backoffice Anda. Semua catatan siap Anda buka di Obsidian lokal! 🚀`;
       } catch (err) {
         thoughts.push(`❌ [Tool Error] ${err.message}`);
-        responseText = `Gagal menyinkronkan Obsidian Vault: ${err.message}`;
+        responseText = `Mohon maaf, sinkronisasi Obsidian mengalami kendala: ${err.message}.`;
       }
     }
     // Intent 4: Create Documentation / Note
@@ -228,7 +228,7 @@ export const agenticAiService = {
         toolExecuted = 'create_documentation';
         resultPayload = createdDoc;
         thoughts.push(`✅ [Tool Output] Tool create_documentation berhasil dieksekusi! ID: ${createdDoc.id}`);
-        responseText = `Dokumentasi baru **"${createdDoc.title}"** berhasil dibuat dan ditambahkan ke **System Documentation Manager** & Obsidian Vault!`;
+        responseText = `Dokumentasi baru bertajuk **"${createdDoc.title}"** telah berhasil saya buatkan! 📄✨\n\nCatatan ini otomatis tersimpan rapi di menu **System Documentation Manager** dan siap diakses di Obsidian Vault. Ada materi lain yang ingin ditambahkan ke dalamnya? 😊`;
       } catch (err) {
         thoughts.push(`❌ [Tool Error] ${err.message}`);
         responseText = `Gagal membuat dokumentasi: ${err.message}`;
@@ -246,7 +246,7 @@ export const agenticAiService = {
         toolExecuted = 'get_telemetry_report';
         resultPayload = { todos: todos.length, projects: projects.length, docs: docs.length };
         thoughts.push('✅ [Tool Output] Telemetri berhasil dikumpulkan.');
-        responseText = `### 📊 Laporan Telemetri Sistem Backoffice:\n- **Total Tugas Kanban**: ${todos.length} items\n- **Portofolio Proyek**: ${projects.length} projects\n- **Dokumentasi & Notes**: ${docs.length} notes\n- **Status Sistem**: 100% Operational & Live on Vercel.`;
+        responseText = `Berikut adalah **Laporan Ringkasan Eksekutif Sistem Backoffice** Anda saat ini: 📊✨\n\n- 📝 **Tugas Kanban Aktif**: ${todos.length} item\n- 💼 **Portofolio Proyek Live**: ${projects.length} proyek\n- 📄 **Dokumentasi & PRD**: ${docs.length} dokumen\n- 🟢 **Status Infrastruktur**: 100% Operational & Live di Vercel Global Network\n\nSistem berjalan dengan sangat prima! Ada bagian tertentu yang ingin Anda teliti lebih dalam? 😊`;
       } catch (err) {
         thoughts.push(`❌ [Tool Error] ${err.message}`);
         responseText = `Gagal mengumpulkan telemetri: ${err.message}`;
@@ -259,20 +259,20 @@ export const agenticAiService = {
         try {
           const geminiOutput = await this.callGeminiApi(
             userInput, 
-            'Anda adalah Desktop-Agentic di platform Desktopalie Backoffice. Anda bertugas membantu developer dan administrator mengelola sistem, memperbarui PRD, to-do board, portofolio proyek, dan Obsidian Vault. Berikan jawaban yang cerdas, ringkas, terstruktur, dan bersahabat dalam Bahasa Indonesia.'
+            'Anda adalah Desktop-Agentic, rekan AI yang sangat ramah, hangat, suportif, dan cerdas di platform Desktopalie Backoffice. Sapa pengguna dengan antusias, gunakan Bahasa Indonesia yang akrab, positif, dan terstruktur rapi dengan poin-poin yang mudah dipahami serta emoji yang menyenangkan (🚀, ✨, 💡, 📋, 😊). Selalu siap sedia membantu segala kebutuhan workspace.'
           );
           if (geminiOutput) {
             responseText = geminiOutput;
           } else {
-            responseText = 'Gemini tidak memberikan respons teks. Silakan coba pertanyaan lain.';
+            responseText = 'Halo! Saya siap membantu Anda. Silakan beri tahu apa yang ingin Anda diskusikan atau kerjakan bersama saya ya! 😊✨';
           }
         } catch (err) {
           thoughts.push(`⚠️ [Gemini API Warning] ${err.message}`);
-          responseText = `Halo! Saya memproses pertanyaan Anda: "${userInput}".\n\nUntuk perintah otonom langsung, Anda bisa mencoba:\n- *"Update PRD: [Spesifikasi Baru]"*\n- *"Buat tugas baru: [Nama Tugas]"*\n- *"Singkronkan Obsidian Vault"*\n- *"Tampilkan laporan telemetri"*`;
+          responseText = `Halo! Saya memproses pesan Anda: "${userInput}".\n\nSaya selalu siap membantu Anda menjalankan berbagai aksi otomatis:\n- *"Update PRD: [Spesifikasi Baru]"*\n- *"Buat tugas baru: [Nama Tugas]"*\n- *"Singkronkan Obsidian Vault"*\n- *"Tampilkan laporan telemetri"* 😊✨`;
         }
       } else {
         thoughts.push('💡 [Agent Reasoning] Pertanyaan umum -> Memformulasikan jawaban bantuan Desktop-Agentic...');
-        responseText = `Halo! Saya adalah **Desktop-Agentic** di Desktopalie Backoffice. Saya memiliki akses langsung ke sistem (*Tool Registry*)!\n\n**Perintah yang bisa Anda berikan:**\n1. *"Update PRD: tambahkan modul Desktop-Agentic"* $\\rightarrow$ *(Otomatis memperbarui PRD)*\n2. *"Buat tugas baru: Pengujian Security Audit"* $\\rightarrow$ *(Otomatis membuat Kanban task)*\n3. *"Singkronkan Obsidian Vault"* $\\rightarrow$ *(Menjalankan sync dokumentasi)*\n4. *"Tampilkan laporan telemetri proyek"* $\\rightarrow$ *(Mengkompilasi ringkasan data)*`;
+        responseText = `Halo! Senang mengobrol dengan Anda! 😊 Saya adalah **Desktop-Agentic** di Desktopalie Backoffice.\n\nSaya bisa membantu Anda melakukan banyak hal hebat:\n1. 📋 *"Update PRD: tambahkan modul baru"* $\\rightarrow$ *(Otomatis memperbarui PRD)*\n2. 📝 *"Buat tugas baru: Pengujian Security Audit"* $\\rightarrow$ *(Membuat tugas Kanban)*\n3. 🔄 *"Singkronkan Obsidian Vault"* $\\rightarrow$ *(Menyelaraskan catatan markdown)*\n4. 📊 *"Tampilkan laporan telemetri proyek"* $\\rightarrow$ *(Melihat metrik kesehatan sistem)*\n\nAda yang ingin kita mulai sekarang? 🚀✨`;
       }
     }
 

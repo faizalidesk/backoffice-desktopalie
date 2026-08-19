@@ -331,38 +331,57 @@ export default function AgenticAiDrawer() {
         </button>
       </div>
 
-      {/* COMPACT INPUT FORM */}
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleSend();
-        }}
-        style={{
-          padding: '12px 14px',
-          backgroundColor: 'var(--bg-card)',
-          borderTop: '1px solid var(--border-color)',
-          display: 'flex',
-          gap: '8px'
-        }}
-      >
-        <input
-          type="text"
-          className="form-control"
-          style={{ fontSize: '0.84rem', borderRadius: '8px', padding: '8px 12px', height: '38px' }}
-          placeholder="Ketik instruksi untuk Desktop-Agentic..."
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          disabled={loading}
-        />
-        <button
-          type="submit"
-          className="btn btn-primary"
-          style={{ width: '38px', height: '38px', padding: 0, borderRadius: '8px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-          disabled={loading || !input.trim()}
+      {/* COMPACT INPUT FORM & AI MODEL ATTRIBUTION */}
+      <div style={{
+        padding: '10px 14px 12px 14px',
+        backgroundColor: 'var(--bg-card)',
+        borderTop: '1px solid var(--border-color)',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '8px'
+      }}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSend();
+          }}
+          style={{
+            display: 'flex',
+            gap: '8px'
+          }}
         >
-          <FiSend size={15} />
-        </button>
-      </form>
+          <input
+            type="text"
+            className="form-control"
+            style={{ fontSize: '0.84rem', borderRadius: '8px', padding: '8px 12px', height: '38px' }}
+            placeholder="Ketik instruksi untuk Desktop-Agentic..."
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            disabled={loading}
+          />
+          <button
+            type="submit"
+            className="btn btn-primary"
+            style={{ width: '38px', height: '38px', padding: 0, borderRadius: '8px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            disabled={loading || !input.trim()}
+          >
+            <FiSend size={15} />
+          </button>
+        </form>
+
+        {/* AI MODEL INFO BADGE */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '5px',
+          fontSize: '0.68rem',
+          color: 'var(--text-muted)'
+        }}>
+          <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10B981' }} />
+          <span>Powered by <strong style={{ color: 'var(--text-main)', fontWeight: '600' }}>Google Gemini 1.5 Flash</strong> & Tool Engine</span>
+        </div>
+      </div>
     </aside>
   );
 }
