@@ -4,6 +4,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { LanguageProvider } from './context/LanguageContext';
 import { FlavorProvider, useFlavor } from './context/FlavorContext';
+import { backofficeService } from './services/backofficeService';
 import { Toaster } from 'react-hot-toast';
 
 import Sidebar from './components/Sidebar';
@@ -32,6 +33,71 @@ import NotificationsManager from './pages/NotificationsManager';
 import TransactionsManager from './pages/TransactionsManager';
 
 import AgenticAiDrawer from './components/AgenticAiDrawer';
+
+// HOOK TO CHECK PLATFORM MAINTENANCE STATUS
+function usePlatformMaintenance(targetFlavorId) {
+  const [isMaintenance, setIsMaintenance] = useState(() => {
+    try {
+      const cached = localStorage.getItem(`desktopalie_maintenance_settings_${targetFlavorId}`) ||
+                     localStorage.getItem(`desktopalie_maint_${targetFlavorId}`);
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        return Boolean(
+          parsed && (
+            parsed.is_enabled === true ||
+            parsed.is_enabled === 'true' ||
+            parsed.is_enabled === 1 ||
+            parsed.is_enabled === '1'
+          )
+        );
+      }
+    } catch (e) {}
+    return false;
+  });
+
+  useEffect(() => {
+    let isMounted = true;
+    async function checkMaint() {
+      try {
+        const maintData = await backofficeService.getMaintenanceSettings(targetFlavorId);
+        if (isMounted) {
+          const isEnabled = Boolean(
+            maintData && (
+              maintData.is_enabled === true ||
+              maintData.is_enabled === 'true' ||
+              maintData.is_enabled === 1 ||
+              maintData.is_enabled === '1'
+            )
+          );
+          setIsMaintenance(isEnabled);
+          if (isEnabled) {
+            localStorage.setItem(`desktopalie_maintenance_settings_${targetFlavorId}`, JSON.stringify(maintData));
+            localStorage.setItem(`desktopalie_maint_${targetFlavorId}`, JSON.stringify(maintData));
+          } else {
+            localStorage.removeItem(`desktopalie_maintenance_settings_${targetFlavorId}`);
+            localStorage.removeItem(`desktopalie_maint_${targetFlavorId}`);
+          }
+        }
+      } catch (e) {}
+    }
+
+    checkMaint();
+
+    const handleStorage = (e) => {
+      if (!e || !e.key || e.key.includes('maintenance') || e.key.includes('maint')) {
+        checkMaint();
+      }
+    };
+
+    window.addEventListener('storage', handleStorage);
+    return () => {
+      isMounted = false;
+      window.removeEventListener('storage', handleStorage);
+    };
+  }, [targetFlavorId]);
+
+  return isMaintenance;
+}
 
 // MAIN BACKOFFICE PROTECTED LAYOUT (WITH SIDEBAR)
 function ProtectedLayout({ children }) {
@@ -131,21 +197,40 @@ function DashboardRoute() {
   return <Dashboard />;
 }
 
-// SMART LOGIN ROUTE FOR SUBDOMAINS AND BACKOFFICE
-function LoginRoute() {
+// SMART LOGIN ROUTE FOR SUBDOMAINS AND BACKOFFICE (WITH STRICT MAINTENANCE GUARD)
+function LoginRoute({ targetFlavor = null }) {
+  const { flavorId } = useFlavor();
+  const currentFlavor = targetFlavor || flavorId;
+  const isMaintenance = usePlatformMaintenance(currentFlavor);
   const hostname = typeof window !== 'undefined' ? window.location.hostname.toLowerCase() : '';
+  const isBackofficeDomain = hostname.startsWith('back.') || hostname.startsWith('backoffice.') || hostname === 'back.desktopalie.my.id';
+
+  // STRICT MAINTENANCE LOCK: Block login on public platforms when maintenance is enabled
+  if (!isBackofficeDomain && isMaintenance) {
+    return <PublicPlatformLanding />;
+  }
+
   const isSubplatformSubdomain = hostname.startsWith('beta.') || hostname.startsWith('gamma.') || hostname.startsWith('delta.');
 
-  if (isSubplatformSubdomain) {
+  if (isSubplatformSubdomain || targetFlavor) {
     return <SubPlatformLogin />;
   }
 
   return <Login />;
 }
 
-// SMART PORTAL ROUTE FOR SUBDOMAINS
+// SMART PORTAL ROUTE FOR SUBDOMAINS (WITH STRICT MAINTENANCE GUARD)
 function PortalRoute() {
   const { flavorId } = useFlavor();
+  const isMaintenance = usePlatformMaintenance(flavorId);
+  const hostname = typeof window !== 'undefined' ? window.location.hostname.toLowerCase() : '';
+  const isBackofficeDomain = hostname.startsWith('back.') || hostname.startsWith('backoffice.') || hostname === 'back.desktopalie.my.id';
+
+  // STRICT MAINTENANCE LOCK: Block portal on public platforms when maintenance is enabled
+  if (!isBackofficeDomain && isMaintenance) {
+    return <PublicPlatformLanding />;
+  }
+
   if (flavorId === 'platform2') return <SubPlatformProtectedLayout><PlatformBetaPortal /></SubPlatformProtectedLayout>;
   if (flavorId === 'platform3') return <SubPlatformProtectedLayout><PlatformGammaPortal /></SubPlatformProtectedLayout>;
   if (flavorId === 'platform4') return <SubPlatformProtectedLayout><PlatformDeltaPortal /></SubPlatformProtectedLayout>;
@@ -210,15 +295,15 @@ export default function App() {
                   <Route path="/login" element={<LoginRoute />} />
                   <Route path="/portal" element={<PortalRoute />} />
 
-                  {/* SUB-PATH ALIAS ROUTES FOR COMPATIBILITY */}
-                  <Route path="/beta/login" element={<SubPlatformLogin />} />
-                  <Route path="/gamma/login" element={<SubPlatformLogin />} />
-                  <Route path="/delta/login" element={<SubPlatformLogin />} />
-                  <Route path="/platform/:platformName/login" element={<SubPlatformLogin />} />
+                  {/* SUB-PATH ALIAS ROUTES FOR COMPATIBILITY (WITH STRICT MAINTENANCE GUARD) */}
+                  <Route path="/beta/login" element={<LoginRoute targetFlavor="platform2" />} />
+                  <Route path="/gamma/login" element={<LoginRoute targetFlavor="platform3" />} />
+                  <Route path="/delta/login" element={<LoginRoute targetFlavor="platform4" />} />
+                  <Route path="/platform/:platformName/login" element={<LoginRoute />} />
 
-                  <Route path="/beta/portal" element={<SubPlatformProtectedLayout><PlatformBetaPortal /></SubPlatformProtectedLayout>} />
-                  <Route path="/gamma/portal" element={<SubPlatformProtectedLayout><PlatformGammaPortal /></SubPlatformProtectedLayout>} />
-                  <Route path="/delta/portal" element={<SubPlatformProtectedLayout><PlatformDeltaPortal /></SubPlatformProtectedLayout>} />
+                  <Route path="/beta/portal" element={<PortalRoute />} />
+                  <Route path="/gamma/portal" element={<PortalRoute />} />
+                  <Route path="/delta/portal" element={<PortalRoute />} />
 
                   {/* AUTH & MAIN BACKOFFICE ROUTES */}
                   <Route path="/register" element={<Register />} />

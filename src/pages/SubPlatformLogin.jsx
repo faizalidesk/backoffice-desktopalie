@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useFlavor } from '../context/FlavorContext';
-import { useNavigate, Link, useParams } from 'react-router-dom';
+import { useNavigate, Link, useParams, Navigate } from 'react-router-dom';
+import { backofficeService } from '../services/backofficeService';
 import { toast } from 'react-hot-toast';
 import { FiLock, FiMail, FiArrowRight, FiAlertCircle, FiMoon, FiSun, FiGlobe, FiShield, FiCpu, FiTruck } from 'react-icons/fi';
 import { FaGoogle } from 'react-icons/fa';
@@ -20,6 +21,7 @@ export default function SubPlatformLogin() {
   const [submitting, setSubmitting] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [isMaintBlocked, setIsMaintBlocked] = useState(false);
 
   useEffect(() => {
     if (platformName) {
@@ -28,6 +30,26 @@ export default function SubPlatformLogin() {
       else if (platformName.toLowerCase() === 'delta') switchFlavor('platform4');
     }
   }, [platformName]);
+
+  useEffect(() => {
+    async function checkMaintenance() {
+      const hostname = typeof window !== 'undefined' ? window.location.hostname.toLowerCase() : '';
+      const isBackoffice = hostname.startsWith('back.') || hostname.startsWith('backoffice.') || hostname === 'back.desktopalie.my.id';
+      if (!isBackoffice) {
+        try {
+          const maint = await backofficeService.getMaintenanceSettings(flavorId);
+          if (maint && (maint.is_enabled === true || maint.is_enabled === 'true' || maint.is_enabled === 1 || maint.is_enabled === '1')) {
+            setIsMaintBlocked(true);
+          }
+        } catch (e) {}
+      }
+    }
+    checkMaintenance();
+  }, [flavorId]);
+
+  if (isMaintBlocked) {
+    return <Navigate to="/" replace />;
+  }
 
   const primaryColor = activeFlavor?.theme?.colorPrimary || '#3B82F6';
 

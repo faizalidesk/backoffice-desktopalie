@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useFlavor } from '../context/FlavorContext';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, Navigate } from 'react-router-dom';
+import { backofficeService } from '../services/backofficeService';
 import { toast } from 'react-hot-toast';
 import { FiLock, FiMail, FiArrowRight, FiAlertCircle, FiMoon, FiSun } from 'react-icons/fi';
 import DesktopalieMark from '../components/DesktopalieMark';
@@ -12,6 +13,7 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [isMaintBlocked, setIsMaintBlocked] = useState(false);
   const { login } = useAuth();
   const { isDarkMode, toggleTheme } = useTheme();
   const { activeFlavor, flavorId, switchFlavor, isMainDesktopalie } = useFlavor();
@@ -25,6 +27,26 @@ export default function Login() {
       localStorage.setItem('desktopalie_flavor', 'platform1');
     }
   }, [flavorId]);
+
+  useEffect(() => {
+    async function checkMaintenance() {
+      const hostname = typeof window !== 'undefined' ? window.location.hostname.toLowerCase() : '';
+      const isBackoffice = hostname.startsWith('back.') || hostname.startsWith('backoffice.') || hostname === 'back.desktopalie.my.id';
+      if (!isBackoffice) {
+        try {
+          const maint = await backofficeService.getMaintenanceSettings('platform1');
+          if (maint && (maint.is_enabled === true || maint.is_enabled === 'true' || maint.is_enabled === 1 || maint.is_enabled === '1')) {
+            setIsMaintBlocked(true);
+          }
+        } catch (e) {}
+      }
+    }
+    checkMaintenance();
+  }, []);
+
+  if (isMaintBlocked) {
+    return <Navigate to="/" replace />;
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
