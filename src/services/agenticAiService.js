@@ -289,7 +289,45 @@ ${ragKnowledge}
       }
     }
 
-    // 3. Fallback to Gemini Serverless Endpoint
+    // 3. Direct client Google Gemini API Key if key starts with AIzaSy or model is gemini
+    if (apiKey && (currentModel.startsWith('gemini') || apiKey.startsWith('AIzaSy'))) {
+      try {
+        const geminiModel = currentModel.startsWith('gemini') ? currentModel : 'gemini-2.0-flash';
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent?key=${apiKey}`;
+        
+        let contents = [];
+        if (conversationHistory && conversationHistory.length > 0) {
+          contents = conversationHistory.map(m => ({
+            role: m.sender === 'user' ? 'user' : 'model',
+            parts: [{ text: m.text }]
+          }));
+          if (prompt) contents.push({ role: 'user', parts: [{ text: prompt }] });
+        } else {
+          contents = [{ role: 'user', parts: [{ text: prompt }] }];
+        }
+
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents,
+            generationConfig: { temperature: 0.5, maxOutputTokens: 1500 },
+            systemInstruction: { parts: [{ text: customSystemInstruction }] }
+          })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          const candidate = data.candidates?.[0];
+          const text = candidate?.content?.parts?.[0]?.text || '';
+          if (text) return { text, reasoning: null, model: geminiModel };
+        }
+      } catch (e) {
+        console.warn('Direct Gemini API call error:', e);
+      }
+    }
+
+    // 4. Fallback to Gemini Serverless Endpoint
     try {
       const geminiResponse = await fetch('/api/gemini', {
         method: 'POST',
