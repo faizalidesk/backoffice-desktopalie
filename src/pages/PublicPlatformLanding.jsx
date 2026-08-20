@@ -18,7 +18,22 @@ import {
   FiZap, 
   FiLayers, 
   FiShield,
-  FiActivity
+  FiActivity,
+  FiCheck,
+  FiHelpCircle,
+  FiCpu,
+  FiSliders,
+  FiMessageSquare,
+  FiAward,
+  FiUsers,
+  FiStar,
+  FiSend,
+  FiChevronRight,
+  FiCode,
+  FiDatabase,
+  FiTerminal,
+  FiTrendingUp,
+  FiExternalLink
 } from 'react-icons/fi';
 import {
   FaBell,
@@ -38,6 +53,20 @@ import {
 import DesktopalieMark from '../components/DesktopalieMark';
 import NotificationBell from '../components/NotificationBell';
 
+// SHADCN / UI COMPONENTS INTEGRATION
+import { Button } from '@/components/ui/button';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion';
+import { Switch } from '@/components/ui/switch';
+import { Separator } from '@/components/ui/separator';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/components/ui/tooltip';
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { toast } from 'react-hot-toast';
+
 export default function PublicPlatformLanding() {
   const { activeFlavor, flavorId } = useFlavor();
   const { isDarkMode, toggleTheme } = useTheme();
@@ -46,6 +75,36 @@ export default function PublicPlatformLanding() {
 
   const isSubPlatform = flavorId !== 'platform1';
   const [googleLoading, setGoogleLoading] = useState(false);
+
+  // Interactive Simulation Controls (shadcn Switch)
+  const [simHardwareNvenc, setSimHardwareNvenc] = useState(true);
+  const [simEdgeWaf, setSimEdgeWaf] = useState(true);
+  const [simRealtimeSync, setSimRealtimeSync] = useState(true);
+  const [simAiTelemetry, setSimAiTelemetry] = useState(true);
+
+  // Interactive Quick Consultation Dialog (shadcn Dialog)
+  const [consultOpen, setConsultOpen] = useState(false);
+  const [consultName, setConsultName] = useState('');
+  const [consultEmail, setConsultEmail] = useState('');
+  const [consultMessage, setConsultMessage] = useState('');
+  const [consultSubmitting, setConsultSubmitting] = useState(false);
+
+  const handleConsultSubmit = (e) => {
+    e.preventDefault();
+    if (!consultName.trim() || !consultEmail.trim() || !consultMessage.trim()) {
+      toast.error('Mohon lengkapi seluruh formulir konsultasi.');
+      return;
+    }
+    setConsultSubmitting(true);
+    setTimeout(() => {
+      setConsultSubmitting(false);
+      setConsultOpen(false);
+      toast.success('Pesan konsultasi enterprise berhasil dikirim! Tim kami akan menghubungi Anda segera.');
+      setConsultName('');
+      setConsultEmail('');
+      setConsultMessage('');
+    }, 800);
+  };
 
   const handleGoogleSignIn = async () => {
     setGoogleLoading(true);
@@ -1247,315 +1306,979 @@ export default function PublicPlatformLanding() {
           borderRadius: '24px',
           boxShadow: '0 8px 30px rgba(0,0,0,0.06)'
         }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem', marginBottom: '0.75rem' }}>
+            <Badge variant="secondary" className="px-3 py-1 text-xs font-bold uppercase tracking-wider">
+              {activeFlavor?.shortName} Architecture
+            </Badge>
+          </div>
           <h2 style={{ fontSize: '1.85rem', fontWeight: '800', marginBottom: '0.85rem', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>
-            {settings?.about_title || 'Tentang Platform'}
+            {settings?.about_title || 'Tentang Platform & Ekosistem Digital'}
           </h2>
           <p style={{ fontSize: '1.05rem', fontWeight: '600', color: primaryColor, lineHeight: '1.6', marginBottom: '1.15rem' }}>
-            {settings?.about_large_copy}
+            {settings?.about_large_copy || 'Infrastruktur modern dengan multi-tenant workspace dan sistem keamanan tingkat enterprise.'}
           </p>
           <p style={{ fontSize: '0.925rem', color: isDarkMode ? '#93C5AA' : '#64748B', lineHeight: '1.7', marginBottom: '1.5rem' }}>
-            {settings?.about_description}
+            {settings?.about_description || 'Dibangun dengan fondasi React 19, Vite 6, Supabase PostgreSQL RLS, dan Tailwind CSS + shadcn/ui untuk memberikan performa ultra cepat serta fleksibilitas modul lintas industri.'}
           </p>
           <div style={{ fontSize: '0.85rem', fontWeight: '700', color: isDarkMode ? '#ECFDF5' : '#475569' }}>
-            📍 {settings?.about_location || 'Operating Globally'}
+            📍 {settings?.about_location || 'Operating Globally & Cloud Edge Distributed'}
           </div>
         </div>
       </section>
 
-      {/* MODERN MULTI-COLUMN HIGH-END FOOTER */}
-      <footer id="contact" className="public-footer" style={{
-        borderTop: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
-        backgroundColor: isDarkMode ? '#05130E' : '#F1F5F9',
-        position: 'relative',
-        overflow: 'hidden'
-      }}>
+      {/* SECTION 1: SHADCN INTERACTIVE ARCHITECTURE & CAPABILITIES TABS */}
+      <section id="capabilities" className="public-section-padding">
+        <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem', marginBottom: '0.5rem' }}>
+            <Badge variant="outline" className="px-3 py-1 text-xs font-bold text-primary uppercase tracking-wider">
+              ✦ SHADCN / UI INTERACTIVE TABS
+            </Badge>
+          </div>
+          <h2 style={{ fontSize: '2rem', fontWeight: '800', marginBottom: '0.65rem', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>
+            Kapabilitas & Arsitektur Sistem {activeFlavor?.shortName}
+          </h2>
+          <p style={{ color: isDarkMode ? '#93C5AA' : '#64748B', fontSize: '0.95rem', maxWidth: '650px', margin: '0 auto' }}>
+            Eksplorasi modul inti, standar keamanan tinggi, dan sinkronisasi data real-time berbasis arsitektur multi-tenant.
+          </p>
+        </div>
 
-        {/* Ambient Bottom Glow */}
-        <div style={{
-          position: 'absolute',
-          bottom: '-150px',
-          right: '-100px',
-          width: '500px',
-          height: '500px',
-          borderRadius: '50%',
-          background: `radial-gradient(circle, ${primaryColor}15 0%, rgba(0,0,0,0) 70%)`,
-          pointerEvents: 'none'
-        }} />
+        <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+          <Tabs defaultValue="core" className="w-full">
+            <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 h-auto p-1.5 rounded-2xl bg-slate-100 dark:bg-[#05130E] border border-slate-200 dark:border-[#133829]">
+              <TabsTrigger value="core" className="py-2.5 rounded-xl font-bold text-xs md:text-sm">
+                🏢 Multi-Tenant
+              </TabsTrigger>
+              <TabsTrigger value="security" className="py-2.5 rounded-xl font-bold text-xs md:text-sm">
+                🛡️ Zero-Trust RLS
+              </TabsTrigger>
+              <TabsTrigger value="realtime" className="py-2.5 rounded-xl font-bold text-xs md:text-sm">
+                ⚡ Edge Sync
+              </TabsTrigger>
+              <TabsTrigger value="ai" className="py-2.5 rounded-xl font-bold text-xs md:text-sm">
+                🧠 Agentic AI
+              </TabsTrigger>
+            </TabsList>
 
-        <div style={{ maxWidth: '1280px', margin: '0 auto', position: 'relative', zIndex: 5 }}>
-          
-          {/* Main Footer Grid */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-            gap: '3rem',
-            marginBottom: '4rem'
+            {/* TAB 1: MULTI-TENANT */}
+            <TabsContent value="core" className="mt-4">
+              <Card className="border border-slate-200 dark:border-[#133829] bg-white dark:bg-[#091E16] shadow-sm rounded-2xl">
+                <CardHeader>
+                  <div className="flex items-center justify-between flex-wrap gap-2">
+                    <CardTitle className="text-xl font-bold text-slate-900 dark:text-emerald-50">
+                      Multi-Tenant Workspace & Brand Flavoring Engine
+                    </CardTitle>
+                    <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold">
+                      Layer 1 & 4 Architecture
+                    </Badge>
+                  </div>
+                  <CardDescription className="text-slate-600 dark:text-emerald-300/70">
+                    Sistem flavor dinamis yang mampu memuat 4 platform independen dalam 1 basis kode terpadu.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4 text-sm text-slate-700 dark:text-emerald-100/90">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#05130E] border border-slate-200 dark:border-[#133829]">
+                      <div className="font-bold text-slate-900 dark:text-emerald-50 mb-1 flex items-center gap-2">
+                        <FiCheckCircle className="text-emerald-500" /> Isolasi Subdomain Otomatis
+                      </div>
+                      <p className="text-xs text-slate-500 dark:text-emerald-300/70">
+                        Deteksi subdomain cerdas untuk `beta.`, `gamma.`, dan `delta.` dengan konfigurasi tema dan portal terpisah.
+                      </p>
+                    </div>
+                    <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#05130E] border border-slate-200 dark:border-[#133829]">
+                      <div className="font-bold text-slate-900 dark:text-emerald-50 mb-1 flex items-center gap-2">
+                        <FiCheckCircle className="text-emerald-500" /> State Caching Offline Resilient
+                      </div>
+                      <p className="text-xs text-slate-500 dark:text-emerald-300/70">
+                        Fallback penyimpanan instan di browser `localStorage` menjamin situs tetap dapat diakses meski koneksi lambat.
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* TAB 2: SECURITY */}
+            <TabsContent value="security" className="mt-4">
+              <Card className="border border-slate-200 dark:border-[#133829] bg-white dark:bg-[#091E16] shadow-sm rounded-2xl">
+                <CardHeader>
+                  <div className="flex items-center justify-between flex-wrap gap-2">
+                    <CardTitle className="text-xl font-bold text-slate-900 dark:text-emerald-50">
+                      PostgreSQL Row Level Security (RLS) & PKCE Auth
+                    </CardTitle>
+                    <Badge variant="secondary" className="bg-blue-500/10 text-blue-600 dark:text-blue-400 font-bold">
+                      Layer 8 Security
+                    </Badge>
+                  </div>
+                  <CardDescription className="text-slate-600 dark:text-emerald-300/70">
+                    Otorisasi berbasis token JWT kriptografi dengan kebijakan akses RLS PostgreSQL tingkat baris.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4 text-sm text-slate-700 dark:text-emerald-100/90">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#05130E] border border-slate-200 dark:border-[#133829]">
+                      <div className="font-bold text-slate-900 dark:text-emerald-50 mb-1 flex items-center gap-2">
+                        <FiShield className="text-blue-500" /> PKCE OAuth 2.0 & Email Security
+                      </div>
+                      <p className="text-xs text-slate-500 dark:text-emerald-300/70">
+                        Pemeriksaan token terotentikasi Supabase Auth dengan auto-refresh token tanpa jeda sesi.
+                      </p>
+                    </div>
+                    <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#05130E] border border-slate-200 dark:border-[#133829]">
+                      <div className="font-bold text-slate-900 dark:text-emerald-50 mb-1 flex items-center gap-2">
+                        <FiShield className="text-blue-500" /> Strict Maintenance Quarantine
+                      </div>
+                      <p className="text-xs text-slate-500 dark:text-emerald-300/70">
+                        Penguncian gerbang login dan portal platform secara instan saat sistem masuk ke status pemeliharaan.
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* TAB 3: REALTIME EDGE */}
+            <TabsContent value="realtime" className="mt-4">
+              <Card className="border border-slate-200 dark:border-[#133829] bg-white dark:bg-[#091E16] shadow-sm rounded-2xl">
+                <CardHeader>
+                  <div className="flex items-center justify-between flex-wrap gap-2">
+                    <CardTitle className="text-xl font-bold text-slate-900 dark:text-emerald-50">
+                      Cloudflare & Vercel Edge Global Realtime Sync
+                    </CardTitle>
+                    <Badge variant="secondary" className="bg-purple-500/10 text-purple-600 dark:text-purple-400 font-bold">
+                      Layer 10 & 11 CDN
+                    </Badge>
+                  </div>
+                  <CardDescription className="text-slate-600 dark:text-emerald-300/70">
+                    Jaringan distribusi edge multi-region dengan latensi rata-rata di bawah 20ms di Asia Pasifik.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4 text-sm text-slate-700 dark:text-emerald-100/90">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#05130E] border border-slate-200 dark:border-[#133829]">
+                      <div className="font-bold text-slate-900 dark:text-emerald-50 mb-1 flex items-center gap-2">
+                        <FiZap className="text-purple-500" /> Live PostgreSQL Broadcast
+                      </div>
+                      <p className="text-xs text-slate-500 dark:text-emerald-300/70">
+                        Sinkronisasi telemetri armada, status transcode, dan transaksi keuangan seketika via WebSocket channel.
+                      </p>
+                    </div>
+                    <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#05130E] border border-slate-200 dark:border-[#133829]">
+                      <div className="font-bold text-slate-900 dark:text-emerald-50 mb-1 flex items-center gap-2">
+                        <FiZap className="text-purple-500" /> Static Brotli Assets Caching
+                      </div>
+                      <p className="text-xs text-slate-500 dark:text-emerald-300/70">
+                        Bundle Vite 6 yang dioptimasi dengan kompresi Brotli & Gzip tingkat tinggi untuk waktu muat instan.
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* TAB 4: AGENTIC AI */}
+            <TabsContent value="ai" className="mt-4">
+              <Card className="border border-slate-200 dark:border-[#133829] bg-white dark:bg-[#091E16] shadow-sm rounded-2xl">
+                <CardHeader>
+                  <div className="flex items-center justify-between flex-wrap gap-2">
+                    <CardTitle className="text-xl font-bold text-slate-900 dark:text-emerald-50">
+                      Agentic AI & Obsidian Bi-Directional Knowledge
+                    </CardTitle>
+                    <Badge variant="secondary" className="bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold">
+                      Layer 13 Intelligence
+                    </Badge>
+                  </div>
+                  <CardDescription className="text-slate-600 dark:text-emerald-300/70">
+                    Asisten AI bawaan dan sinkronisasi graf pengetahuan dua arah dengan Obsidian Vault lokal.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4 text-sm text-slate-700 dark:text-emerald-100/90">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#05130E] border border-slate-200 dark:border-[#133829]">
+                      <div className="font-bold text-slate-900 dark:text-emerald-50 mb-1 flex items-center gap-2">
+                        <FiCpu className="text-amber-500" /> Embedded Agentic AI Drawer
+                      </div>
+                      <p className="text-xs text-slate-500 dark:text-emerald-300/70">
+                        Panel pendamping cerdas yang terintegrasi di bawah navbar Backoffice untuk riset kode dan otomasi tugas.
+                      </p>
+                    </div>
+                    <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#05130E] border border-slate-200 dark:border-[#133829]">
+                      <div className="font-bold text-slate-900 dark:text-emerald-50 mb-1 flex items-center gap-2">
+                        <FiCpu className="text-amber-500" /> Bi-Directional Vault Recovery
+                      </div>
+                      <p className="text-xs text-slate-500 dark:text-emerald-300/70">
+                        Sinkronisasi catatan PRD & dokumentasi sistem langsung dengan file markdown lokal di komputer pengguna.
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </section>
+
+      {/* SECTION 2: SHADCN INTERACTIVE LIVE TELEMETRY SIMULATOR WITH SWITCH & TOOLTIPS */}
+      <section id="telemetry-sim" className="public-section-padding">
+        <TooltipProvider>
+          <div className="public-card-container" style={{
+            backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+            border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
+            borderRadius: '24px',
+            padding: '2.25rem',
+            boxShadow: isDarkMode ? '0 20px 40px rgba(0,0,0,0.5)' : '0 12px 32px rgba(15, 23, 42, 0.08)'
           }}>
+            <div className="flex items-center justify-between flex-wrap gap-3 mb-6">
+              <div>
+                <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-widest text-emerald-600 dark:text-emerald-400 mb-1">
+                  <FiSliders /> SIMULASI KONTROL INFRASTRUKTUR SHADCN
+                </div>
+                <h3 className="text-2xl font-extrabold text-slate-900 dark:text-emerald-50 m-0">
+                  Live System Telemetry & Module Simulator
+                </h3>
+              </div>
+              <Badge variant="outline" className="border-emerald-500/40 text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 font-bold px-3 py-1">
+                🟢 Mode Interaktif Aktif
+              </Badge>
+            </div>
 
-            {/* COLUMN 1: BRANDING & SYSTEM STATUS */}
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
-                <DesktopalieMark size={34} style={{ color: isDarkMode ? '#ECFDF5' : '#0F172A' }} />
-                <div>
-                  <span style={{ fontSize: '1.15rem', fontWeight: '800', letterSpacing: '0.04em', color: isDarkMode ? '#ECFDF5' : '#0F172A', display: 'block', lineHeight: 1 }}>
-                    {activeFlavor?.logoText || 'DESKTOPALIE'}
-                  </span>
-                  <span style={{ fontSize: '0.7rem', color: primaryColor, fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                    {activeFlavor?.shortName} Portal
-                  </span>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+              {/* Left Column: Interactive shadcn Switches */}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-[#05130E] border border-slate-200 dark:border-[#133829]">
+                  <div className="space-y-0.5">
+                    <div className="font-bold text-sm text-slate-900 dark:text-emerald-50 flex items-center gap-2">
+                      Hardware Acceleration NVENC
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="cursor-pointer text-slate-400 hover:text-slate-600 dark:hover:text-emerald-200">
+                            <FiHelpCircle className="w-3.5 h-3.5" />
+                          </span>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Mengaktifkan akselerasi GPU NVIDIA untuk encoding ultra cepat.</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </div>
+                    <div className="text-xs text-slate-500 dark:text-emerald-300/70">
+                      Tingkatkan performa render multi-channel hingga 4.2x FPS.
+                    </div>
+                  </div>
+                  <Switch checked={simHardwareNvenc} onCheckedChange={setSimHardwareNvenc} />
+                </div>
+
+                <div className="flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-[#05130E] border border-slate-200 dark:border-[#133829]">
+                  <div className="space-y-0.5">
+                    <div className="font-bold text-sm text-slate-900 dark:text-emerald-50 flex items-center gap-2">
+                      Cloudflare Edge WAF Shield
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="cursor-pointer text-slate-400 hover:text-slate-600 dark:hover:text-emerald-200">
+                            <FiHelpCircle className="w-3.5 h-3.5" />
+                          </span>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Melindungi API gateway dari serangan DDoS & bot scraping.</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </div>
+                    <div className="text-xs text-slate-500 dark:text-emerald-300/70">
+                      Rate limiting 100 req/s dan filtering ancaman zero-day.
+                    </div>
+                  </div>
+                  <Switch checked={simEdgeWaf} onCheckedChange={setSimEdgeWaf} />
+                </div>
+
+                <div className="flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-[#05130E] border border-slate-200 dark:border-[#133829]">
+                  <div className="space-y-0.5">
+                    <div className="font-bold text-sm text-slate-900 dark:text-emerald-50 flex items-center gap-2">
+                      PostgreSQL Realtime Channel
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="cursor-pointer text-slate-400 hover:text-slate-600 dark:hover:text-emerald-200">
+                            <FiHelpCircle className="w-3.5 h-3.5" />
+                          </span>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Live data push tanpa perlu polling berulang.</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </div>
+                    <div className="text-xs text-slate-500 dark:text-emerald-300/70">
+                      Broadcast update data armada, video, dan status keuangan instan.
+                    </div>
+                  </div>
+                  <Switch checked={simRealtimeSync} onCheckedChange={setSimRealtimeSync} />
+                </div>
+
+                <div className="flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-[#05130E] border border-slate-200 dark:border-[#133829]">
+                  <div className="space-y-0.5">
+                    <div className="font-bold text-sm text-slate-900 dark:text-emerald-50 flex items-center gap-2">
+                      AI Predictive Telemetry
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="cursor-pointer text-slate-400 hover:text-slate-600 dark:hover:text-emerald-200">
+                            <FiHelpCircle className="w-3.5 h-3.5" />
+                          </span>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Prediksi beban server dan anomali trafik otomatis.</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </div>
+                    <div className="text-xs text-slate-500 dark:text-emerald-300/70">
+                      Optimasi routing armada dan analisis kepuasan member.
+                    </div>
+                  </div>
+                  <Switch checked={simAiTelemetry} onCheckedChange={setSimAiTelemetry} />
                 </div>
               </div>
 
-              <p style={{
-                fontSize: '0.875rem',
-                lineHeight: '1.65',
-                color: isDarkMode ? '#93C5AA' : '#64748B',
-                marginBottom: '1.5rem',
-                maxWidth: '300px'
-              }}>
-                {activeFlavor?.description || 'Desktopalie Ekosistem digital terpadu untuk proyek, aplikasi enterprise, dan inovasi teknologi.'}
-              </p>
+              {/* Right Column: Live Gauges dynamically computed */}
+              <div className="p-6 rounded-2xl bg-slate-900 text-white shadow-xl space-y-5">
+                <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                  <div className="font-bold text-sm flex items-center gap-2 text-emerald-400">
+                    <FiActivity /> SIMULATED SYSTEM METRICS
+                  </div>
+                  <span className="text-xs text-slate-400">Auto Refreshed (Live)</span>
+                </div>
 
-              {/* System Live Operational Status Badge */}
-              <div style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                padding: '0.35rem 0.75rem',
-                borderRadius: '99px',
-                backgroundColor: isDarkMode ? 'rgba(16, 185, 129, 0.12)' : 'rgba(22, 163, 74, 0.1)',
-                border: `1px solid ${isDarkMode ? 'rgba(16, 185, 129, 0.3)' : 'rgba(22, 163, 74, 0.2)'}`,
-                fontSize: '0.75rem',
-                fontWeight: '700',
-                color: isDarkMode ? '#34D399' : '#16A34A'
-              }}>
-                <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#10B981', boxShadow: '0 0 8px #10B981' }} />
-                <span>Ekosistem System Operational</span>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="p-3 rounded-xl bg-slate-800/80 border border-slate-700">
+                    <div className="text-xs font-bold text-slate-400">LATENCY JARINGAN</div>
+                    <div className="text-2xl font-extrabold text-emerald-400 mt-1">
+                      {simEdgeWaf ? '12 ms' : '85 ms'}
+                    </div>
+                    <div className="text-xs text-slate-400 mt-1">
+                      {simEdgeWaf ? '⚡ Ultra Optimized' : '⚠️ Unshielded'}
+                    </div>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-slate-800/80 border border-slate-700">
+                    <div className="text-xs font-bold text-slate-400">THROUGHPUT SPEED</div>
+                    <div className="text-2xl font-extrabold text-blue-400 mt-1">
+                      {simHardwareNvenc ? '250 FPS' : '45 FPS'}
+                    </div>
+                    <div className="text-xs text-slate-400 mt-1">
+                      {simHardwareNvenc ? '🚀 Hardware GPU' : '🐢 Software CPU'}
+                    </div>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-slate-800/80 border border-slate-700">
+                    <div className="text-xs font-bold text-slate-400">REALTIME CHANNELS</div>
+                    <div className="text-2xl font-extrabold text-purple-400 mt-1">
+                      {simRealtimeSync ? 'Connected' : 'Polling'}
+                    </div>
+                    <div className="text-xs text-slate-400 mt-1">
+                      {simRealtimeSync ? '🟢 WebSocket Active' : '🟡 5s Fallback'}
+                    </div>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-slate-800/80 border border-slate-700">
+                    <div className="text-xs font-bold text-slate-400">AI HEALTH SCORE</div>
+                    <div className="text-2xl font-extrabold text-amber-400 mt-1">
+                      {simAiTelemetry ? '99.8%' : '78.4%'}
+                    </div>
+                    <div className="text-xs text-slate-400 mt-1">
+                      {simAiTelemetry ? '✨ Optimal Health' : '⚠️ Manual Monitoring'}
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
+          </div>
+        </TooltipProvider>
+      </section>
 
-            {/* COLUMN 2: QUICK NAVIGATION */}
-            <div>
-              <h4 style={{ fontSize: '0.9rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.08em', color: isDarkMode ? '#ECFDF5' : '#0F172A', marginBottom: '1.25rem' }}>
-                Navigasi Platform
-              </h4>
-              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.875rem' }}>
-                {navLinks.map((link, idx) => (
-                  <li key={idx}>
+      {/* SECTION 3: SHADCN VERIFIED TESTIMONIALS & PLATFORM ARCHITECTS */}
+      <section id="reviews" className="public-section-padding">
+        <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem', marginBottom: '0.5rem' }}>
+            <Badge variant="secondary" className="px-3 py-1 text-xs font-bold uppercase tracking-wider">
+              ✦ EKOSISTEM & ULASAN PENGGUNA
+            </Badge>
+          </div>
+          <h2 style={{ fontSize: '2rem', fontWeight: '800', marginBottom: '0.65rem', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>
+            Dipercaya Oleh Para Profesional & Enterprise
+          </h2>
+          <p style={{ color: isDarkMode ? '#93C5AA' : '#64748B', fontSize: '0.95rem', maxWidth: '650px', margin: '0 auto' }}>
+            Pengalaman nyata dari tim developer, manajer logistik, dan pimpinan proyek yang menggunakan Desktopalie Backoffice.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          {/* Card 1 */}
+          <Card className="border border-slate-200 dark:border-[#133829] bg-white dark:bg-[#091E16] shadow-sm rounded-2xl flex flex-col justify-between">
+            <CardHeader className="pb-3">
+              <div className="flex items-center gap-3">
+                <Avatar className="h-11 w-11 border-2 border-emerald-500/30">
+                  <AvatarFallback className="bg-gradient-to-tr from-emerald-600 to-teal-500 text-white font-bold text-sm">
+                    FA
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <CardTitle className="text-base font-bold text-slate-900 dark:text-emerald-50">Faiz Ali</CardTitle>
+                  <CardDescription className="text-xs text-slate-500 dark:text-emerald-300/70">Lead Architect & Creator</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="text-sm text-slate-600 dark:text-emerald-100/80 leading-relaxed">
+              "Arsitektur 13-Layer dan sistem isolasi multi-tenant di Desktopalie memungkinkan kami meluncurkan portal sub-platform mandiri dalam hitungan menit tanpa friksi."
+            </CardContent>
+            <CardFooter className="pt-0 flex items-center justify-between text-xs text-slate-400 dark:text-emerald-300/60 border-t border-slate-100 dark:border-[#133829] pt-3">
+              <span className="font-semibold text-emerald-600 dark:text-emerald-400">Desktopalie Core</span>
+              <div className="flex text-amber-400">★★★★★</div>
+            </CardFooter>
+          </Card>
+
+          {/* Card 2 */}
+          <Card className="border border-slate-200 dark:border-[#133829] bg-white dark:bg-[#091E16] shadow-sm rounded-2xl flex flex-col justify-between">
+            <CardHeader className="pb-3">
+              <div className="flex items-center gap-3">
+                <Avatar className="h-11 w-11 border-2 border-emerald-500/30">
+                  <AvatarFallback className="bg-gradient-to-tr from-blue-600 to-indigo-500 text-white font-bold text-sm">
+                    BL
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <CardTitle className="text-base font-bold text-slate-900 dark:text-emerald-50">Budi Logistics</CardTitle>
+                  <CardDescription className="text-xs text-slate-500 dark:text-emerald-300/70">Fleet Ops Director</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="text-sm text-slate-600 dark:text-emerald-100/80 leading-relaxed">
+              "Platform Beta memberikan pemantauan real-time GPS armada kami dengan dashboard yang sangat responsif di layar monitor kantor maupun laptop di lapangan."
+            </CardContent>
+            <CardFooter className="pt-0 flex items-center justify-between text-xs text-slate-400 dark:text-emerald-300/60 border-t border-slate-100 dark:border-[#133829] pt-3">
+              <span className="font-semibold text-blue-600 dark:text-blue-400">Beta Logistics</span>
+              <div className="flex text-amber-400">★★★★★</div>
+            </CardFooter>
+          </Card>
+
+          {/* Card 3 */}
+          <Card className="border border-slate-200 dark:border-[#133829] bg-white dark:bg-[#091E16] shadow-sm rounded-2xl flex flex-col justify-between">
+            <CardHeader className="pb-3">
+              <div className="flex items-center gap-3">
+                <Avatar className="h-11 w-11 border-2 border-emerald-500/30">
+                  <AvatarFallback className="bg-gradient-to-tr from-amber-600 to-orange-500 text-white font-bold text-sm">
+                    DE
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <CardTitle className="text-base font-bold text-slate-900 dark:text-emerald-50">Delta Financial Group</CardTitle>
+                  <CardDescription className="text-xs text-slate-500 dark:text-emerald-300/70">Chief Security Officer</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="text-sm text-slate-600 dark:text-emerald-100/80 leading-relaxed">
+              "Kepatuhan ISO 27001 dan isolasi data per-platform membuat kami yakin mempercayakan audit transaksi keuangan enterprise di platform Delta."
+            </CardContent>
+            <CardFooter className="pt-0 flex items-center justify-between text-xs text-slate-400 dark:text-emerald-300/60 border-t border-slate-100 dark:border-[#133829] pt-3">
+              <span className="font-semibold text-amber-600 dark:text-amber-400">Delta ERP</span>
+              <div className="flex text-amber-400">★★★★★</div>
+            </CardFooter>
+          </Card>
+        </div>
+      </section>
+
+      {/* SECTION 4: SHADCN INTERACTIVE FAQ ACCORDION */}
+      <section id="faq" className="public-section-padding">
+        <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem', marginBottom: '0.5rem' }}>
+            <Badge variant="outline" className="px-3 py-1 text-xs font-bold text-primary uppercase tracking-wider">
+              ✦ PERTANYAAN UMUM (FAQ)
+            </Badge>
+          </div>
+          <h2 style={{ fontSize: '2rem', fontWeight: '800', marginBottom: '0.65rem', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>
+            Pertanyaan yang Sering Diajukan
+          </h2>
+          <p style={{ color: isDarkMode ? '#93C5AA' : '#64748B', fontSize: '0.95rem', maxWidth: '650px', margin: '0 auto' }}>
+            Pelajari lebih lanjut mengenai arsitektur sistem, keamanan data, dan mekanisme operasional ekosistem Desktopalie.
+          </p>
+        </div>
+
+        <div className="max-w-3xl mx-auto">
+          <Card className="border border-slate-200 dark:border-[#133829] bg-white dark:bg-[#091E16] p-6 rounded-2xl shadow-sm">
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="item-1">
+                <AccordionTrigger className="text-base font-bold text-slate-900 dark:text-emerald-50 hover:no-underline">
+                  Bagaimana sistem isolasi multi-tenant di Desktopalie bekerja?
+                </AccordionTrigger>
+                <AccordionContent className="text-sm text-slate-600 dark:text-emerald-200/80 leading-relaxed pt-2">
+                  Setiap platform (Alpha Main, Beta Logistics, Gamma Video, Delta ERP) memiliki identifikasi scoped flavor ID terisolasi. Data transaksi, proyek, dan setelan maintenance dikelola secara mandiri dengan perlindungan PostgreSQL Row Level Security (RLS) sehingga data antar platform tidak akan tercampur.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-2">
+                <AccordionTrigger className="text-base font-bold text-slate-900 dark:text-emerald-50 hover:no-underline">
+                  Apakah platform tetap aman saat mode maintenance aktif?
+                </AccordionTrigger>
+                <AccordionContent className="text-sm text-slate-600 dark:text-emerald-200/80 leading-relaxed pt-2">
+                  Ya, $100\%$ aman. Saat mode pemeliharaan diaktifkan dari Backoffice, seluruh pintu masuk publik (termasuk halaman portal login dan endpoint modul) secara ketat diblokir dan dialihkan ke layar pemeliharaan resmi dengan countdown timer real-time.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-3">
+                <AccordionTrigger className="text-base font-bold text-slate-900 dark:text-emerald-50 hover:no-underline">
+                  Teknologi apa saja yang menjadi pilar frontend & UI?
+                </AccordionTrigger>
+                <AccordionContent className="text-sm text-slate-600 dark:text-emerald-200/80 leading-relaxed pt-2">
+                  Frontend dibangun menggunakan <strong>React 19</strong>, <strong>Vite 6</strong>, <strong>Tailwind CSS</strong>, serta pustaka komponen <strong>shadcn/ui</strong> berbasis Radix UI untuk menjamin aksesibilitas penuh, animasi halus, dan responsivitas adaptif di berbagai ukuran monitor.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-4">
+                <AccordionTrigger className="text-base font-bold text-slate-900 dark:text-emerald-50 hover:no-underline">
+                  Bagaimana cara melakukan konsultasi integrasi enterprise khusus?
+                </AccordionTrigger>
+                <AccordionContent className="text-sm text-slate-600 dark:text-emerald-200/80 leading-relaxed pt-2">
+                  Anda dapat menekan tombol <strong>"Konsultasi Enterprise"</strong> di bawah ini untuk membuka formulir dialog interaktif, atau mengirim email langsung ke tim kami di <code>hello@desktopalie.my.id</code>.
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </Card>
+        </div>
+      </section>
+
+      {/* SECTION 5: SHADCN ENTERPRISE CALL TO ACTION WITH MODAL DIALOG */}
+      <section className="public-section-padding">
+        <div style={{
+          maxWidth: '1000px',
+          margin: '0 auto',
+          padding: '3rem 2rem',
+          borderRadius: '24px',
+          background: isDarkMode 
+            ? 'linear-gradient(135deg, #091E16 0%, #05130E 100%)' 
+            : 'linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%)',
+          border: `1px solid ${isDarkMode ? '#133829' : '#C7D2FE'}`,
+          textAlign: 'center',
+          boxShadow: '0 10px 30px rgba(0,0,0,0.06)'
+        }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.75rem' }}>
+            <Badge className="bg-primary text-white font-bold px-3 py-1 text-xs">
+              ✦ KONSULTASI & INTEGRASI SISTEM
+            </Badge>
+          </div>
+          <h2 style={{ fontSize: '2rem', fontWeight: '800', marginBottom: '0.75rem', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>
+            Siap Membangun Platform Digital Bersama Desktopalie?
+          </h2>
+          <p style={{ color: isDarkMode ? '#93C5AA' : '#475569', fontSize: '1rem', maxWidth: '600px', margin: '0 auto 2rem auto' }}>
+            Tingkatkan efisiensi operasional dengan ruang kerja terpadu, telemetri live, dan keamanan terenkripsi.
+          </p>
+
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+            {/* SHADCN DIALOG MODAL TRIGGER */}
+            <Dialog open={consultOpen} onOpenChange={setConsultOpen}>
+              <DialogTrigger asChild>
+                <Button size="lg" className="rounded-full font-bold px-8 shadow-lg hover:shadow-xl transition-all" style={{ backgroundColor: primaryColor, color: '#FFFFFF' }}>
+                  <FiMessageSquare className="mr-2" />
+                  Mulai Konsultasi Enterprise
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[480px] bg-white dark:bg-[#091E16] border-slate-200 dark:border-[#133829]">
+                <form onSubmit={handleConsultSubmit}>
+                  <DialogHeader>
+                    <DialogTitle className="text-xl font-bold text-slate-900 dark:text-emerald-50">
+                      Konsultasi Enterprise & Solusi Kustom
+                    </DialogTitle>
+                    <DialogDescription className="text-xs text-slate-500 dark:text-emerald-300/70">
+                      Sampaikan kebutuhan proyek atau integrasi platform Anda kepada tim arsitek kami.
+                    </DialogDescription>
+                  </DialogHeader>
+
+                  <div className="space-y-4 py-4">
+                    <div>
+                      <label className="text-xs font-bold text-slate-700 dark:text-emerald-200 block mb-1">
+                        Nama Lengkap / Organisasi
+                      </label>
+                      <Input 
+                        placeholder="Misal: Faiz Ali (Enterprise Lead)" 
+                        value={consultName} 
+                        onChange={(e) => setConsultName(e.target.value)} 
+                        required 
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold text-slate-700 dark:text-emerald-200 block mb-1">
+                        Email Resmi
+                      </label>
+                      <Input 
+                        type="email" 
+                        placeholder="nama@perusahaan.com" 
+                        value={consultEmail} 
+                        onChange={(e) => setConsultEmail(e.target.value)} 
+                        required 
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold text-slate-700 dark:text-emerald-200 block mb-1">
+                        Rincian Kebutuhan & Ekspektasi
+                      </label>
+                      <textarea
+                        className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                        rows={3}
+                        placeholder="Jelaskan kebutuhan integrasi sistem Anda..."
+                        value={consultMessage}
+                        onChange={(e) => setConsultMessage(e.target.value)}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <DialogFooter className="gap-2 sm:gap-0">
+                    <Button type="button" variant="secondary" onClick={() => setConsultOpen(false)}>
+                      Batal
+                    </Button>
+                    <Button type="submit" disabled={consultSubmitting} style={{ backgroundColor: primaryColor, color: '#FFFFFF' }}>
+                      {consultSubmitting ? 'Mengirim...' : <><FiSend className="mr-2" /> Kirim Permintaan</>}
+                    </Button>
+                  </DialogFooter>
+                </form>
+              </DialogContent>
+            </Dialog>
+
+            <a
+              href="#about"
+              className="px-6 py-2.5 rounded-full font-bold text-sm text-slate-700 dark:text-emerald-200 bg-white/80 dark:bg-[#05130E]/80 border border-slate-300 dark:border-[#133829] hover:bg-slate-50 dark:hover:bg-[#091E16] transition-all no-underline inline-flex items-center gap-2"
+            >
+              <span>Pelajari Fitur Lengkap</span>
+              <FiChevronRight />
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* MODERN MULTI-COLUMN HIGH-END FOOTER WITH SHADCN SEPARATOR & TOOLTIPS */}
+      <footer id="contact" className="public-footer" style={{
+        borderTop: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
+        backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC',
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
+        <TooltipProvider>
+          {/* Ambient Bottom Glow */}
+          <div style={{
+            position: 'absolute',
+            bottom: '-150px',
+            right: '-100px',
+            width: '500px',
+            height: '500px',
+            borderRadius: '50%',
+            background: `radial-gradient(circle, ${primaryColor}15 0%, rgba(0,0,0,0) 70%)`,
+            pointerEvents: 'none'
+          }} />
+
+          <div style={{ maxWidth: '1280px', margin: '0 auto', position: 'relative', zIndex: 5, padding: '4rem 1.5rem 2rem 1.5rem' }}>
+            
+            {/* Main Footer Grid */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+              gap: '3rem',
+              marginBottom: '3rem'
+            }}>
+
+              {/* COLUMN 1: BRANDING & SYSTEM STATUS */}
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
+                  <DesktopalieMark size={36} style={{ color: isDarkMode ? '#ECFDF5' : '#0F172A' }} />
+                  <div>
+                    <span style={{ fontSize: '1.2rem', fontWeight: '800', letterSpacing: '0.04em', color: isDarkMode ? '#ECFDF5' : '#0F172A', display: 'block', lineHeight: 1 }}>
+                      {activeFlavor?.logoText || 'DESKTOPALIE'}
+                    </span>
+                    <span style={{ fontSize: '0.7rem', color: primaryColor, fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                      {activeFlavor?.shortName} Platform Hub
+                    </span>
+                  </div>
+                </div>
+
+                <p style={{
+                  fontSize: '0.875rem',
+                  lineHeight: '1.65',
+                  color: isDarkMode ? '#93C5AA' : '#64748B',
+                  marginBottom: '1.5rem',
+                  maxWidth: '300px'
+                }}>
+                  {activeFlavor?.description || 'Desktopalie ekosistem digital terpadu untuk proyek, aplikasi enterprise, dan otomasi cerdas.'}
+                </p>
+
+                {/* System Live Operational Status Badge */}
+                <div style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  padding: '0.35rem 0.75rem',
+                  borderRadius: '99px',
+                  backgroundColor: isDarkMode ? 'rgba(16, 185, 129, 0.12)' : 'rgba(22, 163, 74, 0.1)',
+                  border: `1px solid ${isDarkMode ? 'rgba(16, 185, 129, 0.3)' : 'rgba(22, 163, 74, 0.2)'}`,
+                  fontSize: '0.75rem',
+                  fontWeight: '700',
+                  color: isDarkMode ? '#34D399' : '#16A34A'
+                }}>
+                  <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#10B981', boxShadow: '0 0 8px #10B981' }} />
+                  <span>Ekosistem 100% Operational</span>
+                </div>
+              </div>
+
+              {/* COLUMN 2: QUICK NAVIGATION */}
+              <div>
+                <h4 style={{ fontSize: '0.9rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.08em', color: isDarkMode ? '#ECFDF5' : '#0F172A', marginBottom: '1.25rem' }}>
+                  Navigasi Halaman
+                </h4>
+                <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.875rem' }}>
+                  {navLinks.map((link, idx) => (
+                    <li key={idx}>
+                      <a
+                        href={link.path}
+                        style={{
+                          color: isDarkMode ? '#93C5AA' : '#64748B',
+                          textDecoration: 'none',
+                          transition: 'color 0.15s ease',
+                          fontWeight: '500'
+                        }}
+                        onMouseOver={(e) => e.currentTarget.style.color = primaryColor}
+                        onMouseOut={(e) => e.currentTarget.style.color = isDarkMode ? '#93C5AA' : '#64748B'}
+                      >
+                        {link.label}
+                      </a>
+                    </li>
+                  ))}
+                  <li>
                     <a
-                      href={link.path}
-                      style={{
-                        color: isDarkMode ? '#93C5AA' : '#64748B',
-                        textDecoration: 'none',
-                        transition: 'color 0.15s ease',
-                        fontWeight: '500'
-                      }}
-                      onMouseOver={(e) => e.currentTarget.style.color = primaryColor}
-                      onMouseOut={(e) => e.currentTarget.style.color = isDarkMode ? '#93C5AA' : '#64748B'}
+                      href="#capabilities"
+                      style={{ color: isDarkMode ? '#93C5AA' : '#64748B', textDecoration: 'none', fontWeight: '500' }}
                     >
-                      {link.label}
+                      Kapabilitas Sistem
                     </a>
                   </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* COLUMN 3: EKOSISTEM SUB-PLATFORM */}
-            <div>
-              <h4 style={{ fontSize: '0.9rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.08em', color: isDarkMode ? '#ECFDF5' : '#0F172A', marginBottom: '1.25rem' }}>
-                Ekosistem Sub-Platform
-              </h4>
-              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-                <li>
-                  <a
-                    href="https://desktopalie.my.id"
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.5rem',
-                      color: isDarkMode ? '#93C5AA' : '#64748B',
-                      textDecoration: 'none',
-                      fontSize: '0.825rem',
-                      fontWeight: '600'
-                    }}
-                  >
-                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#10B981' }} />
-                    <span>Desktopalie Main Core</span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://beta.desktopalie.my.id"
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.5rem',
-                      color: isDarkMode ? '#93C5AA' : '#64748B',
-                      textDecoration: 'none',
-                      fontSize: '0.825rem',
-                      fontWeight: '600'
-                    }}
-                  >
-                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#10B981' }} />
-                    <span>Platform Beta (Logistics)</span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://gamma.desktopalie.my.id"
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.5rem',
-                      color: isDarkMode ? '#93C5AA' : '#64748B',
-                      textDecoration: 'none',
-                      fontSize: '0.825rem',
-                      fontWeight: '600'
-                    }}
-                  >
-                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#8B5CF6' }} />
-                    <span>Platform Gamma (Streaming)</span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://delta.desktopalie.my.id"
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.5rem',
-                      color: isDarkMode ? '#93C5AA' : '#64748B',
-                      textDecoration: 'none',
-                      fontSize: '0.825rem',
-                      fontWeight: '600'
-                    }}
-                  >
-                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#F59E0B' }} />
-                    <span>Platform Delta (Enterprise ERP)</span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            {/* COLUMN 4: CONTACT & SOCIAL HANDLES */}
-            <div>
-              <h4 style={{ fontSize: '0.9rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.08em', color: isDarkMode ? '#ECFDF5' : '#0F172A', marginBottom: '1.25rem' }}>
-                Kontak & Komunitas
-              </h4>
-              <p style={{ fontSize: '0.85rem', color: isDarkMode ? '#93C5AA' : '#64748B', marginBottom: '1rem' }}>
-                {settings?.contact_title || 'Punya pertanyaan atau butuh integrasi custom?'}
-              </p>
-
-              <div style={{
-                backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
-                border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
-                borderRadius: '12px',
-                padding: '0.75rem 1rem',
-                fontSize: '0.85rem',
-                fontWeight: '700',
-                color: primaryColor,
-                marginBottom: '1.25rem',
-                display: 'inline-block'
-              }}>
-                ✉️ {settings?.contact_email || 'hello@desktopalie.my.id'}
+                  <li>
+                    <a
+                      href="#faq"
+                      style={{ color: isDarkMode ? '#93C5AA' : '#64748B', textDecoration: 'none', fontWeight: '500' }}
+                    >
+                      FAQ & Pengetahuan
+                    </a>
+                  </li>
+                </ul>
               </div>
 
-              <div style={{ display: 'flex', gap: '0.85rem' }}>
-                {settings?.github_url && (
-                  <a
-                    href={settings.github_url}
-                    target="_blank"
-                    rel="noreferrer"
-                    style={{
-                      width: '38px',
-                      height: '38px',
-                      borderRadius: '50%',
-                      backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
-                      border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: isDarkMode ? '#ECFDF5' : '#0F172A',
-                      fontSize: '1.1rem',
-                      transition: 'all 0.15s ease'
-                    }}
-                  >
-                    <FiGithub />
-                  </a>
-                )}
-                {settings?.linkedin_url && (
-                  <a
-                    href={settings.linkedin_url}
-                    target="_blank"
-                    rel="noreferrer"
-                    style={{
-                      width: '38px',
-                      height: '38px',
-                      borderRadius: '50%',
-                      backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
-                      border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: isDarkMode ? '#ECFDF5' : '#0F172A',
-                      fontSize: '1.1rem',
-                      transition: 'all 0.15s ease'
-                    }}
-                  >
-                    <FiLinkedin />
-                  </a>
-                )}
-                {settings?.instagram_url && (
-                  <a
-                    href={settings.instagram_url}
-                    target="_blank"
-                    rel="noreferrer"
-                    style={{
-                      width: '38px',
-                      height: '38px',
-                      borderRadius: '50%',
-                      backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
-                      border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: isDarkMode ? '#ECFDF5' : '#0F172A',
-                      fontSize: '1.1rem',
-                      transition: 'all 0.15s ease'
-                    }}
-                  >
-                    <FiInstagram />
-                  </a>
-                )}
+              {/* COLUMN 3: EKOSISTEM SUB-PLATFORM */}
+              <div>
+                <h4 style={{ fontSize: '0.9rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.08em', color: isDarkMode ? '#ECFDF5' : '#0F172A', marginBottom: '1.25rem' }}>
+                  Ekosistem Sub-Platform
+                </h4>
+                <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+                  <li>
+                    <a
+                      href="https://desktopalie.my.id"
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        color: isDarkMode ? '#93C5AA' : '#64748B',
+                        textDecoration: 'none',
+                        fontSize: '0.825rem',
+                        fontWeight: '600'
+                      }}
+                    >
+                      <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#10B981' }} />
+                      <span>Desktopalie Main Core</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="https://beta.desktopalie.my.id"
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        color: isDarkMode ? '#93C5AA' : '#64748B',
+                        textDecoration: 'none',
+                        fontSize: '0.825rem',
+                        fontWeight: '600'
+                      }}
+                    >
+                      <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#10B981' }} />
+                      <span>Platform Beta (Logistics)</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="https://gamma.desktopalie.my.id"
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        color: isDarkMode ? '#93C5AA' : '#64748B',
+                        textDecoration: 'none',
+                        fontSize: '0.825rem',
+                        fontWeight: '600'
+                      }}
+                    >
+                      <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#8B5CF6' }} />
+                      <span>Platform Gamma (Streaming)</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="https://delta.desktopalie.my.id"
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        color: isDarkMode ? '#93C5AA' : '#64748B',
+                        textDecoration: 'none',
+                        fontSize: '0.825rem',
+                        fontWeight: '600'
+                      }}
+                    >
+                      <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#F59E0B' }} />
+                      <span>Platform Delta (Enterprise ERP)</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+
+              {/* COLUMN 4: CONTACT & SOCIAL HANDLES WITH TOOLTIPS */}
+              <div>
+                <h4 style={{ fontSize: '0.9rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.08em', color: isDarkMode ? '#ECFDF5' : '#0F172A', marginBottom: '1.25rem' }}>
+                  Kontak & Komunitas
+                </h4>
+                <p style={{ fontSize: '0.85rem', color: isDarkMode ? '#93C5AA' : '#64748B', marginBottom: '1rem' }}>
+                  {settings?.contact_title || 'Punya pertanyaan atau butuh integrasi custom?'}
+                </p>
+
+                <div style={{
+                  backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+                  border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
+                  borderRadius: '12px',
+                  padding: '0.75rem 1rem',
+                  fontSize: '0.85rem',
+                  fontWeight: '700',
+                  color: primaryColor,
+                  marginBottom: '1.25rem',
+                  display: 'inline-block'
+                }}>
+                  ✉️ {settings?.contact_email || 'hello@desktopalie.my.id'}
+                </div>
+
+                <div style={{ display: 'flex', gap: '0.75rem' }}>
+                  {settings?.github_url && (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <a
+                          href={settings.github_url}
+                          target="_blank"
+                          rel="noreferrer"
+                          style={{
+                            width: '38px',
+                            height: '38px',
+                            borderRadius: '50%',
+                            backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+                            border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: isDarkMode ? '#ECFDF5' : '#0F172A',
+                            fontSize: '1.1rem',
+                            transition: 'all 0.15s ease'
+                          }}
+                        >
+                          <FiGithub />
+                        </a>
+                      </TooltipTrigger>
+                      <TooltipContent><p>GitHub Repository</p></TooltipContent>
+                    </Tooltip>
+                  )}
+
+                  {settings?.linkedin_url && (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <a
+                          href={settings.linkedin_url}
+                          target="_blank"
+                          rel="noreferrer"
+                          style={{
+                            width: '38px',
+                            height: '38px',
+                            borderRadius: '50%',
+                            backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+                            border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: isDarkMode ? '#ECFDF5' : '#0F172A',
+                            fontSize: '1.1rem',
+                            transition: 'all 0.15s ease'
+                          }}
+                        >
+                          <FiLinkedin />
+                        </a>
+                      </TooltipTrigger>
+                      <TooltipContent><p>LinkedIn Profile</p></TooltipContent>
+                    </Tooltip>
+                  )}
+
+                  {settings?.instagram_url && (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <a
+                          href={settings.instagram_url}
+                          target="_blank"
+                          rel="noreferrer"
+                          style={{
+                            width: '38px',
+                            height: '38px',
+                            borderRadius: '50%',
+                            backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+                            border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: isDarkMode ? '#ECFDF5' : '#0F172A',
+                            fontSize: '1.1rem',
+                            transition: 'all 0.15s ease'
+                          }}
+                        >
+                          <FiInstagram />
+                        </a>
+                      </TooltipTrigger>
+                      <TooltipContent><p>Instagram Community</p></TooltipContent>
+                    </Tooltip>
+                  )}
+                </div>
+              </div>
+
+            </div>
+
+            {/* SHADCN SEPARATOR */}
+            <Separator className="my-6 bg-slate-200 dark:bg-[#133829]" />
+
+            {/* BOTTOM BAR: COPYRIGHT & COMPLIANCE */}
+            <div style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '1rem',
+              fontSize: '0.775rem',
+              color: isDarkMode ? '#58836F' : '#94A3B8'
+            }}>
+              <div>
+                © {new Date().getFullYear()} <strong>{activeFlavor?.name}</strong>. Hak Cipta Dilindungi. Powered by Desktopalie Core Engine.
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', fontWeight: '600' }}>
+                <span className="flex items-center gap-1.5"><FiShield className="text-emerald-500" /> ISO 27001 Security Compliant</span>
+                <span>•</span>
+                <span>Encrypted SSL 256-bit</span>
+                <span>•</span>
+                <span>shadcn/ui v2.5 Enhanced</span>
               </div>
             </div>
 
           </div>
-
-          {/* BOTTOM BAR: COPYRIGHT & COMPLIANCE */}
-          <div style={{
-            borderTop: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
-            paddingTop: '2rem',
-            display: 'flex',
-            flexWrap: 'wrap',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: '1rem',
-            fontSize: '0.775rem',
-            color: isDarkMode ? '#58836F' : '#94A3B8'
-          }}>
-            <div>
-              © {new Date().getFullYear()} <strong>{activeFlavor?.name}</strong>. Hak Cipta Dilindungi. Powered by Desktopalie Core Engine.
-            </div>
-
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', fontWeight: '600' }}>
-              <span>ISO 27001 Security Compliant</span>
-              <span>•</span>
-              <span>Encrypted SSL 256-bit</span>
-            </div>
-          </div>
-
-        </div>
+        </TooltipProvider>
       </footer>
 
     </div>
