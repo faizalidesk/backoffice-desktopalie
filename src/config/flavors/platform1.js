@@ -5,10 +5,10 @@ export default {
   description: 'Primary Independent Backoffice Workspace (https://desktopalie.my.id/)',
   logoText: 'Desktopalie',
   theme: {
-    colorPrimary: '#4f46e5', // Indigo
-    colorSecondary: '#6366f1',
-    bgSidebar: '#ffffff',
-    accent: '#818cf8',
+    colorPrimary: '#2563EB', // Blue
+    colorSecondary: '#3B82F6',
+    bgSidebar: '#0F3574',
+    accent: '#60A5FA',
   },
   features: {
     enableProjects: true,
