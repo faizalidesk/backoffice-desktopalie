@@ -1182,13 +1182,14 @@ export default function PublicPlatformLanding() {
           gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
           gap: '1.25rem'
         }}>
-          <div style={{
+          <div className="interactive-card" style={{
             backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
             border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
             borderRadius: '16px',
             padding: '1.75rem 1.25rem',
             textAlign: 'center',
-            boxShadow: '0 4px 16px rgba(0,0,0,0.04)'
+            boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
+            cursor: 'default'
           }}>
             <div style={{ fontSize: '2.25rem', fontWeight: '800', color: primaryColor, marginBottom: '0.25rem' }}>
               {settings?.stat_1_value || '100+'}
@@ -1198,13 +1199,14 @@ export default function PublicPlatformLanding() {
             </div>
           </div>
 
-          <div style={{
+          <div className="interactive-card" style={{
             backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
             border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
             borderRadius: '16px',
             padding: '1.75rem 1.25rem',
             textAlign: 'center',
-            boxShadow: '0 4px 16px rgba(0,0,0,0.04)'
+            boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
+            cursor: 'default'
           }}>
             <div style={{ fontSize: '2.25rem', fontWeight: '800', color: primaryColor, marginBottom: '0.25rem' }}>
               {settings?.stat_2_value || '99.9%'}
@@ -1214,13 +1216,14 @@ export default function PublicPlatformLanding() {
             </div>
           </div>
 
-          <div style={{
+          <div className="interactive-card" style={{
             backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
             border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
             borderRadius: '16px',
             padding: '1.75rem 1.25rem',
             textAlign: 'center',
-            boxShadow: '0 4px 16px rgba(0,0,0,0.04)'
+            boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
+            cursor: 'default'
           }}>
             <div style={{ fontSize: '2.25rem', fontWeight: '800', color: primaryColor, marginBottom: '0.25rem' }}>
               {settings?.stat_3_value || '24/7'}
@@ -1252,7 +1255,7 @@ export default function PublicPlatformLanding() {
           gap: '1.5rem'
         }}>
           {dummyProjects.map(proj => (
-            <div key={proj.id} style={{
+            <div key={proj.id} className="interactive-card" style={{
               backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
               border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
               borderRadius: '16px',
@@ -1260,7 +1263,8 @@ export default function PublicPlatformLanding() {
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
-              boxShadow: '0 4px 16px rgba(0,0,0,0.04)'
+              boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
+              cursor: 'default'
             }}>
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
@@ -1290,7 +1294,7 @@ export default function PublicPlatformLanding() {
                   <span>{proj.progress}%</span>
                 </div>
                 <div style={{ width: '100%', height: '6px', backgroundColor: isDarkMode ? '#133829' : '#E2E8F0', borderRadius: '99px', overflow: 'hidden' }}>
-                  <div style={{ width: `${proj.progress}%`, height: '100%', backgroundColor: primaryColor, borderRadius: '99px' }} />
+                  <div style={{ width: `${proj.progress}%`, height: '100%', backgroundColor: primaryColor, borderRadius: '99px', transition: 'width 0.8s cubic-bezier(0.16, 1, 0.3, 1)' }} />
                 </div>
               </div>
             </div>
@@ -1300,14 +1304,14 @@ export default function PublicPlatformLanding() {
 
       {/* ABOUT SECTION */}
       <section id="about" className="public-section-padding">
-        <div className="public-about-box" style={{
+        <div className="public-about-box interactive-card-subtle" style={{
           backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
           border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
           borderRadius: '24px',
           boxShadow: '0 8px 30px rgba(0,0,0,0.06)'
         }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem', marginBottom: '0.75rem' }}>
-            <Badge variant="secondary" className="px-3 py-1 text-xs font-bold uppercase tracking-wider">
+            <Badge variant="secondary" className="px-3 py-1 text-xs font-bold uppercase tracking-wider animate-pulse-subtle">
               {activeFlavor?.shortName} Architecture
             </Badge>
           </div>
@@ -1345,23 +1349,23 @@ export default function PublicPlatformLanding() {
         <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
           <Tabs defaultValue="core" className="w-full">
             <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 h-auto p-1.5 rounded-2xl bg-slate-100 dark:bg-[#05130E] border border-slate-200 dark:border-[#133829]">
-              <TabsTrigger value="core" className="py-2.5 rounded-xl font-bold text-xs md:text-sm">
+              <TabsTrigger value="core" className="py-2.5 rounded-xl font-bold text-xs md:text-sm transition-all duration-200">
                 🏢 Multi-Tenant
               </TabsTrigger>
-              <TabsTrigger value="security" className="py-2.5 rounded-xl font-bold text-xs md:text-sm">
+              <TabsTrigger value="security" className="py-2.5 rounded-xl font-bold text-xs md:text-sm transition-all duration-200">
                 🛡️ Zero-Trust RLS
               </TabsTrigger>
-              <TabsTrigger value="realtime" className="py-2.5 rounded-xl font-bold text-xs md:text-sm">
+              <TabsTrigger value="realtime" className="py-2.5 rounded-xl font-bold text-xs md:text-sm transition-all duration-200">
                 ⚡ Edge Sync
               </TabsTrigger>
-              <TabsTrigger value="ai" className="py-2.5 rounded-xl font-bold text-xs md:text-sm">
+              <TabsTrigger value="ai" className="py-2.5 rounded-xl font-bold text-xs md:text-sm transition-all duration-200">
                 🧠 Agentic AI
               </TabsTrigger>
             </TabsList>
 
             {/* TAB 1: MULTI-TENANT */}
-            <TabsContent value="core" className="mt-4">
-              <Card className="border border-slate-200 dark:border-[#133829] bg-white dark:bg-[#091E16] shadow-sm rounded-2xl">
+            <TabsContent value="core" className="mt-4 animate-fade-in-up">
+              <Card className="interactive-card border border-slate-200 dark:border-[#133829] bg-white dark:bg-[#091E16] shadow-sm rounded-2xl">
                 <CardHeader>
                   <div className="flex items-center justify-between flex-wrap gap-2">
                     <CardTitle className="text-xl font-bold text-slate-900 dark:text-emerald-50">
@@ -1377,7 +1381,7 @@ export default function PublicPlatformLanding() {
                 </CardHeader>
                 <CardContent className="space-y-4 text-sm text-slate-700 dark:text-emerald-100/90">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#05130E] border border-slate-200 dark:border-[#133829]">
+                    <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#05130E] border border-slate-200 dark:border-[#133829] transition-all hover:border-emerald-500/40">
                       <div className="font-bold text-slate-900 dark:text-emerald-50 mb-1 flex items-center gap-2">
                         <FiCheckCircle className="text-emerald-500" /> Isolasi Subdomain Otomatis
                       </div>
@@ -1385,7 +1389,7 @@ export default function PublicPlatformLanding() {
                         Deteksi subdomain cerdas untuk `beta.`, `gamma.`, dan `delta.` dengan konfigurasi tema dan portal terpisah.
                       </p>
                     </div>
-                    <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#05130E] border border-slate-200 dark:border-[#133829]">
+                    <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#05130E] border border-slate-200 dark:border-[#133829] transition-all hover:border-emerald-500/40">
                       <div className="font-bold text-slate-900 dark:text-emerald-50 mb-1 flex items-center gap-2">
                         <FiCheckCircle className="text-emerald-500" /> State Caching Offline Resilient
                       </div>
@@ -1399,8 +1403,8 @@ export default function PublicPlatformLanding() {
             </TabsContent>
 
             {/* TAB 2: SECURITY */}
-            <TabsContent value="security" className="mt-4">
-              <Card className="border border-slate-200 dark:border-[#133829] bg-white dark:bg-[#091E16] shadow-sm rounded-2xl">
+            <TabsContent value="security" className="mt-4 animate-fade-in-up">
+              <Card className="interactive-card border border-slate-200 dark:border-[#133829] bg-white dark:bg-[#091E16] shadow-sm rounded-2xl">
                 <CardHeader>
                   <div className="flex items-center justify-between flex-wrap gap-2">
                     <CardTitle className="text-xl font-bold text-slate-900 dark:text-emerald-50">
@@ -1416,7 +1420,7 @@ export default function PublicPlatformLanding() {
                 </CardHeader>
                 <CardContent className="space-y-4 text-sm text-slate-700 dark:text-emerald-100/90">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#05130E] border border-slate-200 dark:border-[#133829]">
+                    <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#05130E] border border-slate-200 dark:border-[#133829] transition-all hover:border-blue-500/40">
                       <div className="font-bold text-slate-900 dark:text-emerald-50 mb-1 flex items-center gap-2">
                         <FiShield className="text-blue-500" /> PKCE OAuth 2.0 & Email Security
                       </div>
@@ -1424,7 +1428,7 @@ export default function PublicPlatformLanding() {
                         Pemeriksaan token terotentikasi Supabase Auth dengan auto-refresh token tanpa jeda sesi.
                       </p>
                     </div>
-                    <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#05130E] border border-slate-200 dark:border-[#133829]">
+                    <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#05130E] border border-slate-200 dark:border-[#133829] transition-all hover:border-blue-500/40">
                       <div className="font-bold text-slate-900 dark:text-emerald-50 mb-1 flex items-center gap-2">
                         <FiShield className="text-blue-500" /> Strict Maintenance Quarantine
                       </div>
@@ -1438,8 +1442,8 @@ export default function PublicPlatformLanding() {
             </TabsContent>
 
             {/* TAB 3: REALTIME EDGE */}
-            <TabsContent value="realtime" className="mt-4">
-              <Card className="border border-slate-200 dark:border-[#133829] bg-white dark:bg-[#091E16] shadow-sm rounded-2xl">
+            <TabsContent value="realtime" className="mt-4 animate-fade-in-up">
+              <Card className="interactive-card border border-slate-200 dark:border-[#133829] bg-white dark:bg-[#091E16] shadow-sm rounded-2xl">
                 <CardHeader>
                   <div className="flex items-center justify-between flex-wrap gap-2">
                     <CardTitle className="text-xl font-bold text-slate-900 dark:text-emerald-50">
@@ -1455,7 +1459,7 @@ export default function PublicPlatformLanding() {
                 </CardHeader>
                 <CardContent className="space-y-4 text-sm text-slate-700 dark:text-emerald-100/90">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#05130E] border border-slate-200 dark:border-[#133829]">
+                    <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#05130E] border border-slate-200 dark:border-[#133829] transition-all hover:border-purple-500/40">
                       <div className="font-bold text-slate-900 dark:text-emerald-50 mb-1 flex items-center gap-2">
                         <FiZap className="text-purple-500" /> Live PostgreSQL Broadcast
                       </div>
@@ -1463,7 +1467,7 @@ export default function PublicPlatformLanding() {
                         Sinkronisasi telemetri armada, status transcode, dan transaksi keuangan seketika via WebSocket channel.
                       </p>
                     </div>
-                    <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#05130E] border border-slate-200 dark:border-[#133829]">
+                    <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#05130E] border border-slate-200 dark:border-[#133829] transition-all hover:border-purple-500/40">
                       <div className="font-bold text-slate-900 dark:text-emerald-50 mb-1 flex items-center gap-2">
                         <FiZap className="text-purple-500" /> Static Brotli Assets Caching
                       </div>
@@ -1477,8 +1481,8 @@ export default function PublicPlatformLanding() {
             </TabsContent>
 
             {/* TAB 4: AGENTIC AI */}
-            <TabsContent value="ai" className="mt-4">
-              <Card className="border border-slate-200 dark:border-[#133829] bg-white dark:bg-[#091E16] shadow-sm rounded-2xl">
+            <TabsContent value="ai" className="mt-4 animate-fade-in-up">
+              <Card className="interactive-card border border-slate-200 dark:border-[#133829] bg-white dark:bg-[#091E16] shadow-sm rounded-2xl">
                 <CardHeader>
                   <div className="flex items-center justify-between flex-wrap gap-2">
                     <CardTitle className="text-xl font-bold text-slate-900 dark:text-emerald-50">
@@ -1494,7 +1498,7 @@ export default function PublicPlatformLanding() {
                 </CardHeader>
                 <CardContent className="space-y-4 text-sm text-slate-700 dark:text-emerald-100/90">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#05130E] border border-slate-200 dark:border-[#133829]">
+                    <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#05130E] border border-slate-200 dark:border-[#133829] transition-all hover:border-amber-500/40">
                       <div className="font-bold text-slate-900 dark:text-emerald-50 mb-1 flex items-center gap-2">
                         <FiCpu className="text-amber-500" /> Embedded Agentic AI Drawer
                       </div>
@@ -1502,7 +1506,7 @@ export default function PublicPlatformLanding() {
                         Panel pendamping cerdas yang terintegrasi di bawah navbar Backoffice untuk riset kode dan otomasi tugas.
                       </p>
                     </div>
-                    <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#05130E] border border-slate-200 dark:border-[#133829]">
+                    <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#05130E] border border-slate-200 dark:border-[#133829] transition-all hover:border-amber-500/40">
                       <div className="font-bold text-slate-900 dark:text-emerald-50 mb-1 flex items-center gap-2">
                         <FiCpu className="text-amber-500" /> Bi-Directional Vault Recovery
                       </div>
@@ -1708,10 +1712,10 @@ export default function PublicPlatformLanding() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
           {/* Card 1 */}
-          <Card className="border border-slate-200 dark:border-[#133829] bg-white dark:bg-[#091E16] shadow-sm rounded-2xl flex flex-col justify-between">
+          <Card className="interactive-card border border-slate-200 dark:border-[#133829] bg-white dark:bg-[#091E16] shadow-sm rounded-2xl flex flex-col justify-between cursor-default">
             <CardHeader className="pb-3">
               <div className="flex items-center gap-3">
-                <Avatar className="h-11 w-11 border-2 border-emerald-500/30">
+                <Avatar className="h-11 w-11 border-2 border-emerald-500/30 transition-transform duration-300 hover:scale-105">
                   <AvatarFallback className="bg-gradient-to-tr from-emerald-600 to-teal-500 text-white font-bold text-sm">
                     FA
                   </AvatarFallback>
@@ -1727,15 +1731,15 @@ export default function PublicPlatformLanding() {
             </CardContent>
             <CardFooter className="pt-0 flex items-center justify-between text-xs text-slate-400 dark:text-emerald-300/60 border-t border-slate-100 dark:border-[#133829] pt-3">
               <span className="font-semibold text-emerald-600 dark:text-emerald-400">Desktopalie Core</span>
-              <div className="flex text-amber-400">★★★★★</div>
+              <div className="flex text-amber-400 tracking-wider">★★★★★</div>
             </CardFooter>
           </Card>
 
           {/* Card 2 */}
-          <Card className="border border-slate-200 dark:border-[#133829] bg-white dark:bg-[#091E16] shadow-sm rounded-2xl flex flex-col justify-between">
+          <Card className="interactive-card border border-slate-200 dark:border-[#133829] bg-white dark:bg-[#091E16] shadow-sm rounded-2xl flex flex-col justify-between cursor-default">
             <CardHeader className="pb-3">
               <div className="flex items-center gap-3">
-                <Avatar className="h-11 w-11 border-2 border-emerald-500/30">
+                <Avatar className="h-11 w-11 border-2 border-blue-500/30 transition-transform duration-300 hover:scale-105">
                   <AvatarFallback className="bg-gradient-to-tr from-blue-600 to-indigo-500 text-white font-bold text-sm">
                     BL
                   </AvatarFallback>
@@ -1751,15 +1755,15 @@ export default function PublicPlatformLanding() {
             </CardContent>
             <CardFooter className="pt-0 flex items-center justify-between text-xs text-slate-400 dark:text-emerald-300/60 border-t border-slate-100 dark:border-[#133829] pt-3">
               <span className="font-semibold text-blue-600 dark:text-blue-400">Beta Logistics</span>
-              <div className="flex text-amber-400">★★★★★</div>
+              <div className="flex text-amber-400 tracking-wider">★★★★★</div>
             </CardFooter>
           </Card>
 
           {/* Card 3 */}
-          <Card className="border border-slate-200 dark:border-[#133829] bg-white dark:bg-[#091E16] shadow-sm rounded-2xl flex flex-col justify-between">
+          <Card className="interactive-card border border-slate-200 dark:border-[#133829] bg-white dark:bg-[#091E16] shadow-sm rounded-2xl flex flex-col justify-between cursor-default">
             <CardHeader className="pb-3">
               <div className="flex items-center gap-3">
-                <Avatar className="h-11 w-11 border-2 border-emerald-500/30">
+                <Avatar className="h-11 w-11 border-2 border-amber-500/30 transition-transform duration-300 hover:scale-105">
                   <AvatarFallback className="bg-gradient-to-tr from-amber-600 to-orange-500 text-white font-bold text-sm">
                     DE
                   </AvatarFallback>
@@ -1775,7 +1779,7 @@ export default function PublicPlatformLanding() {
             </CardContent>
             <CardFooter className="pt-0 flex items-center justify-between text-xs text-slate-400 dark:text-emerald-300/60 border-t border-slate-100 dark:border-[#133829] pt-3">
               <span className="font-semibold text-amber-600 dark:text-amber-400">Delta ERP</span>
-              <div className="flex text-amber-400">★★★★★</div>
+              <div className="flex text-amber-400 tracking-wider">★★★★★</div>
             </CardFooter>
           </Card>
         </div>
@@ -1798,10 +1802,10 @@ export default function PublicPlatformLanding() {
         </div>
 
         <div className="max-w-3xl mx-auto">
-          <Card className="border border-slate-200 dark:border-[#133829] bg-white dark:bg-[#091E16] p-6 rounded-2xl shadow-sm">
+          <Card className="interactive-card-subtle border border-slate-200 dark:border-[#133829] bg-white dark:bg-[#091E16] p-6 rounded-2xl shadow-sm">
             <Accordion type="single" collapsible className="w-full">
               <AccordionItem value="item-1">
-                <AccordionTrigger className="text-base font-bold text-slate-900 dark:text-emerald-50 hover:no-underline">
+                <AccordionTrigger className="text-base font-bold text-slate-900 dark:text-emerald-50 hover:no-underline transition-colors hover:text-emerald-500">
                   Bagaimana sistem isolasi multi-tenant di Desktopalie bekerja?
                 </AccordionTrigger>
                 <AccordionContent className="text-sm text-slate-600 dark:text-emerald-200/80 leading-relaxed pt-2">
@@ -1810,7 +1814,7 @@ export default function PublicPlatformLanding() {
               </AccordionItem>
 
               <AccordionItem value="item-2">
-                <AccordionTrigger className="text-base font-bold text-slate-900 dark:text-emerald-50 hover:no-underline">
+                <AccordionTrigger className="text-base font-bold text-slate-900 dark:text-emerald-50 hover:no-underline transition-colors hover:text-emerald-500">
                   Apakah platform tetap aman saat mode maintenance aktif?
                 </AccordionTrigger>
                 <AccordionContent className="text-sm text-slate-600 dark:text-emerald-200/80 leading-relaxed pt-2">
@@ -1819,7 +1823,7 @@ export default function PublicPlatformLanding() {
               </AccordionItem>
 
               <AccordionItem value="item-3">
-                <AccordionTrigger className="text-base font-bold text-slate-900 dark:text-emerald-50 hover:no-underline">
+                <AccordionTrigger className="text-base font-bold text-slate-900 dark:text-emerald-50 hover:no-underline transition-colors hover:text-emerald-500">
                   Teknologi apa saja yang menjadi pilar frontend & UI?
                 </AccordionTrigger>
                 <AccordionContent className="text-sm text-slate-600 dark:text-emerald-200/80 leading-relaxed pt-2">
@@ -1828,7 +1832,7 @@ export default function PublicPlatformLanding() {
               </AccordionItem>
 
               <AccordionItem value="item-4">
-                <AccordionTrigger className="text-base font-bold text-slate-900 dark:text-emerald-50 hover:no-underline">
+                <AccordionTrigger className="text-base font-bold text-slate-900 dark:text-emerald-50 hover:no-underline transition-colors hover:text-emerald-500">
                   Bagaimana cara melakukan konsultasi integrasi enterprise khusus?
                 </AccordionTrigger>
                 <AccordionContent className="text-sm text-slate-600 dark:text-emerald-200/80 leading-relaxed pt-2">
@@ -1842,20 +1846,20 @@ export default function PublicPlatformLanding() {
 
       {/* SECTION 5: SHADCN ENTERPRISE CALL TO ACTION WITH MODAL DIALOG */}
       <section className="public-section-padding">
-        <div style={{
+        <div className="interactive-card-subtle" style={{
           maxWidth: '1000px',
           margin: '0 auto',
-          padding: '3rem 2rem',
+          padding: '3.5rem 2rem',
           borderRadius: '24px',
           background: isDarkMode 
             ? 'linear-gradient(135deg, #091E16 0%, #05130E 100%)' 
             : 'linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%)',
           border: `1px solid ${isDarkMode ? '#133829' : '#C7D2FE'}`,
           textAlign: 'center',
-          boxShadow: '0 10px 30px rgba(0,0,0,0.06)'
+          boxShadow: '0 12px 36px rgba(0,0,0,0.06)'
         }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.75rem' }}>
-            <Badge className="bg-primary text-white font-bold px-3 py-1 text-xs">
+            <Badge className="bg-primary text-white font-bold px-3 py-1 text-xs animate-pulse-subtle">
               ✦ KONSULTASI & INTEGRASI SISTEM
             </Badge>
           </div>
