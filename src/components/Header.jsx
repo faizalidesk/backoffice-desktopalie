@@ -203,33 +203,6 @@ export default function Header({ title = 'Dashboard Overview' }) {
           <FiExternalLink style={{ fontSize: '0.75rem' }} />
         </a>
 
-        {/* DESKTOP-AGENTIC AI TOGGLE BUTTON */}
-        <button
-          type="button"
-          onClick={() => window.dispatchEvent(new CustomEvent('toggle-ai-sidebar'))}
-          title="Buka/Tutup Desktop-Agentic AI"
-          style={{
-            height: '38px',
-            padding: '0 0.85rem',
-            borderRadius: '99px',
-            backgroundColor: isDarkMode ? 'rgba(129, 140, 248, 0.15)' : 'rgba(79, 70, 229, 0.1)',
-            border: `1px solid ${isDarkMode ? 'rgba(129, 140, 248, 0.3)' : 'rgba(79, 70, 229, 0.2)'}`,
-            color: 'var(--primary)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            cursor: 'pointer',
-            fontSize: '0.85rem',
-            fontWeight: '700',
-            transition: 'all 0.15s ease'
-          }}
-          onMouseOver={(e) => e.currentTarget.style.backgroundColor = isDarkMode ? 'rgba(129, 140, 248, 0.25)' : 'rgba(79, 70, 229, 0.18)'}
-          onMouseOut={(e) => e.currentTarget.style.backgroundColor = isDarkMode ? 'rgba(129, 140, 248, 0.15)' : 'rgba(79, 70, 229, 0.1)'}
-        >
-          <FiCpu style={{ fontSize: '1.05rem' }} />
-          <span>AI Agentic</span>
-        </button>
-
         {/* NOTIFICATION BELL BUTTON & POPUP PANEL */}
         <div style={{ position: 'relative' }} ref={notifRef}>
           <button
