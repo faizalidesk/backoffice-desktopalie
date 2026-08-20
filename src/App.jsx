@@ -231,9 +231,9 @@ function PortalRoute() {
     return <PublicPlatformLanding />;
   }
 
-  if (flavorId === 'platform2') return <ProtectedLayout><PlatformBetaPortal /></ProtectedLayout>;
-  if (flavorId === 'platform3') return <ProtectedLayout><PlatformGammaPortal /></ProtectedLayout>;
-  if (flavorId === 'platform4') return <ProtectedLayout><PlatformDeltaPortal /></ProtectedLayout>;
+  if (flavorId === 'platform2') return <SubPlatformProtectedLayout><PlatformBetaPortal /></SubPlatformProtectedLayout>;
+  if (flavorId === 'platform3') return <SubPlatformProtectedLayout><PlatformGammaPortal /></SubPlatformProtectedLayout>;
+  if (flavorId === 'platform4') return <SubPlatformProtectedLayout><PlatformDeltaPortal /></SubPlatformProtectedLayout>;
   return <Navigate to="/dashboard" replace />;
 }
 
