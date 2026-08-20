@@ -283,7 +283,7 @@ export default function PublicPlatformLanding() {
               <Link to="/contact">Contact</Link>
             </nav>
 
-            <div className="header-actions">
+            <div className="header-actions" style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
               <button
                 className="theme-button"
                 onClick={toggleTheme}
@@ -291,9 +291,33 @@ export default function PublicPlatformLanding() {
               >
                 {isDarkMode ? <FaSun /> : <FaMoon />}
               </button>
+
               <span className="maint-locked-chip">
                 <FaLock /> Site Locked
               </span>
+
+              {/* PROMINENT ADMIN BACKOFFICE PORTAL BUTTON IN HEADER */}
+              <Link
+                to={flavorId === 'platform2' ? '/beta/login' : (flavorId === 'platform3' ? '/gamma/login' : (flavorId === 'platform4' ? '/delta/login' : '/login'))}
+                style={{
+                  padding: '0.45rem 1rem',
+                  fontSize: '0.825rem',
+                  fontWeight: '700',
+                  borderRadius: '99px',
+                  backgroundColor: primaryColor,
+                  color: '#FFFFFF',
+                  textDecoration: 'none',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.45rem',
+                  boxShadow: `0 4px 14px ${primaryColor}40`,
+                  transition: 'all 0.2s ease'
+                }}
+                title="Buka Portal Admin Backoffice"
+              >
+                <FaLock style={{ fontSize: '0.75rem' }} />
+                <span>Portal Admin</span>
+              </Link>
             </div>
           </div>
         </header>
@@ -385,30 +409,86 @@ export default function PublicPlatformLanding() {
                   )}
                 </div>
 
-                {/* Admin Bypass Button */}
-                {maintenance?.allow_admin_bypass && (
-                  <div style={{ marginTop: '1.25rem' }}>
-                    <button
-                      type="button"
-                      onClick={() => navigate('/login')}
+                {/* DEDICATED ADMIN BACKOFFICE PORTAL ACCESS CARD */}
+                <div style={{
+                  marginTop: '1.5rem',
+                  padding: '1.25rem',
+                  borderRadius: '16px',
+                  backgroundColor: isDarkMode ? 'rgba(5, 19, 14, 0.75)' : 'rgba(248, 250, 252, 0.95)',
+                  border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  flexWrap: 'wrap',
+                  gap: '1rem',
+                  boxShadow: '0 4px 16px rgba(0, 0, 0, 0.05)'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    <div style={{
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '10px',
+                      backgroundColor: `${primaryColor}20`,
+                      color: primaryColor,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '1.1rem',
+                      flexShrink: 0
+                    }}>
+                      <FaLock />
+                    </div>
+                    <div>
+                      <div style={{ fontSize: '0.925rem', fontWeight: '800', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>
+                        Portal Admin & Backoffice Access
+                      </div>
+                      <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                        Masuk ke ruang kerja Backoffice untuk mengelola sistem atau mematikan mode maintenance.
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap' }}>
+                    <Link
+                      to={flavorId === 'platform2' ? '/beta/login' : (flavorId === 'platform3' ? '/gamma/login' : (flavorId === 'platform4' ? '/delta/login' : '/login'))}
                       style={{
-                        background: 'none',
-                        border: 'none',
-                        padding: 0,
-                        color: primaryColor,
+                        padding: '0.55rem 1.15rem',
+                        borderRadius: '10px',
+                        backgroundColor: primaryColor,
+                        color: '#FFFFFF',
                         fontWeight: '700',
                         fontSize: '0.85rem',
-                        cursor: 'pointer',
+                        textDecoration: 'none',
                         display: 'inline-flex',
                         alignItems: 'center',
-                        gap: '0.35rem'
+                        gap: '0.45rem',
+                        boxShadow: `0 4px 12px ${primaryColor}40`
                       }}
                     >
-                      <FaLock style={{ fontSize: '0.8rem' }} />
-                      <span>Portal Admin Backoffice (Bypass)</span>
-                    </button>
+                      <FaLock style={{ fontSize: '0.75rem' }} />
+                      <span>Masuk Portal Admin</span>
+                    </Link>
+
+                    <Link
+                      to="/login"
+                      style={{
+                        padding: '0.55rem 1rem',
+                        borderRadius: '10px',
+                        backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+                        border: `1px solid ${isDarkMode ? '#133829' : '#CBD5E1'}`,
+                        color: isDarkMode ? '#ECFDF5' : '#0F172A',
+                        fontWeight: '700',
+                        fontSize: '0.85rem',
+                        textDecoration: 'none',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.45rem'
+                      }}
+                    >
+                      <span>Backoffice Utama</span>
+                    </Link>
                   </div>
-                )}
+                </div>
               </div>
 
               {/* Visual Browser Window & Live Terminal */}
@@ -469,6 +549,25 @@ export default function PublicPlatformLanding() {
               <span>{brandName}</span>
             </Link>
             <p>Projects, experiments, and digital creations.</p>
+            
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <Link
+                to={flavorId === 'platform2' ? '/beta/login' : (flavorId === 'platform3' ? '/gamma/login' : (flavorId === 'platform4' ? '/delta/login' : '/login'))}
+                style={{
+                  fontSize: '0.85rem',
+                  fontWeight: '700',
+                  color: primaryColor,
+                  textDecoration: 'none',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.35rem'
+                }}
+              >
+                <FaLock style={{ fontSize: '0.75rem' }} />
+                <span>Portal Admin Backoffice</span>
+              </Link>
+            </div>
+
             <div className="social-links">
               {settings?.github_url && (
                 <a href={settings.github_url} target="_blank" rel="noreferrer" aria-label="GitHub">
