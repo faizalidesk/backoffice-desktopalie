@@ -36,7 +36,7 @@ export const AGENT_TOOLS = [
 
 // Rich Context Knowledge Base for Desktopalie Backoffice Ecosystem
 const BACKOFFICE_SYSTEM_PROMPT = `
-Anda adalah Desktop-Agentic, asisten AI resmi berteknologi Google Gemini 2.0 Flash di platform Desktopalie Backoffice (back.desktopalie.my.id).
+Anda adalah Desktop-Agentic, asisten AI resmi berteknologi DeepSeek (DeepSeek-V3 / DeepSeek-R1) di platform Desktopalie Backoffice (back.desktopalie.my.id).
 
 IDENTITAS SISTEM & PENGEMBANG:
 - Pemilik & Developer: Faiz Ali (Full-stack Engineer & AI Practitioner).
@@ -45,8 +45,8 @@ IDENTITAS SISTEM & PENGEMBANG:
 - Teknologi: React 19, Vite, Tailwind CSS + shadcn/ui, Supabase PostgreSQL, Vercel Serverless, Obsidian Vault Sync.
 
 GAYA KOMUNIKASI:
-- Ramah, luwes, solutif, dan asik diajak diskusi layaknya rekan kerja/pair programmer pribadi.
-- Peka dan cepat tangkap konteks pertanyaan maupun instruksi coding/manajemen sistem.
+- Ramah, luwes, tajam dalam analisa logika/coding, dan asik diajak diskusi layaknya rekan kerja/pair programmer pribadi.
+- Peka dan cepat tangkap konteks instruksi teknis, arsitektur data, maupun manajemen tugas.
 - To-the-point, jelas, dan terstruktur rapi.
 
 MODUL UTAMA BACKOFFICE:
@@ -59,129 +59,136 @@ MODUL UTAMA BACKOFFICE:
 `;
 
 export const agenticAiService = {
-  // Helper: Get Gemini API Key
+  // Helper: Get DeepSeek API Key
   getApiKey() {
-    const key = import.meta.env.VITE_GEMINI_API_KEY || localStorage.getItem('desktopalie_gemini_api_key') || '';
+    const key = import.meta.env.VITE_DEEPSEEK_API_KEY || localStorage.getItem('desktopalie_deepseek_api_key') || localStorage.getItem('desktopalie_gemini_api_key') || '';
     return key.trim();
   },
 
   // Save user API key to localStorage
   setApiKey(key) {
-    localStorage.setItem('desktopalie_gemini_api_key', key.trim());
+    localStorage.setItem('desktopalie_deepseek_api_key', key.trim());
   },
 
-  // Get active Gemini model
+  // Get active AI model ('deepseek-chat' / 'deepseek-reasoner' / 'gemini-2.0-flash')
   getModel() {
-    return localStorage.getItem('desktopalie_gemini_model') || 'gemini-2.0-flash';
+    return localStorage.getItem('desktopalie_ai_model') || 'deepseek-chat';
   },
 
-  // Set active Gemini model
+  // Set active AI model
   setModel(modelName) {
-    localStorage.setItem('desktopalie_gemini_model', modelName);
+    localStorage.setItem('desktopalie_ai_model', modelName);
   },
 
-  // Call Google Gemini 2.0 Flash via Secure Backend Serverless API or Direct
-  async callGeminiApi(prompt, conversationHistory = [], customSystem = '') {
+  // Call DeepSeek API (V3 / R1) via Secure Backend Serverless API or Direct
+  async callDeepSeekApi(prompt, conversationHistory = [], customSystem = '') {
     const finalSystem = customSystem || BACKOFFICE_SYSTEM_PROMPT;
     const currentModel = this.getModel();
+    const apiKey = this.getApiKey();
 
-    // 1. First try secure Backend Serverless Route (/api/gemini)
+    // 1. First try secure Backend Serverless Route (/api/deepseek)
     try {
-      const backendResponse = await fetch('/api/gemini', {
+      const backendResponse = await fetch('/api/deepseek', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           prompt, 
           messages: conversationHistory,
           systemInstruction: finalSystem,
-          model: currentModel
+          model: currentModel,
+          apiKey: apiKey || undefined
         })
       });
 
       if (backendResponse.ok) {
         const backendData = await backendResponse.json();
-        if (backendData.text) return backendData.text;
+        if (backendData.text) {
+          return {
+            text: backendData.text,
+            reasoning: backendData.reasoning || null,
+            model: backendData.model || currentModel
+          };
+        }
       }
     } catch (e) {
-      // Backend route not available or running in pure Vite dev mode
+      // Backend route not available or running in pure local dev
     }
 
-    // 2. Fallback to direct client API Key if configured
-    const apiKey = this.getApiKey();
-    if (!apiKey) return null;
-
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${currentModel}:generateContent?key=${apiKey}`;
-    
-    // Format messages into Google GenAI parts
-    let contents = [];
-    if (conversationHistory && conversationHistory.length > 0) {
-      contents = conversationHistory.map(m => ({
-        role: m.sender === 'user' ? 'user' : 'model',
-        parts: [{ text: m.text }]
-      }));
-      if (prompt) {
-        contents.push({
-          role: 'user',
-          parts: [{ text: prompt }]
+    // 2. Fallback to direct client DeepSeek API Key if provided
+    if (apiKey && (currentModel.startsWith('deepseek') || apiKey.startsWith('sk-'))) {
+      const formattedMessages = [{ role: 'system', content: finalSystem }];
+      if (conversationHistory && conversationHistory.length > 0) {
+        conversationHistory.forEach(m => {
+          formattedMessages.push({
+            role: m.sender === 'user' ? 'user' : 'assistant',
+            content: m.text
+          });
         });
-      }
-    } else {
-      contents = [
-        {
-          role: 'user',
-          parts: [{ text: prompt }]
+        if (prompt) {
+          formattedMessages.push({ role: 'user', content: prompt });
         }
-      ];
+      } else {
+        formattedMessages.push({ role: 'user', content: prompt });
+      }
+
+      const response = await fetch('https://api.deepseek.com/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          model: currentModel,
+          messages: formattedMessages,
+          stream: false,
+          max_tokens: currentModel === 'deepseek-reasoner' ? 4096 : 2048,
+          temperature: currentModel === 'deepseek-reasoner' ? undefined : 0.6
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const choice = data.choices?.[0];
+        return {
+          text: choice?.message?.content || '',
+          reasoning: choice?.message?.reasoning_content || null,
+          model: currentModel
+        };
+      }
     }
 
-    const body = {
-      contents,
-      generationConfig: {
-        temperature: 0.5,
-        maxOutputTokens: 1500,
-        topP: 0.95
-      },
-      systemInstruction: {
-        parts: [{ text: finalSystem }]
-      }
-    };
-
-    let response = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    });
-
-    // Fallback to gemini-1.5-flash if 2.0 has quota/region limits
-    if (!response.ok && currentModel !== 'gemini-1.5-flash') {
-      const fallbackUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-      response = await fetch(fallbackUrl, {
+    // 3. Fallback to Gemini if configured
+    try {
+      const geminiResponse = await fetch('/api/gemini', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
+        body: JSON.stringify({ 
+          prompt, 
+          messages: conversationHistory,
+          systemInstruction: finalSystem,
+          model: 'gemini-2.0-flash'
+        })
       });
-    }
 
-    if (!response.ok) {
-      const errData = await response.json().catch(() => ({}));
-      throw new Error(errData.error?.message || `HTTP error ${response.status}`);
-    }
+      if (geminiResponse.ok) {
+        const data = await geminiResponse.json();
+        if (data.text) return { text: data.text, reasoning: null, model: 'gemini-2.0-flash' };
+      }
+    } catch (e) {}
 
-    const data = await response.json();
-    const candidate = data.candidates?.[0];
-    return candidate?.content?.parts?.[0]?.text || '';
+    return null;
   },
 
   // Smart Built-in Fallback Knowledge Base (Clean paragraphs & simple bullet points)
   getLocalKnowledgeAnswer(text) {
     // Topic: What is Desktopalie Backoffice?
     if (text.includes('backoffice') || text.includes('desktopalie') || text.includes('aplikasi ini') || text.includes('sistem ini')) {
-      return `Desktopalie Backoffice (back.desktopalie.my.id) adalah pusat kendali dan sistem manajemen internal terpadu untuk platform Faiz Ali (desktopalie.my.id).\n\nFitur dan modul utama yang tersedia meliputi:\n- To-Do Kanban Board: Pengelolaan tugas harian dengan subtask dan prioritas ala Jira atau Notion.\n- Projects & Experiments Manager: Manajemen portofolio proyek perangkat lunak dan arsitektur kode.\n- Documentation & Master PRD: Pengelolaan dokumen Product Requirement Document dan SOP teknis.\n- Obsidian Vault Sync: Sinkronisasi dua arah antara catatan markdown lokal dengan database Supabase.\n- Desktop-Agentic: Asisten AI otonom berteknologi Google Gemini 2.0 Flash untuk otomatisasi eksekusi sistem dan pembaruan dokumen.\n- Security & Telemetry: Pemantauan keamanan Content Security Policy (CSP) dan metrik kesehatan infrastruktur.\n\nApakah ada modul tertentu yang ingin Anda diskusikan atau gunakan sekarang?`;
+      return `Desktopalie Backoffice (back.desktopalie.my.id) adalah pusat kendali dan sistem manajemen internal terpadu untuk platform Faiz Ali (desktopalie.my.id). Sistem ini dirancang untuk mengelola seluruh aspek operasional, dokumentasi arsitektur, dan alur kerja pengembangan aplikasi dalam satu tempat.\n\nFitur dan modul utama yang tersedia meliputi:\n- To-Do Kanban Board: Pengelolaan tugas harian dengan subtask dan prioritas ala Jira atau Notion.\n- Projects & Experiments Manager: Manajemen portofolio proyek perangkat lunak dan arsitektur kode.\n- Documentation & Master PRD: Pengelolaan dokumen Product Requirement Document dan SOP teknis.\n- Obsidian Vault Sync: Sinkronisasi dua arah antara catatan markdown lokal dengan database Supabase.\n- Desktop-Agentic: Asisten AI otonom berteknologi DeepSeek-V3 / DeepSeek-R1 untuk otomatisasi eksekusi sistem dan penalaran mendalam.\n- Security & Telemetry: Pemantauan keamanan Content Security Policy (CSP) dan metrik kesehatan infrastruktur.\n\nApakah ada modul tertentu yang ingin Anda diskusikan atau gunakan sekarang?`;
     }
 
     // Topic: Who is Faiz Ali?
     if (text.includes('faiz ali') || text.includes('pembuat') || text.includes('creator') || text.includes('developer')) {
-      return `Faiz Ali adalah Software Engineer dan pengembang utama dari ekosistem Desktopalie (desktopalie.my.id).\n\nBeliau merancang platform ini dengan arsitektur modern (React 19, Supabase PostgreSQL, Obsidian Knowledge Graph, dan Agentic AI Google Gemini) untuk menyatukan portofolio, dokumentasi riset, dan sistem manajemen tugas dalam satu ekosistem yang terpadu.`;
+      return `Faiz Ali adalah Software Engineer dan pengembang utama dari ekosistem Desktopalie (desktopalie.my.id).\n\nBeliau merancang platform ini dengan arsitektur modern (React 19, Supabase PostgreSQL, Obsidian Knowledge Graph, dan Agentic AI DeepSeek) untuk menyatukan portofolio, dokumentasi riset, dan sistem manajemen tugas dalam satu ekosistem yang terpadu.`;
     }
 
     // Topic: What is Obsidian / Knowledge Graph?
@@ -199,11 +206,14 @@ export const agenticAiService = {
     let toolExecuted = null;
     let resultPayload = null;
     let responseText = '';
+    let reasoningContent = null;
+    const currentModel = this.getModel();
 
     // Intent 0: Friendly Greetings (Hi / Halo / Hello / Pagi / Malam)
     if (text === 'hi' || text === 'halo' || text === 'hello' || text === 'hey' || text === 'p' || text.includes('selamat pagi') || text.includes('selamat sore') || text.includes('selamat malam')) {
       thoughts.push('👋 [Agent Reasoning] Menyapa pengguna dengan santun...');
-      responseText = `Halo! Selamat datang di Desktopalie Backoffice. Saya adalah Desktop-Agentic (Powered by Google Gemini 2.0 Flash), siap bantu oprek dan kelola project Anda hari ini. 🚀\n\nBeberapa tugas otomatis yang bisa langsung saya eksekusi:\n- Update PRD: Memperbarui dokumen Product Requirement Document di database.\n- Buat Tugas: Menambahkan tugas baru ke papan To-Do Kanban.\n- Sinkronkan Obsidian: Menyelaraskan catatan dokumentasi dengan Obsidian Vault.\n- Cek Telemetri: Menampilkan ringkasan status kesehatan dan data proyek.\n- Buat Dokumentasi: Menulis catatan arsitektur sistem baru.\n\nApa yang ingin kita kerjakan sekarang?`;
+      const modelLabel = currentModel === 'deepseek-reasoner' ? 'DeepSeek-R1' : 'DeepSeek-V3';
+      responseText = `Halo! Selamat datang di Desktopalie Backoffice. Saya adalah Desktop-Agentic (Powered by ${modelLabel}), siap bantu oprek coding, analisis arsitektur, dan eksekusi tugas otomatis Anda hari ini. 🚀\n\nBeberapa tugas otomatis yang bisa langsung saya jalankan:\n- Update PRD: Memperbarui dokumen Product Requirement Document di database.\n- Buat Tugas: Menambahkan tugas baru ke papan To-Do Kanban.\n- Sinkronkan Obsidian: Menyelaraskan catatan dokumentasi dengan Obsidian Vault.\n- Cek Telemetri: Menampilkan ringkasan status kesehatan dan data proyek.\n- Buat Dokumentasi: Menulis catatan arsitektur sistem baru.\n\nApa yang ingin kita kerjakan sekarang?`;
     }
     // Intent 1: Update PRD (Product Requirement Document)
     else if (text.includes('update prd') || text.includes('perbarui prd') || text.includes('ubah prd') || text.includes('tambah prd') || text.includes('edit prd') || (text.includes('prd') && (text.includes('tambah') || text.includes('update')))) {
@@ -218,14 +228,14 @@ export const agenticAiService = {
         
         let newContent = '';
         if (prdDoc) {
-          newContent = `${prdDoc.content || ''}\n\n### ✦ Update PRD (${timestamp})\n- Catatan Pembaruan: ${updateNote}\n- Otoritas: Desktop-Agentic (Gemini 2.0 Engine)\n- Status: Live & Integrated with Supabase + Obsidian Vault.`;
+          newContent = `${prdDoc.content || ''}\n\n### ✦ Update PRD (${timestamp})\n- Catatan Pembaruan: ${updateNote}\n- Otoritas: Desktop-Agentic (DeepSeek Engine)\n- Status: Live & Integrated with Supabase + Obsidian Vault.`;
           await backofficeService.updateDoc(prdDoc.id, { content: newContent });
         } else {
           prdDoc = await backofficeService.createDoc({
             title: '00 - Backoffice PRD (Product Requirement Document)',
             folder: '02 - Backoffice',
             slug: '00-backoffice-prd',
-            author: 'Desktop-Agentic (Gemini 2.0)',
+            author: 'Desktop-Agentic (DeepSeek)',
             content: `# 00 - Backoffice PRD (Product Requirement Document)\n\n## Ringkasan Sistem\nDokumen master PRD ini dikelola secara otonom oleh Desktop-Agentic.\n\n### Update PRD (${timestamp})\n- Catatan Pembaruan: ${updateNote}`
           });
         }
@@ -248,7 +258,7 @@ export const agenticAiService = {
 
       const taskData = {
         title: title.charAt(0).toUpperCase() + title.slice(1),
-        description: `Dibuat secara otomatis oleh Desktop-Agentic (Gemini 2.0) pada ${new Date().toLocaleString('id-ID')}.\n\nInstruksi:\n- Verifikasi dan pengujian komponen.`,
+        description: `Dibuat secara otomatis oleh Desktop-Agentic (DeepSeek Engine) pada ${new Date().toLocaleString('id-ID')}.\n\nInstruksi:\n- Verifikasi dan pengujian komponen.`,
         priority: text.includes('tinggi') || text.includes('high') ? 'High' : (text.includes('rendah') || text.includes('low') ? 'Low' : 'Medium'),
         category: text.includes('qa') ? 'QA Checklist' : (text.includes('dev') ? 'Engineering' : 'Research'),
         status: text.includes('selesai') || text.includes('done') ? 'Done' : (text.includes('jalan') || text.includes('progress') ? 'Inprogress' : 'Not started'),
@@ -265,11 +275,14 @@ export const agenticAiService = {
         thoughts.push(`✅ [Tool Output] Tool create_task berhasil dieksekusi! ID: ${created.id}`);
         
         try {
-          const geminiResponse = await this.callGeminiApi(
+          const aiResponse = await this.callDeepSeekApi(
             `User meminta membuat tugas: "${userInput}". Tugas berhasil dibuat dengan ID: ${created.id}, Judul: "${created.title}", Status: "${created.status}", Prioritas: "${created.priority}". Buat respons konfirmasi yang ramah dan to-the-point dalam Bahasa Indonesia dengan format ringkas.`,
             conversationHistory
           );
-          if (geminiResponse) responseText = geminiResponse;
+          if (aiResponse?.text) {
+            responseText = aiResponse.text;
+            if (aiResponse.reasoning) reasoningContent = aiResponse.reasoning;
+          }
         } catch (e) {}
         
         if (!responseText) {
@@ -304,8 +317,8 @@ export const agenticAiService = {
         title: docTitle.charAt(0).toUpperCase() + docTitle.slice(1),
         folder: '02 - Backoffice',
         slug: docTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-        author: 'Desktop-Agentic (Gemini 2.0)',
-        content: `# ${docTitle}\n\nCatatan dokumentasi ini dibuat secara otomatis oleh Desktop-Agentic (Gemini 2.0).\n\nRingkasan Sistem:\n- Waktu Pembuatan: ${new Date().toISOString()}\n- Dikelola oleh: Desktop-Agentic Action Router.`
+        author: 'Desktop-Agentic (DeepSeek)',
+        content: `# ${docTitle}\n\nCatatan dokumentasi ini dibuat secara otomatis oleh Desktop-Agentic (DeepSeek Engine).\n\nRingkasan Sistem:\n- Waktu Pembuatan: ${new Date().toISOString()}\n- Dikelola oleh: Desktop-Agentic Action Router.`
       };
 
       try {
@@ -337,20 +350,26 @@ export const agenticAiService = {
         responseText = `Gagal mengumpulkan telemetri: ${err.message}`;
       }
     }
-    // General Questions / Conversational Queries (Gemini 2.0 Flash AI + Local Knowledge Base)
+    // General Questions / Deep Coding & Reasoning Queries (DeepSeek V3 / R1 + Local Knowledge Base)
     else {
-      // 1. Try Google Gemini 2.0 Flash Inference with full multi-turn conversation context
+      // 1. Try DeepSeek AI Inference
       try {
-        thoughts.push('🧠 [Gemini 2.0 Inference] Memproses pertanyaan dengan Google Gemini 2.0 Flash...');
-        const geminiOutput = await this.callGeminiApi(userInput, conversationHistory);
-        if (geminiOutput && geminiOutput.trim()) {
-          responseText = geminiOutput;
+        const modelLabel = currentModel === 'deepseek-reasoner' ? 'DeepSeek-R1 (Thinking)' : 'DeepSeek-V3';
+        thoughts.push(`🧠 [DeepSeek Inference] Menganalisis dengan ${modelLabel}...`);
+        
+        const aiOutput = await this.callDeepSeekApi(userInput, conversationHistory);
+        if (aiOutput?.text && aiOutput.text.trim()) {
+          responseText = aiOutput.text;
+          if (aiOutput.reasoning) {
+            reasoningContent = aiOutput.reasoning;
+            thoughts.push('💡 [Chain-of-Thought] DeepSeek-R1 menyelesaikan penalaran bertingkat.');
+          }
         }
       } catch (err) {
-        thoughts.push(`⚠️ [Gemini 2.0 Note] ${err.message}`);
+        thoughts.push(`⚠️ [DeepSeek API Note] ${err.message}`);
       }
 
-      // 2. If Gemini didn't return (e.g. offline/no key), consult smart local knowledge base
+      // 2. If DeepSeek didn't return (e.g. offline/no key), consult smart local knowledge base
       if (!responseText) {
         const localAnswer = this.getLocalKnowledgeAnswer(text);
         if (localAnswer) {
@@ -358,7 +377,7 @@ export const agenticAiService = {
           responseText = localAnswer;
         } else {
           thoughts.push('💡 [General Response] Memformulasikan tanggapan bantuan Desktop-Agentic...');
-          responseText = `Mengenai pertanyaan Anda tentang "${userInput}":\n\nSaya siap bantu diskusi seputar arsitektur sistem, pemrograman, optimasi proyek, maupun manajemen tugas.\n\nBeberapa tugas otomatis yang bisa langsung dijalankan:\n- Update PRD: Memperbarui dokumen spesifikasi produk di database.\n- Buat Tugas: Menambahkan tugas baru ke Kanban To-Do.\n- Sinkronkan Obsidian: Menyelaraskan catatan dokumentasi dengan Obsidian Vault.\n- Cek Telemetri: Menampilkan status kesehatan dan ringkasan sistem.\n\nAda bagian yang mau langsung kita oprek sekarang?`;
+          responseText = `Mengenai pertanyaan Anda tentang "${userInput}":\n\nSaya siap bantu analisis arsitektur sistem, coding, optimasi database, maupun manajemen tugas.\n\nBeberapa tugas otomatis yang bisa langsung dijalankan:\n- Update PRD: Memperbarui dokumen spesifikasi produk di database.\n- Buat Tugas: Menambahkan tugas baru ke Kanban To-Do.\n- Sinkronkan Obsidian: Menyelaraskan catatan dokumentasi dengan Obsidian Vault.\n- Cek Telemetri: Menampilkan status kesehatan dan ringkasan sistem.\n\nAda bagian kode atau tugas yang mau langsung kita bedah sekarang?`;
         }
       }
     }
@@ -367,7 +386,8 @@ export const agenticAiService = {
       thoughts,
       toolExecuted,
       resultPayload,
-      responseText
+      responseText,
+      reasoningContent
     };
   }
 };
