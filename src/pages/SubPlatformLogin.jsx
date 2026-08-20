@@ -107,9 +107,9 @@ export default function SubPlatformLogin() {
       {/* TOP NAVBAR HEADER */}
       <header style={{
         width: '100%',
-        maxWidth: '1280px',
+        maxWidth: '1560px',
         margin: '0 auto',
-        padding: '1.5rem 2rem',
+        padding: '1.75rem 2.5rem',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -117,30 +117,30 @@ export default function SubPlatformLogin() {
         zIndex: 10
       }}>
         {/* Left Brand Logo matching Main Login */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-          <DesktopalieMark size={30} style={{ color: primaryColor, flexShrink: 0 }} />
-          <span style={{ fontSize: '1rem', fontWeight: '800', letterSpacing: '0.08em', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <DesktopalieMark size={36} style={{ color: primaryColor, flexShrink: 0 }} />
+          <span style={{ fontSize: '1.15rem', fontWeight: '800', letterSpacing: '0.08em', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
             {activeFlavor?.logoText?.toUpperCase() || 'DESKTOPALIE'}
           </span>
         </div>
 
         {/* Center Nav Links */}
-        <nav style={{ display: 'flex', alignItems: 'center', gap: '1.75rem' }}>
-          <a href="/" style={{ color: isDarkMode ? '#94A3B8' : '#475569', fontSize: '0.85rem', fontWeight: '600', textDecoration: 'none' }}>Home</a>
-          <a href="#features" style={{ color: isDarkMode ? '#94A3B8' : '#475569', fontSize: '0.85rem', fontWeight: '600', textDecoration: 'none' }}>Features</a>
-          <a href="#about" style={{ color: isDarkMode ? '#94A3B8' : '#475569', fontSize: '0.85rem', fontWeight: '600', textDecoration: 'none' }}>About</a>
-          <a href="#contact" style={{ color: isDarkMode ? '#94A3B8' : '#475569', fontSize: '0.85rem', fontWeight: '600', textDecoration: 'none' }}>Contact</a>
+        <nav style={{ display: 'flex', alignItems: 'center', gap: '2.25rem' }}>
+          <a href="/" style={{ color: isDarkMode ? '#94A3B8' : '#475569', fontSize: '0.95rem', fontWeight: '600', textDecoration: 'none' }}>Home</a>
+          <a href="#features" style={{ color: isDarkMode ? '#94A3B8' : '#475569', fontSize: '0.95rem', fontWeight: '600', textDecoration: 'none' }}>Features</a>
+          <a href="#about" style={{ color: isDarkMode ? '#94A3B8' : '#475569', fontSize: '0.95rem', fontWeight: '600', textDecoration: 'none' }}>About</a>
+          <a href="#contact" style={{ color: isDarkMode ? '#94A3B8' : '#475569', fontSize: '0.95rem', fontWeight: '600', textDecoration: 'none' }}>Contact</a>
         </nav>
 
         {/* Right Controls: Theme Switcher & Pill Login Indicator */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
           <button
             type="button"
             onClick={toggleTheme}
             title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
             style={{
-              width: '40px',
-              height: '40px',
+              width: '44px',
+              height: '44px',
               borderRadius: '50%',
               backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
               border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
@@ -148,7 +148,7 @@ export default function SubPlatformLogin() {
               alignItems: 'center',
               justifyContent: 'center',
               color: isDarkMode ? '#FBBF24' : '#0F172A',
-              fontSize: '1.1rem',
+              fontSize: '1.2rem',
               cursor: 'pointer',
               boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
               transition: 'all 0.2s ease'
@@ -158,19 +158,19 @@ export default function SubPlatformLogin() {
           </button>
 
           <div style={{
-            padding: '0.5rem 1.25rem',
+            padding: '0.6rem 1.4rem',
             borderRadius: '99px',
             backgroundColor: primaryColor,
             color: '#FFFFFF',
-            fontSize: '0.85rem',
+            fontSize: '0.95rem',
             fontWeight: '700',
             display: 'flex',
             alignItems: 'center',
-            gap: '0.4rem',
+            gap: '0.5rem',
             boxShadow: `0 4px 12px ${primaryColor}40`
           }}>
             <span>Portal Auth</span>
-            <FiArrowRight style={{ fontSize: '0.85rem' }} />
+            <FiArrowRight style={{ fontSize: '0.95rem' }} />
           </div>
         </div>
       </header>
@@ -179,12 +179,12 @@ export default function SubPlatformLogin() {
       <main style={{
         flex: 1,
         width: '100%',
-        maxWidth: '1280px',
+        maxWidth: '1560px',
         margin: '0 auto',
-        padding: '2rem 2rem 4rem 2rem',
+        padding: '2.5rem 2.5rem 5rem 2.5rem',
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-        gap: '4rem',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
+        gap: '4.5rem',
         alignItems: 'center',
         position: 'relative',
         zIndex: 5
@@ -195,39 +195,39 @@ export default function SubPlatformLogin() {
           <div style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '0.5rem',
-            padding: '0.35rem 0.85rem',
+            gap: '0.6rem',
+            padding: '0.45rem 1.1rem',
             borderRadius: '99px',
             backgroundColor: `${primaryColor}18`,
             border: `1px solid ${primaryColor}40`,
-            fontSize: '0.725rem',
+            fontSize: '0.825rem',
             fontWeight: '700',
             letterSpacing: '0.08em',
             color: primaryColor,
-            marginBottom: '1.5rem',
+            marginBottom: '1.75rem',
             textTransform: 'uppercase'
           }}>
-            <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: primaryColor }} />
+            <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: primaryColor }} />
             <span>PLATFORM {activeFlavor?.shortName?.toUpperCase()} PORTAL WORKSPACE</span>
           </div>
 
           <h1 style={{
-            fontSize: '3.25rem',
+            fontSize: 'clamp(2.75rem, 4vw, 4.25rem)',
             fontWeight: '800',
             color: isDarkMode ? '#F8FAFC' : '#0F172A',
-            lineHeight: '1.08',
+            lineHeight: '1.1',
             letterSpacing: '-0.03em',
-            marginBottom: '1.25rem'
+            marginBottom: '1.5rem'
           }}>
             {activeFlavor?.name}
           </h1>
 
           <p style={{
-            fontSize: '1rem',
-            lineHeight: '1.65',
+            fontSize: '1.125rem',
+            lineHeight: '1.7',
             color: isDarkMode ? '#94A3B8' : '#64748B',
-            marginBottom: '2rem',
-            maxWidth: '520px'
+            marginBottom: '2.25rem',
+            maxWidth: '580px'
           }}>
             {activeFlavor?.description}
           </p>
@@ -236,13 +236,13 @@ export default function SubPlatformLogin() {
           <div style={{
             backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
             border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
-            borderRadius: '24px',
-            padding: '2rem',
+            borderRadius: '28px',
+            padding: '2.5rem',
             boxShadow: isDarkMode ? '0 25px 50px -12px rgba(0, 0, 0, 0.4)' : '0 20px 40px -15px rgba(15, 23, 42, 0.08)',
-            marginBottom: '2rem',
-            maxWidth: '480px'
+            marginBottom: '2.5rem',
+            maxWidth: '540px'
           }}>
-            <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: isDarkMode ? '#F8FAFC' : '#0F172A', marginBottom: '1.25rem' }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: '800', color: isDarkMode ? '#F8FAFC' : '#0F172A', marginBottom: '1.5rem' }}>
               Sign In to {activeFlavor?.shortName} Workspace
             </h3>
 
@@ -250,32 +250,43 @@ export default function SubPlatformLogin() {
             <button
               type="button"
               onClick={handleGoogleSignIn}
-              disabled={googleLoading}
+              disabled={googleLoading || submitting}
               style={{
                 width: '100%',
-                padding: '0.8rem',
-                borderRadius: '12px',
-                backgroundColor: isDarkMode ? '#0F172A' : '#FFFFFF',
-                color: isDarkMode ? '#F8FAFC' : '#0F172A',
+                padding: '0.9rem',
+                borderRadius: '14px',
                 border: `1px solid ${isDarkMode ? '#475569' : '#CBD5E1'}`,
+                backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
+                color: isDarkMode ? '#F8FAFC' : '#0F172A',
+                fontSize: '0.95rem',
                 fontWeight: '700',
-                fontSize: '0.875rem',
+                cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '0.65rem',
-                cursor: 'pointer',
-                marginBottom: '1.25rem',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.04)'
+                gap: '0.75rem',
+                marginBottom: '1.5rem',
+                transition: 'all 0.15s ease'
               }}
             >
               <FaGoogle style={{ color: '#EA4335', fontSize: '1.1rem' }} />
-              <span>{googleLoading ? 'Memproses OAuth...' : 'Sign in with Google Account'}</span>
+              <span>{googleLoading ? 'Menghubungkan ke Google...' : `Sign in with Google`}</span>
             </button>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
+            {/* Divider */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '1rem',
+              marginBottom: '1.5rem',
+              color: isDarkMode ? '#64748B' : '#94A3B8',
+              fontSize: '0.8rem',
+              fontWeight: '700',
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em'
+            }}>
               <div style={{ flex: 1, height: '1px', backgroundColor: isDarkMode ? '#334155' : '#E2E8F0' }} />
-              <span style={{ fontSize: '0.7rem', fontWeight: '700', textTransform: 'uppercase', color: 'var(--text-muted)' }}>atau login email</span>
+              <span>OR EMAIL</span>
               <div style={{ flex: 1, height: '1px', backgroundColor: isDarkMode ? '#334155' : '#E2E8F0' }} />
             </div>
 
@@ -284,52 +295,53 @@ export default function SubPlatformLogin() {
                 backgroundColor: isDarkMode ? 'rgba(239, 68, 68, 0.15)' : '#FFF1F2',
                 border: `1px solid ${isDarkMode ? 'rgba(239, 68, 68, 0.3)' : '#FECDD3'}`,
                 color: isDarkMode ? '#FCA5A5' : '#E11D48',
-                padding: '0.75rem 1rem',
-                borderRadius: '12px',
-                fontSize: '0.85rem',
-                marginBottom: '1.25rem',
+                padding: '0.85rem 1.15rem',
+                borderRadius: '14px',
+                fontSize: '0.9rem',
+                marginBottom: '1.5rem',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.5rem'
+                gap: '0.6rem'
               }}>
-                <FiAlertCircle style={{ flexShrink: 0 }} />
+                <FiAlertCircle style={{ flexShrink: 0, fontSize: '1.1rem' }} />
                 <span>{errorMessage}</span>
               </div>
             )}
 
             <form onSubmit={handleSubmit}>
-              <div style={{ marginBottom: '1.15rem' }}>
-                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', color: isDarkMode ? '#94A3B8' : '#64748B', marginBottom: '0.4rem' }}>
-                  Email Administrator / Pengguna
+              <div style={{ marginBottom: '1.35rem' }}>
+                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', textTransform: 'uppercase', color: isDarkMode ? '#94A3B8' : '#64748B', marginBottom: '0.5rem', letterSpacing: '0.04em' }}>
+                  Work Email Address
                 </label>
                 <div style={{ position: 'relative' }}>
-                  <FiMail style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: isDarkMode ? '#64748B' : '#94A3B8' }} />
+                  <FiMail style={{ position: 'absolute', left: '1.15rem', top: '50%', transform: 'translateY(-50%)', color: isDarkMode ? '#64748B' : '#94A3B8', fontSize: '1.15rem' }} />
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="user@domain.com"
+                    placeholder="user@organization.com"
                     required
                     style={{
                       width: '100%',
-                      padding: '0.75rem 1rem 0.75rem 2.75rem',
-                      borderRadius: '12px',
+                      padding: '0.95rem 1.25rem 0.95rem 3.2rem',
+                      borderRadius: '14px',
                       border: `1px solid ${isDarkMode ? '#475569' : '#CBD5E1'}`,
-                      fontSize: '0.9rem',
+                      fontSize: '1rem',
                       outline: 'none',
                       backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
-                      color: isDarkMode ? '#F8FAFC' : '#0F172A'
+                      color: isDarkMode ? '#F8FAFC' : '#0F172A',
+                      transition: 'border-color 0.15s ease, box-shadow 0.15s ease'
                     }}
                   />
                 </div>
               </div>
 
-              <div style={{ marginBottom: '1.5rem' }}>
-                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', color: isDarkMode ? '#94A3B8' : '#64748B', marginBottom: '0.4rem' }}>
-                  Kata Sandi
+              <div style={{ marginBottom: '1.75rem' }}>
+                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', textTransform: 'uppercase', color: isDarkMode ? '#94A3B8' : '#64748B', marginBottom: '0.5rem', letterSpacing: '0.04em' }}>
+                  Password
                 </label>
                 <div style={{ position: 'relative' }}>
-                  <FiLock style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: isDarkMode ? '#64748B' : '#94A3B8' }} />
+                  <FiLock style={{ position: 'absolute', left: '1.15rem', top: '50%', transform: 'translateY(-50%)', color: isDarkMode ? '#64748B' : '#94A3B8', fontSize: '1.15rem' }} />
                   <input
                     type="password"
                     value={password}
@@ -338,126 +350,105 @@ export default function SubPlatformLogin() {
                     required
                     style={{
                       width: '100%',
-                      padding: '0.75rem 1rem 0.75rem 2.75rem',
-                      borderRadius: '12px',
+                      padding: '0.95rem 1.25rem 0.95rem 3.2rem',
+                      borderRadius: '14px',
                       border: `1px solid ${isDarkMode ? '#475569' : '#CBD5E1'}`,
-                      fontSize: '0.9rem',
+                      fontSize: '1rem',
                       outline: 'none',
                       backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
-                      color: isDarkMode ? '#F8FAFC' : '#0F172A'
+                      color: isDarkMode ? '#F8FAFC' : '#0F172A',
+                      transition: 'border-color 0.15s ease, box-shadow 0.15s ease'
                     }}
                   />
                 </div>
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1.25rem', flexWrap: 'wrap' }}>
                 <button
                   type="submit"
                   disabled={submitting}
                   style={{
-                    padding: '0.85rem 1.85rem',
+                    padding: '0.95rem 2.25rem',
                     borderRadius: '99px',
                     backgroundColor: primaryColor,
                     color: '#FFFFFF',
                     border: 'none',
-                    fontSize: '0.9rem',
+                    fontSize: '1rem',
                     fontWeight: '700',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '0.5rem',
+                    gap: '0.6rem',
                     boxShadow: `0 8px 20px ${primaryColor}40`,
                     transition: 'all 0.15s ease'
                   }}
                 >
-                  <span>{submitting ? 'Memproses...' : `Masuk Portal ${activeFlavor?.shortName}`}</span>
-                  <FiArrowRight />
+                  <span>{submitting ? 'Authenticating...' : `Enter ${activeFlavor?.shortName} Portal`}</span>
+                  <FiArrowRight style={{ fontSize: '1.1rem' }} />
                 </button>
 
-                <Link to="/" style={{ fontSize: '0.85rem', fontWeight: '600', color: primaryColor, textDecoration: 'none' }}>
-                  Kembali ke Landing ➔
+                <Link to="/login" style={{ fontSize: '0.95rem', fontWeight: '600', color: primaryColor, textDecoration: 'none' }}>
+                  Main Backoffice ➔
                 </Link>
               </div>
             </form>
           </div>
-
-          {/* Bottom Monospace Tagline matching Main Login */}
-          <div style={{
-            fontSize: '0.7rem',
-            fontFamily: "'JetBrains Mono', monospace",
-            letterSpacing: '0.05em',
-            color: isDarkMode ? '#64748B' : '#94A3B8',
-            borderTop: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
-            paddingTop: '1rem',
-            maxWidth: '480px'
-          }}>
-            INTEGRATED PLATFORM FLAVORING SYSTEM — POWERED BY DESKTOPALIE ECOSYSTEM.
-          </div>
         </div>
 
-        {/* RIGHT COLUMN: 3D GRAPHICAL MOCKUP WINDOW (MATCHING MAIN LOGIN LAYOUT) */}
-        <div style={{ position: 'relative', display: 'flex', justifyContent: 'center' }}>
+        {/* RIGHT COLUMN: INTERACTIVE FEATURE SHOWCASE */}
+        <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', width: '100%' }}>
+          
           <div style={{
             width: '100%',
-            maxWidth: '520px',
-            borderRadius: '24px',
+            maxWidth: '620px',
             backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
             border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
-            padding: '1.75rem',
-            boxShadow: isDarkMode ? '0 25px 50px -12px rgba(0, 0, 0, 0.5)' : '0 20px 40px -15px rgba(15, 23, 42, 0.1)',
+            borderRadius: '24px',
+            padding: '3rem 2.5rem',
+            boxShadow: isDarkMode ? '0 30px 60px -15px rgba(0, 0, 0, 0.6)' : '0 30px 60px -15px rgba(15, 23, 42, 0.12)',
             position: 'relative'
           }}>
-            {/* Window Top Controls */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '1.5rem' }}>
-              <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#EF4444' }} />
-              <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#F59E0B' }} />
-              <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#10B981' }} />
-              <span style={{ marginLeft: '0.5rem', fontSize: '0.75rem', fontWeight: '700', color: 'var(--text-muted)' }}>
-                {activeFlavor?.name} Workspace Preview
-              </span>
-            </div>
-
             {/* Platform Dedicated Graphic / Features Mockup */}
             <div style={{
-              borderRadius: '16px',
+              borderRadius: '18px',
               backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
               border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
-              padding: '2rem 1.5rem',
+              padding: '2.5rem 2rem',
               textAlign: 'center'
             }}>
               <div style={{
-                width: '72px',
-                height: '72px',
+                width: '80px',
+                height: '80px',
                 borderRadius: '50%',
                 backgroundColor: `${primaryColor}20`,
                 color: primaryColor,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                margin: '0 auto 1.25rem auto',
-                fontSize: '2rem'
+                margin: '0 auto 1.5rem auto',
+                fontSize: '2.25rem'
               }}>
                 {flavorId === 'platform2' ? <FiTruck /> : (flavorId === 'platform3' ? <FiCpu /> : <FiShield />)}
               </div>
 
-              <h4 style={{ fontSize: '1.2rem', fontWeight: '800', margin: '0 0 0.5rem 0', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+              <h4 style={{ fontSize: '1.35rem', fontWeight: '800', margin: '0 0 0.75rem 0', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
                 {activeFlavor?.shortName} Dedicated Telemetry & Portal
               </h4>
 
-              <p style={{ fontSize: '0.875rem', color: isDarkMode ? '#94A3B8' : '#64748B', lineHeight: '1.55', margin: '0 0 1.5rem 0' }}>
+              <p style={{ fontSize: '0.95rem', color: isDarkMode ? '#94A3B8' : '#64748B', lineHeight: '1.65', margin: '0 0 1.75rem 0' }}>
                 Akses mandiri ke modul real-time telemetry, kontrol keamanan terenkripsi, dan analitik performa {activeFlavor?.shortName}.
               </p>
 
               <div style={{
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '0.4rem',
-                padding: '0.4rem 0.85rem',
+                gap: '0.5rem',
+                padding: '0.5rem 1.1rem',
                 borderRadius: '99px',
                 backgroundColor: `${primaryColor}15`,
                 color: primaryColor,
                 fontWeight: '700',
-                fontSize: '0.775rem'
+                fontSize: '0.85rem'
               }}>
                 🟢 Live Server Cluster Online
               </div>

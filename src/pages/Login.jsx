@@ -92,9 +92,9 @@ export default function Login() {
       {/* TOP NAVBAR HEADER */}
       <header style={{
         width: '100%',
-        maxWidth: '1280px',
+        maxWidth: '1560px',
         margin: '0 auto',
-        padding: '1.5rem 2rem',
+        padding: '1.75rem 2.5rem',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -102,32 +102,32 @@ export default function Login() {
         zIndex: 10
       }}>
         {/* Left Brand Logo */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-          <DesktopalieMark size={30} style={{ color: isDarkMode ? '#F8FAFC' : '#0F172A', flexShrink: 0 }} />
-          <span style={{ fontSize: '1rem', fontWeight: '800', letterSpacing: '0.08em', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <DesktopalieMark size={36} style={{ color: isDarkMode ? '#F8FAFC' : '#0F172A', flexShrink: 0 }} />
+          <span style={{ fontSize: '1.15rem', fontWeight: '800', letterSpacing: '0.08em', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
             {activeFlavor?.logoText?.toUpperCase() || 'DESKTOPALIE'}
           </span>
         </div>
 
         {/* Center Nav Links */}
-        <nav style={{ display: 'flex', alignItems: 'center', gap: '1.75rem' }}>
-          <a href="https://desktopalie.my.id" style={{ color: isDarkMode ? '#94A3B8' : '#475569', fontSize: '0.85rem', fontWeight: '600', textDecoration: 'none' }}>Home</a>
-          <a href="https://desktopalie.my.id#projects" style={{ color: isDarkMode ? '#94A3B8' : '#475569', fontSize: '0.85rem', fontWeight: '600', textDecoration: 'none' }}>Projects</a>
-          <a href="https://desktopalie.my.id#experiments" style={{ color: isDarkMode ? '#94A3B8' : '#475569', fontSize: '0.85rem', fontWeight: '600', textDecoration: 'none' }}>Experiments</a>
-          <a href="https://desktopalie.my.id#about" style={{ color: isDarkMode ? '#94A3B8' : '#475569', fontSize: '0.85rem', fontWeight: '600', textDecoration: 'none' }}>About</a>
-          <a href="https://desktopalie.my.id#services" style={{ color: isDarkMode ? '#94A3B8' : '#475569', fontSize: '0.85rem', fontWeight: '600', textDecoration: 'none' }}>Services</a>
-          <a href="https://desktopalie.my.id#contact" style={{ color: isDarkMode ? '#94A3B8' : '#475569', fontSize: '0.85rem', fontWeight: '600', textDecoration: 'none' }}>Contact</a>
+        <nav style={{ display: 'flex', alignItems: 'center', gap: '2.25rem' }}>
+          <a href="https://desktopalie.my.id" style={{ color: isDarkMode ? '#94A3B8' : '#475569', fontSize: '0.95rem', fontWeight: '600', textDecoration: 'none' }}>Home</a>
+          <a href="https://desktopalie.my.id#projects" style={{ color: isDarkMode ? '#94A3B8' : '#475569', fontSize: '0.95rem', fontWeight: '600', textDecoration: 'none' }}>Projects</a>
+          <a href="https://desktopalie.my.id#experiments" style={{ color: isDarkMode ? '#94A3B8' : '#475569', fontSize: '0.95rem', fontWeight: '600', textDecoration: 'none' }}>Experiments</a>
+          <a href="https://desktopalie.my.id#about" style={{ color: isDarkMode ? '#94A3B8' : '#475569', fontSize: '0.95rem', fontWeight: '600', textDecoration: 'none' }}>About</a>
+          <a href="https://desktopalie.my.id#services" style={{ color: isDarkMode ? '#94A3B8' : '#475569', fontSize: '0.95rem', fontWeight: '600', textDecoration: 'none' }}>Services</a>
+          <a href="https://desktopalie.my.id#contact" style={{ color: isDarkMode ? '#94A3B8' : '#475569', fontSize: '0.95rem', fontWeight: '600', textDecoration: 'none' }}>Contact</a>
         </nav>
 
         {/* Right Controls: Interactive Dark Mode Switcher & Login Pill Button */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
           <button
             type="button"
             onClick={toggleTheme}
             title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
             style={{
-              width: '40px',
-              height: '40px',
+              width: '44px',
+              height: '44px',
               borderRadius: '50%',
               backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
               border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
@@ -135,7 +135,7 @@ export default function Login() {
               alignItems: 'center',
               justifyContent: 'center',
               color: isDarkMode ? '#FBBF24' : '#0F172A',
-              fontSize: '1.1rem',
+              fontSize: '1.2rem',
               cursor: 'pointer',
               boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
               transition: 'all 0.2s ease'
@@ -145,18 +145,18 @@ export default function Login() {
           </button>
 
           <div style={{
-            padding: '0.5rem 1.25rem',
+            padding: '0.6rem 1.4rem',
             borderRadius: '99px',
             backgroundColor: isDarkMode ? '#818CF8' : '#0F172A',
             color: isDarkMode ? '#0F172A' : '#FFFFFF',
-            fontSize: '0.85rem',
+            fontSize: '0.95rem',
             fontWeight: '700',
             display: 'flex',
             alignItems: 'center',
-            gap: '0.4rem'
+            gap: '0.5rem'
           }}>
             <span>Login</span>
-            <FiArrowRight style={{ fontSize: '0.85rem' }} />
+            <FiArrowRight style={{ fontSize: '0.95rem' }} />
           </div>
         </div>
       </header>
@@ -165,12 +165,12 @@ export default function Login() {
       <main style={{
         flex: 1,
         width: '100%',
-        maxWidth: '1280px',
+        maxWidth: '1560px',
         margin: '0 auto',
-        padding: '2rem 2rem 4rem 2rem',
+        padding: '2.5rem 2.5rem 5rem 2.5rem',
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-        gap: '4rem',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
+        gap: '4.5rem',
         alignItems: 'center',
         position: 'relative',
         zIndex: 5
@@ -181,27 +181,27 @@ export default function Login() {
           <div style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '0.5rem',
-            padding: '0.35rem 0.85rem',
+            gap: '0.6rem',
+            padding: '0.45rem 1.1rem',
             borderRadius: '99px',
             backgroundColor: isDarkMode ? 'rgba(129, 140, 248, 0.15)' : '#F1F5F9',
             border: `1px solid ${isDarkMode ? 'rgba(129, 140, 248, 0.3)' : '#E2E8F0'}`,
-            fontSize: '0.725rem',
+            fontSize: '0.825rem',
             fontWeight: '700',
             letterSpacing: '0.08em',
             color: isDarkMode ? '#818CF8' : '#0D9488',
-            marginBottom: '1.5rem',
+            marginBottom: '1.75rem',
             textTransform: 'uppercase'
           }}>
-            <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: isDarkMode ? '#818CF8' : '#0D9488' }} />
+            <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: isDarkMode ? '#818CF8' : '#0D9488' }} />
             <span>{isMainDesktopalie ? 'MAIN BACKOFFICE ADMIN WORKSPACE' : `PLATFORM ${activeFlavor?.shortName?.toUpperCase()} WORKSPACE`}</span>
           </div>
 
           <h1 style={{
-            fontSize: '3.5rem',
+            fontSize: 'clamp(2.75rem, 4vw, 4.25rem)',
             fontWeight: '800',
             color: isDarkMode ? '#F8FAFC' : '#0F172A',
-            lineHeight: '1.08',
+            lineHeight: '1.1',
             letterSpacing: '-0.03em',
             marginBottom: '1.5rem'
           }}>
@@ -209,11 +209,11 @@ export default function Login() {
           </h1>
 
           <p style={{
-            fontSize: '1rem',
-            lineHeight: '1.65',
+            fontSize: '1.125rem',
+            lineHeight: '1.7',
             color: isDarkMode ? '#94A3B8' : '#64748B',
-            marginBottom: '2rem',
-            maxWidth: '520px'
+            marginBottom: '2.25rem',
+            maxWidth: '580px'
           }}>
             {activeFlavor?.description || 'Desktopalie is a space for projects, experiments, and digital creations.'}
           </p>
@@ -221,13 +221,13 @@ export default function Login() {
           <div style={{
             backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
             border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
-            borderRadius: '24px',
-            padding: '2rem',
+            borderRadius: '28px',
+            padding: '2.5rem',
             boxShadow: isDarkMode ? '0 25px 50px -12px rgba(0, 0, 0, 0.4)' : '0 20px 40px -15px rgba(15, 23, 42, 0.08)',
             marginBottom: '2.5rem',
-            maxWidth: '480px'
+            maxWidth: '540px'
           }}>
-            <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: isDarkMode ? '#F8FAFC' : '#0F172A', marginBottom: '1.25rem' }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: '800', color: isDarkMode ? '#F8FAFC' : '#0F172A', marginBottom: '1.5rem' }}>
               Sign In to Backoffice Admin
             </h3>
 
@@ -236,26 +236,26 @@ export default function Login() {
                 backgroundColor: isDarkMode ? 'rgba(239, 68, 68, 0.15)' : '#FFF1F2',
                 border: `1px solid ${isDarkMode ? 'rgba(239, 68, 68, 0.3)' : '#FECDD3'}`,
                 color: isDarkMode ? '#FCA5A5' : '#E11D48',
-                padding: '0.75rem 1rem',
-                borderRadius: '12px',
-                fontSize: '0.85rem',
-                marginBottom: '1.25rem',
+                padding: '0.85rem 1.15rem',
+                borderRadius: '14px',
+                fontSize: '0.9rem',
+                marginBottom: '1.5rem',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.5rem'
+                gap: '0.6rem'
               }}>
-                <FiAlertCircle style={{ flexShrink: 0 }} />
+                <FiAlertCircle style={{ flexShrink: 0, fontSize: '1.1rem' }} />
                 <span>{errorMessage}</span>
               </div>
             )}
 
             <form onSubmit={handleSubmit}>
-              <div style={{ marginBottom: '1.15rem' }}>
-                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', color: isDarkMode ? '#94A3B8' : '#64748B', marginBottom: '0.4rem' }}>
+              <div style={{ marginBottom: '1.35rem' }}>
+                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', textTransform: 'uppercase', color: isDarkMode ? '#94A3B8' : '#64748B', marginBottom: '0.5rem', letterSpacing: '0.04em' }}>
                   Administrator Email
                 </label>
                 <div style={{ position: 'relative' }}>
-                  <FiMail style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: isDarkMode ? '#64748B' : '#94A3B8' }} />
+                  <FiMail style={{ position: 'absolute', left: '1.15rem', top: '50%', transform: 'translateY(-50%)', color: isDarkMode ? '#64748B' : '#94A3B8', fontSize: '1.15rem' }} />
                   <input
                     type="email"
                     value={email}
@@ -264,24 +264,25 @@ export default function Login() {
                     required
                     style={{
                       width: '100%',
-                      padding: '0.75rem 1rem 0.75rem 2.75rem',
-                      borderRadius: '12px',
+                      padding: '0.95rem 1.25rem 0.95rem 3.2rem',
+                      borderRadius: '14px',
                       border: `1px solid ${isDarkMode ? '#475569' : '#CBD5E1'}`,
-                      fontSize: '0.9rem',
+                      fontSize: '1rem',
                       outline: 'none',
                       backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
-                      color: isDarkMode ? '#F8FAFC' : '#0F172A'
+                      color: isDarkMode ? '#F8FAFC' : '#0F172A',
+                      transition: 'border-color 0.15s ease, box-shadow 0.15s ease'
                     }}
                   />
                 </div>
               </div>
 
-              <div style={{ marginBottom: '1.5rem' }}>
-                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', color: isDarkMode ? '#94A3B8' : '#64748B', marginBottom: '0.4rem' }}>
+              <div style={{ marginBottom: '1.75rem' }}>
+                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', textTransform: 'uppercase', color: isDarkMode ? '#94A3B8' : '#64748B', marginBottom: '0.5rem', letterSpacing: '0.04em' }}>
                   Password
                 </label>
                 <div style={{ position: 'relative' }}>
-                  <FiLock style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: isDarkMode ? '#64748B' : '#94A3B8' }} />
+                  <FiLock style={{ position: 'absolute', left: '1.15rem', top: '50%', transform: 'translateY(-50%)', color: isDarkMode ? '#64748B' : '#94A3B8', fontSize: '1.15rem' }} />
                   <input
                     type="password"
                     value={password}
@@ -290,43 +291,44 @@ export default function Login() {
                     required
                     style={{
                       width: '100%',
-                      padding: '0.75rem 1rem 0.75rem 2.75rem',
-                      borderRadius: '12px',
+                      padding: '0.95rem 1.25rem 0.95rem 3.2rem',
+                      borderRadius: '14px',
                       border: `1px solid ${isDarkMode ? '#475569' : '#CBD5E1'}`,
-                      fontSize: '0.9rem',
+                      fontSize: '1rem',
                       outline: 'none',
                       backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
-                      color: isDarkMode ? '#F8FAFC' : '#0F172A'
+                      color: isDarkMode ? '#F8FAFC' : '#0F172A',
+                      transition: 'border-color 0.15s ease, box-shadow 0.15s ease'
                     }}
                   />
                 </div>
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1.25rem', flexWrap: 'wrap' }}>
                 <button
                   type="submit"
                   disabled={submitting}
                   style={{
-                    padding: '0.85rem 1.85rem',
+                    padding: '0.95rem 2.25rem',
                     borderRadius: '99px',
                     backgroundColor: isDarkMode ? '#818CF8' : '#0F172A',
                     color: isDarkMode ? '#0F172A' : '#FFFFFF',
                     border: 'none',
-                    fontSize: '0.9rem',
+                    fontSize: '1rem',
                     fontWeight: '700',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '0.5rem',
+                    gap: '0.6rem',
                     boxShadow: isDarkMode ? '0 8px 20px rgba(129, 140, 248, 0.3)' : '0 8px 20px rgba(15, 23, 42, 0.25)',
                     transition: 'all 0.15s ease'
                   }}
                 >
                   <span>{submitting ? 'Processing...' : 'Sign In to Backoffice'}</span>
-                  <FiArrowRight />
+                  <FiArrowRight style={{ fontSize: '1.1rem' }} />
                 </button>
 
-                <Link to="/register" style={{ fontSize: '0.85rem', fontWeight: '600', color: isDarkMode ? '#818CF8' : '#64748B', textDecoration: 'none' }}>
+                <Link to="/register" style={{ fontSize: '0.95rem', fontWeight: '600', color: isDarkMode ? '#818CF8' : '#64748B', textDecoration: 'none' }}>
                   Register Account ➔
                 </Link>
               </div>
@@ -335,36 +337,36 @@ export default function Login() {
 
           {/* Bottom Monospace Tagline */}
           <div style={{
-            fontSize: '0.7rem',
+            fontSize: '0.8rem',
             fontFamily: "'JetBrains Mono', monospace",
-            letterSpacing: '0.05em',
+            letterSpacing: '0.06em',
             color: isDarkMode ? '#64748B' : '#94A3B8',
             borderTop: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
-            paddingTop: '1rem',
-            maxWidth: '480px'
+            paddingTop: '1.25rem',
+            maxWidth: '540px'
           }}>
             CURRENTLY EXPLORING CREATIVE INTERFACES, THOUGHTFUL MOTION, AND USEFUL AI.
           </div>
         </div>
 
         {/* RIGHT COLUMN: 3D GRAPHICAL MOCKUP WINDOW (LIKE SCREENSHOT) */}
-        <div style={{ position: 'relative', display: 'flex', justifyContent: 'center' }}>
+        <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', width: '100%' }}>
           
           {/* Floating Badge Top Right */}
           <div style={{
             position: 'absolute',
-            top: '-20px',
-            right: '20px',
+            top: '-24px',
+            right: '10px',
             backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
             border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
-            borderRadius: '8px',
-            padding: '0.35rem 0.85rem',
-            fontSize: '0.725rem',
+            borderRadius: '10px',
+            padding: '0.5rem 1.1rem',
+            fontSize: '0.825rem',
             fontWeight: '800',
             fontFamily: "'JetBrains Mono', monospace",
             letterSpacing: '0.08em',
             color: isDarkMode ? '#C084FC' : '#475569',
-            boxShadow: '0 10px 20px rgba(0,0,0,0.2)',
+            boxShadow: '0 10px 25px rgba(0,0,0,0.25)',
             zIndex: 10,
             transform: 'rotate(3deg)'
           }}>
@@ -374,13 +376,13 @@ export default function Login() {
           {/* Floating Code Snippet Badge Bottom Left */}
           <div style={{
             position: 'absolute',
-            bottom: '40px',
-            left: '-10px',
+            bottom: '30px',
+            left: '-15px',
             backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
             border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
-            borderRadius: '8px',
-            padding: '0.45rem 1rem',
-            fontSize: '0.75rem',
+            borderRadius: '10px',
+            padding: '0.6rem 1.25rem',
+            fontSize: '0.85rem',
             fontFamily: "'JetBrains Mono', monospace",
             color: isDarkMode ? '#F8FAFC' : '#0F172A',
             boxShadow: '0 15px 30px rgba(0,0,0,0.3)',
@@ -393,10 +395,10 @@ export default function Login() {
           {/* MAIN 3D TILTED MOCKUP BROWSER CARD */}
           <div style={{
             width: '100%',
-            maxWidth: '520px',
+            maxWidth: '620px',
             backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
             border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
-            borderRadius: '20px',
+            borderRadius: '24px',
             boxShadow: isDarkMode ? '0 30px 60px -15px rgba(0, 0, 0, 0.6)' : '0 30px 60px -15px rgba(15, 23, 42, 0.12)',
             overflow: 'hidden',
             transform: 'perspective(1000px) rotateY(-4deg) rotateX(2deg)',
@@ -406,40 +408,40 @@ export default function Login() {
             <div style={{
               backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
               borderBottom: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
-              padding: '0.75rem 1.25rem',
+              padding: '0.9rem 1.5rem',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between'
             }}>
-              <div style={{ display: 'flex', gap: '0.4rem' }}>
-                <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#EF4444' }} />
-                <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#F59E0B' }} />
-                <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#10B981' }} />
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <span style={{ width: '12px', height: '12px', borderRadius: '50%', backgroundColor: '#EF4444' }} />
+                <span style={{ width: '12px', height: '12px', borderRadius: '50%', backgroundColor: '#F59E0B' }} />
+                <span style={{ width: '12px', height: '12px', borderRadius: '50%', backgroundColor: '#10B981' }} />
               </div>
 
               <div style={{
                 backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
                 border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
-                borderRadius: '6px',
-                padding: '0.2rem 1rem',
-                fontSize: '0.725rem',
+                borderRadius: '8px',
+                padding: '0.35rem 1.25rem',
+                fontSize: '0.825rem',
                 fontFamily: "'JetBrains Mono', monospace",
                 color: isDarkMode ? '#94A3B8' : '#64748B'
               }}>
                 desktopalie.my.id/lab
               </div>
 
-              <span style={{ fontSize: '0.8rem', color: isDarkMode ? '#64748B' : '#94A3B8' }}>+</span>
+              <span style={{ fontSize: '1rem', color: isDarkMode ? '#64748B' : '#94A3B8' }}>+</span>
             </div>
 
             {/* Canvas Area with Grid Pattern */}
             <div style={{
-              padding: '2.5rem 2rem',
-              minHeight: '340px',
+              padding: '3rem 2.5rem',
+              minHeight: '400px',
               backgroundImage: isDarkMode 
-                ? 'radial-gradient(#334155 1px, transparent 1px)' 
-                : 'radial-gradient(#CBD5E1 1px, transparent 1px)',
-              backgroundSize: '20px 20px',
+                ? 'radial-gradient(#334155 1.5px, transparent 1.5px)' 
+                : 'radial-gradient(#CBD5E1 1.5px, transparent 1.5px)',
+              backgroundSize: '24px 24px',
               backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
               position: 'relative',
               display: 'flex',
@@ -448,21 +450,21 @@ export default function Login() {
             }}>
               <div>
                 <div style={{
-                  fontSize: '0.7rem',
+                  fontSize: '0.8rem',
                   fontFamily: "'JetBrains Mono', monospace",
                   fontWeight: '700',
                   color: isDarkMode ? '#C084FC' : '#7C3AED',
                   letterSpacing: '0.1em',
-                  marginBottom: '1rem'
+                  marginBottom: '1.25rem'
                 }}>
                   EXPERIMENT / 026
                 </div>
 
                 <h2 style={{
-                  fontSize: '2.1rem',
+                  fontSize: '2.6rem',
                   fontWeight: '800',
                   color: isDarkMode ? '#F8FAFC' : '#0F172A',
-                  lineHeight: '1.15',
+                  lineHeight: '1.18',
                   marginBottom: '0.5rem',
                   letterSpacing: '-0.02em'
                 }}>
@@ -472,9 +474,9 @@ export default function Login() {
               </div>
 
               {/* 3D Donut & UI Chip Graphic */}
-              <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginTop: '2rem' }}>
+              <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginTop: '2.5rem' }}>
                 <div style={{
-                  fontSize: '0.65rem',
+                  fontSize: '0.75rem',
                   fontFamily: "'JetBrains Mono', monospace",
                   color: isDarkMode ? '#64748B' : '#94A3B8',
                   letterSpacing: '0.1em'
@@ -483,10 +485,10 @@ export default function Login() {
                 </div>
 
                 {/* Gradient Ring Graphic */}
-                <div style={{ position: 'relative', width: '130px', height: '130px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ position: 'relative', width: '150px', height: '150px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <div style={{
-                    width: '120px',
-                    height: '120px',
+                    width: '140px',
+                    height: '140px',
                     borderRadius: '50%',
                     background: 'conic-gradient(from 180deg, #38BDF8, #818CF8, #C084FC, #F43F5E)',
                     display: 'flex',
@@ -494,8 +496,8 @@ export default function Login() {
                     justifyContent: 'center'
                   }}>
                     <div style={{
-                      width: '60px',
-                      height: '60px',
+                      width: '70px',
+                      height: '70px',
                       borderRadius: '50%',
                       backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF'
                     }} />
@@ -504,13 +506,13 @@ export default function Login() {
                   {/* UI Chip Floating Card */}
                   <div style={{
                     position: 'absolute',
-                    top: '10px',
-                    left: '-20px',
+                    top: '12px',
+                    left: '-24px',
                     backgroundColor: isDarkMode ? '#0F172A' : '#1E293B',
                     color: '#FFFFFF',
-                    borderRadius: '8px',
-                    padding: '0.6rem 0.85rem',
-                    fontSize: '0.75rem',
+                    borderRadius: '10px',
+                    padding: '0.7rem 1rem',
+                    fontSize: '0.85rem',
                     fontWeight: '800',
                     boxShadow: '0 10px 20px rgba(0,0,0,0.4)'
                   }}>
@@ -525,12 +527,12 @@ export default function Login() {
                     backgroundColor: isDarkMode ? '#818CF8' : '#0F172A',
                     color: isDarkMode ? '#0F172A' : '#FFFFFF',
                     borderRadius: '50%',
-                    width: '28px',
-                    height: '28px',
+                    width: '32px',
+                    height: '32px',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    fontSize: '0.7rem',
+                    fontSize: '0.8rem',
                     fontWeight: '800'
                   }}>
                     01
