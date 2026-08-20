@@ -1,26 +1,35 @@
 import { useState, useRef, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { 
-  FiGrid, 
-  FiFolder, 
-  FiCpu, 
-  FiFileText, 
-  FiBookmark, 
-  FiUser, 
-  FiTool, 
-  FiLayout, 
-  FiCheckSquare, 
-  FiBookOpen, 
-  FiMenu, 
-  FiSearch, 
-  FiX, 
-  FiLayers, 
-  FiUsers, 
-  FiBell, 
-  FiDollarSign,
-  FiChevronDown,
-  FiZap
-} from 'react-icons/fi';
+  HiHome,
+  HiOutlineHome,
+  HiSquares2X2,
+  HiOutlineSquares2X2,
+  HiBanknotes,
+  HiOutlineBanknotes,
+  HiFolder,
+  HiOutlineFolder,
+  HiClipboardDocumentCheck,
+  HiOutlineClipboardDocumentCheck,
+  HiPencilSquare,
+  HiOutlinePencilSquare,
+  HiDocumentText,
+  HiOutlineDocumentText,
+  HiUserGroup,
+  HiOutlineUserGroup,
+  HiBell,
+  HiOutlineBell,
+  HiCog6Tooth,
+  HiOutlineCog6Tooth,
+  HiUser,
+  HiOutlineUser,
+  HiBolt,
+  HiOutlineBolt,
+  HiMagnifyingGlass,
+  HiBars3,
+  HiXMark
+} from 'react-icons/hi2';
+import { FiUser } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useFlavor } from '../context/FlavorContext';
@@ -35,9 +44,6 @@ export default function Sidebar() {
   const { flavor, flavorId, subPlatformFlavors, isMainDesktopalie, switchFlavor, resetToMainFlavor } = useFlavor();
   const [searchQuery, setSearchQuery] = useState('');
   const [unreadCount, setUnreadCount] = useState(() => notificationService.getUnreadCount());
-  
-  // Accordion state: Store active category ID for exclusive single-open accordion (null = all collapsed)
-  const [openCategoryId, setOpenCategoryId] = useState(null);
 
   const [userProfile, setUserProfile] = useState(() => {
     try {
@@ -48,18 +54,15 @@ export default function Sidebar() {
   });
   const searchInputRef = useRef(null);
 
-  // Desktop collapse state
   const [isCollapsed, setIsCollapsed] = useState(() => {
     return localStorage.getItem('desktopalie_sidebar_collapsed') === 'true';
   });
 
-  // Tablet & Mobile detection & drawer toggle
   const [isTabletOrMobile, setIsTabletOrMobile] = useState(() => {
     return typeof window !== 'undefined' ? window.innerWidth <= 1024 : false;
   });
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Load user profile
   useEffect(() => {
     async function loadSidebarProfile() {
       try {
@@ -70,7 +73,6 @@ export default function Sidebar() {
       } catch (e) {}
     }
     loadSidebarProfile();
-
     const handleStorage = (e) => {
       if (!e || !e.key || e.key.includes('profile')) {
         loadSidebarProfile();
@@ -80,7 +82,6 @@ export default function Sidebar() {
     return () => window.removeEventListener('storage', handleStorage);
   }, [user?.id]);
 
-  // Window resize handler for mobile/tablet detection
   useEffect(() => {
     const handleResize = () => {
       const isTablet = window.innerWidth <= 1024;
@@ -93,7 +94,6 @@ export default function Sidebar() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Notification subscription
   useEffect(() => {
     const unsubscribe = notificationService.subscribe(() => {
       setUnreadCount(notificationService.getUnreadCount());
@@ -125,333 +125,159 @@ export default function Sidebar() {
     }
   };
 
-  // Toggle Category Accordion Dropdown (Exclusive: only 1 category open at a time)
-  const toggleCategory = (catId) => {
-    setOpenCategoryId(prev => (prev === catId ? null : catId));
-  };
-
-  // =========================================================================
-  // CATEGORIZED MENUS SORTED ALPHABETICALLY (A-Z)
-  // 1. Analitik
-  // 2. Dokumentasi
-  // 3. Inovasi
-  // 4. Manajemen
-  // 5. Sistem
-  // =========================================================================
-  const rawCategories = [
-    {
-      id: 'analytics',
-      title: 'Analitik',
-      icon: FiGrid,
-      items: [
-        { label: t('dashboard') || 'Dashboard', path: '/dashboard', icon: FiGrid },
-        ...(!isMainDesktopalie ? [{ label: `Portal ${flavor?.shortName || 'Platform'}`, path: '/portal', icon: FiZap }] : []),
-        { label: t('workspaces') || 'Workspaces', path: '/workspaces', icon: FiLayers },
-        { label: t('notifications') || 'Notifikasi', path: '/notifications', icon: FiBell, badge: unreadCount },
-      ]
-    },
-    {
-      id: 'docs',
-      title: 'Dokumentasi',
-      icon: FiBookOpen,
-      items: [
-        { label: t('documentation') || 'Dokumentasi', path: '/documentation', icon: FiBookOpen },
-        { label: t('notes') || 'Catatan', path: '/notes', icon: FiFileText },
-        { label: t('bookmarks') || 'Bookmarks', path: '/bookmarks', icon: FiBookmark },
-      ]
-    },
-    {
-      id: 'innovation',
-      title: 'Inovasi',
-      icon: FiFolder,
-      items: [
-        { label: t('projects') || 'Proyek', path: '/projects', icon: FiFolder },
-        { label: t('experiments') || 'Eksperimen', path: '/experiments', icon: FiCpu },
-        { label: t('todos') || 'To-Do List', path: '/todos', icon: FiCheckSquare },
-      ]
-    },
-    {
-      id: 'management',
-      title: 'Manajemen',
-      icon: FiDollarSign,
-      items: [
-        { label: t('transactions') || 'Transaksi', path: '/transactions', icon: FiDollarSign },
-        { label: 'Membership', path: '/members', icon: FiUsers },
-        { label: t('landingManager') || 'Landing Manager', path: '/landing-manager', icon: FiLayout },
-      ]
-    },
-    {
-      id: 'settings',
-      title: 'Sistem',
-      icon: FiTool,
-      items: [
-        { label: t('maintenance') || 'Maintenance', path: '/maintenance', icon: FiTool },
-        { label: t('profile') || 'Profil Akun', path: '/profile', icon: FiUser },
-      ]
-    }
+  const flatMenuItems = [
+    { id: 'dashboard', label: 'Dashboard', path: '/dashboard', solidIcon: HiHome, outlineIcon: HiOutlineHome },
+    ...(!isMainDesktopalie ? [{ id: 'portal', label: `Portal ${flavor?.shortName || ''}`.trim(), path: '/portal', solidIcon: HiBolt, outlineIcon: HiOutlineBolt }] : []),
+    { id: 'workspaces', label: 'Workspaces', path: '/workspaces', solidIcon: HiSquares2X2, outlineIcon: HiOutlineSquares2X2 },
+    { id: 'transactions', label: 'Transaksi', path: '/transactions', solidIcon: HiBanknotes, outlineIcon: HiOutlineBanknotes },
+    { id: 'projects', label: 'Proyek', path: '/projects', solidIcon: HiFolder, outlineIcon: HiOutlineFolder },
+    { id: 'todos', label: 'To-Do', path: '/todos', solidIcon: HiClipboardDocumentCheck, outlineIcon: HiOutlineClipboardDocumentCheck },
+    { id: 'notes', label: 'Catatan', path: '/notes', solidIcon: HiPencilSquare, outlineIcon: HiOutlinePencilSquare },
+    { id: 'documentation', label: 'Dokumen', path: '/documentation', solidIcon: HiDocumentText, outlineIcon: HiOutlineDocumentText },
+    { id: 'members', label: 'Member', path: '/members', solidIcon: HiUserGroup, outlineIcon: HiOutlineUserGroup },
+    { id: 'notifications', label: 'Notifikasi', path: '/notifications', solidIcon: HiBell, outlineIcon: HiOutlineBell, badge: unreadCount },
+    { id: 'maintenance', label: 'Sistem', path: '/maintenance', solidIcon: HiCog6Tooth, outlineIcon: HiOutlineCog6Tooth },
+    { id: 'profile', label: 'Profil', path: '/profile', solidIcon: HiUser, outlineIcon: HiOutlineUser }
   ];
 
-  // Guarantee strict alphabetical sort by Category Title (A-Z)
-  const menuCategories = [...rawCategories].sort((a, b) => a.title.localeCompare(b.title));
+  const filteredItems = flatMenuItems.filter(item =>
+    item.label.toLowerCase().includes(searchQuery.toLowerCase().trim())
+  );
 
-  // Render Accordion Category Component
-  const renderCategoryAccordion = (category, isMobileView = false) => {
-    const trimmedQuery = searchQuery.toLowerCase().trim();
-    
-    // Filter items based on search query
-    const matchingItems = category.items.filter(item => 
-      item.label.toLowerCase().includes(trimmedQuery) ||
-      category.title.toLowerCase().includes(trimmedQuery)
-    );
-
-    if (trimmedQuery && matchingItems.length === 0) {
-      return null;
+  const getFlavorEmoji = (id) => {
+    switch (id) {
+      case 'platform2': return '🚀';
+      case 'platform3': return '⚡';
+      case 'platform4': return '🛡️';
+      default: return '💎';
     }
+  };
 
-    const itemsToRender = trimmedQuery ? matchingItems : category.items;
-    const isCategoryOpen = trimmedQuery ? true : openCategoryId === category.id;
-    const hasActiveChild = category.items.some(item => location.pathname === item.path);
-    const CategoryIcon = category.icon;
-    const totalBadges = category.items.reduce((sum, item) => sum + (item.badge || 0), 0);
+  const renderNavItem = (item, isMobileView = false) => {
+    const isActive = location.pathname === item.path;
+    const Icon = isMainDesktopalie ? item.solidIcon : item.outlineIcon;
+    const styleModeClass = isMainDesktopalie ? 'main-style' : 'sub-style';
 
     return (
-      <div key={category.id} style={{ marginBottom: '0.35rem' }}>
-        {/* Category Header Button (Accordion Trigger - Borderless with Click Animation) */}
-        <button
-          type="button"
-          onClick={() => toggleCategory(category.id)}
-          className={`sidebar-category-btn ${hasActiveChild ? 'has-active' : ''} ${isCategoryOpen ? 'is-open' : ''}`}
-          style={{
+      <NavLink
+        key={item.id}
+        to={item.path}
+        onClick={() => {
+          if (isMobileView) setIsMobileMenuOpen(false);
+        }}
+        className={`sidebar-flat-item ${styleModeClass} ${isActive ? 'active' : ''}`}
+        title={item.label}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: isCollapsed && !isMobileView ? 0 : '0.75rem',
+          padding: '0.65rem', marginBottom: '0.2rem', borderRadius: 'var(--radius-sm)', textDecoration: 'none',
+          color: isActive ? 'var(--primary)' : 'var(--text-sidebar-muted)',
+          backgroundColor: isActive ? 'var(--bg-sidebar-active)' : 'transparent',
+          justifyContent: isCollapsed && !isMobileView ? 'center' : 'flex-start'
+        }}
+      >
+        <Icon style={{
+          fontSize: '1.25rem',
+          flexShrink: 0,
+          transition: 'transform 0.2s ease',
+          transform: isActive ? 'scale(1.08)' : 'scale(1)'
+        }} />
+
+        {(!isCollapsed || isMobileView) && (
+          <div style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            width: '100%',
-            padding: '0.65rem 0.85rem',
-            borderRadius: 'var(--radius-sm)',
-            backgroundColor: isCategoryOpen ? 'var(--bg-sidebar-hover)' : 'transparent',
-            border: 'none',
-            outline: 'none',
-            boxShadow: 'none',
-            color: hasActiveChild ? 'var(--primary)' : 'var(--text-sidebar-main)',
-            fontSize: '0.825rem',
-            fontWeight: '700',
-            cursor: 'pointer',
-            transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-            textAlign: 'left'
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', minWidth: 0, flex: 1 }}>
-            <CategoryIcon style={{ 
-              fontSize: '1.1rem', 
-              flexShrink: 0, 
-              color: hasActiveChild ? 'var(--primary)' : 'var(--text-sidebar-muted)' 
-            }} />
-            <span style={{ 
-              whiteSpace: 'nowrap', 
-              overflow: 'hidden', 
+            flex: 1,
+            minWidth: 0
+          }}>
+            <span style={{
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
               textOverflow: 'ellipsis',
-              flex: 1,
-              letterSpacing: '0.01em'
+              letterSpacing: '0.01em',
+              fontWeight: isActive ? '800' : '600'
             }}>
-              {category.title}
+              {item.label}
             </span>
-          </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexShrink: 0 }}>
-            {totalBadges > 0 && (
+            {Boolean(item.badge && item.badge > 0) && (
               <span style={{
                 backgroundColor: '#EF4444',
                 color: '#FFFFFF',
                 fontSize: '0.675rem',
                 fontWeight: '800',
-                padding: '0.05rem 0.4rem',
-                borderRadius: '99px'
+                padding: '0.1rem 0.45rem',
+                borderRadius: '99px',
+                lineHeight: '1.2',
+                boxShadow: '0 2px 6px rgba(239, 68, 68, 0.4)'
               }}>
-                {totalBadges}
+                {item.badge}
               </span>
             )}
-            <FiChevronDown 
-              className={`sidebar-chevron-icon ${isCategoryOpen ? 'open' : ''}`} 
-              style={{
-                transform: isCategoryOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                transition: 'transform 0.35s cubic-bezier(0.4, 0, 0.2, 1)'
-              }}
-            />
           </div>
-        </button>
-
-        {/* Sub-menu Dropdown List with Smooth CSS Transition */}
-        <div 
-          className={`sidebar-accordion-body ${isCategoryOpen ? 'open' : 'closed'}`}
-          style={{
-            maxHeight: isCategoryOpen ? `${itemsToRender.length * 52 + 20}px` : '0px',
-            opacity: isCategoryOpen ? 1 : 0,
-            overflow: 'hidden',
-            transition: 'max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease, margin 0.25s ease',
-            marginTop: isCategoryOpen ? '0.2rem' : '0',
-            marginBottom: isCategoryOpen ? '0.4rem' : '0'
-          }}
-        >
-          <div className="sidebar-submenu-container" style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '0.25rem',
-            paddingLeft: '0.6rem',
-            borderLeft: '2px solid var(--border-sidebar, #E2E8F0)',
-            marginLeft: '1.25rem'
-          }}>
-            {itemsToRender.map((item) => {
-              const ItemIcon = item.icon;
-              return (
-                <NavLink
-                  key={item.path}
-                  to={item.path}
-                  end={item.path === '/'}
-                  onClick={() => {
-                    if (isMobileView) {
-                      setIsMobileMenuOpen(false);
-                    }
-                  }}
-                  className={({ isActive }) => `sidebar-subitem-link ${isActive ? 'active' : ''}`}
-                  style={({ isActive }) => ({
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.65rem',
-                    padding: '0.5rem 0.75rem',
-                    borderRadius: 'var(--radius-sm)',
-                    fontSize: '0.8rem',
-                    fontWeight: isActive ? '700' : '600',
-                    textDecoration: 'none',
-                    color: isActive ? 'var(--primary)' : 'var(--text-sidebar-muted)',
-                    backgroundColor: isActive ? 'var(--bg-sidebar-active)' : 'transparent',
-                    boxShadow: isActive ? '0 2px 8px rgba(0, 0, 0, 0.2)' : 'none',
-                    transition: 'all 0.15s ease'
-                  })}
-                >
-                  <ItemIcon style={{ fontSize: '1rem', flexShrink: 0 }} />
-                  <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', flex: 1 }}>
-                    {item.label}
-                  </span>
-                  {item.badge > 0 && (
-                    <span style={{
-                      backgroundColor: '#EF4444',
-                      color: '#FFFFFF',
-                      fontSize: '0.675rem',
-                      fontWeight: '800',
-                      padding: '0.05rem 0.4rem',
-                      borderRadius: '99px',
-                      marginLeft: 'auto'
-                    }}>
-                      {item.badge}
-                    </span>
-                  )}
-                </NavLink>
-              );
-            })}
-          </div>
-        </div>
-      </div>
+        )}
+      </NavLink>
     );
   };
 
-  // User Profile Component (Minimalist with photo avatar / default fallback icon)
-  const renderUserProfile = (isMobileView = false) => (
+  const renderUserProfileItem = (isMobileView = false) => (
     <NavLink
       to="/profile"
-      title={userProfile?.full_name || user?.email || 'Profil Saya'}
-      onClick={() => {
-        if (isMobileView) {
-          setIsMobileMenuOpen(false);
-        }
-      }}
+      onClick={() => { if (isMobileView) setIsMobileMenuOpen(false); }}
+      title="Profil Saya"
       style={({ isActive }) => ({
         display: 'flex',
         alignItems: 'center',
-        gap: isCollapsed && !isMobileView ? 0 : '0.75rem',
-        justifyContent: isCollapsed && !isMobileView ? 'center' : 'flex-start',
-        padding: isCollapsed && !isMobileView ? '0.5rem 0' : '0.6rem 0.75rem',
+        gap: '0.75rem',
+        padding: '0.55rem 0.65rem',
         borderRadius: 'var(--radius-sm)',
-        backgroundColor: isActive ? 'var(--bg-sidebar-active)' : 'var(--bg-sidebar-hover)',
-        border: `1px solid ${isActive ? 'var(--primary)' : 'var(--border-sidebar)'}`,
         textDecoration: 'none',
-        color: 'var(--text-sidebar-main)',
-        marginTop: 'auto',
-        marginBottom: '0.5rem',
+        backgroundColor: isActive ? 'var(--bg-sidebar-hover)' : 'transparent',
+        border: 'none',
         transition: 'all 0.15s ease'
       })}
     >
       <div style={{
-        width: '32px',
-        height: '32px',
+        width: '34px',
+        height: '34px',
         borderRadius: '50%',
-        backgroundColor: 'var(--primary-light, rgba(37, 99, 235, 0.1))',
-        color: 'var(--primary, #2563EB)',
+        backgroundColor: 'rgba(255, 255, 255, 0.15)',
+        color: '#FFFFFF',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        fontSize: '0.9rem',
+        fontSize: '0.95rem',
         overflow: 'hidden',
         flexShrink: 0
       }}>
         {userProfile?.avatar_url ? (
-          <img
-            src={userProfile.avatar_url}
-            alt="Avatar"
-            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-            onError={(e) => {
-              e.currentTarget.style.display = 'none';
-              if (e.currentTarget.nextSibling) {
-                e.currentTarget.nextSibling.style.display = 'block';
-              }
-            }}
-          />
+          <img src={userProfile.avatar_url} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         ) : null}
-        <FiUser style={{
-          fontSize: '1rem',
-          display: userProfile?.avatar_url ? 'none' : 'block'
-        }} />
+        <FiUser style={{ fontSize: '1.05rem', display: userProfile?.avatar_url ? 'none' : 'block' }} />
       </div>
-
       {(!isCollapsed || isMobileView) && (
-        <div style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column', gap: '0.1rem', minWidth: 0, flex: 1 }}>
-          <span style={{
-            fontSize: '0.825rem',
-            fontWeight: '700',
-            color: 'var(--text-sidebar-main)',
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis'
-          }}>
-            {userProfile?.full_name || user?.email?.split('@')[0] || 'User'}
+        <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0, overflow: 'hidden' }}>
+          <span style={{ fontSize: '0.8rem', fontWeight: '700', color: 'var(--text-sidebar-main)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            {userProfile?.full_name || 'User'}
           </span>
-          <span style={{
-            fontSize: '0.7rem',
-            color: 'var(--text-sidebar-muted)',
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis'
-          }}>
-            {user?.email || 'Member'}
+          <span style={{ fontSize: '0.7rem', color: 'var(--text-sidebar-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            {user?.email}
           </span>
         </div>
       )}
     </NavLink>
   );
 
-  // RENDERING NAVIGATION CONTENT (Used for both Desktop Sidebar and Mobile Overlay Drawer)
   const renderNavContent = (isMobileView = false) => (
     <>
-      {/* SUB-PLATFORM SWITCHER */}
-      <div style={{ marginBottom: '0.85rem' }}>
+      <div style={{ marginBottom: '0.75rem' }}>
         <select
           value={flavorId}
           onChange={(e) => {
             const selectedVal = e.target.value;
-            if (selectedVal === 'platform1') {
-              resetToMainFlavor();
-            } else if (selectedVal) {
-              switchFlavor(selectedVal);
-            }
+            if (selectedVal === 'platform1') { resetToMainFlavor(); } else if (selectedVal) { switchFlavor(selectedVal); }
           }}
           style={{
             width: '100%',
@@ -463,526 +289,196 @@ export default function Sidebar() {
             backgroundColor: 'var(--bg-sidebar-hover)',
             color: 'var(--text-sidebar-main)',
             cursor: 'pointer',
-            outline: 'none',
-            transition: 'all 0.15s ease'
+            outline: 'none'
           }}
         >
-          <option value="platform1" style={{ backgroundColor: 'var(--bg-sidebar)', color: 'var(--text-sidebar-main)' }}>
-            🏠 Desktopalie Main
-          </option>
+          <option value="platform1" style={{ background: 'var(--bg-sidebar)', color: '#FFFFFF' }}>🏠 Desktopalie Backoffice</option>
           {subPlatformFlavors?.map((f) => (
-            <option key={f.id} value={f.id} style={{ backgroundColor: 'var(--bg-sidebar)', color: 'var(--text-sidebar-main)' }}>
-              ⚡ Platform {f.shortName}
-            </option>
+            <option key={f.id} value={f.id} style={{ background: 'var(--bg-sidebar)', color: '#FFFFFF' }}>{getFlavorEmoji(f.id)} Platform {f.shortName}</option>
           ))}
         </select>
       </div>
 
-      {/* SEARCH INPUT BOX */}
-      <div style={{
-        position: 'relative',
-        marginBottom: '1rem',
-        display: 'flex',
-        alignItems: 'center'
-      }}>
-        <FiSearch style={{
-          position: 'absolute',
-          left: '0.75rem',
-          color: 'var(--text-sidebar-muted)',
-          fontSize: '0.9rem',
-          pointerEvents: 'none'
-        }} />
+      <div style={{ position: 'relative', marginBottom: '0.85rem', display: 'flex', alignItems: 'center' }}>
+        <HiMagnifyingGlass style={{ position: 'absolute', left: '0.75rem', color: 'var(--text-sidebar-muted)', fontSize: '1rem', pointerEvents: 'none' }} />
         <input
           ref={searchInputRef}
           type="text"
-          placeholder={t('searchMenu')}
+          placeholder={t('searchMenu') || 'Cari menu...'}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           style={{
             width: '100%',
-            padding: '0.45rem 2rem 0.45rem 2.1rem',
-            fontSize: '0.825rem',
+            padding: '0.5rem 0.75rem 0.5rem 2.25rem',
+            fontSize: '0.8rem',
             borderRadius: 'var(--radius-sm)',
             border: '1px solid var(--border-sidebar)',
             backgroundColor: 'var(--bg-sidebar-hover)',
             color: 'var(--text-sidebar-main)',
-            outline: 'none',
-            transition: 'border-color 0.15s ease, box-shadow 0.15s ease'
+            outline: 'none'
           }}
-          onFocus={(e) => e.target.style.borderColor = 'var(--primary)'}
-          onBlur={(e) => e.target.style.borderColor = 'var(--border-sidebar)'}
         />
         {searchQuery && (
-          <button
-            onClick={() => setSearchQuery('')}
-            title="Clear search"
-            style={{
-              position: 'absolute',
-              right: '0.4rem',
-              background: 'transparent',
-              border: 'none',
-              color: 'var(--text-sidebar-muted)',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '0.2rem',
-              borderRadius: '50%'
-            }}
-          >
-            <FiX style={{ fontSize: '0.9rem' }} />
+          <button onClick={() => setSearchQuery('')} style={{ position: 'absolute', right: '0.6rem', background: 'transparent', border: 'none', color: 'var(--text-sidebar-muted)', cursor: 'pointer', padding: '0.2rem' }}>
+            <HiXMark style={{ fontSize: '1rem' }} />
           </button>
         )}
       </div>
 
-      {/* CATEGORIZED ACCORDION NAV LIST (A-Z) */}
-      <nav style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.25rem', overflowY: 'auto' }}>
-        {menuCategories.map((category) => renderCategoryAccordion(category, isMobileView))}
-      </nav>
-
-      {/* MINIMALIST USER PROFILE */}
-      {renderUserProfile(isMobileView)}
-
-      {/* FOOTER */}
-      <div style={{
-        paddingTop: '0.75rem',
-        marginTop: '0.25rem',
-        borderTop: '1px solid var(--border-sidebar)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        fontSize: '0.725rem',
-        color: 'var(--text-sidebar-muted)',
-        fontWeight: '600',
-        paddingLeft: '0.25rem',
-        paddingRight: '0.25rem'
-      }}>
-        <span>Desktopalie Backoffice</span>
-        <span>v2.5.0</span>
+      <div className="sidebar-nav-list" style={{ flex: 1, overflowY: 'auto' }}>
+        {filteredItems.length > 0 ? (
+          filteredItems.map(item => renderNavItem(item, isMobileView))
+        ) : (
+          <div style={{ padding: '1rem 0.5rem', fontSize: '0.775rem', color: 'var(--text-sidebar-muted)', textAlign: 'center' }}>
+            Menu tidak ditemukan
+          </div>
+        )}
       </div>
     </>
   );
 
-  // TABLET & MOBILE VIEW (TOP HEADER WITH HAMBURGER MENU & SLIDE-DOWN DRAWER)
-  if (isTabletOrMobile) {
-    return (
-      <aside style={{
-        width: '100%',
-        backgroundColor: 'var(--bg-sidebar)',
-        borderBottom: '1px solid var(--border-sidebar)',
-        display: 'flex',
-        flexDirection: 'column',
-        position: 'sticky',
-        top: 0,
-        left: 0,
-        zIndex: 500,
-        padding: '0.65rem 1rem',
-        flexShrink: 0
-      }}>
-        {/* TABLET / MOBILE TOP BAR */}
+  return (
+    <>
+      <div className="tablet-mobile-topbar" style={{ display: isTabletOrMobile ? 'block' : 'none', position: 'sticky', top: 0, zIndex: 9999, backgroundColor: 'var(--bg-sidebar)', borderBottom: '1px solid var(--border-sidebar)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.75rem 1rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+            {isMainDesktopalie ? (
+              <>
+                <DesktopalieMark size={28} style={{ color: 'var(--text-sidebar-main)', flexShrink: 0 }} />
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <h2 style={{ fontSize: '0.925rem', fontWeight: '800', margin: 0, color: 'var(--text-sidebar-main)' }}>Desktopalie</h2>
+                  <span style={{ fontSize: '0.625rem', color: 'var(--text-sidebar-muted)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Backoffice Utama</span>
+                </div>
+              </>
+            ) : (
+              <div className="sidebar-subplatform-badge">
+                <span>{getFlavorEmoji(flavorId)}</span>
+                <span>Portal {flavor?.shortName}</span>
+              </div>
+            )}
+          </div>
+          <button onClick={toggleCollapse} style={{ background: 'var(--bg-sidebar-hover)', border: '1px solid var(--border-sidebar)', color: 'var(--text-sidebar-main)', padding: '0.45rem', borderRadius: 'var(--radius-sm)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            {isMobileMenuOpen ? <HiXMark style={{ fontSize: '1.25rem' }} /> : <HiBars3 style={{ fontSize: '1.25rem' }} />}
+          </button>
+        </div>
+        {isMobileMenuOpen && (
+          <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, backgroundColor: 'var(--bg-sidebar)', padding: '1rem', borderBottom: '1px solid var(--border-sidebar)', boxShadow: '0 12px 30px rgba(0,0,0,0.25)', maxHeight: 'calc(100vh - 70px)', overflowY: 'auto' }}>
+            {renderNavContent(true)}
+            <div style={{ borderTop: '1px solid var(--border-sidebar)', paddingTop: '0.75rem', marginTop: '0.5rem' }}>{renderUserProfileItem(true)}</div>
+          </div>
+        )}
+      </div>
+
+      <aside
+        className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}
+        style={{
+          display: isTabletOrMobile ? 'none' : 'flex',
+          flexDirection: 'column',
+          width: isCollapsed ? '72px' : '256px',
+          height: '100vh',
+          position: 'sticky',
+          top: 0,
+          flexShrink: 0,
+          backgroundColor: 'var(--bg-sidebar)',
+          borderRight: '1px solid var(--border-sidebar)',
+          padding: isCollapsed ? '1rem 0.5rem' : '1.25rem 1rem',
+          transition: 'width 0.25s cubic-bezier(0.4, 0, 0.2, 1), padding 0.25s ease',
+          zIndex: 40,
+          boxSizing: 'border-box'
+        }}
+      >
         <div style={{
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between',
-          width: '100%'
+          justifyContent: isCollapsed ? 'center' : 'space-between',
+          marginBottom: '1.25rem',
+          minHeight: '40px',
+          gap: '0.5rem'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-            <DesktopalieMark size={28} style={{ color: 'var(--primary)', flexShrink: 0 }} />
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <h2 style={{
-                fontSize: '0.9rem',
-                fontWeight: '800',
-                letterSpacing: '0.06em',
-                textTransform: 'uppercase',
-                color: 'var(--text-sidebar-main)',
-                lineHeight: '1.1',
-                margin: 0
-              }}>
-                Desktopalie
-              </h2>
-              <span style={{
-                fontSize: '0.625rem',
-                color: isMainDesktopalie ? 'var(--text-sidebar-muted)' : '#FB7185',
-                fontWeight: '700',
-                textTransform: 'uppercase',
-                letterSpacing: '0.08em',
-                lineHeight: '1.2',
-                marginTop: '0.1rem'
-              }}>
-                {isMainDesktopalie ? 'Main Backoffice' : `Platform ${flavor.shortName}`}
-              </span>
+          {!isCollapsed && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', minWidth: 0, flex: 1 }}>
+              {isMainDesktopalie ? (
+                <>
+                  <DesktopalieMark size={30} style={{ color: 'var(--text-sidebar-main)', flexShrink: 0 }} />
+                  <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+                    <h2 style={{ fontSize: '0.95rem', fontWeight: '800', letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--text-sidebar-main)', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      Desktopalie
+                    </h2>
+                    <span style={{ fontSize: '0.65rem', color: 'var(--text-sidebar-muted)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.08em', marginTop: '0.1rem', whiteSpace: 'nowrap' }}>
+                      Backoffice Utama
+                    </span>
+                  </div>
+                </>
+              ) : (
+                <div className="sidebar-subplatform-badge">
+                  <span>{getFlavorEmoji(flavorId)}</span>
+                  <span>Portal {flavor?.shortName}</span>
+                </div>
+              )}
             </div>
-          </div>
+          )}
 
           <button
             onClick={toggleCollapse}
-            aria-label="Toggle Menu Navigation"
-            title="Toggle Menu Navigation"
+            title={isCollapsed ? 'Buka Sidebar' : 'Tutup Sidebar'}
             style={{
-              background: 'var(--bg-sidebar-hover)',
-              border: '1px solid var(--border-sidebar)',
-              color: 'var(--text-sidebar-main)',
+              background: 'transparent',
+              border: 'none',
+              color: 'var(--text-sidebar-muted)',
               cursor: 'pointer',
-              padding: '0.5rem',
+              padding: '0.4rem',
               borderRadius: 'var(--radius-sm)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               fontSize: '1.25rem',
+              flexShrink: 0,
               transition: 'all 0.15s ease'
             }}
+            onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'var(--bg-sidebar-hover)'}
+            onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
           >
-            {isMobileMenuOpen ? <FiX /> : <FiMenu />}
+            <HiBars3 />
           </button>
         </div>
 
-        {/* TABLET / MOBILE SLIDE-DOWN DRAWER OVERLAY */}
-        {isMobileMenuOpen && (
-          <div style={{
-            position: 'absolute',
-            top: '100%',
-            left: 0,
-            right: 0,
-            backgroundColor: 'var(--bg-sidebar)',
-            borderBottom: '1px solid var(--border-sidebar)',
-            boxShadow: '0 12px 30px rgba(0, 0, 0, 0.25)',
-            padding: '1rem',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '0.5rem',
-            maxHeight: 'calc(85vh - 60px)',
-            overflowY: 'auto',
-            zIndex: 500
-          }}>
-            {renderNavContent(true)}
-          </div>
-        )}
-      </aside>
-    );
-  }
-
-  // DESKTOP VIEW (STICKY SIDEBAR WITH EXPAND / COLLAPSE TOGGLE)
-  return (
-    <aside style={{
-      width: isCollapsed ? '80px' : '260px',
-      backgroundColor: 'var(--bg-sidebar)',
-      borderRight: '1px solid var(--border-sidebar)',
-      display: 'flex',
-      flexDirection: 'column',
-      height: '100vh',
-      position: 'sticky',
-      top: 0,
-      left: 0,
-      zIndex: 200,
-      padding: isCollapsed ? '1.25rem 0.5rem' : '1.25rem 1rem',
-      overflowY: 'auto',
-      flexShrink: 0,
-      transition: 'width 0.25s cubic-bezier(0.4, 0, 0.2, 1), padding 0.25s cubic-bezier(0.4, 0, 0.2, 1)'
-    }}>
-      {/* Sidebar Header & Hamburger Button */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: isCollapsed ? 'center' : 'space-between',
-        padding: isCollapsed ? '0.5rem 0 1rem 0' : '0.5rem 0.25rem 1rem 0.25rem',
-        borderBottom: '1px solid var(--border-sidebar)',
-        marginBottom: '1rem'
-      }}>
-        {!isCollapsed && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexShrink: 0 }}>
-            <DesktopalieMark size={30} style={{ color: 'var(--primary)', flexShrink: 0, marginTop: '-1px' }} />
-            <div style={{ display: 'flex', flexDirection: 'column', flexShrink: 0 }}>
-              <h2 style={{
-                fontSize: '0.95rem',
-                fontWeight: '800',
-                letterSpacing: '0.06em',
-                textTransform: 'uppercase',
-                color: 'var(--text-sidebar-main)',
-                lineHeight: '1.1',
-                margin: 0,
-                whiteSpace: 'nowrap'
-              }}>
-                Desktopalie
-              </h2>
-              <span style={{
-                fontSize: '0.65rem',
-                color: isMainDesktopalie ? 'var(--text-sidebar-muted)' : '#FB7185',
-                fontWeight: '700',
-                textTransform: 'uppercase',
-                letterSpacing: '0.08em',
-                lineHeight: '1.2',
-                marginTop: '0.15rem',
-                whiteSpace: 'nowrap'
-              }}>
-                {isMainDesktopalie ? 'Main Backoffice' : `Platform ${flavor.shortName}`}
-              </span>
-            </div>
-          </div>
-        )}
-
-        <button
-          onClick={toggleCollapse}
-          title={isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
-          style={{
-            background: 'transparent',
-            border: 'none',
-            color: 'var(--text-sidebar-muted)',
-            cursor: 'pointer',
-            padding: '0.4rem',
-            borderRadius: 'var(--radius-sm)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '1.25rem',
-            flexShrink: 0,
-            transition: 'all 0.15s ease'
-          }}
-          onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'var(--bg-sidebar-hover)'}
-          onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-        >
-          <FiMenu />
-        </button>
-      </div>
-
-      {/* SUB-PLATFORM SWITCHER */}
-      {!isCollapsed && (
-        <div style={{ marginBottom: '0.85rem' }}>
-          <select
-            value={flavorId}
-            onChange={(e) => {
-              const selectedVal = e.target.value;
-              if (selectedVal === 'platform1') {
-                resetToMainFlavor();
-              } else if (selectedVal) {
-                switchFlavor(selectedVal);
-              }
-            }}
-            style={{
-              width: '100%',
-              padding: '0.5rem 0.65rem',
-              fontSize: '0.775rem',
-              fontWeight: '600',
-              borderRadius: 'var(--radius-sm)',
-              border: '1px solid var(--border-sidebar)',
-              backgroundColor: 'var(--bg-sidebar-hover)',
-              color: 'var(--text-sidebar-main)',
-              cursor: 'pointer',
-              outline: 'none',
-              transition: 'all 0.15s ease'
-            }}
-          >
-            <option value="platform1" style={{ backgroundColor: 'var(--bg-sidebar)', color: 'var(--text-sidebar-main)' }}>
-              🏠 Desktopalie Main
-            </option>
-            {subPlatformFlavors?.map((f) => (
-              <option key={f.id} value={f.id} style={{ backgroundColor: 'var(--bg-sidebar)', color: 'var(--text-sidebar-main)' }}>
-                ⚡ Platform {f.shortName}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
-      {isCollapsed && (
-        <button
-          onClick={() => {
-            const subIds = subPlatformFlavors.map(f => f.id);
-            if (isMainDesktopalie) {
-              switchFlavor(subIds[0]);
-            } else {
-              const currentIdx = subIds.indexOf(flavorId);
-              if (currentIdx === subIds.length - 1) {
-                resetToMainFlavor();
-              } else {
-                switchFlavor(subIds[currentIdx + 1]);
-              }
-            }
-          }}
-          title={isMainDesktopalie ? "Desktopalie Main. Klik untuk pilih sub-platform." : `Platform Sub: ${flavor?.shortName}. Klik untuk ganti.`}
-          style={{
-            background: 'transparent',
-            border: '1px solid var(--border-sidebar)',
-            borderRadius: 'var(--radius-sm)',
-            color: 'var(--text-sidebar-muted)',
-            cursor: 'pointer',
-            padding: '0.35rem 0',
-            marginBottom: '0.85rem',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '0.7rem',
-            fontWeight: '700',
-            width: '100%',
-            transition: 'all 0.15s ease'
-          }}
-        >
-          {isMainDesktopalie ? 'D' : (flavor?.shortName?.[0] || 'S')}
-        </button>
-      )}
-
-      {/* SEARCH INPUT BOX */}
-      {!isCollapsed ? (
-        <div style={{
-          position: 'relative',
-          marginBottom: '1rem',
-          display: 'flex',
-          alignItems: 'center'
-        }}>
-          <FiSearch style={{
-            position: 'absolute',
-            left: '0.75rem',
-            color: 'var(--text-sidebar-muted)',
-            fontSize: '0.9rem',
-            pointerEvents: 'none'
-          }} />
-          <input
-            ref={searchInputRef}
-            type="text"
-            placeholder={t('searchMenu')}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            style={{
-              width: '100%',
-              padding: '0.45rem 2rem 0.45rem 2.1rem',
-              fontSize: '0.825rem',
-              borderRadius: 'var(--radius-sm)',
-              border: '1px solid var(--border-sidebar)',
-              backgroundColor: 'var(--bg-sidebar-hover)',
-              color: 'var(--text-sidebar-main)',
-              outline: 'none',
-              transition: 'border-color 0.15s ease, box-shadow 0.15s ease'
-            }}
-            onFocus={(e) => e.target.style.borderColor = 'var(--primary)'}
-            onBlur={(e) => e.target.style.borderColor = 'var(--border-sidebar)'}
-          />
-          {searchQuery && (
+        {isCollapsed && (
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1rem' }}>
             <button
-              onClick={() => setSearchQuery('')}
-              title="Clear search"
+              onClick={handleSearchIconClick}
+              title="Cari menu"
               style={{
-                position: 'absolute',
-                right: '0.4rem',
-                background: 'transparent',
-                border: 'none',
+                width: '38px',
+                height: '38px',
+                borderRadius: 'var(--radius-sm)',
+                border: '1px solid var(--border-sidebar)',
+                backgroundColor: 'var(--bg-sidebar-hover)',
                 color: 'var(--text-sidebar-muted)',
-                cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                padding: '0.2rem',
-                borderRadius: '50%'
+                cursor: 'pointer',
+                fontSize: '1.15rem',
+                transition: 'all 0.15s ease'
               }}
             >
-              <FiX style={{ fontSize: '0.9rem' }} />
+              <HiMagnifyingGlass />
             </button>
-          )}
+          </div>
+        )}
+
+        {!isCollapsed && renderNavContent(false)}
+
+        {isCollapsed && (
+          <div className="sidebar-nav-list" style={{ flex: 1, overflowY: 'auto' }}>
+            {filteredItems.map(item => renderNavItem(item, false))}
+          </div>
+        )}
+
+        <div style={{ borderTop: '1px solid var(--border-sidebar)', paddingTop: '0.75rem', marginTop: '0.5rem' }}>
+          {renderUserProfileItem(false)}
         </div>
-      ) : (
-        <button
-          onClick={handleSearchIconClick}
-          title={t('searchMenu')}
-          style={{
-            background: 'transparent',
-            border: '1px solid var(--border-sidebar)',
-            borderRadius: 'var(--radius-sm)',
-            color: 'var(--text-sidebar-muted)',
-            cursor: 'pointer',
-            padding: '0.5rem 0',
-            marginBottom: '0.85rem',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '100%',
-            transition: 'all 0.15s ease'
-          }}
-          onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'var(--bg-sidebar-hover)'}
-          onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-        >
-          <FiSearch style={{ fontSize: '1.1rem' }} />
-        </button>
-      )}
-
-      {/* CATEGORIZED ACCORDION NAV LIST (A-Z) */}
-      <nav style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.25rem', overflowY: 'auto' }}>
-        {!isCollapsed ? (
-          menuCategories.map((category) => renderCategoryAccordion(category, false))
-        ) : (
-          /* COLLAPSED MODE: RENDER CATEGORY ICONS THAT EXPAND SIDEBAR & TRIGGER ACCORDION */
-          menuCategories.map((category) => {
-            const CategoryIcon = category.icon;
-            const hasActiveChild = category.items.some(item => location.pathname === item.path);
-            const totalBadges = category.items.reduce((sum, item) => sum + (item.badge || 0), 0);
-
-            return (
-              <button
-                key={category.id}
-                type="button"
-                onClick={() => {
-                  setIsCollapsed(false);
-                  localStorage.setItem('desktopalie_sidebar_collapsed', 'false');
-                  setOpenCategoryId(category.id);
-                }}
-                title={category.title}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  padding: '0.75rem 0',
-                  borderRadius: 'var(--radius-sm)',
-                  border: 'none',
-                  backgroundColor: hasActiveChild ? 'var(--bg-sidebar-active)' : 'transparent',
-                  color: hasActiveChild ? 'var(--primary)' : 'var(--text-sidebar-muted)',
-                  cursor: 'pointer',
-                  position: 'relative',
-                  width: '100%',
-                  transition: 'all 0.15s ease'
-                }}
-                onMouseOver={(e) => !hasActiveChild && (e.currentTarget.style.backgroundColor = 'var(--bg-sidebar-hover)')}
-                onMouseOut={(e) => !hasActiveChild && (e.currentTarget.style.backgroundColor = 'transparent')}
-              >
-                <CategoryIcon style={{ fontSize: '1.25rem' }} />
-                {totalBadges > 0 && (
-                  <span style={{
-                    position: 'absolute',
-                    top: '4px',
-                    right: '8px',
-                    width: '8px',
-                    height: '8px',
-                    borderRadius: '50%',
-                    backgroundColor: '#EF4444'
-                  }} />
-                )}
-              </button>
-            );
-          })
-        )}
-      </nav>
-
-      {/* MINIMALIST USER PROFILE */}
-      {renderUserProfile(false)}
-
-      {/* FOOTER */}
-      <div style={{
-        paddingTop: '0.75rem',
-        marginTop: '0.25rem',
-        borderTop: '1px solid var(--border-sidebar)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: isCollapsed ? 'center' : 'space-between',
-        fontSize: '0.725rem',
-        color: 'var(--text-sidebar-muted)',
-        fontWeight: '600',
-        paddingLeft: isCollapsed ? 0 : '0.25rem',
-        paddingRight: isCollapsed ? 0 : '0.25rem'
-      }}>
-        {!isCollapsed ? (
-          <>
-            <span>Desktopalie</span>
-            <span>v2.5.0</span>
-          </>
-        ) : (
-          <span title="Desktopalie v2.5.0">v2.5</span>
-        )}
-      </div>
-    </aside>
+      </aside>
+    </>
   );
 }
