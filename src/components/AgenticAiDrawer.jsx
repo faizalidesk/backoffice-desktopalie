@@ -371,9 +371,9 @@ export default function AgenticAiDrawer() {
         flexDirection: 'column',
         gap: '12px'
       }}>
-        {messages.map((msg, index) => (
+        {messages.map((msg, idx) => (
           <div
-            key={index}
+            key={idx}
             style={{
               alignSelf: msg.sender === 'user' ? 'flex-end' : 'flex-start',
               maxWidth: '92%',
