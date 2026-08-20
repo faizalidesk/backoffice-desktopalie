@@ -41,7 +41,7 @@ export default function Sidebar() {
   const { user } = useAuth();
   const { t } = useLanguage();
   const location = useLocation();
-  const { flavor, flavorId, subPlatformFlavors, isMainDesktopalie, switchFlavor, resetToMainFlavor } = useFlavor();
+  const { flavor, flavorId, isMainDesktopalie } = useFlavor();
   const [searchQuery, setSearchQuery] = useState('');
   const [unreadCount, setUnreadCount] = useState(() => notificationService.getUnreadCount());
 
@@ -125,20 +125,34 @@ export default function Sidebar() {
     }
   };
 
-  const flatMenuItems = [
-    { id: 'dashboard', label: 'Dashboard', path: '/dashboard', solidIcon: HiHome, outlineIcon: HiOutlineHome },
-    ...(!isMainDesktopalie ? [{ id: 'portal', label: `Portal ${flavor?.shortName || ''}`.trim(), path: '/portal', solidIcon: HiBolt, outlineIcon: HiOutlineBolt }] : []),
-    { id: 'workspaces', label: 'Workspaces', path: '/workspaces', solidIcon: HiSquares2X2, outlineIcon: HiOutlineSquares2X2 },
-    { id: 'transactions', label: 'Transaksi', path: '/transactions', solidIcon: HiBanknotes, outlineIcon: HiOutlineBanknotes },
-    { id: 'projects', label: 'Proyek', path: '/projects', solidIcon: HiFolder, outlineIcon: HiOutlineFolder },
-    { id: 'todos', label: 'To-Do', path: '/todos', solidIcon: HiClipboardDocumentCheck, outlineIcon: HiOutlineClipboardDocumentCheck },
-    { id: 'notes', label: 'Catatan', path: '/notes', solidIcon: HiPencilSquare, outlineIcon: HiOutlinePencilSquare },
-    { id: 'documentation', label: 'Dokumen', path: '/documentation', solidIcon: HiDocumentText, outlineIcon: HiOutlineDocumentText },
-    { id: 'members', label: 'Member', path: '/members', solidIcon: HiUserGroup, outlineIcon: HiOutlineUserGroup },
-    { id: 'notifications', label: 'Notifikasi', path: '/notifications', solidIcon: HiBell, outlineIcon: HiOutlineBell, badge: unreadCount },
-    { id: 'maintenance', label: 'Sistem', path: '/maintenance', solidIcon: HiCog6Tooth, outlineIcon: HiOutlineCog6Tooth },
-    { id: 'profile', label: 'Profil', path: '/profile', solidIcon: HiUser, outlineIcon: HiOutlineUser }
-  ];
+  // =========================================================================
+  // TAILORED MENU DEFINITIONS:
+  // Back Office Utama: Admin operations, tenants, finance, members & maintenance
+  // Sub-Platform Portal: Core tool (portal), dashboard, user projects, tasks, notes, docs, notifications & profile
+  // =========================================================================
+  const flatMenuItems = isMainDesktopalie
+    ? [
+        { id: 'dashboard', label: 'Dashboard', path: '/dashboard', solidIcon: HiHome, outlineIcon: HiOutlineHome },
+        { id: 'workspaces', label: 'Workspaces', path: '/workspaces', solidIcon: HiSquares2X2, outlineIcon: HiOutlineSquares2X2 },
+        { id: 'transactions', label: 'Transaksi', path: '/transactions', solidIcon: HiBanknotes, outlineIcon: HiOutlineBanknotes },
+        { id: 'members', label: 'Member', path: '/members', solidIcon: HiUserGroup, outlineIcon: HiOutlineUserGroup },
+        { id: 'projects', label: 'Proyek', path: '/projects', solidIcon: HiFolder, outlineIcon: HiOutlineFolder },
+        { id: 'todos', label: 'To-Do', path: '/todos', solidIcon: HiClipboardDocumentCheck, outlineIcon: HiOutlineClipboardDocumentCheck },
+        { id: 'documentation', label: 'Dokumen', path: '/documentation', solidIcon: HiDocumentText, outlineIcon: HiOutlineDocumentText },
+        { id: 'notifications', label: 'Notifikasi', path: '/notifications', solidIcon: HiBell, outlineIcon: HiOutlineBell, badge: unreadCount },
+        { id: 'maintenance', label: 'Sistem', path: '/maintenance', solidIcon: HiCog6Tooth, outlineIcon: HiOutlineCog6Tooth },
+        { id: 'profile', label: 'Profil', path: '/profile', solidIcon: HiUser, outlineIcon: HiOutlineUser }
+      ]
+    : [
+        { id: 'portal', label: `Portal ${flavor?.shortName || ''}`.trim(), path: '/portal', solidIcon: HiBolt, outlineIcon: HiOutlineBolt },
+        { id: 'dashboard', label: 'Dashboard', path: '/dashboard', solidIcon: HiHome, outlineIcon: HiOutlineHome },
+        { id: 'projects', label: 'Proyek', path: '/projects', solidIcon: HiFolder, outlineIcon: HiOutlineFolder },
+        { id: 'todos', label: 'Tugas', path: '/todos', solidIcon: HiClipboardDocumentCheck, outlineIcon: HiOutlineClipboardDocumentCheck },
+        { id: 'notes', label: 'Catatan', path: '/notes', solidIcon: HiPencilSquare, outlineIcon: HiOutlinePencilSquare },
+        { id: 'documentation', label: 'Dokumen', path: '/documentation', solidIcon: HiDocumentText, outlineIcon: HiOutlineDocumentText },
+        { id: 'notifications', label: 'Notifikasi', path: '/notifications', solidIcon: HiBell, outlineIcon: HiOutlineBell, badge: unreadCount },
+        { id: 'profile', label: 'Profil', path: '/profile', solidIcon: HiUser, outlineIcon: HiOutlineUser }
+      ];
 
   const filteredItems = flatMenuItems.filter(item =>
     item.label.toLowerCase().includes(searchQuery.toLowerCase().trim())
@@ -171,15 +185,24 @@ export default function Sidebar() {
           display: 'flex',
           alignItems: 'center',
           gap: isCollapsed && !isMobileView ? 0 : '0.75rem',
-          padding: '0.65rem', marginBottom: '0.2rem', borderRadius: 'var(--radius-sm)', textDecoration: 'none',
-          color: isActive ? 'var(--primary)' : 'var(--text-sidebar-muted)',
-          backgroundColor: isActive ? 'var(--bg-sidebar-active)' : 'transparent',
-          justifyContent: isCollapsed && !isMobileView ? 'center' : 'flex-start'
+          padding: '0.65rem 0.85rem',
+          marginBottom: '0.25rem',
+          borderRadius: isMainDesktopalie ? 'var(--radius-sm)' : '0 var(--radius-sm) var(--radius-sm) 0',
+          textDecoration: 'none',
+          color: isActive ? '#FFFFFF' : 'var(--text-sidebar-muted, #E2E8F0)',
+          backgroundColor: isActive 
+            ? (isMainDesktopalie ? 'var(--bg-sidebar-active, #2563EB)' : 'var(--bg-sidebar-hover, rgba(255, 255, 255, 0.14))') 
+            : 'transparent',
+          borderLeft: !isMainDesktopalie ? (isActive ? '4px solid #60A5FA' : '4px solid transparent') : 'none',
+          boxShadow: isMainDesktopalie && isActive ? '0 4px 14px rgba(0, 0, 0, 0.25)' : 'none',
+          justifyContent: isCollapsed && !isMobileView ? 'center' : 'flex-start',
+          transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
         }}
       >
         <Icon style={{
           fontSize: '1.25rem',
           flexShrink: 0,
+          color: isActive ? '#FFFFFF' : 'inherit',
           transition: 'transform 0.2s ease',
           transform: isActive ? 'scale(1.08)' : 'scale(1)'
         }} />
@@ -197,7 +220,8 @@ export default function Sidebar() {
               overflow: 'hidden',
               textOverflow: 'ellipsis',
               letterSpacing: '0.01em',
-              fontWeight: isActive ? '800' : '600'
+              fontWeight: isActive ? '800' : '600',
+              color: isActive ? '#FFFFFF' : 'inherit'
             }}>
               {item.label}
             </span>
@@ -272,33 +296,7 @@ export default function Sidebar() {
 
   const renderNavContent = (isMobileView = false) => (
     <>
-      <div style={{ marginBottom: '0.75rem' }}>
-        <select
-          value={flavorId}
-          onChange={(e) => {
-            const selectedVal = e.target.value;
-            if (selectedVal === 'platform1') { resetToMainFlavor(); } else if (selectedVal) { switchFlavor(selectedVal); }
-          }}
-          style={{
-            width: '100%',
-            padding: '0.5rem 0.65rem',
-            fontSize: '0.775rem',
-            fontWeight: '600',
-            borderRadius: 'var(--radius-sm)',
-            border: '1px solid var(--border-sidebar)',
-            backgroundColor: 'var(--bg-sidebar-hover)',
-            color: 'var(--text-sidebar-main)',
-            cursor: 'pointer',
-            outline: 'none'
-          }}
-        >
-          <option value="platform1" style={{ background: 'var(--bg-sidebar)', color: '#FFFFFF' }}>🏠 Desktopalie Backoffice</option>
-          {subPlatformFlavors?.map((f) => (
-            <option key={f.id} value={f.id} style={{ background: 'var(--bg-sidebar)', color: '#FFFFFF' }}>{getFlavorEmoji(f.id)} Platform {f.shortName}</option>
-          ))}
-        </select>
-      </div>
-
+      {/* SEARCH INPUT */}
       <div style={{ position: 'relative', marginBottom: '0.85rem', display: 'flex', alignItems: 'center' }}>
         <HiMagnifyingGlass style={{ position: 'absolute', left: '0.75rem', color: 'var(--text-sidebar-muted)', fontSize: '1rem', pointerEvents: 'none' }} />
         <input
@@ -325,6 +323,7 @@ export default function Sidebar() {
         )}
       </div>
 
+      {/* FLAT MENU LIST */}
       <div className="sidebar-nav-list" style={{ flex: 1, overflowY: 'auto' }}>
         {filteredItems.length > 0 ? (
           filteredItems.map(item => renderNavItem(item, isMobileView))
@@ -339,6 +338,7 @@ export default function Sidebar() {
 
   return (
     <>
+      {/* TABLET / MOBILE TOPBAR */}
       <div className="tablet-mobile-topbar" style={{ display: isTabletOrMobile ? 'block' : 'none', position: 'sticky', top: 0, zIndex: 9999, backgroundColor: 'var(--bg-sidebar)', borderBottom: '1px solid var(--border-sidebar)' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.75rem 1rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
@@ -369,6 +369,7 @@ export default function Sidebar() {
         )}
       </div>
 
+      {/* DESKTOP SIDEBAR */}
       <aside
         className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}
         style={{
@@ -387,6 +388,7 @@ export default function Sidebar() {
           boxSizing: 'border-box'
         }}
       >
+        {/* HEADER BRANDING: Main Backoffice with Logo vs Sub-Platform with Badge Only */}
         <div style={{
           display: 'flex',
           alignItems: 'center',
@@ -442,6 +444,7 @@ export default function Sidebar() {
           </button>
         </div>
 
+        {/* COLLAPSED MODE SEARCH TRIGGER */}
         {isCollapsed && (
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1rem' }}>
             <button
@@ -467,14 +470,17 @@ export default function Sidebar() {
           </div>
         )}
 
+        {/* EXPANDED VIEW: SEARCH & FLAT MENU */}
         {!isCollapsed && renderNavContent(false)}
 
+        {/* COLLAPSED VIEW: ICON ONLY FLAT LIST */}
         {isCollapsed && (
           <div className="sidebar-nav-list" style={{ flex: 1, overflowY: 'auto' }}>
             {filteredItems.map(item => renderNavItem(item, false))}
           </div>
         )}
 
+        {/* BOTTOM USER PROFILE */}
         <div style={{ borderTop: '1px solid var(--border-sidebar)', paddingTop: '0.75rem', marginTop: '0.5rem' }}>
           {renderUserProfileItem(false)}
         </div>

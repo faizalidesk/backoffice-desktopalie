@@ -54,10 +54,10 @@
   --bg-sidebar: #0F3574;             /* Bold Deep Vibrant Royal Blue */
   --bg-sidebar-hover: rgba(255, 255, 255, 0.12);
   --bg-sidebar-active: #2563EB;
-  --border-sidebar: rgba(255, 255, 255, 0.15);
+  --border-sidebar: rgba(255, 255, 255, 0.18);
   --text-sidebar-main: #FFFFFF;
-  --text-sidebar-muted: #BFDBFE;
-  --text-sidebar-subtle: #93C5FD;
+  --text-sidebar-muted: #E2E8F0;     /* Crisp High-Contrast Light Slate/White */
+  --text-sidebar-subtle: #BFDBFE;
 
   --bg-main: #F0F6FF;                /* Soft Pastel Blue (derived directly from Sidebar Blue) */
   --bg-card: #FFFFFF;
@@ -91,10 +91,10 @@
   --bg-sidebar: #042014;             /* Bold Deep Vibrant Forest Emerald */
   --bg-sidebar-hover: rgba(16, 185, 129, 0.14);
   --bg-sidebar-active: #10B981;
-  --border-sidebar: rgba(52, 211, 153, 0.16);
+  --border-sidebar: rgba(52, 211, 153, 0.18);
   --text-sidebar-main: #FFFFFF;
-  --text-sidebar-muted: #A7F3D0;
-  --text-sidebar-subtle: #34D399;
+  --text-sidebar-muted: #ECFDF5;     /* Crisp High-Contrast Emerald Tint/White */
+  --text-sidebar-subtle: #6EE7B7;
 
   --bg-main: #05130E;                /* Soft Pastel-tinted Deep Emerald */
   --bg-card: #091E16;
