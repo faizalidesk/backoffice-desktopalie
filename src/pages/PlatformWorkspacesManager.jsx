@@ -38,20 +38,20 @@ export default function PlatformWorkspacesManager() {
   };
 
   return (
-    <div style={{ paddingBottom: '3rem' }}>
+    <>
       <Header title="Management Platform Workspaces" />
 
-      <main style={{ padding: '2rem 2.5rem', maxWidth: '1400px', margin: '0 auto' }}>
+      <div className="page-body" style={{ paddingBottom: '4rem' }}>
         {/* Banner Title */}
         <div style={{
           backgroundColor: 'var(--bg-card)',
           border: '1px solid var(--border-color)',
           borderRadius: 'var(--radius-lg)',
-          padding: '1.75rem 2.25rem',
+          padding: '1.75rem 2rem',
           marginBottom: '2rem',
           boxShadow: 'var(--shadow-sm)'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
             <div style={{
               width: '32px',
               height: '32px',
@@ -61,7 +61,8 @@ export default function PlatformWorkspacesManager() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '1.1rem'
+              fontSize: '1.1rem',
+              flexShrink: 0
             }}>
               <FiGrid />
             </div>
@@ -81,7 +82,8 @@ export default function PlatformWorkspacesManager() {
             fontWeight: '800',
             color: 'var(--text-main)',
             marginBottom: '0.35rem',
-            lineHeight: '1.2'
+            lineHeight: '1.2',
+            wordBreak: 'break-word'
           }}>
             Platform Workspace Backoffice
           </h1>
@@ -102,7 +104,9 @@ export default function PlatformWorkspacesManager() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            marginBottom: '1.25rem'
+            marginBottom: '1.25rem',
+            flexWrap: 'wrap',
+            gap: '0.5rem'
           }}>
             <div style={{
               display: 'flex',
@@ -124,8 +128,8 @@ export default function PlatformWorkspacesManager() {
 
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: '1.5rem'
+            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+            gap: '1.25rem'
           }}>
             {availableFlavors.map((p) => {
               const isSelected = flavorId === p.id;
@@ -142,7 +146,7 @@ export default function PlatformWorkspacesManager() {
                       ? `2px solid ${accentColor}` 
                       : '1px solid var(--border-color)',
                     borderRadius: 'var(--radius-md)',
-                    padding: '1.75rem 1.5rem 1.5rem 1.5rem',
+                    padding: '1.5rem',
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-between',
@@ -152,7 +156,8 @@ export default function PlatformWorkspacesManager() {
                       ? `0 10px 25px -5px ${accentColor}25` 
                       : 'var(--shadow-sm)',
                     position: 'relative',
-                    overflow: 'hidden'
+                    overflow: 'hidden',
+                    minWidth: 0
                   }}
                   onMouseOver={(e) => {
                     if (!isSelected) {
@@ -196,26 +201,27 @@ export default function PlatformWorkspacesManager() {
                   <div>
                     {/* Platform Icon & Title */}
                     <div style={{
-                      width: '46px',
-                      height: '46px',
+                      width: '44px',
+                      height: '44px',
                       borderRadius: 'var(--radius-sm)',
                       backgroundColor: `${accentColor}15`,
                       color: accentColor,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      fontSize: '1.4rem',
-                      marginBottom: '1.25rem'
+                      fontSize: '1.35rem',
+                      marginBottom: '1.15rem'
                     }}>
                       <IconComponent />
                     </div>
 
                     <h3 style={{
-                      fontSize: '1.2rem',
+                      fontSize: '1.15rem',
                       fontWeight: '800',
                       color: 'var(--text-main)',
                       marginBottom: '0.35rem',
-                      lineHeight: '1.3'
+                      lineHeight: '1.3',
+                      wordBreak: 'break-word'
                     }}>
                       {p.name}
                     </h3>
@@ -223,7 +229,7 @@ export default function PlatformWorkspacesManager() {
                     <p style={{
                       fontSize: '0.825rem',
                       color: 'var(--text-muted)',
-                      marginBottom: '1.25rem',
+                      marginBottom: '1.15rem',
                       lineHeight: '1.45',
                       minHeight: '2.8em'
                     }}>
@@ -306,8 +312,8 @@ export default function PlatformWorkspacesManager() {
             })}
           </div>
         </div>
-      </main>
-    </div>
+      </div>
+    </>
   );
 }
 
