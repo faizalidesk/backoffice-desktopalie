@@ -6,20 +6,18 @@ import { useNavigate, Link, useParams, Navigate } from 'react-router-dom';
 import { backofficeService } from '../services/backofficeService';
 import { toast } from 'react-hot-toast';
 import { FiLock, FiMail, FiArrowRight, FiAlertCircle, FiMoon, FiSun, FiGlobe, FiShield, FiCpu, FiTruck } from 'react-icons/fi';
-import { FaGoogle } from 'react-icons/fa';
 import DesktopalieMark from '../components/DesktopalieMark';
 
 export default function SubPlatformLogin() {
   const { platformName } = useParams();
   const { activeFlavor, flavorId, switchFlavor } = useFlavor();
   const { isDarkMode, toggleTheme } = useTheme();
-  const { login, signInWithGoogle } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [submitting, setSubmitting] = useState(false);
-  const [googleLoading, setGoogleLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [isMaintBlocked, setIsMaintBlocked] = useState(false);
 
@@ -267,39 +265,6 @@ export default function SubPlatformLogin() {
             <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: isDarkMode ? '#ECFDF5' : '#0F172A', marginBottom: '1.25rem' }}>
               Sign In to {activeFlavor?.shortName} Workspace
             </h3>
-
-            {/* Google OAuth Button */}
-            <button
-              type="button"
-              onClick={handleGoogleSignIn}
-              disabled={googleLoading}
-              style={{
-                width: '100%',
-                padding: '0.8rem',
-                borderRadius: '12px',
-                backgroundColor: isDarkMode ? '#05130E' : '#FFFFFF',
-                color: isDarkMode ? '#ECFDF5' : '#0F172A',
-                border: `1px solid ${isDarkMode ? '#133829' : '#CBD5E1'}`,
-                fontWeight: '700',
-                fontSize: '0.875rem',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.65rem',
-                cursor: 'pointer',
-                marginBottom: '1.25rem',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.04)'
-              }}
-            >
-              <FaGoogle style={{ color: '#EA4335', fontSize: '1.1rem' }} />
-              <span>{googleLoading ? 'Memproses OAuth...' : 'Sign in with Google Account'}</span>
-            </button>
-
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
-              <div style={{ flex: 1, height: '1px', backgroundColor: isDarkMode ? '#133829' : '#E2E8F0' }} />
-              <span style={{ fontSize: '0.7rem', fontWeight: '700', textTransform: 'uppercase', color: 'var(--text-muted)' }}>atau login email</span>
-              <div style={{ flex: 1, height: '1px', backgroundColor: isDarkMode ? '#133829' : '#E2E8F0' }} />
-            </div>
 
             {errorMessage && (
               <div style={{
