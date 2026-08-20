@@ -48,13 +48,42 @@ export default function MembershipManager() {
     }
   }, [flavorId]);
 
+  // Helper for initials & deterministic gradients (100% offline & fast)
+  const getInitials = (name) => {
+    if (!name) return 'U';
+    const clean = name.replace(/\(.*?\)/g, '').trim();
+    const words = clean.split(/\s+/).filter(Boolean);
+    if (words.length === 0) return 'U';
+    if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
+    return (words[0][0] + words[1][0]).toUpperCase();
+  };
+
+  const getAvatarGradient = (str, platform) => {
+    if (platform === 'platform2') return 'linear-gradient(135deg, #10B981 0%, #059669 100%)';
+    if (platform === 'platform3') return 'linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)';
+    if (platform === 'platform4') return 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)';
+    
+    const gradients = [
+      'linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)',
+      'linear-gradient(135deg, #06B6D4 0%, #0284C7 100%)',
+      'linear-gradient(135deg, #6366F1 0%, #4338CA 100%)',
+      'linear-gradient(135deg, #EC4899 0%, #BE185D 100%)',
+      'linear-gradient(135deg, #14B8A6 0%, #0F766E 100%)'
+    ];
+    let hash = 0;
+    for (let i = 0; i < (str || '').length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return gradients[Math.abs(hash) % gradients.length];
+  };
+
   // Initial Demo Data Fallback
   const initialDemoMembers = [
     {
       id: 'usr-google-881920',
       full_name: 'Faiz Ali (Administrator)',
       email: 'faizali.desk@gmail.com',
-      avatar_url: 'https://ui-avatars.com/api/?name=Faiz+Ali&background=3B82F6&color=fff',
+      avatar_url: null,
       provider: 'Google OAuth 2.0',
       platform: 'platform1',
       platformName: 'Desktopalie Main',
@@ -67,7 +96,7 @@ export default function MembershipManager() {
       id: 'usr-beta-771201',
       full_name: 'Budi Logistics Coordinator',
       email: 'budi.logistics@cargo-beta.com',
-      avatar_url: 'https://ui-avatars.com/api/?name=Budi+Logistics&background=10B981&color=fff',
+      avatar_url: null,
       provider: 'Google OAuth 2.0',
       platform: 'platform2',
       platformName: 'Desktopalie Beta',
@@ -80,7 +109,7 @@ export default function MembershipManager() {
       id: 'usr-gamma-551040',
       full_name: 'Rian Transcoder Engineer',
       email: 'rian.transcode@gamma-stream.io',
-      avatar_url: 'https://ui-avatars.com/api/?name=Rian+Engine&background=8B5CF6&color=fff',
+      avatar_url: null,
       provider: 'Email & Password',
       platform: 'platform3',
       platformName: 'Desktopalie Gamma',
@@ -93,7 +122,7 @@ export default function MembershipManager() {
       id: 'usr-delta-331092',
       full_name: 'Dedi Enterprise Cloud Admin',
       email: 'dedi.cloud@delta-erp.net',
-      avatar_url: 'https://ui-avatars.com/api/?name=Dedi+Cloud&background=F59E0B&color=fff',
+      avatar_url: null,
       provider: 'Google OAuth 2.0',
       platform: 'platform4',
       platformName: 'Desktopalie Delta',
@@ -106,9 +135,9 @@ export default function MembershipManager() {
 
   const renderMemberAvatar = (member, size = 38) => {
     const name = member?.full_name || member?.email || 'User';
-    const initial = name.charAt(0).toUpperCase();
-    const badgeBg = member?.platform === 'platform2' ? '#10B981' : (member?.platform === 'platform3' ? '#8B5CF6' : (member?.platform === 'platform4' ? '#F59E0B' : '#3B82F6'));
-    const avatarSrc = member?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=3B82F6&color=fff`;
+    const initials = getInitials(name);
+    const bgGradient = getAvatarGradient(member?.email || name, member?.platform);
+    const hasCustomPhoto = member?.avatar_url && !member.avatar_url.includes('ui-avatars.com') && (member.avatar_url.startsWith('http') || member.avatar_url.startsWith('data:image'));
 
     return (
       <div style={{
@@ -116,29 +145,42 @@ export default function MembershipManager() {
         height: `${size}px`,
         minWidth: `${size}px`,
         borderRadius: '50%',
-        backgroundColor: badgeBg,
+        background: bgGradient,
         color: '#FFFFFF',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         fontWeight: '800',
-        fontSize: size > 50 ? '1.75rem' : '0.85rem',
-        overflow: 'hidden',
-        border: `2px solid ${isDarkMode ? '#133829' : badgeBg}`,
-        boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
+        fontSize: size > 50 ? '1.5rem' : '0.825rem',
+        letterSpacing: '0.03em',
+        border: `2px solid ${isDarkMode ? '#133829' : 'rgba(255, 255, 255, 0.2)'}`,
+        boxShadow: '0 2px 6px rgba(0, 0, 0, 0.15)',
         position: 'relative',
-        flexShrink: 0
+        flexShrink: 0,
+        overflow: 'hidden',
+        userSelect: 'none'
       }}>
-        <img
-          src={avatarSrc}
-          alt={name}
-          onError={(e) => {
-            e.currentTarget.style.display = 'none';
-          }}
-          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-        />
-        <span style={{ position: 'absolute', pointerEvents: 'none', zIndex: 0 }}>
-          {initial}
+        {hasCustomPhoto && (
+          <img
+            src={member.avatar_url}
+            alt=""
+            onError={(e) => {
+              e.currentTarget.style.display = 'none';
+            }}
+            style={{ 
+              width: '100%', 
+              height: '100%', 
+              borderRadius: '50%', 
+              objectFit: 'cover',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              zIndex: 1
+            }}
+          />
+        )}
+        <span style={{ zIndex: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          {initials}
         </span>
       </div>
     );
@@ -177,7 +219,7 @@ export default function MembershipManager() {
                   id: val.id || key,
                   full_name: val.full_name || val.email.split('@')[0],
                   email: val.email,
-                  avatar_url: val.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(val.email)}`,
+                  avatar_url: val.avatar_url || null,
                   provider: val.provider || 'Google OAuth 2.0',
                   platform: val.platform || 'platform1',
                   platformName: val.platformName || (val.platform === 'platform2' ? 'Desktopalie Beta' : (val.platform === 'platform3' ? 'Desktopalie Gamma' : (val.platform === 'platform4' ? 'Desktopalie Delta' : 'Desktopalie Main'))),
@@ -206,7 +248,7 @@ export default function MembershipManager() {
                 id: p.id,
                 full_name: p.full_name || existing.full_name || emailKey.split('@')[0],
                 email: emailKey,
-                avatar_url: p.avatar_url || existing.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(p.full_name || emailKey)}&background=3B82F6&color=fff`,
+                avatar_url: p.avatar_url || null,
                 provider: p.provider || existing.provider || 'Google OAuth 2.0',
                 platform: p.platform || existing.platform || 'platform1',
                 platformName: p.platformName || existing.platformName || 'Desktopalie Main',
@@ -232,7 +274,7 @@ export default function MembershipManager() {
 
         const localAvatar = localStorage.getItem('desktopalie_profile_avatar') || localProfile?.avatar_url;
         const existing = map.get(currentUser.email) || {};
-        const avatarUrl = localAvatar || currentUser.user_metadata?.avatar_url || currentUser.user_metadata?.picture || existing.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(localProfile?.full_name || currentUser.user_metadata?.full_name || currentUser.email)}&background=10B981&color=fff`;
+        const avatarUrl = localAvatar || currentUser.user_metadata?.avatar_url || currentUser.user_metadata?.picture || existing.avatar_url || null;
 
         map.set(currentUser.email, {
           id: currentUser.id,
