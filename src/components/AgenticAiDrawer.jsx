@@ -22,9 +22,9 @@ const DEFAULT_GREETING = {
 export default function AgenticAiDrawer() {
   const { isDarkMode } = useTheme();
 
-  // Initial collapsed state from localStorage (default: true / closed by default)
+  // Initial collapsed state (ALWAYS closed by default when entering the app)
   const [isCollapsed, setIsCollapsed] = useState(() => {
-    const saved = localStorage.getItem('desktopalie_ai_sidebar_collapsed');
+    const saved = sessionStorage.getItem('desktopalie_ai_sidebar_collapsed');
     return saved !== null ? JSON.parse(saved) : true;
   });
 
@@ -46,9 +46,15 @@ export default function AgenticAiDrawer() {
     }
   }, [messages]);
 
+  // Synchronize initial layout state on mount (guarantee closed by default)
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent('ai-sidebar-change', { detail: { isCollapsed } }));
+  }, []);
+
   const toggleCollapse = () => {
     setIsCollapsed(prev => {
       const nextState = !prev;
+      sessionStorage.setItem('desktopalie_ai_sidebar_collapsed', JSON.stringify(nextState));
       localStorage.setItem('desktopalie_ai_sidebar_collapsed', JSON.stringify(nextState));
       window.dispatchEvent(new CustomEvent('ai-sidebar-change', { detail: { isCollapsed: nextState } }));
       return nextState;

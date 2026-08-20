@@ -105,7 +105,7 @@ function ProtectedLayout({ children }) {
   
   // Track AI sidebar collapsed state for responsive reflow (default: true / closed by default)
   const [isAiCollapsed, setIsAiCollapsed] = useState(() => {
-    const saved = localStorage.getItem('desktopalie_ai_sidebar_collapsed');
+    const saved = sessionStorage.getItem('desktopalie_ai_sidebar_collapsed');
     return saved !== null ? JSON.parse(saved) : true;
   });
 
@@ -114,8 +114,8 @@ function ProtectedLayout({ children }) {
       if (e && e.detail && typeof e.detail.isCollapsed === 'boolean') {
         setIsAiCollapsed(e.detail.isCollapsed);
       } else {
-        const saved = localStorage.getItem('desktopalie_ai_sidebar_collapsed');
-        setIsAiCollapsed(saved !== null ? JSON.parse(saved) : false);
+        const saved = sessionStorage.getItem('desktopalie_ai_sidebar_collapsed');
+        setIsAiCollapsed(saved !== null ? JSON.parse(saved) : true);
       }
     };
 
