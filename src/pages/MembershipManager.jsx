@@ -104,6 +104,46 @@ export default function MembershipManager() {
     }
   ];
 
+  const renderMemberAvatar = (member, size = 38) => {
+    const name = member?.full_name || member?.email || 'User';
+    const initial = name.charAt(0).toUpperCase();
+    const badgeBg = member?.platform === 'platform2' ? '#10B981' : (member?.platform === 'platform3' ? '#8B5CF6' : (member?.platform === 'platform4' ? '#F59E0B' : '#3B82F6'));
+    const avatarSrc = member?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=3B82F6&color=fff`;
+
+    return (
+      <div style={{
+        width: `${size}px`,
+        height: `${size}px`,
+        minWidth: `${size}px`,
+        borderRadius: '50%',
+        backgroundColor: badgeBg,
+        color: '#FFFFFF',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontWeight: '800',
+        fontSize: size > 50 ? '1.75rem' : '0.85rem',
+        overflow: 'hidden',
+        border: `2px solid ${isDarkMode ? '#133829' : badgeBg}`,
+        boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
+        position: 'relative',
+        flexShrink: 0
+      }}>
+        <img
+          src={avatarSrc}
+          alt={name}
+          onError={(e) => {
+            e.currentTarget.style.display = 'none';
+          }}
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+        <span style={{ position: 'absolute', pointerEvents: 'none', zIndex: 0 }}>
+          {initial}
+        </span>
+      </div>
+    );
+  };
+
   const fetchMembers = async () => {
     setLoading(true);
     try {
@@ -159,13 +199,14 @@ export default function MembershipManager() {
         const profiles = await backofficeService.getAllProfiles();
         if (profiles && profiles.length > 0) {
           profiles.forEach(p => {
-            if (p.email) {
-              const existing = map.get(p.email) || {};
-              map.set(p.email, {
+            const emailKey = p.email || (p.id === currentUser?.id ? currentUser?.email : null);
+            if (emailKey) {
+              const existing = map.get(emailKey) || {};
+              map.set(emailKey, {
                 id: p.id,
-                full_name: p.full_name || existing.full_name || p.email.split('@')[0],
-                email: p.email,
-                avatar_url: p.avatar_url || existing.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(p.email)}`,
+                full_name: p.full_name || existing.full_name || emailKey.split('@')[0],
+                email: emailKey,
+                avatar_url: p.avatar_url || existing.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(p.full_name || emailKey)}&background=3B82F6&color=fff`,
                 provider: p.provider || existing.provider || 'Google OAuth 2.0',
                 platform: p.platform || existing.platform || 'platform1',
                 platformName: p.platformName || existing.platformName || 'Desktopalie Main',
@@ -181,18 +222,27 @@ export default function MembershipManager() {
         console.warn('Profiles fetch warning:', err);
       }
 
-      // 5. Add current logged in user if missing
+      // 5. Add current logged in user & sync latest profile from localStorage
       if (currentUser && currentUser.email) {
+        let localProfile = null;
+        try {
+          const cached = localStorage.getItem('desktopalie_profile') || localStorage.getItem(`desktopalie_profile_${currentUser?.id}`);
+          if (cached) localProfile = JSON.parse(cached);
+        } catch (e) {}
+
+        const localAvatar = localStorage.getItem('desktopalie_profile_avatar') || localProfile?.avatar_url;
         const existing = map.get(currentUser.email) || {};
+        const avatarUrl = localAvatar || currentUser.user_metadata?.avatar_url || currentUser.user_metadata?.picture || existing.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(localProfile?.full_name || currentUser.user_metadata?.full_name || currentUser.email)}&background=10B981&color=fff`;
+
         map.set(currentUser.email, {
           id: currentUser.id,
-          full_name: currentUser.user_metadata?.full_name || existing.full_name || currentUser.email.split('@')[0],
+          full_name: localProfile?.full_name || currentUser.user_metadata?.full_name || existing.full_name || currentUser.email.split('@')[0],
           email: currentUser.email,
-          avatar_url: currentUser.user_metadata?.avatar_url || currentUser.user_metadata?.picture || existing.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.email)}`,
+          avatar_url: avatarUrl,
           provider: currentUser.app_metadata?.provider === 'google' ? 'Google OAuth 2.0' : 'Email & Password',
           platform: existing.platform || 'platform1',
           platformName: existing.platformName || 'Desktopalie Main',
-          role: existing.role || 'Super Admin',
+          role: localProfile?.role || existing.role || 'Super Admin',
           status: 'Active',
           created_at: currentUser.created_at || existing.created_at || new Date().toISOString(),
           last_login: 'Baru Saja'
@@ -708,11 +758,7 @@ export default function MembershipManager() {
                             style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer' }}
                             title="Klik untuk melihat profil"
                           >
-                            <img
-                              src={row.avatar_url}
-                              alt="Avatar"
-                              style={{ width: '38px', height: '38px', borderRadius: '50%', objectFit: 'cover', border: '1.5px solid #10B981' }}
-                            />
+                            {renderMemberAvatar(row, 40)}
                             <div>
                               <div style={{ fontWeight: '800', color: isDarkMode ? '#ECFDF5' : '#0F172A', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
                                 <span>{row.full_name}</span>
@@ -886,13 +932,9 @@ export default function MembershipManager() {
                 <FiX />
               </button>
 
-              <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-                <img
-                  src={selectedMember.avatar_url}
-                  alt="Avatar"
-                  style={{ width: '76px', height: '76px', borderRadius: '50%', objectFit: 'cover', border: '3px solid #10B981', margin: '0 auto 0.75rem auto' }}
-                />
-                <h3 style={{ margin: '0 0 0.25rem 0', fontSize: '1.25rem', fontWeight: '800', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>
+              <div style={{ textAlign: 'center', marginBottom: '1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                {renderMemberAvatar(selectedMember, 76)}
+                <h3 style={{ margin: '0.75rem 0 0.25rem 0', fontSize: '1.25rem', fontWeight: '800', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>
                   {selectedMember.full_name}
                 </h3>
                 <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.875rem' }}>{selectedMember.email}</p>
