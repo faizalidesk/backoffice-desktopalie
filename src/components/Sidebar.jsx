@@ -131,60 +131,60 @@ export default function Sidebar() {
 
   // =========================================================================
   // CATEGORIZED MENUS SORTED ALPHABETICALLY (A-Z)
-  // 1. Analitik & Dashboard
-  // 2. Dokumentasi & Catatan
-  // 3. Inovasi & Proyek
-  // 4. Manajemen & Finansial
-  // 5. Pengaturan & Sistem
+  // 1. Analitik
+  // 2. Dokumentasi
+  // 3. Inovasi
+  // 4. Manajemen
+  // 5. Sistem
   // =========================================================================
   const rawCategories = [
     {
       id: 'analytics',
-      title: 'Analitik & Dashboard',
+      title: 'Analitik',
       icon: FiGrid,
       items: [
-        { label: t('dashboard') || 'Dashboard Overview', path: '/dashboard', icon: FiGrid },
+        { label: t('dashboard') || 'Dashboard', path: '/dashboard', icon: FiGrid },
         { label: t('workspaces') || 'Workspaces', path: '/workspaces', icon: FiLayers },
         { label: t('notifications') || 'Notifikasi', path: '/notifications', icon: FiBell, badge: unreadCount },
       ]
     },
     {
       id: 'docs',
-      title: 'Dokumentasi & Catatan',
+      title: 'Dokumentasi',
       icon: FiBookOpen,
       items: [
-        { label: t('documentation') || 'Dokumentasi Sistem', path: '/documentation', icon: FiBookOpen },
-        { label: t('notes') || 'Jurnal & Catatan', path: '/notes', icon: FiFileText },
-        { label: t('bookmarks') || 'Resource Library', path: '/bookmarks', icon: FiBookmark },
+        { label: t('documentation') || 'Dokumentasi', path: '/documentation', icon: FiBookOpen },
+        { label: t('notes') || 'Catatan', path: '/notes', icon: FiFileText },
+        { label: t('bookmarks') || 'Bookmarks', path: '/bookmarks', icon: FiBookmark },
       ]
     },
     {
       id: 'innovation',
-      title: 'Inovasi & Proyek',
+      title: 'Inovasi',
       icon: FiFolder,
       items: [
-        { label: t('projects') || 'Portofolio Proyek', path: '/projects', icon: FiFolder },
-        { label: t('experiments') || 'Motion & Eksperimen', path: '/experiments', icon: FiCpu },
-        { label: t('todos') || 'Kanban & To-Do', path: '/todos', icon: FiCheckSquare },
+        { label: t('projects') || 'Proyek', path: '/projects', icon: FiFolder },
+        { label: t('experiments') || 'Eksperimen', path: '/experiments', icon: FiCpu },
+        { label: t('todos') || 'To-Do List', path: '/todos', icon: FiCheckSquare },
       ]
     },
     {
       id: 'management',
-      title: 'Manajemen & Finansial',
+      title: 'Manajemen',
       icon: FiDollarSign,
       items: [
-        { label: t('transactions') || 'Transaksi & Keuangan', path: '/transactions', icon: FiDollarSign },
-        { label: 'Membership Pengguna', path: '/members', icon: FiUsers },
-        { label: t('landingManager') || 'Landing Page Builder', path: '/landing-manager', icon: FiLayout },
+        { label: t('transactions') || 'Transaksi', path: '/transactions', icon: FiDollarSign },
+        { label: 'Membership', path: '/members', icon: FiUsers },
+        { label: t('landingManager') || 'Landing Manager', path: '/landing-manager', icon: FiLayout },
       ]
     },
     {
       id: 'settings',
-      title: 'Pengaturan & Sistem',
+      title: 'Sistem',
       icon: FiTool,
       items: [
-        { label: t('maintenance') || 'Maintenance & Fitur', path: '/maintenance', icon: FiTool },
-        { label: t('profile') || 'Profil Akun Saya', path: '/profile', icon: FiUser },
+        { label: t('maintenance') || 'Maintenance', path: '/maintenance', icon: FiTool },
+        { label: t('profile') || 'Profil Akun', path: '/profile', icon: FiUser },
       ]
     }
   ];
