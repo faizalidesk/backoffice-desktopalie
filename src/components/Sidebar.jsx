@@ -35,8 +35,8 @@ export default function Sidebar() {
   const [searchQuery, setSearchQuery] = useState('');
   const [unreadCount, setUnreadCount] = useState(() => notificationService.getUnreadCount());
   
-  // Accordion open/close state: By default all categories are collapsed
-  const [openCategories, setOpenCategories] = useState({});
+  // Accordion state: Store active category ID for exclusive single-open accordion (null = all collapsed)
+  const [openCategoryId, setOpenCategoryId] = useState(null);
 
   const [userProfile, setUserProfile] = useState(() => {
     try {
@@ -124,12 +124,9 @@ export default function Sidebar() {
     }
   };
 
-  // Toggle Category Accordion Dropdown
+  // Toggle Category Accordion Dropdown (Exclusive: only 1 category open at a time)
   const toggleCategory = (catId) => {
-    setOpenCategories(prev => ({
-      ...prev,
-      [catId]: !prev[catId]
-    }));
+    setOpenCategoryId(prev => (prev === catId ? null : catId));
   };
 
   // =========================================================================
@@ -210,7 +207,7 @@ export default function Sidebar() {
     }
 
     const itemsToRender = trimmedQuery ? matchingItems : category.items;
-    const isCategoryOpen = trimmedQuery ? true : !!openCategories[category.id];
+    const isCategoryOpen = trimmedQuery ? true : openCategoryId === category.id;
     const hasActiveChild = category.items.some(item => location.pathname === item.path);
     const CategoryIcon = category.icon;
     const totalBadges = category.items.reduce((sum, item) => sum + (item.badge || 0), 0);
@@ -920,7 +917,7 @@ export default function Sidebar() {
                 onClick={() => {
                   setIsCollapsed(false);
                   localStorage.setItem('desktopalie_sidebar_collapsed', 'false');
-                  setOpenCategories(prev => ({ ...prev, [category.id]: true }));
+                  setOpenCategoryId(category.id);
                 }}
                 title={category.title}
                 style={{
