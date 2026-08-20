@@ -80,7 +80,7 @@ function ProtectedLayout({ children }) {
     <div 
       className="app-container"
       style={{
-        '--ai-sidebar-width': isAiCollapsed ? '0px' : '400px'
+        '--ai-sidebar-width': isAiCollapsed ? '0px' : '420px'
       }}
     >
       <Sidebar />

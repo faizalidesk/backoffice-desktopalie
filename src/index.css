@@ -87,6 +87,8 @@ body {
   display: flex;
   min-height: 100vh;
   width: 100%;
+  position: relative;
+  overflow-x: hidden;
 }
 
 .main-content {
@@ -95,6 +97,14 @@ body {
   flex-direction: column;
   min-width: 0;
   background-color: var(--bg-main);
+  margin-right: var(--ai-sidebar-width, 0px);
+  transition: margin-right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (max-width: 1024px) {
+  .main-content {
+    margin-right: 0 !important;
+  }
 }
 
 .page-body {

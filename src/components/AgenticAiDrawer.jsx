@@ -89,12 +89,12 @@ export default function AgenticAiDrawer() {
   return (
     <aside
       style={{
-        width: '400px',
-        height: 'calc(100vh - 64px)',
+        width: '420px',
+        height: '100vh',
         position: 'fixed',
-        top: '64px',
+        top: 0,
         right: 0,
-        zIndex: 90,
+        zIndex: 250,
         backgroundColor: 'var(--bg-card)',
         borderLeft: '1px solid var(--border-color)',
         display: 'flex',
@@ -113,11 +113,11 @@ export default function AgenticAiDrawer() {
           title="Buka Desktop-Agentic [|]"
           style={{
             position: 'absolute',
-            top: '8px',
+            top: '76px',
             left: '-44px',
             width: '44px',
-            height: '40px',
-            borderRadius: '8px 0 0 8px',
+            height: '42px',
+            borderRadius: '10px 0 0 10px',
             backgroundColor: 'var(--bg-card)',
             border: '1px solid var(--border-color)',
             borderRight: 'none',
@@ -145,11 +145,11 @@ export default function AgenticAiDrawer() {
         </button>
       )}
 
-      {/* SIMPLE CLEAN HEADER (SINGLE ROW) */}
+      {/* SIMPLE CLEAN HEADER (ALIGNED WITH MAIN HEADER HEIGHT 64px) */}
       <div style={{
-        height: '48px',
-        minHeight: '48px',
-        padding: '0 16px',
+        height: '64px',
+        minHeight: '64px',
+        padding: '0 18px',
         borderBottom: '1px solid var(--border-color)',
         backgroundColor: 'var(--bg-card)',
         display: 'flex',
@@ -157,11 +157,11 @@ export default function AgenticAiDrawer() {
         justifyContent: 'space-between'
       }}>
         {/* Title & Status Indicator */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <div style={{
-            width: '28px',
-            height: '28px',
-            borderRadius: '6px',
+            width: '32px',
+            height: '32px',
+            borderRadius: '8px',
             backgroundColor: 'var(--bg-main)',
             border: '1px solid var(--border-color)',
             display: 'flex',
@@ -169,15 +169,15 @@ export default function AgenticAiDrawer() {
             justifyContent: 'center',
             color: 'var(--primary)'
           }}>
-            <FiCpu size={16} />
+            <FiCpu size={18} />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span style={{ fontSize: '0.875rem', fontWeight: '700', color: 'var(--text-main)', lineHeight: 1.2 }}>
+            <span style={{ fontSize: '0.925rem', fontWeight: '700', color: 'var(--text-main)', lineHeight: 1.2 }}>
               Desktop-Agentic
             </span>
-            <span style={{ fontSize: '0.68rem', color: '#10B981', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: '500' }}>
+            <span style={{ fontSize: '0.725rem', color: '#10B981', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: '600' }}>
               <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10B981' }} />
-              Ready & Autonomous
+              Autonomous Engine
             </span>
           </div>
         </div>
