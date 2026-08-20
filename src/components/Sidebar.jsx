@@ -466,11 +466,11 @@ export default function Sidebar() {
             transition: 'all 0.15s ease'
           }}
         >
-          <option value="platform1" style={{ background: '#1E1B4B', color: '#FFFFFF' }}>
+          <option value="platform1" style={{ backgroundColor: 'var(--bg-sidebar)', color: 'var(--text-sidebar-main)' }}>
             🏠 Desktopalie Main
           </option>
           {subPlatformFlavors?.map((f) => (
-            <option key={f.id} value={f.id} style={{ background: '#1E1B4B', color: '#FFFFFF' }}>
+            <option key={f.id} value={f.id} style={{ backgroundColor: 'var(--bg-sidebar)', color: 'var(--text-sidebar-main)' }}>
               ⚡ Platform {f.shortName}
             </option>
           ))}
@@ -504,7 +504,7 @@ export default function Sidebar() {
             borderRadius: 'var(--radius-sm)',
             border: '1px solid var(--border-sidebar)',
             backgroundColor: 'var(--bg-sidebar-hover)',
-            color: '#FFFFFF',
+            color: 'var(--text-sidebar-main)',
             outline: 'none',
             transition: 'border-color 0.15s ease, box-shadow 0.15s ease'
           }}
@@ -770,11 +770,11 @@ export default function Sidebar() {
               transition: 'all 0.15s ease'
             }}
           >
-            <option value="platform1" style={{ background: '#1E1B4B', color: '#FFFFFF' }}>
+            <option value="platform1" style={{ backgroundColor: 'var(--bg-sidebar)', color: 'var(--text-sidebar-main)' }}>
               🏠 Desktopalie Main
             </option>
             {subPlatformFlavors?.map((f) => (
-              <option key={f.id} value={f.id} style={{ background: '#1E1B4B', color: '#FFFFFF' }}>
+              <option key={f.id} value={f.id} style={{ backgroundColor: 'var(--bg-sidebar)', color: 'var(--text-sidebar-main)' }}>
                 ⚡ Platform {f.shortName}
               </option>
             ))}
@@ -846,7 +846,7 @@ export default function Sidebar() {
               borderRadius: 'var(--radius-sm)',
               border: '1px solid var(--border-sidebar)',
               backgroundColor: 'var(--bg-sidebar-hover)',
-              color: '#FFFFFF',
+              color: 'var(--text-sidebar-main)',
               outline: 'none',
               transition: 'border-color 0.15s ease, box-shadow 0.15s ease'
             }}

@@ -68,7 +68,6 @@ export const FlavorProvider = ({ children }) => {
           root.style.setProperty('--color-accent', activeFlavor.theme.accent);
         }
       }
-      root.style.setProperty('--bg-sidebar', '#042014');
     } else {
       if (activeFlavor?.theme) {
         if (activeFlavor.theme.colorPrimary) {
@@ -84,10 +83,6 @@ export const FlavorProvider = ({ children }) => {
 
         if (activeFlavor.theme.accent) {
           root.style.setProperty('--color-accent', activeFlavor.theme.accent);
-        }
-
-        if (activeFlavor.theme.bgSidebar && activeFlavor.theme.bgSidebar !== 'default') {
-          root.style.setProperty('--bg-sidebar', activeFlavor.theme.bgSidebar);
         }
       }
     }

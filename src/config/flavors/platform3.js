@@ -7,7 +7,6 @@ export default {
   theme: {
     colorPrimary: '#7c3aed', // Purple Violet
     colorSecondary: '#8b5cf6',
-    bgSidebar: '#ffffff',
     accent: '#a78bfa',
   },
   features: {

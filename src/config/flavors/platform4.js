@@ -7,7 +7,6 @@ export default {
   theme: {
     colorPrimary: '#d97706', // Amber / Orange
     colorSecondary: '#f59e0b',
-    bgSidebar: '#ffffff',
     accent: '#fbbf24',
   },
   features: {
