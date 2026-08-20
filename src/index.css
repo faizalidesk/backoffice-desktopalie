@@ -95,14 +95,8 @@ body {
   flex-direction: column;
   min-width: 0;
   background-color: var(--bg-main);
-  margin-right: var(--ai-sidebar-width, 0px);
-  transition: margin-right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@media (max-width: 1024px) {
-  .main-content {
-    margin-right: 0 !important;
-  }
+  position: relative;
+  width: 100%;
 }
 
 .page-body {
@@ -111,7 +105,15 @@ body {
   max-width: 1400px;
   width: 100%;
   margin: 0 auto;
-  transition: padding 0.2s ease;
+  box-sizing: border-box;
+  padding-right: calc(1.5rem + var(--ai-sidebar-width, 0px));
+  transition: padding-right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (max-width: 1024px) {
+  .page-body {
+    padding-right: 1.5rem !important;
+  }
 }
 
 /* Typography & Headings */
