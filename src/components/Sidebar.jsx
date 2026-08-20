@@ -230,7 +230,7 @@ export default function Sidebar() {
             border: 'none',
             outline: 'none',
             boxShadow: 'none',
-            color: hasActiveChild ? '#FFFFFF' : 'var(--text-sidebar-main)',
+            color: hasActiveChild ? 'var(--primary)' : 'var(--text-sidebar-main)',
             fontSize: '0.825rem',
             fontWeight: '700',
             cursor: 'pointer',
@@ -242,7 +242,7 @@ export default function Sidebar() {
             <CategoryIcon style={{ 
               fontSize: '1.1rem', 
               flexShrink: 0, 
-              color: hasActiveChild ? '#FFFFFF' : 'var(--text-sidebar-muted)' 
+              color: hasActiveChild ? 'var(--primary)' : 'var(--text-sidebar-muted)' 
             }} />
             <span style={{ 
               whiteSpace: 'nowrap', 
@@ -272,7 +272,7 @@ export default function Sidebar() {
               className={`sidebar-chevron-icon ${isCategoryOpen ? 'open' : ''}`} 
               style={{
                 transform: isCategoryOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+                transition: 'transform 0.35s cubic-bezier(0.4, 0, 0.2, 1)'
               }}
             />
           </div>
@@ -295,7 +295,7 @@ export default function Sidebar() {
             flexDirection: 'column',
             gap: '0.25rem',
             paddingLeft: '0.6rem',
-            borderLeft: '2px solid var(--border-sidebar, rgba(255, 255, 255, 0.12))',
+            borderLeft: '2px solid var(--border-sidebar, #E2E8F0)',
             marginLeft: '1.25rem'
           }}>
             {itemsToRender.map((item) => {
@@ -320,7 +320,7 @@ export default function Sidebar() {
                     fontSize: '0.8rem',
                     fontWeight: isActive ? '700' : '600',
                     textDecoration: 'none',
-                    color: isActive ? '#FFFFFF' : 'var(--text-sidebar-muted)',
+                    color: isActive ? 'var(--primary)' : 'var(--text-sidebar-muted)',
                     backgroundColor: isActive ? 'var(--bg-sidebar-active)' : 'transparent',
                     boxShadow: isActive ? '0 2px 8px rgba(0, 0, 0, 0.2)' : 'none',
                     transition: 'all 0.15s ease'
@@ -370,7 +370,7 @@ export default function Sidebar() {
         padding: isCollapsed && !isMobileView ? '0.5rem 0' : '0.6rem 0.75rem',
         borderRadius: 'var(--radius-sm)',
         backgroundColor: isActive ? 'var(--bg-sidebar-active)' : 'var(--bg-sidebar-hover)',
-        border: `1px solid ${isActive ? 'var(--text-sidebar-main)' : 'var(--border-sidebar)'}`,
+        border: `1px solid ${isActive ? 'var(--primary)' : 'var(--border-sidebar)'}`,
         textDecoration: 'none',
         color: 'var(--text-sidebar-main)',
         marginTop: 'auto',
@@ -382,8 +382,8 @@ export default function Sidebar() {
         width: '32px',
         height: '32px',
         borderRadius: '50%',
-        backgroundColor: 'rgba(255, 255, 255, 0.15)',
-        color: '#FFFFFF',
+        backgroundColor: 'var(--primary-light, rgba(37, 99, 235, 0.1))',
+        color: 'var(--primary, #2563EB)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -585,7 +585,7 @@ export default function Sidebar() {
           width: '100%'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-            <DesktopalieMark size={28} style={{ color: 'var(--text-sidebar-main)', flexShrink: 0 }} />
+            <DesktopalieMark size={28} style={{ color: 'var(--primary)', flexShrink: 0 }} />
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <h2 style={{
                 fontSize: '0.9rem',
@@ -688,7 +688,7 @@ export default function Sidebar() {
       }}>
         {!isCollapsed && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexShrink: 0 }}>
-            <DesktopalieMark size={30} style={{ color: 'var(--text-sidebar-main)', flexShrink: 0, marginTop: '-1px' }} />
+            <DesktopalieMark size={30} style={{ color: 'var(--primary)', flexShrink: 0, marginTop: '-1px' }} />
             <div style={{ display: 'flex', flexDirection: 'column', flexShrink: 0 }}>
               <h2 style={{
                 fontSize: '0.95rem',
@@ -928,7 +928,7 @@ export default function Sidebar() {
                   borderRadius: 'var(--radius-sm)',
                   border: 'none',
                   backgroundColor: hasActiveChild ? 'var(--bg-sidebar-active)' : 'transparent',
-                  color: hasActiveChild ? '#FFFFFF' : 'var(--text-sidebar-muted)',
+                  color: hasActiveChild ? 'var(--primary)' : 'var(--text-sidebar-muted)',
                   cursor: 'pointer',
                   position: 'relative',
                   width: '100%',

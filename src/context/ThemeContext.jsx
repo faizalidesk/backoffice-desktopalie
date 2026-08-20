@@ -25,13 +25,13 @@ export function ThemeProvider({ children }) {
         root.style.setProperty('--color-secondary', '#059669');
         root.style.setProperty('--color-accent', '#34D399');
       }
-      root.style.setProperty('--bg-sidebar', '#042014');
+      root.style.setProperty('--bg-sidebar', '#091E16');
       root.style.setProperty('--bg-sidebar-hover', 'rgba(16, 185, 129, 0.12)');
       root.style.setProperty('--bg-sidebar-active', '#10B981');
-      root.style.setProperty('--border-sidebar', 'rgba(52, 211, 153, 0.16)');
+      root.style.setProperty('--border-sidebar', '#133829');
       root.style.setProperty('--text-sidebar-main', '#ECFDF5');
-      root.style.setProperty('--text-sidebar-muted', '#A7F3D0');
-      root.style.setProperty('--text-sidebar-subtle', '#34D399');
+      root.style.setProperty('--text-sidebar-muted', '#93C5AA');
+      root.style.setProperty('--text-sidebar-subtle', '#58836F');
       root.style.setProperty('--bg-main', '#05130E');
       root.style.setProperty('--bg-card', '#091E16');
       root.style.setProperty('--bg-card-hover', '#0F2B20');
@@ -49,14 +49,14 @@ export function ThemeProvider({ children }) {
         root.style.setProperty('--color-secondary', '#3B82F6');
         root.style.setProperty('--color-accent', '#60A5FA');
       }
-      root.style.setProperty('--bg-sidebar', '#0F3574');
-      root.style.setProperty('--bg-sidebar-hover', 'rgba(255, 255, 255, 0.08)');
-      root.style.setProperty('--bg-sidebar-active', '#2563EB');
-      root.style.setProperty('--border-sidebar', 'rgba(255, 255, 255, 0.12)');
-      root.style.setProperty('--text-sidebar-main', '#FFFFFF');
-      root.style.setProperty('--text-sidebar-muted', '#BFDBFE');
-      root.style.setProperty('--text-sidebar-subtle', '#60A5FA');
-      root.style.setProperty('--bg-main', '#F0F6FF');
+      root.style.setProperty('--bg-sidebar', '#FFFFFF');
+      root.style.setProperty('--bg-sidebar-hover', '#F1F5F9');
+      root.style.setProperty('--bg-sidebar-active', '#EFF6FF');
+      root.style.setProperty('--border-sidebar', '#E2E8F0');
+      root.style.setProperty('--text-sidebar-main', '#0F172A');
+      root.style.setProperty('--text-sidebar-muted', '#64748B');
+      root.style.setProperty('--text-sidebar-subtle', '#94A3B8');
+      root.style.setProperty('--bg-main', '#F8FAFC');
       root.style.setProperty('--bg-card', '#FFFFFF');
       root.style.setProperty('--bg-card-hover', '#F8FAFC');
       root.style.setProperty('--border-color', '#E2E8F0');

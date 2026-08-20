@@ -68,7 +68,7 @@ export const FlavorProvider = ({ children }) => {
           root.style.setProperty('--color-accent', activeFlavor.theme.accent);
         }
       }
-      root.style.setProperty('--bg-sidebar', '#042014');
+      root.style.setProperty('--bg-sidebar', '#091E16');
       root.style.setProperty('--bg-main', '#05130E');
     } else {
       if (flavorId === 'platform1') {
@@ -78,8 +78,8 @@ export const FlavorProvider = ({ children }) => {
         root.style.setProperty('--color-primary', '#2563EB');
         root.style.setProperty('--color-secondary', '#3B82F6');
         root.style.setProperty('--color-accent', '#60A5FA');
-        root.style.setProperty('--bg-sidebar', '#0F3574');
-        root.style.setProperty('--bg-main', '#F0F6FF');
+        root.style.setProperty('--bg-sidebar', '#FFFFFF');
+        root.style.setProperty('--bg-main', '#F8FAFC');
       } else if (activeFlavor?.theme) {
         if (activeFlavor.theme.colorPrimary) {
           root.style.setProperty('--primary', activeFlavor.theme.colorPrimary);
@@ -96,12 +96,8 @@ export const FlavorProvider = ({ children }) => {
           root.style.setProperty('--color-accent', activeFlavor.theme.accent);
         }
 
-        if (activeFlavor.theme.bgSidebar && activeFlavor.theme.bgSidebar !== 'default' && activeFlavor.theme.bgSidebar !== '#ffffff') {
-          root.style.setProperty('--bg-sidebar', activeFlavor.theme.bgSidebar);
-        } else {
-          root.style.setProperty('--bg-sidebar', '#0F3574');
-          root.style.setProperty('--bg-main', '#F0F6FF');
-        }
+        root.style.setProperty('--bg-sidebar', '#FFFFFF');
+        root.style.setProperty('--bg-main', '#F8FAFC');
       }
     }
   }, [flavorId, activeFlavor]);

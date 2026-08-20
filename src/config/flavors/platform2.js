@@ -7,7 +7,7 @@ export default {
   theme: {
     colorPrimary: '#059669', // Emerald Green
     colorSecondary: '#10b981',
-    bgSidebar: '#0F3574',
+    bgSidebar: '#FFFFFF',
     accent: '#34d399',
   },
   features: {

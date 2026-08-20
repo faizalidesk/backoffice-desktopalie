@@ -7,7 +7,7 @@ export default {
   theme: {
     colorPrimary: '#2563EB', // Blue
     colorSecondary: '#3B82F6',
-    bgSidebar: '#0F3574',
+    bgSidebar: '#FFFFFF',
     accent: '#60A5FA',
   },
   features: {
