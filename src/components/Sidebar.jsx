@@ -18,7 +18,8 @@ import {
   FiUsers, 
   FiBell, 
   FiDollarSign,
-  FiChevronDown
+  FiChevronDown,
+  FiZap
 } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -144,6 +145,7 @@ export default function Sidebar() {
       icon: FiGrid,
       items: [
         { label: t('dashboard') || 'Dashboard', path: '/dashboard', icon: FiGrid },
+        ...(!isMainDesktopalie ? [{ label: `Portal ${flavor?.shortName || 'Platform'}`, path: '/portal', icon: FiZap }] : []),
         { label: t('workspaces') || 'Workspaces', path: '/workspaces', icon: FiLayers },
         { label: t('notifications') || 'Notifikasi', path: '/notifications', icon: FiBell, badge: unreadCount },
       ]

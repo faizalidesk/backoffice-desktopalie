@@ -2,10 +2,9 @@ import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useFlavor } from '../context/FlavorContext';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
-import DesktopalieMark from '../components/DesktopalieMark';
-import NotificationBell from '../components/NotificationBell';
+import Header from '../components/Header';
 import { 
   FiShield, 
   FiServer, 
@@ -14,20 +13,16 @@ import {
   FiCheckCircle, 
   FiHardDrive, 
   FiCpu, 
-  FiLogOut,
   FiTerminal,
-  FiLayers,
   FiPlus,
   FiDollarSign,
-  FiBriefcase,
-  FiSun,
-  FiMoon
+  FiBriefcase
 } from 'react-icons/fi';
 
 export default function PlatformDeltaPortal() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const { activeFlavor } = useFlavor();
-  const { isDarkMode, toggleTheme } = useTheme();
+  const { isDarkMode } = useTheme();
   const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState('clusters');
@@ -40,103 +35,19 @@ export default function PlatformDeltaPortal() {
     { id: 'ERP-INV-55104', vendor: 'High-Speed Fiber Transit Provider', amount: 'Rp 14.200.000', status: 'Pending Review', dept: 'Network Edge' }
   ]);
 
-  const handleSignOut = async () => {
-    await logout();
-    toast.success('Keluar dari Platform Delta Workspace');
-    navigate('/delta/login');
-  };
-
   return (
     <div style={{
       minHeight: '100vh',
-      width: '100vw',
-      backgroundColor: isDarkMode ? '#05130E' : '#FAF9FC',
+      width: '100%',
+      backgroundColor: 'transparent',
       color: isDarkMode ? '#ECFDF5' : '#0F172A',
       fontFamily: "'Plus Jakarta Sans', -apple-system, sans-serif"
     }}>
-      {/* STANDALONE PORTAL TOP HEADER */}
-      <header style={{
-        width: '100%',
-        maxWidth: '1280px',
-        margin: '0 auto',
-        padding: '1rem 1.25rem',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        flexWrap: 'wrap',
-        gap: '0.75rem',
-        borderBottom: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-          <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', textDecoration: 'none' }}>
-            <DesktopalieMark size={26} style={{ color: primaryColor }} />
-            <span style={{ fontSize: '1rem', fontWeight: '800', color: isDarkMode ? '#ECFDF5' : '#0F172A', letterSpacing: '0.04em' }}>
-              DESKTOPALIE DELTA PORTAL
-            </span>
-          </Link>
-          <span style={{ padding: '0.2rem 0.65rem', borderRadius: '99px', backgroundColor: 'rgba(245, 158, 11, 0.15)', color: '#FBBF24', border: '1px solid rgba(245, 158, 11, 0.3)', fontSize: '0.725rem', fontWeight: '700' }}>
-            ● Enterprise ERP Cloud
-          </span>
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <button
-            type="button"
-            onClick={toggleTheme}
-            style={{
-              width: '38px',
-              height: '38px',
-              borderRadius: '50%',
-              backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
-              border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
-              color: isDarkMode ? '#FBBF24' : '#0F172A',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer'
-            }}
-          >
-            {isDarkMode ? <FiSun /> : <FiMoon />}
-          </button>
-
-          {user && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-              <NotificationBell primaryColor={primaryColor} />
-              <img
-                src={user.user_metadata?.avatar_url || user.user_metadata?.picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.email)}`}
-                alt="Avatar"
-                style={{ width: '36px', height: '36px', borderRadius: '50%', border: `2px solid ${primaryColor}`, objectFit: 'cover' }}
-              />
-              <span style={{ fontSize: '0.85rem', fontWeight: '700' }}>
-                {user.user_metadata?.full_name || user.email?.split('@')[0]}
-              </span>
-            </div>
-          )}
-
-          <button
-            onClick={handleSignOut}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.4rem',
-              padding: '0.5rem 1rem',
-              borderRadius: '10px',
-              backgroundColor: isDarkMode ? '#091E16' : '#F1F5F9',
-              border: `1px solid ${isDarkMode ? '#133829' : '#CBD5E1'}`,
-              color: isDarkMode ? '#ECFDF5' : '#0F172A',
-              fontWeight: '700',
-              fontSize: '0.8rem',
-              cursor: 'pointer'
-            }}
-          >
-            <FiLogOut />
-            <span>Keluar</span>
-          </button>
-        </div>
-      </header>
+      {/* STANDARD BACKOFFICE HEADER WITH SIDEBAR CONTROLS */}
+      <Header title="Platform Delta Enterprise Portal" />
 
       {/* PORTAL MAIN CONTENT AREA */}
-      <main style={{ maxWidth: '1280px', margin: '0 auto', padding: '2rem 2rem 4rem 2rem' }}>
+      <main className="p-6 md:p-8 max-w-7xl mx-auto" style={{ paddingBottom: '4rem' }}>
         
         {/* HERO BANNER DELTA ERP & CLOUD */}
         <div style={{
