@@ -35,8 +35,8 @@ export default function Sidebar() {
   const [searchQuery, setSearchQuery] = useState('');
   const [unreadCount, setUnreadCount] = useState(() => notificationService.getUnreadCount());
   
-  // Accordion open/close state: By default all categories are collapsed
-  const [openCategories, setOpenCategories] = useState({});
+  // Accordion state: Store active category ID for exclusive single-open accordion (null = all collapsed)
+  const [openCategoryId, setOpenCategoryId] = useState(null);
 
   const [userProfile, setUserProfile] = useState(() => {
     try {
@@ -124,12 +124,9 @@ export default function Sidebar() {
     }
   };
 
-  // Toggle Category Accordion Dropdown
+  // Toggle Category Accordion Dropdown (Exclusive: only 1 category open at a time)
   const toggleCategory = (catId) => {
-    setOpenCategories(prev => ({
-      ...prev,
-      [catId]: !prev[catId]
-    }));
+    setOpenCategoryId(prev => (prev === catId ? null : catId));
   };
 
   // =========================================================================
@@ -210,18 +207,18 @@ export default function Sidebar() {
     }
 
     const itemsToRender = trimmedQuery ? matchingItems : category.items;
-    const isCategoryOpen = trimmedQuery ? true : !!openCategories[category.id];
+    const isCategoryOpen = trimmedQuery ? true : openCategoryId === category.id;
     const hasActiveChild = category.items.some(item => location.pathname === item.path);
     const CategoryIcon = category.icon;
     const totalBadges = category.items.reduce((sum, item) => sum + (item.badge || 0), 0);
 
     return (
       <div key={category.id} style={{ marginBottom: '0.35rem' }}>
-        {/* Category Header Button (Accordion Trigger) */}
+        {/* Category Header Button (Accordion Trigger - Borderless with Click Animation) */}
         <button
           type="button"
           onClick={() => toggleCategory(category.id)}
-          className={`sidebar-category-btn ${hasActiveChild ? 'has-active' : ''}`}
+          className={`sidebar-category-btn ${hasActiveChild ? 'has-active' : ''} ${isCategoryOpen ? 'is-open' : ''}`}
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -230,12 +227,14 @@ export default function Sidebar() {
             padding: '0.65rem 0.85rem',
             borderRadius: 'var(--radius-sm)',
             backgroundColor: isCategoryOpen ? 'var(--bg-sidebar-hover)' : 'transparent',
-            border: `1px solid ${hasActiveChild ? 'var(--border-sidebar)' : 'transparent'}`,
+            border: 'none',
+            outline: 'none',
+            boxShadow: 'none',
             color: hasActiveChild ? '#FFFFFF' : 'var(--text-sidebar-main)',
             fontSize: '0.825rem',
             fontWeight: '700',
             cursor: 'pointer',
-            transition: 'all 0.2s ease',
+            transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
             textAlign: 'left'
           }}
         >
@@ -243,7 +242,7 @@ export default function Sidebar() {
             <CategoryIcon style={{ 
               fontSize: '1.1rem', 
               flexShrink: 0, 
-              color: hasActiveChild ? 'var(--accent-violet, #818CF8)' : 'var(--text-sidebar-muted)' 
+              color: hasActiveChild ? '#FFFFFF' : 'var(--text-sidebar-muted)' 
             }} />
             <span style={{ 
               whiteSpace: 'nowrap', 
@@ -918,7 +917,7 @@ export default function Sidebar() {
                 onClick={() => {
                   setIsCollapsed(false);
                   localStorage.setItem('desktopalie_sidebar_collapsed', 'false');
-                  setOpenCategories(prev => ({ ...prev, [category.id]: true }));
+                  setOpenCategoryId(category.id);
                 }}
                 title={category.title}
                 style={{

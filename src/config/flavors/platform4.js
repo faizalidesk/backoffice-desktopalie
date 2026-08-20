@@ -7,6 +7,7 @@ export default {
   theme: {
     colorPrimary: '#d97706', // Amber / Orange
     colorSecondary: '#f59e0b',
+    bgSidebar: '#0F3574',
     accent: '#fbbf24',
   },
   features: {
@@ -25,39 +26,36 @@ export default {
   },
   dummyData: {
     stats: {
-      projectsCount: 6,
-      experimentsCount: 2,
-      notesCount: 19,
-      bookmarksCount: 14,
-      todosCount: 25,
-      docsCount: 15
+      projectsCount: 8,
+      experimentsCount: 3,
+      notesCount: 42,
+      bookmarksCount: 35,
+      todosCount: 29,
+      docsCount: 20
     },
     recentProjects: [
-      { id: 'p4-1', title: 'Delta Enterprise ERP & Resource Planning', type: 'Enterprise Software', status: 'In progress', progress: 68, tone: 'amber' },
-      { id: 'p4-2', title: 'Client Multi-Org Access Control (RBAC)', type: 'Security & IAM', status: 'In progress', progress: 95, tone: 'orange' },
-      { id: 'p4-3', title: 'Financial Audit & Compliance Reporting', type: 'Finance Module', status: 'Completed', progress: 100, tone: 'emerald' },
-      { id: 'p4-4', title: 'Payroll & Tax Automation Engine', type: 'Enterprise Software', status: 'In progress', progress: 30, tone: 'amber' },
+      { id: 'p4-1', title: 'Ledger Audit ISO 27001 Compliance', type: 'Compliance', status: 'In progress', progress: 88, tone: 'amber' },
+      { id: 'p4-2', title: 'Automated Tax Calculation Engine', type: 'FinTech', status: 'Completed', progress: 100, tone: 'emerald' },
+      { id: 'p4-3', title: 'Enterprise Role-Based Access Matrix', type: 'Security', status: 'In progress', progress: 65, tone: 'rose' },
+      { id: 'p4-4', title: 'ERP Multi-Currency Reconciliation', type: 'Accounting', status: 'In progress', progress: 55, tone: 'orange' },
     ],
     recentTodos: [
-      { id: 't4-1', title: 'Penyelarasan ISO 27001 Compliance Audit Data', status: 'In progress', priority: 'High', category: 'Compliance' },
-      { id: 't4-2', title: 'Migrasi Database Legacy Enterprise ke PostgreSQL', status: 'Done', priority: 'High', category: 'Database' },
-      { id: 't4-3', title: 'Review Multi-Tenant Row Level Security (RLS)', status: 'Done', priority: 'High', category: 'Security' },
-      { id: 't4-4', title: 'Setup Automated Daily Backup Snapshot', status: 'Done', priority: 'Medium', category: 'DevOps' },
-      { id: 't4-5', title: 'Laporan Rekonsiliasi Pajak Q3 2026', status: 'In progress', priority: 'Medium', category: 'Finance' },
+      { id: 't4-1', title: 'Finalisasi Laporan Audit Triwulan ISO 27001', status: 'In progress', priority: 'High', category: 'Compliance' },
+      { id: 't4-2', title: 'Validasi Enkripsi Database AES-256 pada Field Finansial', status: 'Done', priority: 'High', category: 'Security' },
+      { id: 't4-3', title: 'Sinkronisasi Kurs Bank Sentral API Realtime', status: 'Done', priority: 'Medium', category: 'Integration' },
     ],
     recentDocs: [
-      { id: 'd4-1', title: 'Buku Panduan Compliance & ISO 27001 Security', category: 'Compliance', author: 'Audit & Security Team' },
-      { id: 'd4-2', title: 'Skema Otorisasi RBAC Enterprise Multi-Tenant', category: 'Security', author: 'Security Lead' },
-      { id: 'd4-3', title: 'SOP Handling Disaster Recovery & Data Backup', category: 'DevOps', author: 'SysAdmin' },
+      { id: 'd4-1', title: 'Matriks Otorisasi Finansial & Persetujuan Bertingkat', category: 'Policy', author: 'CFO Office' },
+      { id: 'd4-2', title: 'Buku Panduan Rekonsiliasi Kas dan Bank', category: 'Finance', author: 'Audit Team' },
     ],
     maintenance: {
       is_active: false,
-      notice_title: 'Server Delta Enterprise Normal',
-      notice_message: 'Sistem ERP dan Audit Keamanan berjalan dengan tingkat SLA 99.9%.'
+      notice_title: 'Sistem Finansial & Audit Delta Stabil',
+      notice_message: 'Seluruh buku besar dan rekonsiliasi transaksi berjalan aman.'
     },
     landing: {
-      hero_title: 'Enterprise Resource Planning & Security Hub',
-      hero_subtitle: 'Pengelolaan data korporat terenkripsi Platform Delta.'
+      hero_title: 'Enterprise ERP, Financial Ledger & Security Governance',
+      hero_subtitle: 'Solusi terintegrasi untuk pembukuan keuangan tingkat lanjut, audit kepatuhan ISO 27001, dan kontrol akses berbasis peran.'
     }
   }
 };

@@ -7,6 +7,7 @@ export default {
   theme: {
     colorPrimary: '#059669', // Emerald Green
     colorSecondary: '#10b981',
+    bgSidebar: '#0F3574',
     accent: '#34d399',
   },
   features: {
@@ -25,38 +26,37 @@ export default {
   },
   dummyData: {
     stats: {
-      projectsCount: 9,
-      experimentsCount: 15,
-      notesCount: 11,
+      projectsCount: 19,
+      experimentsCount: 5,
+      notesCount: 31,
       bookmarksCount: 28,
-      todosCount: 10,
-      docsCount: 4
+      todosCount: 14,
+      docsCount: 9
     },
     recentProjects: [
-      { id: 'p2-1', title: 'Beta Logistics & Fleet Manager', type: 'Logistics Portal', status: 'In progress', progress: 85, tone: 'emerald' },
-      { id: 'p2-2', title: 'Real-time GPS Tracking Engine', type: 'IoT & Telemetry', status: 'Completed', progress: 100, tone: 'teal' },
-      { id: 'p2-3', title: 'Warehouse Inventory Mobile App', type: 'Mobile application', status: 'In progress', progress: 40, tone: 'amber' },
-      { id: 'p2-4', title: 'Beta Automated Dispatcher API', type: 'Microservice', status: 'In progress', progress: 95, tone: 'emerald' },
+      { id: 'p2-1', title: 'Route Optimization Engine v2', type: 'Logistics Algo', status: 'In progress', progress: 85, tone: 'emerald' },
+      { id: 'p2-2', title: 'Fleet GPS Realtime Telemetry', type: 'IoT & Telemetry', status: 'Completed', progress: 100, tone: 'teal' },
+      { id: 'p2-3', title: 'Warehouse Automated Dispatch', type: 'Automation', status: 'In progress', progress: 45, tone: 'indigo' },
+      { id: 'p2-4', title: 'Cold-Chain Temperature Monitor', type: 'Sensors IoT', status: 'In progress', progress: 70, tone: 'blue' },
     ],
     recentTodos: [
-      { id: 't2-1', title: 'Testing Websocket Telemetry Latency under 100ms', status: 'Done', priority: 'High', category: 'Performance' },
-      { id: 't2-2', title: 'Integrasi Payment Gateway QRIS & E-Wallet', status: 'In progress', priority: 'High', category: 'Payment' },
-      { id: 't2-3', title: 'Optimasi Memory Leak pada Driver Tracker', status: 'In progress', priority: 'Medium', category: 'Bugfix' },
-      { id: 't2-4', title: 'Konfigurasi Geofencing Notification Trigger', status: 'Not started', priority: 'Medium', category: 'Feature' },
-      { id: 't2-5', title: 'Review Security Scan Snyk & Dependency Check', status: 'Done', priority: 'Low', category: 'Security' },
+      { id: 't2-1', title: 'Kalibrasi Sensor Suhu Armada Truk Pendingin #12', status: 'In progress', priority: 'High', category: 'Hardware' },
+      { id: 't2-2', title: 'Integrasi API Google Maps Distance Matrix', status: 'Done', priority: 'High', category: 'Backend' },
+      { id: 't2-3', title: 'Pengujian Stress Test 1.000 Kendaraan Bersamaan', status: 'Done', priority: 'Medium', category: 'Testing' },
+      { id: 't2-4', title: 'Penyusunan Jadwal Maintenance Rutin Q3', status: 'Not started', priority: 'Low', category: 'Ops' },
     ],
     recentDocs: [
-      { id: 'd2-1', title: 'Arsitektur Ingest Telemetry High-Throughput', category: 'IoT', author: 'Beta Backend Team' },
-      { id: 'd2-2', title: 'Panduan Integrasi Fleet API untuk Partner', category: 'API Docs', author: 'Tech Lead' },
+      { id: 'd2-1', title: 'Protokol Darurat Kegagalan Sinyal GPS', category: 'Security', author: 'Fleet Security' },
+      { id: 'd2-2', title: 'Panduan Instalasi OBD-II Tracker pada Unit', category: 'Hardware', author: 'Technician Team' },
     ],
     maintenance: {
       is_active: false,
-      notice_title: 'Operasi Logistik Beta Lancar',
-      notice_message: 'Seluruh server penjejak armada beroperasi tanpa kendala.'
+      notice_title: 'Operasional Logistik Beta Lancar',
+      notice_message: 'Pelacakan armada dan pembaruan rute berfungsi normal.'
     },
     landing: {
-      hero_title: 'Smart Logistics & Fleet Telemetry System',
-      hero_subtitle: 'Solusi manajemen armada dan rantai pasok cerdas Platform Beta.'
+      hero_title: 'Next-Generation Logistics & Fleet Management',
+      hero_subtitle: 'Platform operasional cerdas untuk optimasi rute, pemantauan armada real-time, dan otomasi pergudangan.'
     }
   }
 };

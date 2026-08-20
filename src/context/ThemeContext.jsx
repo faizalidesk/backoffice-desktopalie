@@ -42,21 +42,21 @@ export function ThemeProvider({ children }) {
       root.style.setProperty('--text-subtle', '#58836F');
     } else {
       if (currentFlavor === 'platform1') {
-        root.style.setProperty('--primary', '#4F46E5');
-        root.style.setProperty('--primary-hover', '#4338CA');
-        root.style.setProperty('--primary-light', '#EEF2FF');
-        root.style.setProperty('--color-primary', '#4F46E5');
-        root.style.setProperty('--color-secondary', '#6366F1');
-        root.style.setProperty('--color-accent', '#818CF8');
+        root.style.setProperty('--primary', '#2563EB');
+        root.style.setProperty('--primary-hover', '#1D4ED8');
+        root.style.setProperty('--primary-light', '#EFF6FF');
+        root.style.setProperty('--color-primary', '#2563EB');
+        root.style.setProperty('--color-secondary', '#3B82F6');
+        root.style.setProperty('--color-accent', '#60A5FA');
       }
-      root.style.setProperty('--bg-sidebar', '#1E1B4B');
+      root.style.setProperty('--bg-sidebar', '#0F3574');
       root.style.setProperty('--bg-sidebar-hover', 'rgba(255, 255, 255, 0.08)');
-      root.style.setProperty('--bg-sidebar-active', '#4F46E5');
+      root.style.setProperty('--bg-sidebar-active', '#2563EB');
       root.style.setProperty('--border-sidebar', 'rgba(255, 255, 255, 0.12)');
       root.style.setProperty('--text-sidebar-main', '#FFFFFF');
-      root.style.setProperty('--text-sidebar-muted', '#C7D2FE');
-      root.style.setProperty('--text-sidebar-subtle', '#818CF8');
-      root.style.setProperty('--bg-main', '#F5F3FF');
+      root.style.setProperty('--text-sidebar-muted', '#BFDBFE');
+      root.style.setProperty('--text-sidebar-subtle', '#60A5FA');
+      root.style.setProperty('--bg-main', '#F0F6FF');
       root.style.setProperty('--bg-card', '#FFFFFF');
       root.style.setProperty('--bg-card-hover', '#F8FAFC');
       root.style.setProperty('--border-color', '#E2E8F0');

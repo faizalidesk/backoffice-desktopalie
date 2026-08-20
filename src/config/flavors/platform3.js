@@ -7,6 +7,7 @@ export default {
   theme: {
     colorPrimary: '#7c3aed', // Purple Violet
     colorSecondary: '#8b5cf6',
+    bgSidebar: '#0F3574',
     accent: '#a78bfa',
   },
   features: {
@@ -25,38 +26,36 @@ export default {
   },
   dummyData: {
     stats: {
-      projectsCount: 18,
-      experimentsCount: 22,
-      notesCount: 35,
-      bookmarksCount: 62,
-      todosCount: 7,
-      docsCount: 19
+      projectsCount: 11,
+      experimentsCount: 12,
+      notesCount: 18,
+      bookmarksCount: 52,
+      todosCount: 22,
+      docsCount: 15
     },
     recentProjects: [
-      { id: 'p3-1', title: 'Gamma Video Transcoder & Streaming Engine', type: 'Media Processing', status: 'In progress', progress: 92, tone: 'violet' },
-      { id: 'p3-2', title: 'AI Audio Noise Reduction Plugin', type: 'Audio R&D', status: 'Completed', progress: 100, tone: 'rose' },
-      { id: 'p3-3', title: 'Live Stream Analytics & CDN Ingest', type: 'Analytics', status: 'In progress', progress: 50, tone: 'purple' },
-      { id: 'p3-4', title: 'Dynamic Watermark & DRM Protection', type: 'Security', status: 'In progress', progress: 80, tone: 'indigo' },
+      { id: 'p3-1', title: 'H.265 / AV1 Distributed Transcoder', type: 'Video Core', status: 'In progress', progress: 95, tone: 'violet' },
+      { id: 'p3-2', title: 'Realtime Subtitle Whisper AI Engine', type: 'AI Media', status: 'In progress', progress: 80, tone: 'fuchsia' },
+      { id: 'p3-3', title: 'Adaptive Bitrate HLS Stream Optimizer', type: 'CDN Pipeline', status: 'Completed', progress: 100, tone: 'purple' },
+      { id: 'p3-4', title: 'Video Watermark & DRM Protection', type: 'Security', status: 'In progress', progress: 50, tone: 'rose' },
     ],
     recentTodos: [
-      { id: 't3-1', title: 'Benchmark FFmpeg H.265 vs AV1 Encoding Speed', status: 'Done', priority: 'High', category: 'Media R&D' },
-      { id: 't3-2', title: 'Implementasi HLS Multi-Bitrate Adaptive Streaming', status: 'In progress', priority: 'High', category: 'Streaming' },
-      { id: 't3-3', title: 'Stress Test CDN Edge Cache Hit Rate', status: 'In progress', priority: 'Medium', category: 'CDN' },
-      { id: 't3-4', title: 'Pemberitahuan Maintenance Transcoder Node 3', status: 'Done', priority: 'Low', category: 'Maintenance' },
+      { id: 't3-1', title: 'Optimasi Latensi FFmpeg Segmenter di bawah 1.5 detik', status: 'In progress', priority: 'High', category: 'Streaming' },
+      { id: 't3-2', title: 'Benchmark Model Whisper-v3 pada GPU Cluster', status: 'Done', priority: 'High', category: 'AI' },
+      { id: 't3-3', title: 'Setup Auto-Scaling Cloudflare Stream Workers', status: 'In progress', priority: 'Medium', category: 'Infra' },
     ],
     recentDocs: [
-      { id: 'd3-1', title: 'Standard HLS & DASH Streaming Protocol', category: 'Streaming', author: 'Gamma Media Lead' },
-      { id: 'd3-2', title: 'Panduan Encoding Presets FFmpeg GPU Acceleration', category: 'Encoding', author: 'Media Team' },
-      { id: 'd3-3', title: 'Penanganan Low-Latency WebRTC Transmissions', category: 'Network', author: 'Network Engineer' },
+      { id: 'd3-1', title: 'Spesifikasi Preset Encoding 4K 60FPS AV1', category: 'Encoding', author: 'Media Lead' },
+      { id: 'd3-2', title: 'Arsitektur WebRTC Low-Latency Broadcast', category: 'Network', author: 'Streaming Team' },
     ],
     maintenance: {
-      is_active: true,
-      notice_title: 'Jadwal Pemeliharaan Node Transcoder 3',
-      notice_message: 'Peningkatan kapasitas cluster video encoding sedang berlangsung.'
+      is_active: false,
+      notice_title: 'Media Streaming Cluster Normal',
+      notice_message: 'Transcoder pipeline dan distribusi CDN aktif 100%.'
     },
     landing: {
-      hero_title: 'High-Performance Video Encoding & Streaming Platform',
-      hero_subtitle: 'Platform pemrosesan media berkinerja tinggi Platform Gamma.'
+      hero_title: 'Ultra-Fast AI Video Transcoding & Streaming Engine',
+      hero_subtitle: 'Infrastruktur pemrosesan media berbasis edge compute, encoding AV1/H.265 terdistribusi, dan otomasi subtitle cerdas.'
     }
   }
 };
