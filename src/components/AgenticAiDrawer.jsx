@@ -11,10 +11,10 @@ import {
 export default function AgenticAiDrawer() {
   const { isDarkMode } = useTheme();
 
-  // Initial collapsed state from localStorage (default: false / expanded on desktop)
+  // Initial collapsed state from localStorage (default: true / closed by default)
   const [isCollapsed, setIsCollapsed] = useState(() => {
     const saved = localStorage.getItem('desktopalie_ai_sidebar_collapsed');
-    return saved !== null ? JSON.parse(saved) : false;
+    return saved !== null ? JSON.parse(saved) : true;
   });
 
   const [input, setInput] = useState('');

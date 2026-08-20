@@ -37,10 +37,10 @@ import AgenticAiDrawer from './components/AgenticAiDrawer';
 function ProtectedLayout({ children }) {
   const { user, loading } = useAuth();
   
-  // Track AI sidebar collapsed state for responsive reflow
+  // Track AI sidebar collapsed state for responsive reflow (default: true / closed by default)
   const [isAiCollapsed, setIsAiCollapsed] = useState(() => {
     const saved = localStorage.getItem('desktopalie_ai_sidebar_collapsed');
-    return saved !== null ? JSON.parse(saved) : false;
+    return saved !== null ? JSON.parse(saved) : true;
   });
 
   useEffect(() => {
