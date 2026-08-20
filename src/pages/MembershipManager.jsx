@@ -134,9 +134,6 @@ export default function MembershipManager() {
   ];
 
   const renderMemberAvatar = (member, size = 38) => {
-    const name = member?.full_name || member?.email || 'User';
-    const initials = getInitials(name);
-    const bgGradient = getAvatarGradient(member?.email || name, member?.platform);
     const hasCustomPhoto = member?.avatar_url && !member.avatar_url.includes('ui-avatars.com') && (member.avatar_url.startsWith('http') || member.avatar_url.startsWith('data:image'));
 
     return (
@@ -145,14 +142,11 @@ export default function MembershipManager() {
         height: `${size}px`,
         minWidth: `${size}px`,
         borderRadius: '50%',
-        background: bgGradient,
-        color: '#FFFFFF',
+        backgroundColor: 'var(--primary-light)',
+        color: 'var(--primary)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        fontWeight: '800',
-        fontSize: size > 50 ? '1.5rem' : '0.825rem',
-        letterSpacing: '0.03em',
         border: `2px solid ${isDarkMode ? '#133829' : 'rgba(255, 255, 255, 0.2)'}`,
         boxShadow: '0 2px 6px rgba(0, 0, 0, 0.15)',
         position: 'relative',
@@ -179,9 +173,7 @@ export default function MembershipManager() {
             }}
           />
         )}
-        <span style={{ zIndex: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          {initials}
-        </span>
+        <FiUser style={{ fontSize: size > 50 ? '2rem' : '1.15rem', zIndex: 0 }} />
       </div>
     );
   };

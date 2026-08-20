@@ -531,15 +531,27 @@ export default function Header({ title = 'Dashboard Overview' }) {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontWeight: '800',
               fontSize: '0.85rem',
-              overflow: 'hidden'
+              overflow: 'hidden',
+              flexShrink: 0
             }}>
               {userProfile?.avatar_url ? (
-                <img src={userProfile.avatar_url} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              ) : (
-                userProfile?.full_name ? userProfile.full_name.charAt(0).toUpperCase() : (user?.email?.charAt(0).toUpperCase() || 'A')
-              )}
+                <img 
+                  src={userProfile.avatar_url} 
+                  alt="Avatar" 
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                    if (e.currentTarget.nextSibling) {
+                      e.currentTarget.nextSibling.style.display = 'block';
+                    }
+                  }}
+                />
+              ) : null}
+              <FiUser style={{ 
+                fontSize: '0.95rem',
+                display: userProfile?.avatar_url ? 'none' : 'block'
+              }} />
             </div>
 
             <span style={{ fontSize: '0.85rem', fontWeight: '700', maxWidth: '140px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -574,8 +586,9 @@ export default function Header({ title = 'Dashboard Overview' }) {
             }}>
               {/* Profile Header Info */}
               <div style={{
-                padding: '0.75rem',
+                padding: '0.65rem 0.75rem',
                 backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC',
+                border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
                 borderRadius: '12px',
                 display: 'flex',
                 alignItems: 'center',
@@ -585,35 +598,47 @@ export default function Header({ title = 'Dashboard Overview' }) {
                   width: '38px',
                   height: '38px',
                   borderRadius: '50%',
-                  backgroundColor: 'var(--primary)',
-                  color: '#FFFFFF',
+                  backgroundColor: 'var(--primary-light)',
+                  color: 'var(--primary)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontWeight: '800',
-                  fontSize: '1.05rem',
+                  fontSize: '1.1rem',
                   flexShrink: 0,
                   overflow: 'hidden'
                 }}>
                   {userProfile?.avatar_url ? (
-                    <img src={userProfile.avatar_url} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                  ) : (
-                    userProfile?.full_name ? userProfile.full_name.charAt(0).toUpperCase() : (user?.email?.charAt(0).toUpperCase() || 'A')
-                  )}
+                    <img 
+                      src={userProfile.avatar_url} 
+                      alt="Avatar" 
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                        if (e.currentTarget.nextSibling) {
+                          e.currentTarget.nextSibling.style.display = 'block';
+                        }
+                      }}
+                    />
+                  ) : null}
+                  <FiUser style={{ 
+                    fontSize: '1.2rem',
+                    display: userProfile?.avatar_url ? 'none' : 'block'
+                  }} />
                 </div>
 
-                <div style={{ overflow: 'hidden' }}>
-                  <div style={{ fontSize: '0.875rem', fontWeight: '800', color: 'var(--text-main)', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
-                    {userProfile?.full_name || user?.email || 'Admin User'}
+                <div style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column', gap: '0.1rem', minWidth: 0, flex: 1 }}>
+                  <div style={{ fontSize: '0.875rem', fontWeight: '700', color: 'var(--text-main)', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
+                    {userProfile?.full_name || user?.email?.split('@')[0] || 'User'}
                   </div>
                   <span style={{
-                    fontSize: '0.675rem',
-                    fontWeight: '700',
-                    color: 'var(--primary)',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.05em'
+                    fontSize: '0.725rem',
+                    color: 'var(--text-muted)',
+                    whiteSpace: 'nowrap',
+                    textOverflow: 'ellipsis',
+                    overflow: 'hidden',
+                    display: 'block'
                   }}>
-                    Workspace Administrator
+                    {user?.email || 'user@desktopalie.my.id'}
                   </span>
                 </div>
               </div>

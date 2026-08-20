@@ -20,16 +20,26 @@ import {
   FiBell,
   FiDollarSign
 } from 'react-icons/fi';
+import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useFlavor } from '../context/FlavorContext';
+import { backofficeService } from '../services/backofficeService';
 import { notificationService } from '../services/notificationService';
 import DesktopalieMark from './DesktopalieMark';
 
 export default function Sidebar() {
+  const { user } = useAuth();
   const { t } = useLanguage();
   const { flavor, flavorId, subPlatformFlavors, isMainDesktopalie, switchFlavor, resetToMainFlavor } = useFlavor();
   const [searchQuery, setSearchQuery] = useState('');
   const [unreadCount, setUnreadCount] = useState(() => notificationService.getUnreadCount());
+  const [userProfile, setUserProfile] = useState(() => {
+    try {
+      const cached = localStorage.getItem('desktopalie_profile') || localStorage.getItem(`desktopalie_profile_${user?.id}`);
+      if (cached) return JSON.parse(cached);
+    } catch (e) {}
+    return null;
+  });
   const searchInputRef = useRef(null);
 
   // Desktop collapse state
@@ -42,6 +52,26 @@ export default function Sidebar() {
     return typeof window !== 'undefined' ? window.innerWidth <= 1024 : false;
   });
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    async function loadSidebarProfile() {
+      try {
+        if (user?.id) {
+          const p = await backofficeService.getProfile(user.id);
+          if (p) setUserProfile(p);
+        }
+      } catch (e) {}
+    }
+    loadSidebarProfile();
+
+    const handleStorage = (e) => {
+      if (!e || !e.key || e.key.includes('profile')) {
+        loadSidebarProfile();
+      }
+    };
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
+  }, [user?.id]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -267,10 +297,89 @@ export default function Sidebar() {
         )}
       </nav>
 
+      {/* USER PROFILE SECTION (MINIMALIST) */}
+      <NavLink
+        to="/profile"
+        title={userProfile?.full_name || user?.email || 'Profil Saya'}
+        onClick={() => {
+          if (isMobileView) {
+            setIsMobileMenuOpen(false);
+          }
+        }}
+        style={({ isActive }) => ({
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.75rem',
+          padding: '0.6rem 0.75rem',
+          borderRadius: 'var(--radius-sm)',
+          backgroundColor: isActive ? 'var(--primary-light)' : 'var(--bg-card-hover)',
+          border: `1px solid ${isActive ? 'var(--primary)' : 'var(--border-color)'}`,
+          textDecoration: 'none',
+          color: 'var(--text-main)',
+          marginTop: 'auto',
+          marginBottom: '0.5rem',
+          transition: 'all 0.15s ease'
+        })}
+      >
+        <div style={{
+          width: '32px',
+          height: '32px',
+          borderRadius: '50%',
+          backgroundColor: 'var(--primary-light)',
+          color: 'var(--primary)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '0.9rem',
+          overflow: 'hidden',
+          flexShrink: 0
+        }}>
+          {userProfile?.avatar_url ? (
+            <img
+              src={userProfile.avatar_url}
+              alt="Avatar"
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+                if (e.currentTarget.nextSibling) {
+                  e.currentTarget.nextSibling.style.display = 'block';
+                }
+              }}
+            />
+          ) : null}
+          <FiUser style={{
+            fontSize: '1rem',
+            display: userProfile?.avatar_url ? 'none' : 'block'
+          }} />
+        </div>
+
+        <div style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column', gap: '0.1rem', minWidth: 0, flex: 1 }}>
+          <span style={{
+            fontSize: '0.825rem',
+            fontWeight: '700',
+            color: 'var(--text-main)',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis'
+          }}>
+            {userProfile?.full_name || user?.email?.split('@')[0] || 'User'}
+          </span>
+          <span style={{
+            fontSize: '0.7rem',
+            color: 'var(--text-muted)',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis'
+          }}>
+            {user?.email || 'Member'}
+          </span>
+        </div>
+      </NavLink>
+
       {/* FOOTER */}
       <div style={{
         paddingTop: '0.75rem',
-        marginTop: '0.5rem',
+        marginTop: '0.25rem',
         borderTop: '1px solid var(--border-color)',
         display: 'flex',
         alignItems: 'center',
@@ -698,9 +807,87 @@ export default function Sidebar() {
         )}
       </nav>
 
+      {/* USER PROFILE SECTION (MINIMALIST) */}
+      <NavLink
+        to="/profile"
+        title={userProfile?.full_name || user?.email || 'Profil Saya'}
+        style={({ isActive }) => ({
+          display: 'flex',
+          alignItems: 'center',
+          gap: isCollapsed ? 0 : '0.75rem',
+          justifyContent: isCollapsed ? 'center' : 'flex-start',
+          padding: isCollapsed ? '0.5rem 0' : '0.6rem 0.75rem',
+          borderRadius: 'var(--radius-sm)',
+          backgroundColor: isActive ? 'var(--primary-light)' : 'var(--bg-card-hover)',
+          border: `1px solid ${isActive ? 'var(--primary)' : 'var(--border-color)'}`,
+          textDecoration: 'none',
+          color: 'var(--text-main)',
+          marginTop: 'auto',
+          marginBottom: '0.5rem',
+          transition: 'all 0.15s ease'
+        })}
+      >
+        <div style={{
+          width: '32px',
+          height: '32px',
+          borderRadius: '50%',
+          backgroundColor: 'var(--primary-light)',
+          color: 'var(--primary)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '0.9rem',
+          overflow: 'hidden',
+          flexShrink: 0
+        }}>
+          {userProfile?.avatar_url ? (
+            <img
+              src={userProfile.avatar_url}
+              alt="Avatar"
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+                if (e.currentTarget.nextSibling) {
+                  e.currentTarget.nextSibling.style.display = 'block';
+                }
+              }}
+            />
+          ) : null}
+          <FiUser style={{
+            fontSize: '1rem',
+            display: userProfile?.avatar_url ? 'none' : 'block'
+          }} />
+        </div>
+
+        {!isCollapsed && (
+          <div style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column', gap: '0.1rem', minWidth: 0, flex: 1 }}>
+            <span style={{
+              fontSize: '0.825rem',
+              fontWeight: '700',
+              color: 'var(--text-main)',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis'
+            }}>
+              {userProfile?.full_name || user?.email?.split('@')[0] || 'User'}
+            </span>
+            <span style={{
+              fontSize: '0.7rem',
+              color: 'var(--text-muted)',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis'
+            }}>
+              {user?.email || 'Member'}
+            </span>
+          </div>
+        )}
+      </NavLink>
+
       {/* FOOTER */}
       <div style={{
         paddingTop: '0.75rem',
+        marginTop: '0.25rem',
         borderTop: '1px solid var(--border-color)',
         display: 'flex',
         alignItems: 'center',
