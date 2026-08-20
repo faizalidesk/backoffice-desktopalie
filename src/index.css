@@ -50,10 +50,18 @@
 }
 
 :root {
-  --bg-main: #F8FAFC;
-  --bg-sidebar: #FFFFFF;
+  /* Bold Vibrant Sidebar & Soft Pastel Content Background */
+  --bg-sidebar: #1E1B4B;             /* Bold Deep Vibrant Indigo */
+  --bg-sidebar-hover: rgba(255, 255, 255, 0.08);
+  --bg-sidebar-active: #4F46E5;
+  --border-sidebar: rgba(255, 255, 255, 0.12);
+  --text-sidebar-main: #FFFFFF;
+  --text-sidebar-muted: #C7D2FE;
+  --text-sidebar-subtle: #818CF8;
+
+  --bg-main: #F5F3FF;                /* Soft Pastel Lavender (derived from Sidebar Indigo) */
   --bg-card: #FFFFFF;
-  --bg-card-hover: #F1F5F9;
+  --bg-card-hover: #F8FAFC;
   --border-color: #E2E8F0;
   --border-highlight: #CBD5E1;
   
@@ -80,8 +88,15 @@
 }
 
 [data-theme="dark"] {
-  --bg-main: #05130E;
-  --bg-sidebar: #091E16;
+  --bg-sidebar: #042014;             /* Bold Vibrant Deep Forest Emerald */
+  --bg-sidebar-hover: rgba(16, 185, 129, 0.12);
+  --bg-sidebar-active: #10B981;
+  --border-sidebar: rgba(52, 211, 153, 0.16);
+  --text-sidebar-main: #ECFDF5;
+  --text-sidebar-muted: #A7F3D0;
+  --text-sidebar-subtle: #34D399;
+
+  --bg-main: #05130E;                /* Soft Pastel-tinted Deep Emerald */
   --bg-card: #091E16;
   --bg-card-hover: #0F2B20;
   --border-color: #133829;
@@ -630,5 +645,102 @@ textarea.form-control {
 
 .transaction-table-component .data-table tr:hover td {
   background-color: var(--bg-card-hover);
+}
+
+/* ===================================================
+   SIDEBAR ACCORDION DROPDOWN & ANIMATIONS
+   =================================================== */
+.sidebar-category-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  border-radius: var(--radius-sm);
+  background-color: transparent;
+  border: none;
+  color: var(--text-sidebar-main, #FFFFFF);
+  font-size: 0.825rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.sidebar-category-btn:hover {
+  background-color: var(--bg-sidebar-hover, rgba(255, 255, 255, 0.08));
+}
+
+.sidebar-category-btn.has-active {
+  color: #FFFFFF;
+}
+
+.sidebar-chevron-icon {
+  font-size: 0.9rem;
+  color: var(--text-sidebar-muted, #C7D2FE);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.sidebar-chevron-icon.open {
+  transform: rotate(180deg);
+  color: #FFFFFF;
+}
+
+.sidebar-accordion-body {
+  overflow: hidden;
+  transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease, margin 0.25s ease;
+}
+
+.sidebar-accordion-body.closed {
+  max-height: 0;
+  opacity: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  pointer-events: none;
+}
+
+.sidebar-accordion-body.open {
+  max-height: 400px;
+  opacity: 1;
+  margin-top: 0.2rem;
+  margin-bottom: 0.45rem;
+}
+
+.sidebar-submenu-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding-left: 0.6rem;
+  border-left: 2px solid var(--border-sidebar, rgba(255, 255, 255, 0.12));
+  margin-left: 1.15rem;
+}
+
+.sidebar-subitem-link {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--text-sidebar-muted, #C7D2FE);
+  background-color: transparent;
+  transition: all 0.15s ease;
+}
+
+.sidebar-subitem-link:hover {
+  color: #FFFFFF;
+  background-color: var(--bg-sidebar-hover, rgba(255, 255, 255, 0.08));
+}
+
+.sidebar-subitem-link.active {
+  color: #FFFFFF !important;
+  background-color: var(--bg-sidebar-active, #4F46E5) !important;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
 }
 

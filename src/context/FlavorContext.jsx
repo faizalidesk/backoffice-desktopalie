@@ -68,7 +68,7 @@ export const FlavorProvider = ({ children }) => {
           root.style.setProperty('--color-accent', activeFlavor.theme.accent);
         }
       }
-      root.style.setProperty('--bg-sidebar', '#091E16');
+      root.style.setProperty('--bg-sidebar', '#042014');
     } else {
       if (activeFlavor?.theme) {
         if (activeFlavor.theme.colorPrimary) {

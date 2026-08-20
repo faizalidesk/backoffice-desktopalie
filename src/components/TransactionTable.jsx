@@ -1146,20 +1146,13 @@ export default function TransactionTable({
 
                       {/* Pelanggan */}
                       <td>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                          <img
-                            src={tx.customer_avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(tx.customer_name || 'User')}&background=4F46E5&color=fff`}
-                            alt={tx.customer_name}
-                            style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }}
-                          />
-                          <div style={{ display: 'flex', flexDirection: 'column' }}>
-                            <span style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--text-main)' }}>
-                              {tx.customer_name}
-                            </span>
-                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                              {tx.customer_email}
-                            </span>
-                          </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
+                          <span style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--text-main)' }}>
+                            {tx.customer_name}
+                          </span>
+                          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                            {tx.customer_email}
+                          </span>
                         </div>
                       </td>
 
@@ -1486,16 +1479,9 @@ export default function TransactionTable({
                 <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '0.75rem' }}>
                   Informasi Pelanggan
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.75rem' }}>
-                  <img
-                    src={selectedTransaction.customer_avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedTransaction.customer_name)}&background=4F46E5&color=fff`}
-                    alt={selectedTransaction.customer_name}
-                    style={{ width: '36px', height: '36px', borderRadius: '50%' }}
-                  />
-                  <div>
-                    <div style={{ fontWeight: 700, fontSize: '0.9rem' }}>{selectedTransaction.customer_name}</div>
-                    <div style={{ fontSize: '0.775rem', color: 'var(--text-muted)' }}>{selectedTransaction.customer_email}</div>
-                  </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem', marginBottom: '0.75rem' }}>
+                  <div style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-main)' }}>{selectedTransaction.customer_name}</div>
+                  <div style={{ fontSize: '0.775rem', color: 'var(--text-muted)' }}>{selectedTransaction.customer_email}</div>
                 </div>
                 <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
                   Platform: <strong>{selectedTransaction.platform_name || selectedTransaction.platform}</strong>

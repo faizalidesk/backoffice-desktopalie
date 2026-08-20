@@ -25,7 +25,8 @@ export function ThemeProvider({ children }) {
         root.style.setProperty('--color-secondary', '#059669');
         root.style.setProperty('--color-accent', '#34D399');
       }
-      root.style.setProperty('--bg-sidebar', '#091E16');
+      root.style.setProperty('--bg-sidebar', '#042014');
+      root.style.setProperty('--bg-main', '#05130E');
     } else {
       if (currentFlavor === 'platform1') {
         root.style.setProperty('--primary', '#4F46E5');
@@ -34,10 +35,9 @@ export function ThemeProvider({ children }) {
         root.style.setProperty('--color-primary', '#4F46E5');
         root.style.setProperty('--color-secondary', '#6366F1');
         root.style.setProperty('--color-accent', '#818CF8');
-        root.style.setProperty('--bg-sidebar', '#FFFFFF');
-      } else {
-        root.style.setProperty('--bg-sidebar', '#FFFFFF');
       }
+      root.style.setProperty('--bg-sidebar', '#1E1B4B');
+      root.style.setProperty('--bg-main', '#F5F3FF');
     }
   }, [isDarkMode]);
 
