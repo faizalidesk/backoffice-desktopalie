@@ -144,10 +144,10 @@ export default function NotificationsManager() {
   const warningCount = notifications.filter(n => n.type === 'warning').length;
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg-main)' }}>
+    <>
       <Header title={`Pusat Notifikasi Platform - ${activeFlavor?.name || 'Desktopalie'}`} />
 
-      <main style={{ padding: '2rem', maxWidth: '1240px', margin: '0 auto' }}>
+      <div className="page-body" style={{ paddingBottom: '4rem' }}>
         
         {/* PAGE HEADER HERO CARD */}
         <div className="card" style={{
@@ -165,8 +165,8 @@ export default function NotificationsManager() {
           border: '1px solid var(--border-color)',
           boxShadow: '0 4px 20px rgba(0,0,0,0.05)'
         }}>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.4rem' }}>
+          <div style={{ flex: '1 1 300px', minWidth: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.4rem', flexWrap: 'wrap' }}>
               <span style={{
                 padding: '0.2rem 0.65rem',
                 borderRadius: '99px',
@@ -184,7 +184,7 @@ export default function NotificationsManager() {
               </span>
             </div>
 
-            <h1 style={{ fontSize: '1.5rem', fontWeight: '800', color: 'var(--text-main)', margin: '0 0 0.4rem 0' }}>
+            <h1 style={{ fontSize: '1.5rem', fontWeight: '800', color: 'var(--text-main)', margin: '0 0 0.4rem 0', wordBreak: 'break-word' }}>
               Terbitkan Notifikasi ke Setiap Platform
             </h1>
             <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.9rem', maxWidth: '680px' }}>
@@ -350,11 +350,11 @@ export default function NotificationsManager() {
         {/* STATS OVERVIEW CARDS */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-          gap: '1.25rem',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))',
+          gap: '1rem',
           marginBottom: '1.75rem'
         }}>
-          <div className="card" style={{ padding: '1.25rem', borderRadius: '14px', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div className="card" style={{ padding: '1.25rem', borderRadius: '14px', display: 'flex', alignItems: 'center', gap: '1rem', minWidth: 0 }}>
             <div style={{
               width: '44px',
               height: '44px',
@@ -364,21 +364,22 @@ export default function NotificationsManager() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '1.25rem'
+              fontSize: '1.25rem',
+              flexShrink: 0
             }}>
               <FiBell />
             </div>
-            <div>
+            <div style={{ minWidth: 0 }}>
               <div style={{ fontSize: '1.5rem', fontWeight: '800', color: 'var(--text-main)', lineHeight: 1.1 }}>
                 {notifications.length}
               </div>
-              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: '600' }}>
-                Total Notifikasi Target
+              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: '600', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                Total Notifikasi
               </div>
             </div>
           </div>
 
-          <div className="card" style={{ padding: '1.25rem', borderRadius: '14px', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div className="card" style={{ padding: '1.25rem', borderRadius: '14px', display: 'flex', alignItems: 'center', gap: '1rem', minWidth: 0 }}>
             <div style={{
               width: '44px',
               height: '44px',
@@ -388,21 +389,22 @@ export default function NotificationsManager() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '1.25rem'
+              fontSize: '1.25rem',
+              flexShrink: 0
             }}>
               <FiAlertCircle />
             </div>
-            <div>
+            <div style={{ minWidth: 0 }}>
               <div style={{ fontSize: '1.5rem', fontWeight: '800', color: 'var(--text-main)', lineHeight: 1.1 }}>
                 {unreadCount}
               </div>
-              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: '600' }}>
+              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: '600', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 Belum Dibaca
               </div>
             </div>
           </div>
 
-          <div className="card" style={{ padding: '1.25rem', borderRadius: '14px', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div className="card" style={{ padding: '1.25rem', borderRadius: '14px', display: 'flex', alignItems: 'center', gap: '1rem', minWidth: 0 }}>
             <div style={{
               width: '44px',
               height: '44px',
@@ -412,21 +414,22 @@ export default function NotificationsManager() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '1.25rem'
+              fontSize: '1.25rem',
+              flexShrink: 0
             }}>
               <FiCheckCircle />
             </div>
-            <div>
+            <div style={{ minWidth: 0 }}>
               <div style={{ fontSize: '1.5rem', fontWeight: '800', color: 'var(--text-main)', lineHeight: 1.1 }}>
                 {successCount}
               </div>
-              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: '600' }}>
+              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: '600', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 Status Sukses
               </div>
             </div>
           </div>
 
-          <div className="card" style={{ padding: '1.25rem', borderRadius: '14px', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div className="card" style={{ padding: '1.25rem', borderRadius: '14px', display: 'flex', alignItems: 'center', gap: '1rem', minWidth: 0 }}>
             <div style={{
               width: '44px',
               height: '44px',
@@ -436,15 +439,16 @@ export default function NotificationsManager() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '1.25rem'
+              fontSize: '1.25rem',
+              flexShrink: 0
             }}>
               <FiInfo />
             </div>
-            <div>
+            <div style={{ minWidth: 0 }}>
               <div style={{ fontSize: '1.5rem', fontWeight: '800', color: 'var(--text-main)', lineHeight: 1.1 }}>
                 {warningCount}
               </div>
-              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: '600' }}>
+              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: '600', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 Peringatan System
               </div>
             </div>
@@ -463,7 +467,7 @@ export default function NotificationsManager() {
           gap: '1rem'
         }}>
           {/* Type Filter Tabs */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap', flex: '1 1 300px' }}>
             {[
               { id: 'all', label: `Semua (${notifications.length})` },
               { id: 'unread', label: `Belum Dibaca (${unreadCount})` },
@@ -493,11 +497,13 @@ export default function NotificationsManager() {
           </div>
 
           {/* Search Box & Clear All */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap', flex: '1 1 auto', justifyContent: 'flex-end' }}>
             <div style={{
               position: 'relative',
               display: 'flex',
-              alignItems: 'center'
+              alignItems: 'center',
+              flex: '1 1 180px',
+              maxWidth: '300px'
             }}>
               <FiSearch style={{ position: 'absolute', left: '0.75rem', color: 'var(--text-muted)', fontSize: '0.9rem' }} />
               <input
@@ -513,7 +519,7 @@ export default function NotificationsManager() {
                   color: 'var(--text-main)',
                   fontSize: '0.825rem',
                   outline: 'none',
-                  width: '200px'
+                  width: '100%'
                 }}
               />
             </div>
@@ -524,6 +530,7 @@ export default function NotificationsManager() {
                 className="btn btn-danger btn-sm"
                 onClick={handleClearAll}
                 title="Hapus Seluruh Notifikasi Pada View Ini"
+                style={{ whiteSpace: 'nowrap' }}
               >
                 <FiTrash2 />
                 <span>Bersihkan</span>
@@ -732,7 +739,7 @@ export default function NotificationsManager() {
           )}
         </div>
 
-      </main>
+      </div>
 
       {/* MODAL BUAT NOTIFIKASI BARU PER-PLATFORM */}
       <Modal
@@ -957,6 +964,6 @@ export default function NotificationsManager() {
           );
         })()}
       </Modal>
-    </div>
+    </>
   );
 }
