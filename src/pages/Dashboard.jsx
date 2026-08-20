@@ -246,14 +246,28 @@ export default function Dashboard() {
       <div className="page-body" style={{ paddingBottom: '4rem' }}>
         
         {/* SLEEK AMBIENT WELCOME BANNER FOR DASHBOARD OVERVIEW */}
-        <div className="dashboard-banner">
+        <div style={{
+          position: 'relative',
+          borderRadius: '20px',
+          overflow: 'hidden',
+          backgroundColor: '#0F172A',
+          color: '#FFFFFF',
+          padding: '2rem 2.25rem',
+          marginBottom: '2rem',
+          boxShadow: '0 10px 30px rgba(15, 23, 42, 0.15)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: '1.5rem'
+        }}>
           {/* Ambient Decorative Gradient & Glow */}
           <div style={{
             position: 'absolute',
             top: '-50%',
             left: '-10%',
-            width: '700px',
-            height: '500px',
+            width: '600px',
+            height: '400px',
             borderRadius: '50%',
             background: `radial-gradient(circle, ${primaryColor}66 0%, rgba(15, 23, 42, 0) 70%)`,
             pointerEvents: 'none'
@@ -264,27 +278,27 @@ export default function Dashboard() {
             <div style={{
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '0.45rem',
+              gap: '0.4rem',
               backgroundColor: `${primaryColor}22`,
               border: `1px solid ${primaryColor}44`,
-              padding: '0.3rem 0.85rem',
+              padding: '0.25rem 0.75rem',
               borderRadius: '99px',
-              fontSize: '0.78rem',
+              fontSize: '0.725rem',
               color: primaryColor,
               fontWeight: '700',
               textTransform: 'uppercase',
               letterSpacing: '0.05em',
               marginBottom: '0.75rem'
             }}>
-              <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: primaryColor }} />
+              <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: primaryColor }} />
               <span>{activeFlavor?.shortName ? `Platform ${activeFlavor.shortName} Workspace Active` : 'Synced Workspace'}</span>
             </div>
 
-            <h1>
+            <h1 style={{ fontSize: '1.85rem', fontWeight: '800', color: '#FFFFFF', marginBottom: '0.5rem', letterSpacing: '-0.02em' }}>
               {activeFlavor?.name ? `Welcome to ${activeFlavor.name} Backoffice` : 'Welcome Back, Workspace Administrator'}
             </h1>
 
-            <p>
+            <p style={{ color: '#94A3B8', fontSize: '0.925rem', margin: 0, maxWidth: '640px', lineHeight: '1.5' }}>
               {activeFlavor?.description || 'Unified management suite for system portfolio, maintenance controls, and multi-platform telemetry.'}
             </p>
           </div>
@@ -298,13 +312,11 @@ export default function Dashboard() {
                 backgroundColor: primaryColor,
                 color: '#FFFFFF',
                 fontWeight: '700',
-                fontSize: '0.925rem',
-                padding: '0.7rem 1.3rem',
                 border: 'none',
                 boxShadow: `0 4px 14px ${primaryColor}66`
               }}
             >
-              <FiUsers style={{ fontSize: '1.05rem' }} />
+              <FiUsers />
               <span>Membership</span>
             </Link>
 
@@ -315,19 +327,22 @@ export default function Dashboard() {
                 backgroundColor: 'rgba(255, 255, 255, 0.08)',
                 border: '1px solid rgba(255, 255, 255, 0.15)',
                 color: '#FFFFFF',
-                fontWeight: '700',
-                fontSize: '0.925rem',
-                padding: '0.7rem 1.3rem'
+                fontWeight: '700'
               }}
             >
-              <FiBookOpen style={{ fontSize: '1.05rem' }} />
+              <FiBookOpen />
               <span>Docs</span>
             </Link>
           </div>
         </div>
 
         {/* 4 KPI STAT CARDS GRID */}
-        <div className="dashboard-kpi-grid">
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+          gap: '1.25rem',
+          marginBottom: '1.75rem'
+        }}>
           <Link to="/members" style={{ textDecoration: 'none' }}>
             <div className="stat-card" style={{ height: '100%' }}>
               <div className="stat-info">
@@ -379,39 +394,39 @@ export default function Dashboard() {
 
         {/* PLATFORM SPECIFIC LIVE TELEMETRY WIDGET SECTION */}
         {flavorId === 'platform2' && (
-          <div className="card" style={{ marginBottom: '2rem', borderLeft: `4px solid ${primaryColor}`, padding: '1.75rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <FiTruck style={{ color: primaryColor, fontSize: '1.4rem' }} />
-                <h3 style={{ fontSize: '1.2rem', fontWeight: '800', margin: 0, color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+          <div className="card" style={{ marginBottom: '1.75rem', borderLeft: `4px solid ${primaryColor}` }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <FiTruck style={{ color: primaryColor, fontSize: '1.25rem' }} />
+                <h3 style={{ fontSize: '1.1rem', fontWeight: '800', margin: 0, color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
                   Smart Logistics Cold-Chain Fleet Telemetry
                 </h3>
               </div>
-              <span className="badge badge-teal" style={{ fontSize: '0.8rem', padding: '0.3rem 0.8rem' }}>Live Dispatch Feed</span>
+              <span className="badge badge-teal">Live Dispatch Feed</span>
             </div>
 
             <div style={{ overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.925rem' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
                 <thead>
                   <tr style={{ borderBottom: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`, textAlign: 'left', color: 'var(--text-muted)' }}>
-                    <th style={{ padding: '0.9rem 1rem' }}>WAYBILL CONTAINER</th>
-                    <th style={{ padding: '0.9rem 1rem' }}>CARGO TYPE</th>
-                    <th style={{ padding: '0.9rem 1rem' }}>LOGISTICS ROUTE</th>
-                    <th style={{ padding: '0.9rem 1rem' }}>TEMP TELEMETRY</th>
-                    <th style={{ padding: '0.9rem 1rem' }}>DRIVER</th>
-                    <th style={{ padding: '0.9rem 1rem' }}>STATUS</th>
+                    <th style={{ padding: '0.75rem' }}>WAYBILL CONTAINER</th>
+                    <th style={{ padding: '0.75rem' }}>CARGO TYPE</th>
+                    <th style={{ padding: '0.75rem' }}>LOGISTICS ROUTE</th>
+                    <th style={{ padding: '0.75rem' }}>TEMP TELEMETRY</th>
+                    <th style={{ padding: '0.75rem' }}>DRIVER</th>
+                    <th style={{ padding: '0.75rem' }}>STATUS</th>
                   </tr>
                 </thead>
                 <tbody>
                   {betaWaybills.map(wb => (
                     <tr key={wb.id} style={{ borderBottom: `1px solid ${isDarkMode ? '#334155' : '#F1F5F9'}` }}>
-                      <td style={{ padding: '0.95rem 1rem', fontWeight: '800', color: primaryColor }}>{wb.id}</td>
-                      <td style={{ padding: '0.95rem 1rem', fontWeight: '600' }}>{wb.type}</td>
-                      <td style={{ padding: '0.95rem 1rem' }}>{wb.route}</td>
-                      <td style={{ padding: '0.95rem 1rem', fontWeight: '700', color: '#10B981' }}>{wb.temp}</td>
-                      <td style={{ padding: '0.95rem 1rem' }}>{wb.driver}</td>
-                      <td style={{ padding: '0.95rem 1rem' }}>
-                        <span style={{ padding: '0.25rem 0.75rem', borderRadius: '99px', backgroundColor: 'rgba(16, 185, 129, 0.15)', color: '#10B981', fontWeight: '700', fontSize: '0.8rem' }}>
+                      <td style={{ padding: '0.75rem', fontWeight: '800', color: primaryColor }}>{wb.id}</td>
+                      <td style={{ padding: '0.75rem', fontWeight: '600' }}>{wb.type}</td>
+                      <td style={{ padding: '0.75rem' }}>{wb.route}</td>
+                      <td style={{ padding: '0.75rem', fontWeight: '700', color: '#10B981' }}>{wb.temp}</td>
+                      <td style={{ padding: '0.75rem' }}>{wb.driver}</td>
+                      <td style={{ padding: '0.75rem' }}>
+                        <span style={{ padding: '0.2rem 0.6rem', borderRadius: '99px', backgroundColor: 'rgba(16, 185, 129, 0.15)', color: '#10B981', fontWeight: '700', fontSize: '0.725rem' }}>
                           ● {wb.status}
                         </span>
                       </td>
@@ -424,46 +439,46 @@ export default function Dashboard() {
         )}
 
         {flavorId === 'platform3' && (
-          <div className="card" style={{ marginBottom: '2rem', borderLeft: `4px solid ${primaryColor}`, padding: '1.75rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <FiFilm style={{ color: primaryColor, fontSize: '1.4rem' }} />
-                <h3 style={{ fontSize: '1.2rem', fontWeight: '800', margin: 0, color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+          <div className="card" style={{ marginBottom: '1.75rem', borderLeft: `4px solid ${primaryColor}` }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <FiFilm style={{ color: primaryColor, fontSize: '1.25rem' }} />
+                <h3 style={{ fontSize: '1.1rem', fontWeight: '800', margin: 0, color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
                   AI Video Transcoder Real-Time Render Queue
                 </h3>
               </div>
-              <span className="badge badge-violet" style={{ fontSize: '0.8rem', padding: '0.3rem 0.8rem' }}>GPU Accelerator Active</span>
+              <span className="badge badge-violet">GPU Accelerator Active</span>
             </div>
 
             <div style={{ overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.925rem' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
                 <thead>
                   <tr style={{ borderBottom: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`, textAlign: 'left', color: 'var(--text-muted)' }}>
-                    <th style={{ padding: '0.9rem 1rem' }}>JOB ID</th>
-                    <th style={{ padding: '0.9rem 1rem' }}>FILE NAME</th>
-                    <th style={{ padding: '0.9rem 1rem' }}>TARGET CODEC</th>
-                    <th style={{ padding: '0.9rem 1rem' }}>ENCODING SPEED</th>
-                    <th style={{ padding: '0.9rem 1rem' }}>PROGRESS</th>
-                    <th style={{ padding: '0.9rem 1rem' }}>STATUS</th>
+                    <th style={{ padding: '0.75rem' }}>JOB ID</th>
+                    <th style={{ padding: '0.75rem' }}>FILE NAME</th>
+                    <th style={{ padding: '0.75rem' }}>TARGET CODEC</th>
+                    <th style={{ padding: '0.75rem' }}>ENCODING SPEED</th>
+                    <th style={{ padding: '0.75rem' }}>PROGRESS</th>
+                    <th style={{ padding: '0.75rem' }}>STATUS</th>
                   </tr>
                 </thead>
                 <tbody>
                   {gammaRenderJobs.map(job => (
                     <tr key={job.id} style={{ borderBottom: `1px solid ${isDarkMode ? '#334155' : '#F1F5F9'}` }}>
-                      <td style={{ padding: '0.95rem 1rem', fontWeight: '800', color: primaryColor }}>{job.id}</td>
-                      <td style={{ padding: '0.95rem 1rem', fontWeight: '600' }}>{job.name}</td>
-                      <td style={{ padding: '0.95rem 1rem' }}>{job.codec}</td>
-                      <td style={{ padding: '0.95rem 1rem', fontWeight: '700', color: '#8B5CF6' }}>{job.speed}</td>
-                      <td style={{ padding: '0.95rem 1rem', width: '180px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                          <div style={{ flex: 1, height: '8px', backgroundColor: 'var(--border-color)', borderRadius: '99px', overflow: 'hidden' }}>
+                      <td style={{ padding: '0.75rem', fontWeight: '800', color: primaryColor }}>{job.id}</td>
+                      <td style={{ padding: '0.75rem', fontWeight: '600' }}>{job.name}</td>
+                      <td style={{ padding: '0.75rem' }}>{job.codec}</td>
+                      <td style={{ padding: '0.75rem', fontWeight: '700', color: '#8B5CF6' }}>{job.speed}</td>
+                      <td style={{ padding: '0.75rem', width: '160px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                          <div style={{ flex: 1, height: '6px', backgroundColor: 'var(--border-color)', borderRadius: '99px', overflow: 'hidden' }}>
                             <div style={{ height: '100%', width: `${job.progress}%`, backgroundColor: primaryColor, borderRadius: '99px' }} />
                           </div>
-                          <span style={{ fontSize: '0.85rem', fontWeight: '800' }}>{job.progress}%</span>
+                          <span style={{ fontSize: '0.75rem', fontWeight: '800' }}>{job.progress}%</span>
                         </div>
                       </td>
-                      <td style={{ padding: '0.95rem 1rem' }}>
-                        <span style={{ padding: '0.25rem 0.75rem', borderRadius: '99px', backgroundColor: 'rgba(139, 92, 246, 0.15)', color: '#8B5CF6', fontWeight: '700', fontSize: '0.8rem' }}>
+                      <td style={{ padding: '0.75rem' }}>
+                        <span style={{ padding: '0.2rem 0.6rem', borderRadius: '99px', backgroundColor: 'rgba(139, 92, 246, 0.15)', color: '#8B5CF6', fontWeight: '700', fontSize: '0.725rem' }}>
                           ● {job.status}
                         </span>
                       </td>
@@ -476,39 +491,39 @@ export default function Dashboard() {
         )}
 
         {flavorId === 'platform4' && (
-          <div className="card" style={{ marginBottom: '2rem', borderLeft: `4px solid ${primaryColor}`, padding: '1.75rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <FiServer style={{ color: primaryColor, fontSize: '1.4rem' }} />
-                <h3 style={{ fontSize: '1.2rem', fontWeight: '800', margin: 0, color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+          <div className="card" style={{ marginBottom: '1.75rem', borderLeft: `4px solid ${primaryColor}` }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <FiServer style={{ color: primaryColor, fontSize: '1.25rem' }} />
+                <h3 style={{ fontSize: '1.1rem', fontWeight: '800', margin: 0, color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
                   Enterprise Cloud ERP Multi-Node Kubernetes Clusters
                 </h3>
               </div>
-              <span className="badge badge-amber" style={{ fontSize: '0.8rem', padding: '0.3rem 0.8rem' }}>HA Cluster Synchronized</span>
+              <span className="badge badge-amber">HA Cluster Synchronized</span>
             </div>
 
             <div style={{ overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.925rem' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
                 <thead>
                   <tr style={{ borderBottom: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`, textAlign: 'left', color: 'var(--text-muted)' }}>
-                    <th style={{ padding: '0.9rem 1rem' }}>NODE ID</th>
-                    <th style={{ padding: '0.9rem 1rem' }}>REGION CLUSTER</th>
-                    <th style={{ padding: '0.9rem 1rem' }}>CPU LOAD</th>
-                    <th style={{ padding: '0.9rem 1rem' }}>RAM USAGE</th>
-                    <th style={{ padding: '0.9rem 1rem' }}>LATENCY</th>
-                    <th style={{ padding: '0.9rem 1rem' }}>HEALTH</th>
+                    <th style={{ padding: '0.75rem' }}>NODE ID</th>
+                    <th style={{ padding: '0.75rem' }}>REGION CLUSTER</th>
+                    <th style={{ padding: '0.75rem' }}>CPU LOAD</th>
+                    <th style={{ padding: '0.75rem' }}>RAM USAGE</th>
+                    <th style={{ padding: '0.75rem' }}>LATENCY</th>
+                    <th style={{ padding: '0.75rem' }}>HEALTH</th>
                   </tr>
                 </thead>
                 <tbody>
                   {deltaClusterNodes.map(node => (
                     <tr key={node.id} style={{ borderBottom: `1px solid ${isDarkMode ? '#334155' : '#F1F5F9'}` }}>
-                      <td style={{ padding: '0.95rem 1rem', fontWeight: '800', color: primaryColor }}>{node.id}</td>
-                      <td style={{ padding: '0.95rem 1rem', fontWeight: '600' }}>{node.region}</td>
-                      <td style={{ padding: '0.95rem 1rem', fontWeight: '700', color: '#F59E0B' }}>{node.cpu}</td>
-                      <td style={{ padding: '0.95rem 1rem' }}>{node.mem}</td>
-                      <td style={{ padding: '0.95rem 1rem', fontWeight: '600' }}>{node.latency}</td>
-                      <td style={{ padding: '0.95rem 1rem' }}>
-                        <span style={{ padding: '0.25rem 0.75rem', borderRadius: '99px', backgroundColor: 'rgba(245, 158, 11, 0.15)', color: '#F59E0B', fontWeight: '700', fontSize: '0.8rem' }}>
+                      <td style={{ padding: '0.75rem', fontWeight: '800', color: primaryColor }}>{node.id}</td>
+                      <td style={{ padding: '0.75rem', fontWeight: '600' }}>{node.region}</td>
+                      <td style={{ padding: '0.75rem', fontWeight: '700', color: '#F59E0B' }}>{node.cpu}</td>
+                      <td style={{ padding: '0.75rem' }}>{node.mem}</td>
+                      <td style={{ padding: '0.75rem', fontWeight: '600' }}>{node.latency}</td>
+                      <td style={{ padding: '0.75rem' }}>
+                        <span style={{ padding: '0.2rem 0.6rem', borderRadius: '99px', backgroundColor: 'rgba(245, 158, 11, 0.15)', color: '#F59E0B', fontWeight: '700', fontSize: '0.725rem' }}>
                           ● {node.status}
                         </span>
                       </td>
@@ -521,32 +536,37 @@ export default function Dashboard() {
         )}
 
         {/* SECTION 1: SPRINT PROGRESS & MAINTENANCE MODE */}
-        <div className="dashboard-split-grid">
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
+          gap: '1.5rem',
+          marginBottom: '1.75rem'
+        }}>
           {/* Task Board Progress Card */}
-          <div className="card" style={{ padding: '1.5rem' }}>
+          <div className="card">
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                <FiCheckSquare style={{ color: primaryColor, fontSize: '1.25rem' }} />
-                <h3 style={{ fontSize: '1.1rem', fontWeight: '700' }}>Sprint Progress & QA Tasks</h3>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <FiCheckSquare style={{ color: primaryColor, fontSize: '1.15rem' }} />
+                <h3 style={{ fontSize: '1rem', fontWeight: '700' }}>Sprint Progress & QA Tasks</h3>
               </div>
-              <Link to="/todos" style={{ color: primaryColor, fontSize: '0.85rem', fontWeight: '600', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+              <Link to="/todos" style={{ color: primaryColor, fontSize: '0.8rem', fontWeight: '600', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                 <span>Task Board</span>
                 <FiArrowRight />
               </Link>
             </div>
 
             {/* Progress Bar & Badges */}
-            <div style={{ backgroundColor: 'var(--bg-card-hover)', padding: '1.15rem 1.25rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', marginBottom: '1.15rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.55rem', fontSize: '0.9rem', fontWeight: '700' }}>
+            <div style={{ backgroundColor: 'var(--bg-card-hover)', padding: '1rem 1.15rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', marginBottom: '1rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.825rem', fontWeight: '700' }}>
                 <span>Completion Rate</span>
-                <span style={{ color: primaryColor, fontSize: '1rem' }}>{taskProgressPercent}%</span>
+                <span style={{ color: primaryColor }}>{taskProgressPercent}%</span>
               </div>
 
-              <div style={{ width: '100%', height: '7px', backgroundColor: 'var(--border-color)', borderRadius: '99px', overflow: 'hidden' }}>
+              <div style={{ width: '100%', height: '6px', backgroundColor: 'var(--border-color)', borderRadius: '99px', overflow: 'hidden' }}>
                 <div style={{ height: '100%', width: `${taskProgressPercent}%`, backgroundColor: primaryColor, borderRadius: '99px', transition: 'width 0.3s ease' }} />
               </div>
 
-              <div style={{ display: 'flex', gap: '0.9rem', marginTop: '0.75rem', fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: '600', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', gap: '0.85rem', marginTop: '0.75rem', fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: '600' }}>
                 <span>🔴 Not Started: {notStartedTodos}</span>
                 <span>🟡 In Progress: {inProgressTodos}</span>
                 <span>🟢 Done: {completedTodos}</span>
@@ -554,22 +574,22 @@ export default function Dashboard() {
             </div>
 
             {/* Task Items Preview */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               {recentTodos.length === 0 ? (
-                <div style={{ color: 'var(--text-subtle)', fontSize: '0.85rem', padding: '0.5rem 0' }}>No tasks on the Sprint board yet.</div>
+                <div style={{ color: 'var(--text-subtle)', fontSize: '0.825rem' }}>No tasks on the Sprint board yet.</div>
               ) : (
                 recentTodos.map(todo => (
-                  <div key={todo.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.65rem 0.85rem', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--bg-card-hover)', border: '1px solid var(--border-color)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', overflow: 'hidden' }}>
-                      <FiFileText style={{ color: 'var(--text-muted)', fontSize: '0.95rem', flexShrink: 0 }} />
-                      <span style={{ fontSize: '0.875rem', fontWeight: '600', color: 'var(--text-main)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  <div key={todo.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.55rem 0.75rem', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--bg-card-hover)', border: '1px solid var(--border-color)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', overflow: 'hidden' }}>
+                      <FiFileText style={{ color: 'var(--text-muted)', fontSize: '0.85rem', flexShrink: 0 }} />
+                      <span style={{ fontSize: '0.825rem', fontWeight: '600', color: 'var(--text-main)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                         {todo.title}
                       </span>
                     </div>
                     <span style={{
-                      fontSize: '0.725rem',
+                      fontSize: '0.7rem',
                       fontWeight: '700',
-                      padding: '0.15rem 0.55rem',
+                      padding: '0.12rem 0.45rem',
                       borderRadius: '99px',
                       backgroundColor: todo.status === 'Done' ? 'rgba(34, 197, 94, 0.15)' : todo.status === 'In progress' ? 'rgba(234, 179, 8, 0.15)' : 'var(--bg-card)',
                       color: todo.status === 'Done' ? '#16A34A' : todo.status === 'In progress' ? '#D97706' : 'var(--text-muted)'
@@ -583,28 +603,28 @@ export default function Dashboard() {
           </div>
 
           {/* Maintenance Mode Status */}
-          <div className="card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '1.5rem' }}>
+          <div className="card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                  <FiTool style={{ color: 'var(--accent-teal)', fontSize: '1.25rem' }} />
-                  <h3 style={{ fontSize: '1.1rem', fontWeight: '700' }}>Maintenance Mode</h3>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <FiTool style={{ color: 'var(--accent-teal)', fontSize: '1.15rem' }} />
+                  <h3 style={{ fontSize: '1rem', fontWeight: '700' }}>Maintenance Mode</h3>
                 </div>
-                <span className={`badge badge-${maintenance?.is_enabled ? 'rose' : 'teal'}`} style={{ fontSize: '0.75rem', padding: '0.25rem 0.7rem' }}>
+                <span className={`badge badge-${maintenance?.is_enabled ? 'rose' : 'teal'}`}>
                   {maintenance?.is_enabled ? 'Maintenance Active' : 'Website Live'}
                 </span>
               </div>
 
-              <div style={{ backgroundColor: 'var(--bg-card-hover)', border: '1px solid var(--border-color)', padding: '1.2rem', borderRadius: 'var(--radius-sm)', marginBottom: '1.25rem' }}>
-                <div style={{ fontWeight: '700', fontSize: '1rem', color: 'var(--text-main)', marginBottom: '0.35rem' }}>
+              <div style={{ backgroundColor: 'var(--bg-card-hover)', border: '1px solid var(--border-color)', padding: '1.1rem', borderRadius: 'var(--radius-sm)', marginBottom: '1.25rem' }}>
+                <div style={{ fontWeight: '700', fontSize: '0.9rem', color: 'var(--text-main)', marginBottom: '0.3rem' }}>
                   {maintenance?.title || 'System Running Normally'}
                 </div>
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0, lineHeight: '1.55' }}>
+                <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: 0, lineHeight: '1.5' }}>
                   {maintenance?.message}
                 </p>
 
                 {maintenance?.is_enabled && (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', marginTop: '0.75rem', fontSize: '0.8rem', fontWeight: '700', color: 'var(--accent-rose)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginTop: '0.75rem', fontSize: '0.75rem', fontWeight: '700', color: 'var(--accent-rose)' }}>
                     <FiClock />
                     <span>Est. Completion: {new Date(maintenance.end_time).toLocaleString()}</span>
                   </div>
@@ -612,34 +632,34 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <Link to="/maintenance" className="btn btn-secondary" style={{ width: '100%', justifyContent: 'center', padding: '0.7rem 1.2rem', fontSize: '0.9rem' }}>
-              <FiTool style={{ fontSize: '1rem' }} />
+            <Link to="/maintenance" className="btn btn-secondary" style={{ width: '100%', justifyContent: 'center' }}>
+              <FiTool />
               <span>Manage Settings</span>
             </Link>
           </div>
         </div>
 
         {/* SECTION 2: SYSTEM DOCUMENTATION & KNOWLEDGE BASE QUICK SOPS */}
-        <div className="card" style={{ marginBottom: '1.75rem', padding: '1.5rem' }}>
+        <div className="card" style={{ marginBottom: '1.75rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-              <FiBookOpen style={{ color: primaryColor, fontSize: '1.25rem' }} />
-              <h3 style={{ fontSize: '1.1rem', fontWeight: '700' }}>Popular System Guides & Documentation</h3>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <FiBookOpen style={{ color: primaryColor, fontSize: '1.15rem' }} />
+              <h3 style={{ fontSize: '1rem', fontWeight: '700' }}>Popular System Guides & Documentation</h3>
             </div>
-            <Link to="/documentation" style={{ color: primaryColor, fontSize: '0.85rem', fontWeight: '600', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+            <Link to="/documentation" style={{ color: primaryColor, fontSize: '0.8rem', fontWeight: '600', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
               <span>Manage Docs</span>
               <FiArrowRight />
             </Link>
           </div>
 
-          <div className="dashboard-docs-grid">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1rem' }}>
             {recentDocs.map(doc => (
               <Link key={doc.id} to="/documentation" style={{ textDecoration: 'none' }}>
                 <div style={{
                   backgroundColor: 'var(--bg-card-hover)',
                   border: '1px solid var(--border-color)',
                   borderRadius: 'var(--radius-sm)',
-                  padding: '1.2rem',
+                  padding: '1.1rem',
                   height: '100%',
                   display: 'flex',
                   flexDirection: 'column',
@@ -647,20 +667,20 @@ export default function Dashboard() {
                   transition: 'all 0.15s ease'
                 }} className="card">
                   <div>
-                    <span className="badge badge-violet" style={{ fontSize: '0.7rem', marginBottom: '0.55rem', textTransform: 'uppercase' }}>
+                    <span className="badge badge-violet" style={{ fontSize: '0.65rem', marginBottom: '0.5rem', textTransform: 'uppercase' }}>
                       {doc.category || 'Guides'}
                     </span>
-                    <h4 style={{ fontSize: '0.975rem', fontWeight: '700', color: 'var(--text-main)', marginBottom: '0.35rem', lineHeight: '1.35' }}>
+                    <h4 style={{ fontSize: '0.9rem', fontWeight: '700', color: 'var(--text-main)', marginBottom: '0.35rem', lineHeight: '1.3' }}>
                       {doc.title}
                     </h4>
-                    <p style={{ fontSize: '0.825rem', color: 'var(--text-muted)', margin: 0, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', lineHeight: '1.5' }}>
+                    <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', margin: 0, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                       {doc.content}
                     </p>
                   </div>
 
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.85rem', paddingTop: '0.5rem', borderTop: '1px solid var(--border-color)', fontSize: '0.75rem', color: 'var(--text-subtle)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.85rem', paddingTop: '0.4rem', borderTop: '1px solid var(--border-color)', fontSize: '0.725rem', color: 'var(--text-subtle)' }}>
                     <span>Author: {doc.author || 'Admin'}</span>
-                    <FiArrowRight style={{ color: primaryColor, fontSize: '0.9rem' }} />
+                    <FiArrowRight style={{ color: primaryColor }} />
                   </div>
                 </div>
               </Link>
@@ -670,21 +690,21 @@ export default function Dashboard() {
 
         {/* SECTION 3: RECENT PROJECTS SHOWCASE TABLE */}
         <div className="table-container" style={{ marginBottom: '1.75rem' }}>
-          <div className="table-toolbar" style={{ padding: '1.15rem 1.35rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-              <FiFolder style={{ color: primaryColor, fontSize: '1.2rem' }} />
-              <h3 style={{ fontSize: '1.1rem', fontWeight: '700', margin: 0 }}>Recent Portfolio Projects</h3>
+          <div className="table-toolbar">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <FiFolder style={{ color: primaryColor }} />
+              <h3 style={{ fontSize: '1rem', fontWeight: '700', margin: 0 }}>Recent Portfolio Projects</h3>
             </div>
-            <Link to="/projects" className="btn btn-secondary btn-sm" style={{ padding: '0.45rem 0.9rem', fontSize: '0.85rem' }}>
+            <Link to="/projects" className="btn btn-secondary btn-sm">
               <FiPlus />
               <span>Projects</span>
             </Link>
           </div>
 
           {loading ? (
-            <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.95rem' }}>Loading projects...</div>
+            <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)' }}>Loading projects...</div>
           ) : recentProjects.length === 0 ? (
-            <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-subtle)', fontSize: '0.95rem' }}>No projects added yet.</div>
+            <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-subtle)' }}>No projects added yet.</div>
           ) : (
             <table className="data-table">
               <thead>
@@ -700,27 +720,27 @@ export default function Dashboard() {
                 {recentProjects.map(p => (
                   <tr key={p.id}>
                     <td>
-                      <div style={{ fontWeight: '700', color: 'var(--text-main)', fontSize: '0.95rem' }}>{p.title}</div>
-                      <div style={{ fontSize: '0.775rem', color: 'var(--text-muted)' }}>/{p.slug}</div>
+                      <div style={{ fontWeight: '700', color: 'var(--text-main)' }}>{p.title}</div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>/{p.slug}</div>
                     </td>
                     <td>
-                      <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{p.type}</span>
+                      <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{p.type}</span>
                     </td>
                     <td style={{ width: '200px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                        <div style={{ flex: 1, height: '6px', backgroundColor: 'var(--border-color)', borderRadius: '99px', overflow: 'hidden' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <div style={{ flex: 1, height: '5px', backgroundColor: 'var(--border-color)', borderRadius: '99px', overflow: 'hidden' }}>
                           <div style={{ height: '100%', width: `${p.progress}%`, backgroundColor: primaryColor, borderRadius: '99px' }} />
                         </div>
-                        <span style={{ fontSize: '0.8rem', fontWeight: '700' }}>{p.progress}%</span>
+                        <span style={{ fontSize: '0.75rem', fontWeight: '700' }}>{p.progress}%</span>
                       </div>
                     </td>
                     <td>
-                      <span className={`badge badge-${p.tone || 'violet'}`} style={{ fontSize: '0.75rem', padding: '0.2rem 0.65rem' }}>
+                      <span className={`badge badge-${p.tone || 'violet'}`}>
                         {p.status}
                       </span>
                     </td>
                     <td style={{ textAlign: 'right' }}>
-                      <Link to="/projects" className="btn btn-secondary btn-sm" style={{ padding: '0.4rem 0.85rem', fontSize: '0.825rem' }}>
+                      <Link to="/projects" className="btn btn-secondary btn-sm">
                         Details
                       </Link>
                     </td>
@@ -732,66 +752,66 @@ export default function Dashboard() {
         </div>
 
         {/* SECTION 4: LANDING PAGE CONTENT SYNC & QUICK ACTIONS */}
-        <div className="dashboard-bottom-grid">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
           {/* Landing Page Sync Card */}
-          <div className="card" style={{ padding: '1.5rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.15rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                <FiLayout style={{ color: 'var(--accent-teal)', fontSize: '1.25rem' }} />
-                <h3 style={{ fontSize: '1.1rem', fontWeight: '700' }}>Landing Page Content</h3>
+          <div className="card">
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <FiLayout style={{ color: 'var(--accent-teal)', fontSize: '1.15rem' }} />
+                <h3 style={{ fontSize: '1rem', fontWeight: '700' }}>Landing Page Content</h3>
               </div>
-              <Link to="/landing-manager" className="btn btn-secondary btn-sm" style={{ padding: '0.4rem 0.85rem', fontSize: '0.825rem' }}>
+              <Link to="/landing-manager" className="btn btn-secondary btn-sm">
                 Edit
               </Link>
             </div>
 
-            <div style={{ backgroundColor: 'var(--bg-card-hover)', padding: '1.15rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', marginBottom: '1.15rem' }}>
-              <div style={{ fontSize: '0.725rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: primaryColor, fontWeight: '700', marginBottom: '0.3rem' }}>
+            <div style={{ backgroundColor: 'var(--bg-card-hover)', padding: '0.95rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', marginBottom: '1rem' }}>
+              <div style={{ fontSize: '0.675rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: primaryColor, fontWeight: '700', marginBottom: '0.2rem' }}>
                 {landing?.hero_badge || 'Independent Designer & Developer'}
               </div>
-              <h4 style={{ fontSize: '1rem', fontWeight: '800', color: 'var(--text-main)', marginBottom: '0.45rem', lineHeight: '1.35' }}>
+              <h4 style={{ fontSize: '0.95rem', fontWeight: '800', color: 'var(--text-main)', marginBottom: '0.4rem', lineHeight: '1.3' }}>
                 "{landing?.hero_title || 'Ideas, crafted into digital experiences.'}"
               </h4>
-              <p style={{ fontSize: '0.825rem', color: 'var(--text-muted)', margin: 0, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', lineHeight: '1.5' }}>
+              <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', margin: 0, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                 {landing?.hero_description}
               </p>
             </div>
 
-            <a href="https://desktopalie.my.id" target="_blank" rel="noreferrer" className="btn btn-secondary" style={{ width: '100%', justifyContent: 'center', padding: '0.7rem 1.2rem', fontSize: '0.9rem' }}>
+            <a href="https://desktopalie.my.id" target="_blank" rel="noreferrer" className="btn btn-secondary" style={{ width: '100%', justifyContent: 'center' }}>
               <span>View Main Website</span>
-              <FiExternalLink style={{ fontSize: '1rem' }} />
+              <FiExternalLink />
             </a>
           </div>
 
           {/* System Activity Timeline Log */}
-          <div className="card" style={{ padding: '1.5rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1.15rem' }}>
-              <FiActivity style={{ color: primaryColor, fontSize: '1.25rem' }} />
-              <h3 style={{ fontSize: '1.1rem', fontWeight: '700' }}>Recent Activity</h3>
+          <div className="card">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
+              <FiActivity style={{ color: primaryColor, fontSize: '1.15rem' }} />
+              <h3 style={{ fontSize: '1rem', fontWeight: '700' }}>Recent Activity</h3>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
               <div style={{ display: 'flex', gap: '0.75rem' }}>
-                <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#22C55E', marginTop: '6px', flexShrink: 0 }} />
+                <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#22C55E', marginTop: '6px', flexShrink: 0 }} />
                 <div>
-                  <div style={{ fontSize: '0.9rem', fontWeight: '600', color: 'var(--text-main)' }}>QA Task Board Active</div>
-                  <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>Kanban board active with real-time status.</span>
+                  <div style={{ fontSize: '0.825rem', fontWeight: '600', color: 'var(--text-main)' }}>QA Task Board Active</div>
+                  <span style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>Kanban board active with real-time status.</span>
                 </div>
               </div>
 
               <div style={{ display: 'flex', gap: '0.75rem' }}>
-                <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: primaryColor, marginTop: '6px', flexShrink: 0 }} />
+                <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: primaryColor, marginTop: '6px', flexShrink: 0 }} />
                 <div>
-                  <div style={{ fontSize: '0.9rem', fontWeight: '600', color: 'var(--text-main)' }}>Documentation Synced</div>
-                  <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>System tree & live markdown preview enabled.</span>
+                  <div style={{ fontSize: '0.825rem', fontWeight: '600', color: 'var(--text-main)' }}>Documentation Synced</div>
+                  <span style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>System tree & live markdown preview enabled.</span>
                 </div>
               </div>
 
               <div style={{ display: 'flex', gap: '0.75rem' }}>
-                <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: 'var(--accent-teal)', marginTop: '6px', flexShrink: 0 }} />
+                <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: 'var(--accent-teal)', marginTop: '6px', flexShrink: 0 }} />
                 <div>
-                  <div style={{ fontSize: '0.9rem', fontWeight: '600', color: 'var(--text-main)' }}>Maintenance Guard Active</div>
-                  <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>Automated countdown & Admin bypass active.</span>
+                  <div style={{ fontSize: '0.825rem', fontWeight: '600', color: 'var(--text-main)' }}>Maintenance Guard Active</div>
+                  <span style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>Automated countdown & Admin bypass active.</span>
                 </div>
               </div>
             </div>

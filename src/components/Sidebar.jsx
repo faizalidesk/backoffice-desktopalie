@@ -111,7 +111,7 @@ export default function Sidebar() {
   const renderNavContent = (isMobileView = false) => (
     <>
       {/* SUB-PLATFORM SWITCHER */}
-      <div style={{ marginBottom: '1rem' }}>
+      <div style={{ marginBottom: '0.85rem' }}>
         <select
           value={flavorId}
           onChange={(e) => {
@@ -124,8 +124,8 @@ export default function Sidebar() {
           }}
           style={{
             width: '100%',
-            padding: '0.55rem 0.75rem',
-            fontSize: '0.85rem',
+            padding: '0.45rem 0.65rem',
+            fontSize: '0.775rem',
             fontWeight: '600',
             borderRadius: 'var(--radius-sm)',
             border: '1px solid var(--border-color)',
@@ -150,15 +150,15 @@ export default function Sidebar() {
       {/* SEARCH INPUT BOX */}
       <div style={{
         position: 'relative',
-        marginBottom: '1rem',
+        marginBottom: '0.85rem',
         display: 'flex',
         alignItems: 'center'
       }}>
         <FiSearch style={{
           position: 'absolute',
-          left: '0.85rem',
+          left: '0.75rem',
           color: 'var(--text-muted)',
-          fontSize: '1rem',
+          fontSize: '0.9rem',
           pointerEvents: 'none'
         }} />
         <input
@@ -169,8 +169,8 @@ export default function Sidebar() {
           onChange={(e) => setSearchQuery(e.target.value)}
           style={{
             width: '100%',
-            padding: '0.55rem 2rem 0.55rem 2.3rem',
-            fontSize: '0.875rem',
+            padding: '0.45rem 2rem 0.45rem 2.1rem',
+            fontSize: '0.825rem',
             borderRadius: 'var(--radius-sm)',
             border: '1px solid var(--border-color)',
             backgroundColor: 'transparent',
@@ -205,7 +205,7 @@ export default function Sidebar() {
       </div>
 
       {/* NAV LIST */}
-      <nav style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+      <nav style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
         {filteredNavItems.length > 0 ? (
           filteredNavItems.map((item) => {
             const Icon = item.icon;
@@ -222,10 +222,10 @@ export default function Sidebar() {
                 style={({ isActive }) => ({
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '0.85rem',
-                  padding: '0.8rem 1.1rem',
+                  gap: '0.75rem',
+                  padding: '0.75rem 1rem',
                   borderRadius: 'var(--radius-sm)',
-                  fontSize: '0.925rem',
+                  fontSize: '0.875rem',
                   fontWeight: '500',
                   textDecoration: 'none',
                   color: isActive ? 'var(--primary)' : 'var(--text-muted)',
@@ -235,16 +235,16 @@ export default function Sidebar() {
                 })}
               >
                 <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-                  <Icon style={{ fontSize: '1.3rem', flexShrink: 0 }} />
+                  <Icon style={{ fontSize: '1.25rem', flexShrink: 0 }} />
                 </div>
                 <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', flex: 1 }}>{item.label}</span>
                 {item.badge > 0 && (
                   <span style={{
                     backgroundColor: '#EF4444',
                     color: '#FFFFFF',
-                    fontSize: '0.75rem',
+                    fontSize: '0.7rem',
                     fontWeight: '800',
-                    padding: '0.15rem 0.5rem',
+                    padding: '0.1rem 0.45rem',
                     borderRadius: '99px',
                     marginLeft: 'auto'
                   }}>
@@ -388,7 +388,7 @@ export default function Sidebar() {
   // DESKTOP VIEW (STICKY SIDEBAR WITH EXPAND / COLLAPSE TOGGLE)
   return (
     <aside style={{
-      width: isCollapsed ? '80px' : '270px',
+      width: isCollapsed ? '80px' : '260px',
       backgroundColor: 'var(--bg-sidebar)',
       borderRight: '1px solid var(--border-color)',
       display: 'flex',
