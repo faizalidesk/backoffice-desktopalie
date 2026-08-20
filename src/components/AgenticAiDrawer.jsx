@@ -6,18 +6,13 @@ import {
   FiRefreshCw,
   FiPlus,
   FiCpu,
-  FiSettings,
-  FiCheck,
-  FiX,
   FiZap,
-  FiTrash2,
-  FiDatabase,
-  FiBookOpen
+  FiTrash2
 } from 'react-icons/fi';
 
 const DEFAULT_GREETING = {
   sender: 'ai',
-  text: 'Halo! Selamat datang di Desktopalie Backoffice. Saya adalah Desktop-Agentic (Powered by Google Gemini 2.0 Flash), siap bantu oprek coding, analisis arsitektur, dan eksekusi tugas otomatis Anda hari ini. 🚀\n\n🧠 Saya sudah terhubung dengan Live Database Supabase & Obsidian Knowledge RAG:\n- Live Context: Membaca status tugas in-progress dan proyek aktif secara instan.\n- Autonomous Actions: Bisa otomatis buat task Kanban, update PRD, dan sinkronkan Obsidian.\n- Ultra-Fast Intelligence: Model Gemini 2.0 Flash terbaru dengan pemahaman kode yang tajam.\n\nApa yang ingin kita diskusikan atau eksekusi sekarang?'
+  text: 'Halo! Selamat datang di Desktopalie Backoffice. Saya adalah Desktop-Agentic (Powered by Google Gemini 2.0 Flash di Server Backend), siap bantu oprek coding, analisis arsitektur, dan eksekusi tugas otomatis Anda hari ini. 🚀\n\n🧠 Seluruh sistem terhubung otomatis dengan Live Database Supabase & Obsidian Knowledge RAG:\n- Live Context: Membaca status tugas in-progress dan proyek aktif secara instan.\n- Autonomous Actions: Bisa otomatis buat task Kanban, update PRD, dan sinkronkan Obsidian.\n- Secure Backend: Menggunakan Google Gemini 2.0 Flash resmi yang diamankan di server.\n\nApa yang ingin kita diskusikan atau eksekusi sekarang?'
 };
 
 export default function AgenticAiDrawer() {
@@ -31,10 +26,6 @@ export default function AgenticAiDrawer() {
 
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
-  const [apiKeyInput, setApiKeyInput] = useState(() => agenticAiService.getApiKey());
-  const [selectedModel, setSelectedModel] = useState(() => agenticAiService.getModel());
-  const [savedSuccess, setSavedSuccess] = useState(false);
 
   // Chat messages with persistent session storage
   const [messages, setMessages] = useState(() => {
@@ -72,17 +63,6 @@ export default function AgenticAiDrawer() {
   const handleClearHistory = () => {
     agenticAiService.clearChatHistory();
     setMessages([DEFAULT_GREETING]);
-  };
-
-  const handleSaveSettings = (e) => {
-    e.preventDefault();
-    agenticAiService.setApiKey(apiKeyInput);
-    agenticAiService.setModel(selectedModel);
-    setSavedSuccess(true);
-    setTimeout(() => {
-      setSavedSuccess(false);
-      setShowSettings(false);
-    }, 1200);
   };
 
   useEffect(() => {
@@ -125,12 +105,6 @@ export default function AgenticAiDrawer() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const getActiveModelDisplay = () => {
-    if (selectedModel === 'gemini-2.0-flash-thinking-exp') return 'Gemini 2.0 • Thinking';
-    if (selectedModel === 'gemini-1.5-pro') return 'Gemini 1.5 Pro • Ready';
-    return 'Gemini 2.0 Flash • Ready';
   };
 
   return (
@@ -224,32 +198,13 @@ export default function AgenticAiDrawer() {
             </span>
             <span style={{ fontSize: '0.68rem', color: '#10B981', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: '600' }}>
               <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10B981' }} />
-              {getActiveModelDisplay()}
+              Gemini 2.0 Flash • Live Backend
             </span>
           </div>
         </div>
 
-        {/* Header Action Buttons: Settings, Reset '+', Clear, and Close '[|]' */}
+        {/* Header Action Buttons: Reset '+', Clear, and Close '[|]' */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
-          <button
-            type="button"
-            onClick={() => setShowSettings(prev => !prev)}
-            title="Setelan AI & Model Gemini"
-            style={{
-              background: showSettings ? 'var(--bg-sidebar-hover)' : 'none',
-              border: 'none',
-              color: showSettings ? 'var(--primary)' : 'var(--text-muted)',
-              cursor: 'pointer',
-              padding: '6px',
-              display: 'flex',
-              alignItems: 'center',
-              borderRadius: '4px',
-              transition: 'all 0.15s ease'
-            }}
-          >
-            <FiSettings size={16} />
-          </button>
-
           <button
             type="button"
             onClick={handleResetChat}
@@ -314,109 +269,6 @@ export default function AgenticAiDrawer() {
           </button>
         </div>
       </div>
-
-      {/* OPTIONAL GEMINI SETTINGS PANEL */}
-      {showSettings && (
-        <form onSubmit={handleSaveSettings} style={{
-          padding: '12px 16px',
-          backgroundColor: 'var(--bg-main)',
-          borderBottom: '1px solid var(--border-color)',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '8px',
-          fontSize: '0.78rem'
-        }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontWeight: '700', color: 'var(--text-main)' }}>Setelan Google Gemini Engine</span>
-            <button
-              type="button"
-              onClick={() => setShowSettings(false)}
-              style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}
-            >
-              <FiX size={14} />
-            </button>
-          </div>
-
-          <div>
-            <label style={{ display: 'block', fontSize: '0.72rem', color: 'var(--text-muted)', marginBottom: '3px' }}>
-              Pilihan Model Gemini:
-            </label>
-            <select
-              value={selectedModel}
-              onChange={(e) => setSelectedModel(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '5px 8px',
-                borderRadius: '6px',
-                border: '1px solid var(--border-color)',
-                backgroundColor: 'var(--bg-card)',
-                color: 'var(--text-main)',
-                fontSize: '0.76rem',
-                outline: 'none'
-              }}
-            >
-              <option value="gemini-2.0-flash">✨ Google Gemini 2.0 Flash (Default & Ultra Cepat)</option>
-              <option value="gemini-2.0-flash-thinking-exp">🧠 Gemini 2.0 Flash Thinking (Deep Reasoning)</option>
-              <option value="gemini-1.5-pro">💎 Gemini 1.5 Pro (Large Context)</option>
-              <option value="gemini-1.5-flash">⚡ Gemini 1.5 Flash (Legacy)</option>
-            </select>
-          </div>
-
-          <div>
-            <label style={{ display: 'block', fontSize: '0.72rem', color: 'var(--text-muted)', marginBottom: '3px' }}>
-              Google Gemini API Key (aistudio.google.com):
-            </label>
-            <input
-              type="password"
-              placeholder="AIzaSy..."
-              value={apiKeyInput}
-              onChange={(e) => setApiKeyInput(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '5px 8px',
-                borderRadius: '6px',
-                border: '1px solid var(--border-color)',
-                backgroundColor: 'var(--bg-card)',
-                color: 'var(--text-main)',
-                fontSize: '0.76rem',
-                outline: 'none'
-              }}
-            />
-          </div>
-
-          {/* INTELLIGENCE FEATURES BADGES IN SETTINGS */}
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '4px',
-            padding: '6px 8px',
-            backgroundColor: 'var(--bg-card)',
-            borderRadius: '6px',
-            border: '1px solid var(--border-color)',
-            fontSize: '0.68rem',
-            color: 'var(--text-muted)'
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-              <FiDatabase style={{ color: '#10B981' }} />
-              <span><strong>Live Context:</strong> Real-time Supabase Database Sync</span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-              <FiBookOpen style={{ color: '#3B82F6' }} />
-              <span><strong>Obsidian RAG:</strong> Semantic Search di 30+ Dokumen & PRD</span>
-            </div>
-          </div>
-
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '6px', marginTop: '2px' }}>
-            <button
-              type="submit"
-              className="btn btn-primary btn-sm"
-              style={{ padding: '4px 12px', fontSize: '0.75rem', borderRadius: '6px', display: 'flex', alignItems: 'center', gap: '4px' }}
-            >
-              {savedSuccess ? <><FiCheck /> Tersimpan!</> : 'Simpan Setelan'}
-            </button>
-          </div>
-        </form>
-      )}
 
       {/* CHAT CONVERSATION BODY */}
       <div style={{
@@ -489,7 +341,7 @@ export default function AgenticAiDrawer() {
             gap: '8px'
           }}>
             <FiRefreshCw className="spin" style={{ color: 'var(--primary)' }} />
-            <span>Desktop-Agentic (Gemini 2.0) sedang memproses...</span>
+            <span>Desktop-Agentic sedang memproses via Gemini 2.0 Backend...</span>
           </div>
         )}
         <div ref={chatEndRef} />
@@ -589,7 +441,7 @@ export default function AgenticAiDrawer() {
           color: 'var(--text-muted)'
         }}>
           <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10B981' }} />
-          <span>Powered by <strong style={{ color: 'var(--text-main)', fontWeight: '600' }}>Google Gemini 2.0 Flash</strong> • Live Context & Obsidian RAG</span>
+          <span>Powered by <strong style={{ color: 'var(--text-main)', fontWeight: '600' }}>Google Gemini 2.0 Flash</strong> • Secure Server Backend</span>
         </div>
       </div>
     </aside>

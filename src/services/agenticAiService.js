@@ -41,26 +41,6 @@ const CHAT_HISTORY_STORAGE_KEY = 'desktopalie_ai_chat_history';
 
 export const agenticAiService = {
   // =========================================================================
-  // API KEY & GEMINI MODEL SETTINGS
-  // =========================================================================
-  getApiKey() {
-    const key = import.meta.env.VITE_GEMINI_API_KEY || localStorage.getItem('desktopalie_gemini_api_key') || '';
-    return key.trim();
-  },
-
-  setApiKey(key) {
-    localStorage.setItem('desktopalie_gemini_api_key', key.trim());
-  },
-
-  getModel() {
-    return localStorage.getItem('desktopalie_gemini_model') || 'gemini-2.0-flash';
-  },
-
-  setModel(modelName) {
-    localStorage.setItem('desktopalie_gemini_model', modelName);
-  },
-
-  // =========================================================================
   // PILAR 5: LONG-TERM MEMORY & DEVELOPER PREFERENCES
   // =========================================================================
   getDeveloperMemory() {
@@ -209,64 +189,10 @@ ${ragKnowledge}
   },
 
   // =========================================================================
-  // PURE GOOGLE GEMINI 2.0 FLASH INFERENCE ENGINE
+  // SECURE BACKEND-ONLY GOOGLE GEMINI 2.0 FLASH INFERENCE
   // =========================================================================
   async callGeminiInference(prompt, conversationHistory = [], customSystemInstruction = '') {
-    const currentModel = this.getModel();
-    const apiKey = this.getApiKey();
-
-    // 1. Direct client Google Gemini API Key if provided
-    if (apiKey) {
-      try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/${currentModel}:generateContent?key=${apiKey}`;
-        
-        let contents = [];
-        if (conversationHistory && conversationHistory.length > 0) {
-          contents = conversationHistory.map(m => ({
-            role: m.sender === 'user' ? 'user' : 'model',
-            parts: [{ text: m.text }]
-          }));
-          if (prompt) contents.push({ role: 'user', parts: [{ text: prompt }] });
-        } else {
-          contents = [{ role: 'user', parts: [{ text: prompt }] }];
-        }
-
-        let response = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents,
-            generationConfig: { temperature: 0.5, maxOutputTokens: 1500, topP: 0.95 },
-            systemInstruction: { parts: [{ text: customSystemInstruction }] }
-          })
-        });
-
-        // Fallback to gemini-1.5-flash if 2.0 has regional limits
-        if (!response.ok && currentModel !== 'gemini-1.5-flash') {
-          const fallbackUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-          response = await fetch(fallbackUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              contents,
-              generationConfig: { temperature: 0.5, maxOutputTokens: 1500 },
-              systemInstruction: { parts: [{ text: customSystemInstruction }] }
-            })
-          });
-        }
-
-        if (response.ok) {
-          const data = await response.json();
-          const candidate = data.candidates?.[0];
-          const text = candidate?.content?.parts?.[0]?.text || '';
-          if (text) return { text, model: currentModel };
-        }
-      } catch (e) {
-        console.warn('Direct Gemini API call error:', e);
-      }
-    }
-
-    // 2. Serverless Route (/api/gemini)
+    // Exclusively calls backend serverless endpoint (/api/gemini)
     try {
       const backendResponse = await fetch('/api/gemini', {
         method: 'POST',
@@ -275,7 +201,7 @@ ${ragKnowledge}
           prompt, 
           messages: conversationHistory,
           systemInstruction: customSystemInstruction,
-          model: currentModel
+          model: 'gemini-2.0-flash'
         })
       });
 
@@ -284,12 +210,12 @@ ${ragKnowledge}
         if (backendData.text) {
           return {
             text: backendData.text,
-            model: backendData.model || currentModel
+            model: backendData.model || 'gemini-2.0-flash'
           };
         }
       }
     } catch (e) {
-      // Offline / purely local
+      console.warn('Backend Gemini API call error:', e);
     }
 
     return null;
@@ -321,7 +247,6 @@ ${ragKnowledge}
     let toolExecuted = null;
     let resultPayload = null;
     let responseText = '';
-    const currentModel = this.getModel();
 
     // Step 1: Inject Live Dynamic Context & Knowledge RAG
     thoughts.push('📡 [Live Context] Mengambil data status real-time dari Supabase & Obsidian...');
@@ -491,7 +416,7 @@ ${liveContext}
     // General Questions / Deep Queries with Google Gemini 2.0 Flash + Live Context + RAG
     else {
       try {
-        thoughts.push('🧠 [Gemini 2.0 Inference] Menganalisis dengan Google Gemini 2.0 Flash...');
+        thoughts.push('🧠 [Gemini 2.0 Inference] Menganalisis dengan Google Gemini 2.0 Flash via Secure Backend...');
         
         const aiOutput = await this.callGeminiInference(userInput, conversationHistory, systemPromptWithContext);
         if (aiOutput?.text && aiOutput.text.trim()) {
