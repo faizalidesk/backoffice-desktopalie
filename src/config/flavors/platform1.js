@@ -1,6 +1,6 @@
 export default {
   id: 'platform1',
-  name: 'Desktopalie Main Core',
+  name: 'Desktopalie (Utama)',
   shortName: 'Desktopalie',
   description: 'Primary Independent Backoffice Workspace (https://desktopalie.my.id/)',
   logoText: 'Desktopalie',

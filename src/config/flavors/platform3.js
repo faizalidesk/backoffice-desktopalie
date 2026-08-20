@@ -1,6 +1,6 @@
 export default {
   id: 'platform3',
-  name: 'Desktopalie Gamma (AI Video Transcoder)',
+  name: 'Gamma',
   shortName: 'Gamma',
   description: 'Platform 3 - Analytics & Media Hub Workspace (Streaming & Encoding)',
   logoText: 'Desktopalie Gamma',

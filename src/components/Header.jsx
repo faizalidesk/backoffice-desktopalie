@@ -48,10 +48,10 @@ function formatFullDateTime(dateString) {
 
 const PLATFORM_LABELS = {
   all: { name: 'Semua Platform (Broadcast)', bg: '#F43F5E', color: '#FFFFFF' },
-  platform1: { name: 'Platform 1 - Alpha (Main)', bg: '#3B82F6', color: '#FFFFFF' },
-  platform2: { name: 'Platform 2 - Beta Logistics', bg: '#10B981', color: '#FFFFFF' },
-  platform3: { name: 'Platform 3 - Gamma Video Streaming', bg: '#8B5CF6', color: '#FFFFFF' },
-  platform4: { name: 'Platform 4 - Delta Financial ERP', bg: '#F59E0B', color: '#FFFFFF' }
+  platform1: { name: 'Desktopalie (Utama)', bg: '#3B82F6', color: '#FFFFFF' },
+  platform3: { name: 'Gamma', bg: '#8B5CF6', color: '#FFFFFF' },
+  platform2: { name: 'Beta', bg: '#10B981', color: '#FFFFFF' },
+  platform4: { name: 'Delta', bg: '#F59E0B', color: '#FFFFFF' }
 };
 
 export default function Header({ title = 'Dashboard Overview' }) {
@@ -209,10 +209,10 @@ export default function Header({ title = 'Dashboard Overview' }) {
               boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
             }}
           >
-            <option value="platform1">💎 Platform 1: Alpha (Main Backoffice)</option>
-            <option value="platform2">🚀 Platform 2: Beta Logistics</option>
-            <option value="platform3">⚡ Platform 3: Gamma Video</option>
-            <option value="platform4">🛡️ Platform 4: Delta Financial ERP</option>
+            <option value="platform1">💎 Desktopalie (Utama)</option>
+            <option value="platform3">⚡ Gamma</option>
+            <option value="platform2">🚀 Beta</option>
+            <option value="platform4">🛡️ Delta</option>
           </select>
         </div>
 

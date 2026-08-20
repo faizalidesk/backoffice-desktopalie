@@ -317,10 +317,10 @@ export default function Sidebar() {
             transition: 'border-color 0.15s ease'
           }}
         >
-          <option value="platform1">💎 Platform 1 (Main Alpha)</option>
-          <option value="platform2">🚀 Platform 2 (Beta Logistics)</option>
-          <option value="platform3">⚡ Platform 3 (Gamma Video)</option>
-          <option value="platform4">🛡️ Platform 4 (Delta Financial)</option>
+          <option value="platform1">💎 Desktopalie (Utama)</option>
+          <option value="platform3">⚡ Gamma</option>
+          <option value="platform2">🚀 Beta</option>
+          <option value="platform4">🛡️ Delta</option>
         </select>
       </div>
 

@@ -1,6 +1,6 @@
 export default {
   id: 'platform2',
-  name: 'Desktopalie Beta (Smart Logistics)',
+  name: 'Beta',
   shortName: 'Beta',
   description: 'Platform 2 - Secondary Operations Workspace (Logistics & Fleet)',
   logoText: 'Desktopalie Beta',
