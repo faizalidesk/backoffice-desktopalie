@@ -56,20 +56,51 @@
   box-sizing: border-box;
 }
 
+/* ==========================================================================
+   DEVICE-SPECIFIC FLUID ROOT TYPOGRAPHY & SCALING
+   - Mobile: < 768px -> 14.5px base
+   - Tablet: 768px - 1023px -> 15px base
+   - Laptop 13" & 14" (1280x800, 1366x768, 1080p @ 125%/150%): 1024px - 1366px -> 15.25px base
+   - Laptop 15" & Monitor 19" (1440x900, 1600x900): 1367px - 1680px -> 16px base
+   - Monitor 24" & 27" Full HD (1920x1080, 2560x1440): 1681px - 2200px -> 16.75px base
+   - Ultra-Wide & 4K Displays: > 2200px -> 17.5px base
+   ========================================================================== */
 html {
-  font-size: 16px;
+  font-size: 15px;
   scroll-behavior: smooth;
 }
 
-@media (min-width: 1440px) {
+@media (min-width: 768px) {
   html {
-    font-size: 16.5px;
+    font-size: 15px;
   }
 }
 
-@media (min-width: 1800px) {
+/* Laptop 13" & 14" */
+@media (min-width: 1024px) {
   html {
-    font-size: 17px;
+    font-size: 15.25px;
+  }
+}
+
+/* Laptop 15" & Monitor 19" */
+@media (min-width: 1367px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+/* Monitor 24" & 27" Desktop */
+@media (min-width: 1681px) {
+  html {
+    font-size: 16.75px;
+  }
+}
+
+/* Ultra-wide 4K */
+@media (min-width: 2200px) {
+  html {
+    font-size: 17.5px;
   }
 }
 
@@ -124,13 +155,36 @@ body {
   }
 }
 
+/* Page Body Per-Device Widths */
 .page-body {
-  padding: 2rem 2.5rem;
+  padding: 1.5rem 1.75rem;
   flex: 1;
-  max-width: 1600px;
+  max-width: 100%;
   width: 100%;
   margin: 0 auto;
-  transition: padding 0.2s ease;
+  transition: padding 0.2s ease, max-width 0.2s ease;
+  box-sizing: border-box;
+}
+
+@media (min-width: 1367px) {
+  .page-body {
+    padding: 2rem 2.25rem;
+    max-width: 1560px;
+  }
+}
+
+@media (min-width: 1681px) {
+  .page-body {
+    padding: 2.25rem 2.75rem;
+    max-width: 1720px;
+  }
+}
+
+@media (min-width: 2200px) {
+  .page-body {
+    padding: 2.5rem 3.5rem;
+    max-width: 1980px;
+  }
 }
 
 /* Typography & Headings */
@@ -144,20 +198,20 @@ h1, h2, h3, h4 {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 2.25rem;
+  margin-bottom: 2rem;
   flex-wrap: wrap;
   gap: 1.25rem;
 }
 
 .page-title-group h1 {
-  font-size: 2.1rem;
+  font-size: 2rem;
   margin-bottom: 0.35rem;
   color: var(--text-main);
 }
 
 .page-subtitle {
   color: var(--text-muted);
-  font-size: 1rem;
+  font-size: 0.95rem;
 }
 
 /* Minimalist Buttons */
@@ -598,4 +652,123 @@ textarea.form-control {
 .transaction-table-component .data-table tr:hover td {
   background-color: var(--bg-card-hover);
 }
+
+/* ==========================================================================
+   RESPONSIVE DASHBOARD LAYOUT CLASSES (13", 14", 19", 24"+ ADAPTIVE)
+   ========================================================================== */
+
+.dashboard-banner {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  background-color: #0F172A;
+  color: #FFFFFF;
+  padding: 1.75rem 2rem;
+  margin-bottom: 1.75rem;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+@media (min-width: 1367px) {
+  .dashboard-banner {
+    padding: 2.25rem 2.75rem;
+    border-radius: 24px;
+    margin-bottom: 2.25rem;
+  }
+}
+
+.dashboard-banner h1 {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin-bottom: 0.4rem;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+@media (min-width: 1367px) {
+  .dashboard-banner h1 {
+    font-size: 2.15rem;
+    margin-bottom: 0.6rem;
+  }
+}
+
+.dashboard-banner p {
+  color: #94A3B8;
+  font-size: 0.925rem;
+  margin: 0;
+  max-width: 680px;
+  line-height: 1.6;
+}
+
+@media (min-width: 1367px) {
+  .dashboard-banner p {
+    font-size: 1.05rem;
+  }
+}
+
+/* 4 KPI CARDS RESPONSIVE GRID */
+.dashboard-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 1.75rem;
+}
+
+@media (min-width: 1367px) {
+  .dashboard-kpi-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2.25rem;
+  }
+}
+
+/* 2-COLUMN SPLIT GRID (Sprint Tasks & Maintenance) */
+.dashboard-split-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.75rem;
+}
+
+@media (min-width: 1367px) {
+  .dashboard-split-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.75rem;
+    margin-bottom: 2.25rem;
+  }
+}
+
+/* DOCUMENTATION 3-COLUMN RESPONSIVE GRID */
+.dashboard-docs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+@media (min-width: 1367px) {
+  .dashboard-docs-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+}
+
+/* BOTTOM SECTION GRID (Landing Sync & Recent Activity) */
+.dashboard-bottom-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+@media (min-width: 1367px) {
+  .dashboard-bottom-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.75rem;
+  }
+}
+
 
