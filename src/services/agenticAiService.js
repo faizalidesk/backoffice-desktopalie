@@ -1,7 +1,7 @@
 import { backofficeService } from './backofficeService';
 
 // =========================================================================
-// PILLAR 2: AGENTIC AI TOOL REGISTRY & AUTONOMOUS ACTION ENGINE
+// AGENTIC AI TOOL REGISTRY & AUTONOMOUS ACTION ENGINE
 // =========================================================================
 export const AGENT_TOOLS = [
   {
@@ -36,33 +36,32 @@ export const AGENT_TOOLS = [
   }
 ];
 
-// Memory Storage Key
 const MEMORY_STORAGE_KEY = 'desktopalie_agent_memory';
 const CHAT_HISTORY_STORAGE_KEY = 'desktopalie_ai_chat_history';
 
 export const agenticAiService = {
   // =========================================================================
-  // API KEY & MODEL SETTINGS
+  // API KEY & GEMINI MODEL SETTINGS
   // =========================================================================
   getApiKey() {
-    const key = import.meta.env.VITE_DEEPSEEK_API_KEY || localStorage.getItem('desktopalie_deepseek_api_key') || localStorage.getItem('desktopalie_gemini_api_key') || '';
+    const key = import.meta.env.VITE_GEMINI_API_KEY || localStorage.getItem('desktopalie_gemini_api_key') || '';
     return key.trim();
   },
 
   setApiKey(key) {
-    localStorage.setItem('desktopalie_deepseek_api_key', key.trim());
+    localStorage.setItem('desktopalie_gemini_api_key', key.trim());
   },
 
   getModel() {
-    return localStorage.getItem('desktopalie_ai_model') || 'deepseek-chat';
+    return localStorage.getItem('desktopalie_gemini_model') || 'gemini-2.0-flash';
   },
 
   setModel(modelName) {
-    localStorage.setItem('desktopalie_ai_model', modelName);
+    localStorage.setItem('desktopalie_gemini_model', modelName);
   },
 
   // =========================================================================
-  // PILLAR 5: LONG-TERM MEMORY & DEVELOPER PREFERENCES
+  // PILAR 5: LONG-TERM MEMORY & DEVELOPER PREFERENCES
   // =========================================================================
   getDeveloperMemory() {
     try {
@@ -108,7 +107,6 @@ export const agenticAiService = {
   saveChatHistory(messages) {
     try {
       if (Array.isArray(messages)) {
-        // Keep last 30 messages to optimize storage
         const trimmed = messages.slice(-30);
         localStorage.setItem(CHAT_HISTORY_STORAGE_KEY, JSON.stringify(trimmed));
       }
@@ -122,7 +120,7 @@ export const agenticAiService = {
   },
 
   // =========================================================================
-  // PILLAR 3: SEMANTIC KNOWLEDGE RETRIEVAL (RAG) DARI DOKUMEN & OBSIDIAN
+  // PILAR 3: SEMANTIC KNOWLEDGE RETRIEVAL (RAG) DARI DOKUMEN & OBSIDIAN
   // =========================================================================
   async searchKnowledgeDocs(query) {
     try {
@@ -156,7 +154,6 @@ export const agenticAiService = {
         }
       });
 
-      // Sort by match score
       matchedDocs.sort((a, b) => b.score - a.score);
       const topMatches = matchedDocs.slice(0, 3);
 
@@ -174,7 +171,7 @@ export const agenticAiService = {
   },
 
   // =========================================================================
-  // PILLAR 1: DYNAMIC LIVE CONTEXT INJECTION (AI TAHU KONDISI PROYEK REAL-TIME)
+  // PILAR 1: DYNAMIC LIVE CONTEXT INJECTION (SUPABASE REAL-TIME DATA)
   // =========================================================================
   async buildLiveContext(userQuery = '') {
     try {
@@ -212,88 +209,16 @@ ${ragKnowledge}
   },
 
   // =========================================================================
-  // LLM API INFERENCE (DEEPSEEK V3 / R1 & GEMINI FALLBACK)
+  // PURE GOOGLE GEMINI 2.0 FLASH INFERENCE ENGINE
   // =========================================================================
-  async callAiInference(prompt, conversationHistory = [], customSystemInstruction = '') {
+  async callGeminiInference(prompt, conversationHistory = [], customSystemInstruction = '') {
     const currentModel = this.getModel();
     const apiKey = this.getApiKey();
 
-    // 1. First try secure Backend Serverless Route (/api/deepseek)
-    try {
-      const backendResponse = await fetch('/api/deepseek', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          prompt, 
-          messages: conversationHistory,
-          systemInstruction: customSystemInstruction,
-          model: currentModel,
-          apiKey: apiKey || undefined
-        })
-      });
-
-      if (backendResponse.ok) {
-        const backendData = await backendResponse.json();
-        if (backendData.text) {
-          return {
-            text: backendData.text,
-            reasoning: backendData.reasoning || null,
-            model: backendData.model || currentModel
-          };
-        }
-      }
-    } catch (e) {
-      // Backend route not available in pure local Vite dev
-    }
-
-    // 2. Direct client DeepSeek API Key if provided
-    if (apiKey && (currentModel.startsWith('deepseek') || apiKey.startsWith('sk-'))) {
-      const formattedMessages = [{ role: 'system', content: customSystemInstruction }];
-      if (conversationHistory && conversationHistory.length > 0) {
-        conversationHistory.forEach(m => {
-          formattedMessages.push({
-            role: m.sender === 'user' ? 'user' : 'assistant',
-            content: m.text
-          });
-        });
-        if (prompt) {
-          formattedMessages.push({ role: 'user', content: prompt });
-        }
-      } else {
-        formattedMessages.push({ role: 'user', content: prompt });
-      }
-
-      const response = await fetch('https://api.deepseek.com/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`
-        },
-        body: JSON.stringify({
-          model: currentModel,
-          messages: formattedMessages,
-          stream: false,
-          max_tokens: currentModel === 'deepseek-reasoner' ? 4096 : 2048,
-          temperature: currentModel === 'deepseek-reasoner' ? undefined : 0.6
-        })
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        const choice = data.choices?.[0];
-        return {
-          text: choice?.message?.content || '',
-          reasoning: choice?.message?.reasoning_content || null,
-          model: currentModel
-        };
-      }
-    }
-
-    // 3. Direct client Google Gemini API Key if key starts with AIzaSy or model is gemini
-    if (apiKey && (currentModel.startsWith('gemini') || apiKey.startsWith('AIzaSy'))) {
+    // 1. Direct client Google Gemini API Key if provided
+    if (apiKey) {
       try {
-        const geminiModel = currentModel.startsWith('gemini') ? currentModel : 'gemini-2.0-flash';
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent?key=${apiKey}`;
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${currentModel}:generateContent?key=${apiKey}`;
         
         let contents = [];
         if (conversationHistory && conversationHistory.length > 0) {
@@ -306,45 +231,66 @@ ${ragKnowledge}
           contents = [{ role: 'user', parts: [{ text: prompt }] }];
         }
 
-        const response = await fetch(url, {
+        let response = await fetch(url, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             contents,
-            generationConfig: { temperature: 0.5, maxOutputTokens: 1500 },
+            generationConfig: { temperature: 0.5, maxOutputTokens: 1500, topP: 0.95 },
             systemInstruction: { parts: [{ text: customSystemInstruction }] }
           })
         });
+
+        // Fallback to gemini-1.5-flash if 2.0 has regional limits
+        if (!response.ok && currentModel !== 'gemini-1.5-flash') {
+          const fallbackUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+          response = await fetch(fallbackUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents,
+              generationConfig: { temperature: 0.5, maxOutputTokens: 1500 },
+              systemInstruction: { parts: [{ text: customSystemInstruction }] }
+            })
+          });
+        }
 
         if (response.ok) {
           const data = await response.json();
           const candidate = data.candidates?.[0];
           const text = candidate?.content?.parts?.[0]?.text || '';
-          if (text) return { text, reasoning: null, model: geminiModel };
+          if (text) return { text, model: currentModel };
         }
       } catch (e) {
         console.warn('Direct Gemini API call error:', e);
       }
     }
 
-    // 4. Fallback to Gemini Serverless Endpoint
+    // 2. Serverless Route (/api/gemini)
     try {
-      const geminiResponse = await fetch('/api/gemini', {
+      const backendResponse = await fetch('/api/gemini', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           prompt, 
           messages: conversationHistory,
           systemInstruction: customSystemInstruction,
-          model: 'gemini-2.0-flash'
+          model: currentModel
         })
       });
 
-      if (geminiResponse.ok) {
-        const data = await geminiResponse.json();
-        if (data.text) return { text: data.text, reasoning: null, model: 'gemini-2.0-flash' };
+      if (backendResponse.ok) {
+        const backendData = await backendResponse.json();
+        if (backendData.text) {
+          return {
+            text: backendData.text,
+            model: backendData.model || currentModel
+          };
+        }
       }
-    } catch (e) {}
+    } catch (e) {
+      // Offline / purely local
+    }
 
     return null;
   },
@@ -352,11 +298,11 @@ ${ragKnowledge}
   // Fallback Local Knowledge Base
   getLocalKnowledgeAnswer(text) {
     if (text.includes('backoffice') || text.includes('desktopalie') || text.includes('aplikasi ini') || text.includes('sistem ini')) {
-      return `Desktopalie Backoffice (back.desktopalie.my.id) adalah pusat kendali dan sistem manajemen internal terpadu untuk platform Faiz Ali (desktopalie.my.id).\n\nFitur dan modul utama meliputi:\n- To-Do Kanban Board: Pengelolaan tugas harian dengan subtask dan prioritas.\n- Projects & Experiments Manager: Manajemen portofolio proyek perangkat lunak dan arsitektur kode.\n- Documentation & Master PRD: Pengelolaan spesifikasi produk dan SOP teknis.\n- Obsidian Vault Sync: Sinkronisasi dua arah antara catatan markdown lokal dengan database Supabase.\n- Desktop-Agentic: Asisten AI otonom DeepSeek-V3 / DeepSeek-R1 untuk penalaran dan eksekusi tugas otomatis.\n- Telemetry & Security: Pemantauan keamanan Content Security Policy (CSP) dan infrastruktur.\n\nAda modul tertentu yang mau kita eksplorasi sekarang?`;
+      return `Desktopalie Backoffice (back.desktopalie.my.id) adalah pusat kendali dan sistem manajemen internal terpadu untuk platform Faiz Ali (desktopalie.my.id).\n\nFitur dan modul utama meliputi:\n- To-Do Kanban Board: Pengelolaan tugas harian dengan subtask dan prioritas.\n- Projects & Experiments Manager: Manajemen portofolio proyek perangkat lunak dan arsitektur kode.\n- Documentation & Master PRD: Pengelolaan spesifikasi produk dan SOP teknis.\n- Obsidian Vault Sync: Sinkronisasi dua arah antara catatan markdown lokal dengan database Supabase.\n- Desktop-Agentic: Asisten AI otonom Google Gemini 2.0 Flash untuk eksekusi tugas otomatis.\n- Telemetry & Security: Pemantauan keamanan Content Security Policy (CSP) dan infrastruktur.\n\nAda modul tertentu yang mau kita diskusikan sekarang?`;
     }
 
     if (text.includes('faiz ali') || text.includes('pembuat') || text.includes('creator') || text.includes('developer')) {
-      return `Faiz Ali adalah Software Engineer dan pengembang utama dari ekosistem Desktopalie (desktopalie.my.id).\n\nBeliau merancang platform ini dengan arsitektur modern (React 19, Supabase PostgreSQL, Obsidian Knowledge Graph, dan Agentic AI DeepSeek) untuk menyatukan portofolio, dokumentasi riset, dan sistem manajemen tugas dalam satu ekosistem yang terpadu.`;
+      return `Faiz Ali adalah Software Engineer dan pengembang utama dari ekosistem Desktopalie (desktopalie.my.id).\n\nBeliau merancang platform ini dengan arsitektur modern (React 19, Supabase PostgreSQL, Obsidian Knowledge Graph, dan Agentic AI Google Gemini) untuk menyatukan portofolio, dokumentasi riset, dan sistem manajemen tugas dalam satu ekosistem yang terpadu.`;
     }
 
     if (text.includes('obsidian') || text.includes('vault') || text.includes('knowledge graph')) {
@@ -367,7 +313,7 @@ ${ragKnowledge}
   },
 
   // =========================================================================
-  // PILLAR 2 & 4: AUTONOMOUS REASONING & MULTI-STEP TOOL EXECUTION ROUTER
+  // PILAR 2 & 4: AUTONOMOUS GEMINI REASONING & MULTI-STEP TOOL ROUTER
   // =========================================================================
   async processUserIntent(userInput, conversationHistory = []) {
     const text = userInput.toLowerCase().trim();
@@ -375,7 +321,6 @@ ${ragKnowledge}
     let toolExecuted = null;
     let resultPayload = null;
     let responseText = '';
-    let reasoningContent = null;
     const currentModel = this.getModel();
 
     // Step 1: Inject Live Dynamic Context & Knowledge RAG
@@ -383,7 +328,7 @@ ${ragKnowledge}
     const liveContext = await this.buildLiveContext(userInput);
 
     const systemPromptWithContext = `
-Anda adalah Desktop-Agentic, asisten AI otonom dan pair programmer cerdas berteknologi DeepSeek (DeepSeek-V3 / DeepSeek-R1) di platform Desktopalie Backoffice.
+Anda adalah Desktop-Agentic, asisten AI resmi berteknologi Google Gemini 2.0 Flash di platform Desktopalie Backoffice.
 
 GAYA KOMUNIKASI:
 - Ramah, santai, solutif, peka, dan asik diajak diskusi layaknya rekan kerja/pair programmer pribadi.
@@ -403,13 +348,12 @@ ${liveContext}
 
     // Intent 0: Friendly Greetings
     if (text === 'hi' || text === 'halo' || text === 'hello' || text === 'hey' || text === 'p' || text.includes('selamat pagi') || text.includes('selamat sore') || text.includes('selamat malam')) {
-      const modelLabel = currentModel === 'deepseek-reasoner' ? 'DeepSeek-R1' : 'DeepSeek-V3';
-      thoughts.push(`👋 [Agent Reasoning] Menyapa pengguna dengan ${modelLabel}...`);
-      responseText = `Halo! Selamat datang di Desktopalie Backoffice. Saya adalah Desktop-Agentic (Powered by ${modelLabel}), siap bantu oprek coding, analisis arsitektur, dan eksekusi tugas otomatis Anda hari ini. 🚀\n\nBeberapa aksi otomatis yang bisa langsung saya jalankan:\n- Update PRD: Memperbarui dokumen spesifikasi produk di database.\n- Buat Tugas: Menambahkan tugas baru ke papan To-Do Kanban.\n- Sinkronkan Obsidian: Menyelaraskan catatan dokumentasi dengan Obsidian Vault.\n- Cek Telemetri: Menampilkan ringkasan status kesehatan dan data proyek.\n- Buat Dokumentasi: Menulis catatan arsitektur sistem baru.\n\nApa yang ingin kita kerjakan sekarang?`;
+      thoughts.push('👋 [Agent Reasoning] Menyapa pengguna dengan Gemini 2.0 Flash...');
+      responseText = `Halo! Selamat datang di Desktopalie Backoffice. Saya adalah Desktop-Agentic (Powered by Google Gemini 2.0 Flash), siap bantu oprek coding, analisis arsitektur, dan eksekusi tugas otomatis Anda hari ini. 🚀\n\nBeberapa aksi otomatis yang bisa langsung saya jalankan:\n- Update PRD: Memperbarui dokumen spesifikasi produk di database.\n- Buat Tugas: Menambahkan tugas baru ke papan To-Do Kanban.\n- Sinkronkan Obsidian: Menyelaraskan catatan dokumentasi dengan Obsidian Vault.\n- Cek Telemetri: Menampilkan ringkasan status kesehatan dan data proyek.\n- Buat Dokumentasi: Menulis catatan arsitektur sistem baru.\n\nApa yang ingin kita kerjakan sekarang?`;
     }
     // Intent 1: Update PRD
     else if (text.includes('update prd') || text.includes('perbarui prd') || text.includes('ubah prd') || text.includes('tambah prd') || text.includes('edit prd') || (text.includes('prd') && (text.includes('tambah') || text.includes('update')))) {
-      thoughts.push('🔧 [Tool Selection] Terdeteksi niat pembaruan PRD -> Menjalankan Tool update_prd');
+      thoughts.push('🔧 [Tool Selection] Menjalankan Tool update_prd...');
       try {
         const docs = await backofficeService.getDocs();
         let prdDoc = docs.find(d => d.title.toLowerCase().includes('prd') || d.slug.includes('prd'));
@@ -420,14 +364,14 @@ ${liveContext}
         
         let newContent = '';
         if (prdDoc) {
-          newContent = `${prdDoc.content || ''}\n\n### ✦ Update PRD (${timestamp})\n- Catatan Pembaruan: ${updateNote}\n- Otoritas: Desktop-Agentic (DeepSeek Engine)\n- Status: Live & Integrated with Supabase + Obsidian Vault.`;
+          newContent = `${prdDoc.content || ''}\n\n### ✦ Update PRD (${timestamp})\n- Catatan Pembaruan: ${updateNote}\n- Otoritas: Desktop-Agentic (Google Gemini Engine)\n- Status: Live & Integrated with Supabase + Obsidian Vault.`;
           await backofficeService.updateDoc(prdDoc.id, { content: newContent });
         } else {
           prdDoc = await backofficeService.createDoc({
             title: '00 - Backoffice PRD (Product Requirement Document)',
             folder: '02 - Backoffice',
             slug: '00-backoffice-prd',
-            author: 'Desktop-Agentic (DeepSeek)',
+            author: 'Desktop-Agentic (Gemini)',
             content: `# 00 - Backoffice PRD (Product Requirement Document)\n\n## Ringkasan Sistem\nDokumen master PRD ini dikelola secara otonom oleh Desktop-Agentic.\n\n### Update PRD (${timestamp})\n- Catatan Pembaruan: ${updateNote}`
           });
         }
@@ -444,14 +388,14 @@ ${liveContext}
     }
     // Intent 2: Create Task
     else if (text.includes('tugas') || text.includes('todo') || text.includes('task') || text.includes('buat tugas')) {
-      thoughts.push('🔧 [Tool Selection] Terdeteksi niat manajemen tugas -> Menjalankan Tool create_task');
+      thoughts.push('🔧 [Tool Selection] Menjalankan Tool create_task...');
       
       let title = userInput.replace(/buat tugas|tambah tugas|tugas baru|task|todo/gi, '').trim();
       if (!title) title = 'Tugas Baru dari Desktop-Agentic';
 
       const taskData = {
         title: title.charAt(0).toUpperCase() + title.slice(1),
-        description: `Dibuat secara otomatis oleh Desktop-Agentic (DeepSeek) pada ${new Date().toLocaleString('id-ID')}.\n\nInstruksi:\n- Verifikasi dan pengujian komponen.`,
+        description: `Dibuat secara otomatis oleh Desktop-Agentic (Gemini) pada ${new Date().toLocaleString('id-ID')}.\n\nInstruksi:\n- Verifikasi dan pengujian komponen.`,
         priority: text.includes('tinggi') || text.includes('high') ? 'High' : (text.includes('rendah') || text.includes('low') ? 'Low' : 'Medium'),
         category: text.includes('qa') ? 'QA Checklist' : (text.includes('dev') ? 'Engineering' : 'Research'),
         status: text.includes('selesai') || text.includes('done') ? 'Done' : (text.includes('jalan') || text.includes('progress') ? 'Inprogress' : 'Not started'),
@@ -469,14 +413,13 @@ ${liveContext}
         thoughts.push(`✅ [Tool Output] Tool create_task berhasil dieksekusi! ID: ${created.id}`);
         
         try {
-          const aiResponse = await this.callAiInference(
+          const aiResponse = await this.callGeminiInference(
             `User meminta membuat tugas: "${userInput}". Tugas berhasil dibuat dengan ID: ${created.id}, Judul: "${created.title}", Status: "${created.status}", Prioritas: "${created.priority}". Buat respons konfirmasi yang ramah dan to-the-point dalam Bahasa Indonesia.`,
             conversationHistory,
             systemPromptWithContext
           );
           if (aiResponse?.text) {
             responseText = aiResponse.text;
-            if (aiResponse.reasoning) reasoningContent = aiResponse.reasoning;
           }
         } catch (e) {}
         
@@ -512,8 +455,8 @@ ${liveContext}
         title: docTitle.charAt(0).toUpperCase() + docTitle.slice(1),
         folder: '02 - Backoffice',
         slug: docTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-        author: 'Desktop-Agentic (DeepSeek)',
-        content: `# ${docTitle}\n\nCatatan dokumentasi ini dibuat secara otomatis oleh Desktop-Agentic (DeepSeek Engine).\n\nRingkasan Sistem:\n- Waktu Pembuatan: ${new Date().toISOString()}\n- Dikelola oleh: Desktop-Agentic Action Router.`
+        author: 'Desktop-Agentic (Gemini)',
+        content: `# ${docTitle}\n\nCatatan dokumentasi ini dibuat secara otomatis oleh Desktop-Agentic (Google Gemini Engine).\n\nRingkasan Sistem:\n- Waktu Pembuatan: ${new Date().toISOString()}\n- Dikelola oleh: Desktop-Agentic Action Router.`
       };
 
       try {
@@ -545,19 +488,14 @@ ${liveContext}
         responseText = `Gagal mengumpulkan telemetri: ${err.message}`;
       }
     }
-    // General Questions / Deep Coding & Reasoning Queries (DeepSeek V3 / R1 with Dynamic Context & RAG)
+    // General Questions / Deep Queries with Google Gemini 2.0 Flash + Live Context + RAG
     else {
       try {
-        const modelLabel = currentModel === 'deepseek-reasoner' ? 'DeepSeek-R1 (Deep Reasoning & CoT)' : 'DeepSeek-V3';
-        thoughts.push(`🧠 [DeepSeek Inference] Menganalisis pertanyaan bersama ${modelLabel}...`);
+        thoughts.push('🧠 [Gemini 2.0 Inference] Menganalisis dengan Google Gemini 2.0 Flash...');
         
-        const aiOutput = await this.callAiInference(userInput, conversationHistory, systemPromptWithContext);
+        const aiOutput = await this.callGeminiInference(userInput, conversationHistory, systemPromptWithContext);
         if (aiOutput?.text && aiOutput.text.trim()) {
           let rawText = aiOutput.text;
-          if (aiOutput.reasoning) {
-            reasoningContent = aiOutput.reasoning;
-            thoughts.push('🔬 [Chain-of-Thought] DeepSeek-R1 menyelesaikan penalaran bertingkat.');
-          }
 
           // Check if AI included autonomous action tags [ACTION: ...]
           const actionRegex = /\[ACTION:\s*(\w+)\s*(\{.*?\})?\]/g;
@@ -569,9 +507,8 @@ ${liveContext}
               if (match[2]) actionParams = JSON.parse(match[2]);
             } catch (e) {}
 
-            thoughts.push(`⚡ [Autonomous Action] AI memerintahkan eksekusi: ${actionName}`);
+            thoughts.push(`⚡ [Autonomous Action] Gemini mengeksekusi: ${actionName}`);
             
-            // Execute autonomous action
             if (actionName === 'create_task' && actionParams.title) {
               await backofficeService.createTodo({
                 title: actionParams.title,
@@ -593,14 +530,14 @@ ${liveContext}
             }
           }
 
-          // Clean up action tags from final output text for human reading
+          // Clean up action tags from final output text for clean reading
           responseText = rawText.replace(/\[ACTION:\s*\w+\s*(\{.*?\})?\]/g, '').trim();
         }
       } catch (err) {
-        thoughts.push(`⚠️ [DeepSeek API Note] ${err.message}`);
+        thoughts.push(`⚠️ [Gemini API Note] ${err.message}`);
       }
 
-      // If DeepSeek didn't return, consult local knowledge base
+      // If Gemini didn't return, consult local knowledge base
       if (!responseText) {
         const localAnswer = this.getLocalKnowledgeAnswer(text);
         if (localAnswer) {
@@ -617,8 +554,7 @@ ${liveContext}
       thoughts,
       toolExecuted,
       resultPayload,
-      responseText,
-      reasoningContent
+      responseText
     };
   }
 };

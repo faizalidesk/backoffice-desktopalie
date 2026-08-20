@@ -10,8 +10,6 @@ import {
   FiCheck,
   FiX,
   FiZap,
-  FiChevronDown,
-  FiChevronRight,
   FiTrash2,
   FiDatabase,
   FiBookOpen
@@ -19,7 +17,7 @@ import {
 
 const DEFAULT_GREETING = {
   sender: 'ai',
-  text: 'Halo! Selamat datang di Desktopalie Backoffice. Saya adalah Desktop-Agentic (Powered by DeepSeek-V3 & DeepSeek-R1), siap bantu oprek coding, analisis arsitektur, dan eksekusi tugas otomatis Anda hari ini. 🚀\n\n🧠 Saya sudah terhubung dengan Live Database Supabase & Obsidian Knowledge RAG:\n- Live Context: Membaca status tugas in-progress dan proyek aktif secara instan.\n- Autonomous Actions: Bisa otomatis buat task Kanban, update PRD, dan sinkronkan Obsidian.\n- Deep Reasoning: DeepSeek-R1 siap menganalisis logika & kode kompleks dengan Chain-of-Thought.\n\nApa yang ingin kita diskusikan atau eksekusi sekarang?'
+  text: 'Halo! Selamat datang di Desktopalie Backoffice. Saya adalah Desktop-Agentic (Powered by Google Gemini 2.0 Flash), siap bantu oprek coding, analisis arsitektur, dan eksekusi tugas otomatis Anda hari ini. 🚀\n\n🧠 Saya sudah terhubung dengan Live Database Supabase & Obsidian Knowledge RAG:\n- Live Context: Membaca status tugas in-progress dan proyek aktif secara instan.\n- Autonomous Actions: Bisa otomatis buat task Kanban, update PRD, dan sinkronkan Obsidian.\n- Ultra-Fast Intelligence: Model Gemini 2.0 Flash terbaru dengan pemahaman kode yang tajam.\n\nApa yang ingin kita diskusikan atau eksekusi sekarang?'
 };
 
 export default function AgenticAiDrawer() {
@@ -37,7 +35,6 @@ export default function AgenticAiDrawer() {
   const [apiKeyInput, setApiKeyInput] = useState(() => agenticAiService.getApiKey());
   const [selectedModel, setSelectedModel] = useState(() => agenticAiService.getModel());
   const [savedSuccess, setSavedSuccess] = useState(false);
-  const [expandedReasoning, setExpandedReasoning] = useState({});
 
   // Chat messages with persistent session storage
   const [messages, setMessages] = useState(() => {
@@ -64,10 +61,9 @@ export default function AgenticAiDrawer() {
   };
 
   const handleResetChat = () => {
-    const modelLabel = selectedModel === 'deepseek-reasoner' ? 'DeepSeek-R1' : 'DeepSeek-V3';
     const newSessionGreeting = {
       sender: 'ai',
-      text: `Halo, sesi baru telah dimulai bersama Desktop-Agentic (${modelLabel}) dengan Live Context & RAG aktif.\n\nApa yang ingin Anda analisis atau eksekusi sekarang?`
+      text: 'Halo, sesi baru telah dimulai bersama Desktop-Agentic (Google Gemini 2.0 Flash) dengan Live Context & RAG aktif.\n\nApa yang ingin Anda analisis atau eksekusi sekarang?'
     };
     setMessages([newSessionGreeting]);
     agenticAiService.saveChatHistory([newSessionGreeting]);
@@ -87,13 +83,6 @@ export default function AgenticAiDrawer() {
       setSavedSuccess(false);
       setShowSettings(false);
     }, 1200);
-  };
-
-  const toggleReasoningBox = (idx) => {
-    setExpandedReasoning(prev => ({
-      ...prev,
-      [idx]: !prev[idx]
-    }));
   };
 
   useEffect(() => {
@@ -125,8 +114,7 @@ export default function AgenticAiDrawer() {
       const aiMessage = {
         sender: 'ai',
         text: response.responseText,
-        toolExecuted: response.toolExecuted || null,
-        reasoningContent: response.reasoningContent || null
+        toolExecuted: response.toolExecuted || null
       };
       setMessages(prev => [...prev, aiMessage]);
     } catch (err) {
@@ -140,10 +128,9 @@ export default function AgenticAiDrawer() {
   };
 
   const getActiveModelDisplay = () => {
-    if (selectedModel === 'deepseek-reasoner') return 'DeepSeek-R1 • Reasoning';
-    if (selectedModel === 'deepseek-chat') return 'DeepSeek-V3 • Ready';
-    if (selectedModel === 'gemini-2.0-flash') return 'Gemini 2.0 • Ready';
-    return 'DeepSeek • Ready';
+    if (selectedModel === 'gemini-2.0-flash-thinking-exp') return 'Gemini 2.0 • Thinking';
+    if (selectedModel === 'gemini-1.5-pro') return 'Gemini 1.5 Pro • Ready';
+    return 'Gemini 2.0 Flash • Ready';
   };
 
   return (
@@ -170,7 +157,7 @@ export default function AgenticAiDrawer() {
         <button
           type="button"
           onClick={toggleCollapse}
-          title="Buka Desktop-Agentic (DeepSeek) [|]"
+          title="Buka Desktop-Agentic (Gemini 2.0) [|]"
           style={{
             position: 'absolute',
             top: '12px',
@@ -247,7 +234,7 @@ export default function AgenticAiDrawer() {
           <button
             type="button"
             onClick={() => setShowSettings(prev => !prev)}
-            title="Setelan AI & Model DeepSeek"
+            title="Setelan AI & Model Gemini"
             style={{
               background: showSettings ? 'var(--bg-sidebar-hover)' : 'none',
               border: 'none',
@@ -328,7 +315,7 @@ export default function AgenticAiDrawer() {
         </div>
       </div>
 
-      {/* OPTIONAL DEEPSEEK SETTINGS PANEL */}
+      {/* OPTIONAL GEMINI SETTINGS PANEL */}
       {showSettings && (
         <form onSubmit={handleSaveSettings} style={{
           padding: '12px 16px',
@@ -340,7 +327,7 @@ export default function AgenticAiDrawer() {
           fontSize: '0.78rem'
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontWeight: '700', color: 'var(--text-main)' }}>Setelan DeepSeek AI Engine</span>
+            <span style={{ fontWeight: '700', color: 'var(--text-main)' }}>Setelan Google Gemini Engine</span>
             <button
               type="button"
               onClick={() => setShowSettings(false)}
@@ -352,7 +339,7 @@ export default function AgenticAiDrawer() {
 
           <div>
             <label style={{ display: 'block', fontSize: '0.72rem', color: 'var(--text-muted)', marginBottom: '3px' }}>
-              Pilihan Model AI:
+              Pilihan Model Gemini:
             </label>
             <select
               value={selectedModel}
@@ -368,19 +355,20 @@ export default function AgenticAiDrawer() {
                 outline: 'none'
               }}
             >
-              <option value="deepseek-chat">🧠 DeepSeek-V3 (Cepat, Cerdas & Serbaguna)</option>
-              <option value="deepseek-reasoner">🔬 DeepSeek-R1 (Deep Reasoning & Chain-of-Thought)</option>
-              <option value="gemini-2.0-flash">✨ Google Gemini 2.0 Flash (Fallback)</option>
+              <option value="gemini-2.0-flash">✨ Google Gemini 2.0 Flash (Default & Ultra Cepat)</option>
+              <option value="gemini-2.0-flash-thinking-exp">🧠 Gemini 2.0 Flash Thinking (Deep Reasoning)</option>
+              <option value="gemini-1.5-pro">💎 Gemini 1.5 Pro (Large Context)</option>
+              <option value="gemini-1.5-flash">⚡ Gemini 1.5 Flash (Legacy)</option>
             </select>
           </div>
 
           <div>
             <label style={{ display: 'block', fontSize: '0.72rem', color: 'var(--text-muted)', marginBottom: '3px' }}>
-              DeepSeek API Key (Opsional jika server key aktif):
+              Google Gemini API Key (aistudio.google.com):
             </label>
             <input
               type="password"
-              placeholder="sk-..."
+              placeholder="AIzaSy..."
               value={apiKeyInput}
               onChange={(e) => setApiKeyInput(e.target.value)}
               style={{
@@ -470,55 +458,6 @@ export default function AgenticAiDrawer() {
               </div>
             )}
 
-            {/* DeepSeek-R1 Chain of Thought Reasoning Box */}
-            {msg.reasoningContent && (
-              <div style={{
-                border: '1px solid var(--border-color)',
-                borderRadius: '10px',
-                backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC',
-                padding: '6px 10px',
-                fontSize: '0.74rem',
-                color: 'var(--text-muted)',
-                marginBottom: '4px'
-              }}>
-                <button
-                  type="button"
-                  onClick={() => toggleReasoningBox(index)}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    padding: 0,
-                    width: '100%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    cursor: 'pointer',
-                    color: 'var(--primary)',
-                    fontWeight: '700',
-                    fontSize: '0.72rem'
-                  }}
-                >
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    🔬 DeepSeek-R1 Thought Process
-                  </span>
-                  {expandedReasoning[index] ? <FiChevronDown size={14} /> : <FiChevronRight size={14} />}
-                </button>
-                {expandedReasoning[index] && (
-                  <div style={{
-                    marginTop: '6px',
-                    paddingTop: '6px',
-                    borderTop: '1px dashed var(--border-color)',
-                    whiteSpace: 'pre-wrap',
-                    lineHeight: '1.5',
-                    fontSize: '0.7rem',
-                    color: 'var(--text-muted)'
-                  }}>
-                    {msg.reasoningContent}
-                  </div>
-                )}
-              </div>
-            )}
-
             {/* Message Bubble */}
             <div style={{
               padding: '12px 15px',
@@ -550,7 +489,7 @@ export default function AgenticAiDrawer() {
             gap: '8px'
           }}>
             <FiRefreshCw className="spin" style={{ color: 'var(--primary)' }} />
-            <span>Desktop-Agentic sedang memproses dengan Live Context & RAG...</span>
+            <span>Desktop-Agentic (Gemini 2.0) sedang memproses...</span>
           </div>
         )}
         <div ref={chatEndRef} />
@@ -650,7 +589,7 @@ export default function AgenticAiDrawer() {
           color: 'var(--text-muted)'
         }}>
           <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10B981' }} />
-          <span>Powered by <strong style={{ color: 'var(--text-main)', fontWeight: '600' }}>DeepSeek-V3 / R1</strong> • Live Context & Obsidian RAG</span>
+          <span>Powered by <strong style={{ color: 'var(--text-main)', fontWeight: '600' }}>Google Gemini 2.0 Flash</strong> • Live Context & Obsidian RAG</span>
         </div>
       </div>
     </aside>
