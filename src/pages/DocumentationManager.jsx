@@ -453,7 +453,7 @@ export default function DocumentationManager() {
       <div className="page-body">
         {/* Page Subtitle & Header */}
         <div style={{ marginBottom: '1.5rem' }}>
-          <h1 style={{ fontSize: '1.75rem', fontWeight: '800', color: '#0F172A', marginBottom: '0.25rem' }}>
+          <h1 style={{ fontSize: '1.75rem', fontWeight: '800', color: 'var(--text-main)', marginBottom: '0.25rem' }}>
             Documentation
           </h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
@@ -536,7 +536,7 @@ export default function DocumentationManager() {
           alignItems: 'start'
         }}>
           {/* LEFT SIDEBAR: TREE HIERARCHY EXPLORER */}
-          <div className="table-container" style={{ padding: '0.875rem', backgroundColor: '#FFFFFF', minHeight: '680px' }}>
+          <div className="table-container" style={{ padding: '0.875rem', backgroundColor: 'var(--bg-card)', minHeight: '680px' }}>
             {/* Root Folder: Docs v3 */}
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <div
@@ -549,11 +549,11 @@ export default function DocumentationManager() {
                   padding: '0.45rem 0.5rem',
                   fontSize: '0.85rem',
                   fontWeight: '700',
-                  color: '#0F172A',
+                  color: 'var(--text-main)',
                   cursor: 'pointer',
                   userSelect: 'none',
                   borderRadius: 'var(--radius-sm)',
-                  backgroundColor: hoveredFolder === 'Docs v3' ? '#F8FAFC' : 'transparent',
+                  backgroundColor: hoveredFolder === 'Docs v3' ? 'var(--primary-light)' : 'transparent',
                   transition: 'all 0.15s ease'
                 }}
               >
@@ -868,7 +868,7 @@ export default function DocumentationManager() {
                           fontWeight: '800',
                           border: 'none',
                           outline: 'none',
-                          color: '#0F172A',
+                          color: 'var(--text-main)',
                           fontFamily: 'var(--font-sans)',
                           backgroundColor: 'transparent',
                           marginBottom: '0.5rem'
@@ -877,7 +877,7 @@ export default function DocumentationManager() {
                     </div>
 
                     {/* Metadata bar: Main Folder Selection & Author */}
-                    <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.25rem', backgroundColor: '#F8FAFC', padding: '0.75rem 1rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)' }}>
+                    <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.25rem', backgroundColor: 'var(--bg-main)', padding: '0.75rem 1rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)' }}>
                       <div style={{ flex: 1 }}>
                         <label style={{ fontSize: '0.725rem', fontWeight: '700', textTransform: 'uppercase', color: 'var(--text-muted)' }}>Main Folder</label>
                         <select
@@ -927,17 +927,17 @@ export default function DocumentationManager() {
                 ) : (
                   /* PREVIEW MODE */
                   <div style={{ minHeight: '480px' }}>
-                    <h1 style={{ fontSize: '2rem', fontWeight: '800', color: '#0F172A', marginBottom: '1rem' }}>
+                    <h1 style={{ fontSize: '2rem', fontWeight: '800', color: 'var(--text-main)', marginBottom: '1rem' }}>
                       {docTitle || 'Untitled Document'}
                     </h1>
 
                     <div style={{
-                      backgroundColor: '#F8FAFC',
+                      backgroundColor: 'var(--bg-main)',
                       borderLeft: '4px solid var(--primary)',
                       padding: '1rem 1.25rem',
                       borderRadius: 'var(--radius-sm)',
                       fontSize: '0.875rem',
-                      color: '#334155',
+                      color: 'var(--text-main)',
                       marginBottom: '1.5rem',
                       lineHeight: '1.6'
                     }}>
@@ -948,7 +948,7 @@ export default function DocumentationManager() {
                     <div style={{
                       fontSize: '0.95rem',
                       lineHeight: '1.75',
-                      color: '#1E293B',
+                      color: 'var(--text-main)',
                       whiteSpace: 'pre-wrap',
                       fontFamily: "var(--font-sans)"
                     }}>
@@ -1012,7 +1012,7 @@ export default function DocumentationManager() {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem', color: '#E11D48' }}>
             <FiAlertTriangle style={{ fontSize: '2rem', flexShrink: 0 }} />
-            <p style={{ fontSize: '0.9rem', color: '#0F172A', margin: 0 }}>
+            <p style={{ fontSize: '0.9rem', color: 'var(--text-main)', margin: 0 }}>
               Are you sure you want to delete folder <strong>"{folderToDelete}"</strong> and all documents inside?
             </p>
           </div>
@@ -1038,7 +1038,7 @@ export default function DocumentationManager() {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem', color: '#E11D48' }}>
             <FiAlertTriangle style={{ fontSize: '2rem', flexShrink: 0 }} />
-            <p style={{ fontSize: '0.9rem', color: '#0F172A', margin: 0 }}>
+            <p style={{ fontSize: '0.9rem', color: 'var(--text-main)', margin: 0 }}>
               Are you sure you want to delete document <strong>"{docToDelete?.title}"</strong>?
             </p>
           </div>

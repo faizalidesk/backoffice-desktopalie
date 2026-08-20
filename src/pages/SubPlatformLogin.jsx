@@ -72,8 +72,8 @@ export default function SubPlatformLogin() {
     <div style={{
       minHeight: '100vh',
       width: '100vw',
-      backgroundColor: isDarkMode ? '#0F172A' : '#FAF9FC',
-      color: isDarkMode ? '#F8FAFC' : '#0F172A',
+      backgroundColor: isDarkMode ? '#05130E' : '#FAF9FC',
+      color: isDarkMode ? '#ECFDF5' : '#0F172A',
       display: 'flex',
       flexDirection: 'column',
       fontFamily: "'Plus Jakarta Sans', -apple-system, sans-serif",
@@ -89,7 +89,7 @@ export default function SubPlatformLogin() {
         width: '600px',
         height: '600px',
         borderRadius: '50%',
-        background: `radial-gradient(circle, ${primaryColor}25 0%, rgba(15, 23, 42, 0) 70%)`,
+        background: `radial-gradient(circle, ${primaryColor}25 0%, rgba(5, 19, 14, 0) 70%)`,
         pointerEvents: 'none'
       }} />
 
@@ -100,7 +100,7 @@ export default function SubPlatformLogin() {
         width: '500px',
         height: '500px',
         borderRadius: '50%',
-        background: `radial-gradient(circle, ${primaryColor}15 0%, rgba(15, 23, 42, 0) 70%)`,
+        background: `radial-gradient(circle, ${primaryColor}15 0%, rgba(5, 19, 14, 0) 70%)`,
         pointerEvents: 'none'
       }} />
 
@@ -119,17 +119,17 @@ export default function SubPlatformLogin() {
         {/* Left Brand Logo matching Main Login */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
           <DesktopalieMark size={30} style={{ color: primaryColor, flexShrink: 0 }} />
-          <span style={{ fontSize: '1rem', fontWeight: '800', letterSpacing: '0.08em', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+          <span style={{ fontSize: '1rem', fontWeight: '800', letterSpacing: '0.08em', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>
             {activeFlavor?.logoText?.toUpperCase() || 'DESKTOPALIE'}
           </span>
         </div>
 
         {/* Center Nav Links */}
         <nav style={{ display: 'flex', alignItems: 'center', gap: '1.75rem' }}>
-          <a href="/" style={{ color: isDarkMode ? '#94A3B8' : '#475569', fontSize: '0.85rem', fontWeight: '600', textDecoration: 'none' }}>Home</a>
-          <a href="#features" style={{ color: isDarkMode ? '#94A3B8' : '#475569', fontSize: '0.85rem', fontWeight: '600', textDecoration: 'none' }}>Features</a>
-          <a href="#about" style={{ color: isDarkMode ? '#94A3B8' : '#475569', fontSize: '0.85rem', fontWeight: '600', textDecoration: 'none' }}>About</a>
-          <a href="#contact" style={{ color: isDarkMode ? '#94A3B8' : '#475569', fontSize: '0.85rem', fontWeight: '600', textDecoration: 'none' }}>Contact</a>
+          <a href="/" style={{ color: isDarkMode ? '#93C5AA' : '#475569', fontSize: '0.85rem', fontWeight: '600', textDecoration: 'none' }}>Home</a>
+          <a href="#features" style={{ color: isDarkMode ? '#93C5AA' : '#475569', fontSize: '0.85rem', fontWeight: '600', textDecoration: 'none' }}>Features</a>
+          <a href="#about" style={{ color: isDarkMode ? '#93C5AA' : '#475569', fontSize: '0.85rem', fontWeight: '600', textDecoration: 'none' }}>About</a>
+          <a href="#contact" style={{ color: isDarkMode ? '#93C5AA' : '#475569', fontSize: '0.85rem', fontWeight: '600', textDecoration: 'none' }}>Contact</a>
         </nav>
 
         {/* Right Controls: Theme Switcher & Pill Login Indicator */}
@@ -142,8 +142,8 @@ export default function SubPlatformLogin() {
               width: '40px',
               height: '40px',
               borderRadius: '50%',
-              backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-              border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+              backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+              border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -214,7 +214,7 @@ export default function SubPlatformLogin() {
           <h1 style={{
             fontSize: '3.25rem',
             fontWeight: '800',
-            color: isDarkMode ? '#F8FAFC' : '#0F172A',
+            color: isDarkMode ? '#ECFDF5' : '#0F172A',
             lineHeight: '1.08',
             letterSpacing: '-0.03em',
             marginBottom: '1.25rem'
@@ -225,7 +225,7 @@ export default function SubPlatformLogin() {
           <p style={{
             fontSize: '1rem',
             lineHeight: '1.65',
-            color: isDarkMode ? '#94A3B8' : '#64748B',
+            color: isDarkMode ? '#93C5AA' : '#64748B',
             marginBottom: '2rem',
             maxWidth: '520px'
           }}>
@@ -234,15 +234,15 @@ export default function SubPlatformLogin() {
 
           {/* SIGN IN FORM CARD */}
           <div style={{
-            backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-            border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+            backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+            border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
             borderRadius: '24px',
             padding: '2rem',
-            boxShadow: isDarkMode ? '0 25px 50px -12px rgba(0, 0, 0, 0.4)' : '0 20px 40px -15px rgba(15, 23, 42, 0.08)',
+            boxShadow: isDarkMode ? '0 25px 50px -12px rgba(0, 0, 0, 0.5)' : '0 20px 40px -15px rgba(15, 23, 42, 0.08)',
             marginBottom: '2rem',
             maxWidth: '480px'
           }}>
-            <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: isDarkMode ? '#F8FAFC' : '#0F172A', marginBottom: '1.25rem' }}>
+            <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: isDarkMode ? '#ECFDF5' : '#0F172A', marginBottom: '1.25rem' }}>
               Sign In to {activeFlavor?.shortName} Workspace
             </h3>
 
@@ -255,9 +255,9 @@ export default function SubPlatformLogin() {
                 width: '100%',
                 padding: '0.8rem',
                 borderRadius: '12px',
-                backgroundColor: isDarkMode ? '#0F172A' : '#FFFFFF',
-                color: isDarkMode ? '#F8FAFC' : '#0F172A',
-                border: `1px solid ${isDarkMode ? '#475569' : '#CBD5E1'}`,
+                backgroundColor: isDarkMode ? '#05130E' : '#FFFFFF',
+                color: isDarkMode ? '#ECFDF5' : '#0F172A',
+                border: `1px solid ${isDarkMode ? '#133829' : '#CBD5E1'}`,
                 fontWeight: '700',
                 fontSize: '0.875rem',
                 display: 'flex',
@@ -274,9 +274,9 @@ export default function SubPlatformLogin() {
             </button>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
-              <div style={{ flex: 1, height: '1px', backgroundColor: isDarkMode ? '#334155' : '#E2E8F0' }} />
+              <div style={{ flex: 1, height: '1px', backgroundColor: isDarkMode ? '#133829' : '#E2E8F0' }} />
               <span style={{ fontSize: '0.7rem', fontWeight: '700', textTransform: 'uppercase', color: 'var(--text-muted)' }}>atau login email</span>
-              <div style={{ flex: 1, height: '1px', backgroundColor: isDarkMode ? '#334155' : '#E2E8F0' }} />
+              <div style={{ flex: 1, height: '1px', backgroundColor: isDarkMode ? '#133829' : '#E2E8F0' }} />
             </div>
 
             {errorMessage && (
@@ -299,11 +299,11 @@ export default function SubPlatformLogin() {
 
             <form onSubmit={handleSubmit}>
               <div style={{ marginBottom: '1.15rem' }}>
-                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', color: isDarkMode ? '#94A3B8' : '#64748B', marginBottom: '0.4rem' }}>
+                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', color: isDarkMode ? '#93C5AA' : '#64748B', marginBottom: '0.4rem' }}>
                   Email Administrator / Pengguna
                 </label>
                 <div style={{ position: 'relative' }}>
-                  <FiMail style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: isDarkMode ? '#64748B' : '#94A3B8' }} />
+                  <FiMail style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: isDarkMode ? '#58836F' : '#94A3B8' }} />
                   <input
                     type="email"
                     value={email}
@@ -314,22 +314,22 @@ export default function SubPlatformLogin() {
                       width: '100%',
                       padding: '0.75rem 1rem 0.75rem 2.75rem',
                       borderRadius: '12px',
-                      border: `1px solid ${isDarkMode ? '#475569' : '#CBD5E1'}`,
+                      border: `1px solid ${isDarkMode ? '#1B4F3B' : '#CBD5E1'}`,
                       fontSize: '0.9rem',
                       outline: 'none',
-                      backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
-                      color: isDarkMode ? '#F8FAFC' : '#0F172A'
+                      backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC',
+                      color: isDarkMode ? '#ECFDF5' : '#0F172A'
                     }}
                   />
                 </div>
               </div>
 
               <div style={{ marginBottom: '1.5rem' }}>
-                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', color: isDarkMode ? '#94A3B8' : '#64748B', marginBottom: '0.4rem' }}>
+                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase', color: isDarkMode ? '#93C5AA' : '#64748B', marginBottom: '0.4rem' }}>
                   Kata Sandi
                 </label>
                 <div style={{ position: 'relative' }}>
-                  <FiLock style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: isDarkMode ? '#64748B' : '#94A3B8' }} />
+                  <FiLock style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: isDarkMode ? '#58836F' : '#94A3B8' }} />
                   <input
                     type="password"
                     value={password}
@@ -340,11 +340,11 @@ export default function SubPlatformLogin() {
                       width: '100%',
                       padding: '0.75rem 1rem 0.75rem 2.75rem',
                       borderRadius: '12px',
-                      border: `1px solid ${isDarkMode ? '#475569' : '#CBD5E1'}`,
+                      border: `1px solid ${isDarkMode ? '#1B4F3B' : '#CBD5E1'}`,
                       fontSize: '0.9rem',
                       outline: 'none',
-                      backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
-                      color: isDarkMode ? '#F8FAFC' : '#0F172A'
+                      backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC',
+                      color: isDarkMode ? '#ECFDF5' : '#0F172A'
                     }}
                   />
                 </div>
@@ -386,8 +386,8 @@ export default function SubPlatformLogin() {
             fontSize: '0.7rem',
             fontFamily: "'JetBrains Mono', monospace",
             letterSpacing: '0.05em',
-            color: isDarkMode ? '#64748B' : '#94A3B8',
-            borderTop: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+            color: isDarkMode ? '#58836F' : '#94A3B8',
+            borderTop: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
             paddingTop: '1rem',
             maxWidth: '480px'
           }}>
@@ -401,8 +401,8 @@ export default function SubPlatformLogin() {
             width: '100%',
             maxWidth: '520px',
             borderRadius: '24px',
-            backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-            border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+            backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+            border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
             padding: '1.75rem',
             boxShadow: isDarkMode ? '0 25px 50px -12px rgba(0, 0, 0, 0.5)' : '0 20px 40px -15px rgba(15, 23, 42, 0.1)',
             position: 'relative'
@@ -420,8 +420,8 @@ export default function SubPlatformLogin() {
             {/* Platform Dedicated Graphic / Features Mockup */}
             <div style={{
               borderRadius: '16px',
-              backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
-              border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+              backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC',
+              border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
               padding: '2rem 1.5rem',
               textAlign: 'center'
             }}>
@@ -440,11 +440,11 @@ export default function SubPlatformLogin() {
                 {flavorId === 'platform2' ? <FiTruck /> : (flavorId === 'platform3' ? <FiCpu /> : <FiShield />)}
               </div>
 
-              <h4 style={{ fontSize: '1.2rem', fontWeight: '800', margin: '0 0 0.5rem 0', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+              <h4 style={{ fontSize: '1.2rem', fontWeight: '800', margin: '0 0 0.5rem 0', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>
                 {activeFlavor?.shortName} Dedicated Telemetry & Portal
               </h4>
 
-              <p style={{ fontSize: '0.875rem', color: isDarkMode ? '#94A3B8' : '#64748B', lineHeight: '1.55', margin: '0 0 1.5rem 0' }}>
+              <p style={{ fontSize: '0.875rem', color: isDarkMode ? '#93C5AA' : '#64748B', lineHeight: '1.55', margin: '0 0 1.5rem 0' }}>
                 Akses mandiri ke modul real-time telemetry, kontrol keamanan terenkripsi, dan analitik performa {activeFlavor?.shortName}.
               </p>
 

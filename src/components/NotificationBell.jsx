@@ -134,9 +134,9 @@ export default function NotificationBell({ primaryColor }) {
           width: '36px',
           height: '36px',
           borderRadius: '50%',
-          backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-          border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
-          color: isDarkMode ? '#F8FAFC' : '#0F172A',
+          backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+          border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
+          color: isDarkMode ? '#ECFDF5' : '#0F172A',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -146,7 +146,7 @@ export default function NotificationBell({ primaryColor }) {
           transition: 'all 0.15s ease'
         }}
       >
-        <FiBell style={{ fontSize: '1.05rem', color: unreadCount > 0 ? activeColor : (isDarkMode ? '#94A3B8' : '#64748B') }} />
+        <FiBell style={{ fontSize: '1.05rem', color: unreadCount > 0 ? activeColor : (isDarkMode ? '#93C5AA' : '#64748B') }} />
         {unreadCount > 0 && (
           <span style={{
             position: 'absolute',
@@ -164,7 +164,7 @@ export default function NotificationBell({ primaryColor }) {
             alignItems: 'center',
             justifyContent: 'center',
             boxShadow: '0 2px 6px rgba(239, 68, 68, 0.4)',
-            border: `2px solid ${isDarkMode ? '#1E293B' : '#FFFFFF'}`
+            border: `2px solid ${isDarkMode ? '#091E16' : '#FFFFFF'}`
           }}>
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
@@ -178,10 +178,10 @@ export default function NotificationBell({ primaryColor }) {
           top: 'calc(100% + 10px)',
           right: 0,
           width: '340px',
-          backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-          border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+          backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+          border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
           borderRadius: '16px',
-          boxShadow: isDarkMode ? '0 20px 40px rgba(0,0,0,0.5)' : '0 15px 35px rgba(15, 23, 42, 0.12)',
+          boxShadow: isDarkMode ? '0 20px 40px rgba(0,0,0,0.6)' : '0 15px 35px rgba(15, 23, 42, 0.12)',
           overflow: 'hidden',
           zIndex: 9999,
           display: 'flex',
@@ -191,14 +191,14 @@ export default function NotificationBell({ primaryColor }) {
           {/* Header section */}
           <div style={{
             padding: '0.85rem 1rem',
-            borderBottom: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+            borderBottom: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC'
+            backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <span style={{ fontWeight: '700', fontSize: '0.9rem', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+              <span style={{ fontWeight: '700', fontSize: '0.9rem', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>
                 {t('notifications') || 'Notifikasi'}
               </span>
               {unreadCount > 0 && (
@@ -240,7 +240,7 @@ export default function NotificationBell({ primaryColor }) {
             display: 'flex',
             padding: '0.5rem 0.75rem 0.25rem 0.75rem',
             gap: '0.5rem',
-            borderBottom: `1px solid ${isDarkMode ? '#334155' : '#F1F5F9'}`
+            borderBottom: `1px solid ${isDarkMode ? '#133829' : '#F1F5F9'}`
           }}>
             <button
               type="button"
@@ -252,7 +252,7 @@ export default function NotificationBell({ primaryColor }) {
                 fontWeight: '700',
                 border: 'none',
                 backgroundColor: notifFilter === 'all' ? activeColor : 'transparent',
-                color: notifFilter === 'all' ? '#FFFFFF' : (isDarkMode ? '#94A3B8' : '#64748B'),
+                color: notifFilter === 'all' ? '#FFFFFF' : (isDarkMode ? '#93C5AA' : '#64748B'),
                 cursor: 'pointer',
                 transition: 'all 0.15s ease'
               }}
@@ -269,7 +269,7 @@ export default function NotificationBell({ primaryColor }) {
                 fontWeight: '700',
                 border: 'none',
                 backgroundColor: notifFilter === 'unread' ? activeColor : 'transparent',
-                color: notifFilter === 'unread' ? '#FFFFFF' : (isDarkMode ? '#94A3B8' : '#64748B'),
+                color: notifFilter === 'unread' ? '#FFFFFF' : (isDarkMode ? '#93C5AA' : '#64748B'),
                 cursor: 'pointer',
                 transition: 'all 0.15s ease'
               }}
@@ -289,7 +289,7 @@ export default function NotificationBell({ primaryColor }) {
               <div style={{
                 padding: '2.5rem 1rem',
                 textAlign: 'center',
-                color: isDarkMode ? '#94A3B8' : '#64748B',
+                color: isDarkMode ? '#93C5AA' : '#64748B',
                 fontSize: '0.85rem'
               }}>
                 <FiBell style={{ fontSize: '1.75rem', marginBottom: '0.5rem', opacity: 0.5 }} />
@@ -308,8 +308,8 @@ export default function NotificationBell({ primaryColor }) {
                     onClick={() => handleNotifClick(item)}
                     style={{
                       padding: '0.8rem 1rem',
-                      borderBottom: `1px solid ${isDarkMode ? '#334155' : '#F1F5F9'}`,
-                      backgroundColor: isUnread ? (isDarkMode ? 'rgba(59, 130, 246, 0.08)' : 'rgba(239, 246, 255, 0.7)') : 'transparent',
+                      borderBottom: `1px solid ${isDarkMode ? '#133829' : '#F1F5F9'}`,
+                      backgroundColor: isUnread ? (isDarkMode ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 246, 255, 0.7)') : 'transparent',
                       display: 'flex',
                       alignItems: 'flex-start',
                       gap: '0.75rem',
@@ -340,7 +340,7 @@ export default function NotificationBell({ primaryColor }) {
                         <h4 style={{
                           fontSize: '0.825rem',
                           fontWeight: isUnread ? '800' : '600',
-                          color: isDarkMode ? '#F8FAFC' : '#0F172A',
+                          color: isDarkMode ? '#ECFDF5' : '#0F172A',
                           margin: 0,
                           whiteSpace: 'nowrap',
                           overflow: 'hidden',
@@ -348,13 +348,13 @@ export default function NotificationBell({ primaryColor }) {
                         }}>
                           {item.title}
                         </h4>
-                        <span style={{ fontSize: '0.675rem', color: isDarkMode ? '#94A3B8' : '#64748B', flexShrink: 0, marginLeft: '0.5rem' }}>
+                        <span style={{ fontSize: '0.675rem', color: isDarkMode ? '#93C5AA' : '#64748B', flexShrink: 0, marginLeft: '0.5rem' }}>
                           {formatTimeAgo(item.timestamp)}
                         </span>
                       </div>
                       <p style={{
                         fontSize: '0.75rem',
-                        color: isDarkMode ? '#94A3B8' : '#64748B',
+                        color: isDarkMode ? '#93C5AA' : '#64748B',
                         margin: '0 0 0.35rem 0',
                         lineHeight: 1.4,
                         display: '-webkit-box',
@@ -386,7 +386,7 @@ export default function NotificationBell({ primaryColor }) {
                       style={{
                         background: 'none',
                         border: 'none',
-                        color: isDarkMode ? '#64748B' : '#94A3B8',
+                        color: isDarkMode ? '#58836F' : '#94A3B8',
                         cursor: 'pointer',
                         padding: '0.25rem',
                         borderRadius: '4px',
@@ -407,8 +407,8 @@ export default function NotificationBell({ primaryColor }) {
           {notifications.length > 0 && (
             <div style={{
               padding: '0.55rem 1rem',
-              borderTop: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
-              backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
+              borderTop: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
+              backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC',
               textAlign: 'center'
             }}>
               <button
@@ -417,7 +417,7 @@ export default function NotificationBell({ primaryColor }) {
                 style={{
                   background: 'none',
                   border: 'none',
-                  color: isDarkMode ? '#94A3B8' : '#64748B',
+                  color: isDarkMode ? '#93C5AA' : '#64748B',
                   fontSize: '0.725rem',
                   fontWeight: '700',
                   cursor: 'pointer'
@@ -449,25 +449,25 @@ export default function NotificationBell({ primaryColor }) {
           <div style={{
             width: '100%',
             maxWidth: '540px',
-            backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-            border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+            backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+            border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
             borderRadius: '20px',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.35)',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
             overflow: 'hidden',
             animation: 'fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
           }}>
             {/* Modal Header */}
             <div style={{
               padding: '1.25rem 1.5rem',
-              borderBottom: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+              borderBottom: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC'
+              backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC'
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
                 <FiBell style={{ color: activeColor, fontSize: '1.2rem' }} />
-                <span style={{ fontWeight: '800', fontSize: '1rem', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+                <span style={{ fontWeight: '800', fontSize: '1rem', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>
                   Detail & Rincian Notifikasi
                 </span>
               </div>
@@ -478,7 +478,7 @@ export default function NotificationBell({ primaryColor }) {
                 style={{
                   background: 'none',
                   border: 'none',
-                  color: isDarkMode ? '#94A3B8' : '#64748B',
+                  color: isDarkMode ? '#93C5AA' : '#64748B',
                   cursor: 'pointer',
                   fontSize: '1.25rem',
                   padding: '0.2rem',
@@ -537,7 +537,7 @@ export default function NotificationBell({ primaryColor }) {
                     <h2 style={{
                       fontSize: '1.25rem',
                       fontWeight: '800',
-                      color: isDarkMode ? '#F8FAFC' : '#0F172A',
+                      color: isDarkMode ? '#ECFDF5' : '#0F172A',
                       margin: '0 0 1rem 0',
                       lineHeight: 1.35
                     }}>
@@ -546,19 +546,19 @@ export default function NotificationBell({ primaryColor }) {
 
                     {/* Detailed Message Box */}
                     <div style={{
-                      backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
-                      border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+                      backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC',
+                      border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
                       borderRadius: '14px',
                       padding: '1.25rem',
                       marginBottom: '1.25rem'
                     }}>
-                      <div style={{ fontSize: '0.75rem', fontWeight: '700', color: isDarkMode ? '#94A3B8' : '#64748B', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      <div style={{ fontSize: '0.75rem', fontWeight: '700', color: isDarkMode ? '#93C5AA' : '#64748B', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                         Isi & Pembahasan Lengkap:
                       </div>
                       <p style={{
                         fontSize: '0.925rem',
                         lineHeight: 1.65,
-                        color: isDarkMode ? '#E2E8F0' : '#334155',
+                        color: isDarkMode ? '#ECFDF5' : '#334155',
                         margin: 0,
                         whiteSpace: 'pre-wrap'
                       }}>
@@ -572,7 +572,7 @@ export default function NotificationBell({ primaryColor }) {
                       alignItems: 'center',
                       gap: '0.5rem',
                       fontSize: '0.78rem',
-                      color: isDarkMode ? '#94A3B8' : '#64748B'
+                      color: isDarkMode ? '#93C5AA' : '#64748B'
                     }}>
                       <FiClock />
                       <span>Diterbitkan: <strong>{formatFullDateTime(selectedNotif.timestamp)}</strong> ({formatTimeAgo(selectedNotif.timestamp)})</span>
@@ -585,8 +585,8 @@ export default function NotificationBell({ primaryColor }) {
             {/* Modal Footer Actions */}
             <div style={{
               padding: '1rem 1.75rem',
-              borderTop: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
-              backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
+              borderTop: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
+              backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'flex-end',
@@ -622,8 +622,8 @@ export default function NotificationBell({ primaryColor }) {
                 style={{
                   padding: '0.55rem 1.25rem',
                   borderRadius: '10px',
-                  backgroundColor: isDarkMode ? '#334155' : '#E2E8F0',
-                  color: isDarkMode ? '#F8FAFC' : '#0F172A',
+                  backgroundColor: isDarkMode ? '#133829' : '#E2E8F0',
+                  color: isDarkMode ? '#ECFDF5' : '#0F172A',
                   border: 'none',
                   fontWeight: '700',
                   fontSize: '0.85rem',

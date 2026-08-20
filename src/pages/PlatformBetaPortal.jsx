@@ -81,8 +81,8 @@ export default function PlatformBetaPortal() {
     <div style={{
       minHeight: '100vh',
       width: '100vw',
-      backgroundColor: isDarkMode ? '#0F172A' : '#FAF9FC',
-      color: isDarkMode ? '#F8FAFC' : '#0F172A',
+      backgroundColor: isDarkMode ? '#05130E' : '#FAF9FC',
+      color: isDarkMode ? '#ECFDF5' : '#0F172A',
       fontFamily: "'Plus Jakarta Sans', -apple-system, sans-serif"
     }}>
       {/* STANDALONE PORTAL TOP HEADER (WITHOUT BACKOFFICE SIDEBAR) */}
@@ -96,12 +96,12 @@ export default function PlatformBetaPortal() {
         justifyContent: 'space-between',
         flexWrap: 'wrap',
         gap: '0.75rem',
-        borderBottom: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`
+        borderBottom: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
           <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', textDecoration: 'none' }}>
             <DesktopalieMark size={26} style={{ color: primaryColor }} />
-            <span style={{ fontSize: '1rem', fontWeight: '800', color: isDarkMode ? '#F8FAFC' : '#0F172A', letterSpacing: '0.04em' }}>
+            <span style={{ fontSize: '1rem', fontWeight: '800', color: isDarkMode ? '#ECFDF5' : '#0F172A', letterSpacing: '0.04em' }}>
               DESKTOPALIE BETA PORTAL
             </span>
           </Link>
@@ -118,8 +118,8 @@ export default function PlatformBetaPortal() {
               width: '38px',
               height: '38px',
               borderRadius: '50%',
-              backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-              border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+              backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+              border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
               color: isDarkMode ? '#FBBF24' : '#0F172A',
               display: 'flex',
               alignItems: 'center',
@@ -152,9 +152,9 @@ export default function PlatformBetaPortal() {
               gap: '0.4rem',
               padding: '0.5rem 1rem',
               borderRadius: '10px',
-              backgroundColor: isDarkMode ? '#1E293B' : '#F1F5F9',
-              border: `1px solid ${isDarkMode ? '#334155' : '#CBD5E1'}`,
-              color: isDarkMode ? '#F8FAFC' : '#0F172A',
+              backgroundColor: isDarkMode ? '#091E16' : '#F1F5F9',
+              border: `1px solid ${isDarkMode ? '#133829' : '#CBD5E1'}`,
+              color: isDarkMode ? '#ECFDF5' : '#0F172A',
               fontWeight: '700',
               fontSize: '0.8rem',
               cursor: 'pointer'
@@ -174,11 +174,11 @@ export default function PlatformBetaPortal() {
           position: 'relative',
           borderRadius: '20px',
           overflow: 'hidden',
-          backgroundColor: '#0F172A',
+          backgroundColor: '#05130E',
           color: '#FFFFFF',
           padding: '2.25rem',
           marginBottom: '2rem',
-          boxShadow: '0 10px 30px rgba(15, 23, 42, 0.15)'
+          boxShadow: '0 10px 30px rgba(5, 19, 14, 0.25)'
         }}>
           <div style={{
             position: 'absolute',
@@ -187,7 +187,7 @@ export default function PlatformBetaPortal() {
             width: '600px',
             height: '400px',
             borderRadius: '50%',
-            background: `radial-gradient(circle, ${primaryColor}50 0%, rgba(15, 23, 42, 0) 70%)`,
+            background: `radial-gradient(circle, ${primaryColor}50 0%, rgba(5, 19, 14, 0) 70%)`,
             pointerEvents: 'none'
           }} />
 
@@ -283,8 +283,8 @@ export default function PlatformBetaPortal() {
             { label: 'GPS Satellite Telemetry', value: 'Online (24 Nodes)', color: '#F59E0B', icon: <FiCompass /> }
           ].map((kpi, idx) => (
             <div key={idx} style={{
-              backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-              border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+              backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+              border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
               borderRadius: '16px',
               padding: '1.5rem',
               boxShadow: '0 4px 16px rgba(0,0,0,0.04)'
@@ -293,7 +293,7 @@ export default function PlatformBetaPortal() {
                 <span style={{ fontSize: '0.775rem', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase' }}>{kpi.label}</span>
                 <span style={{ fontSize: '1.1rem', color: kpi.color }}>{kpi.icon}</span>
               </div>
-              <div style={{ fontSize: '1.6rem', fontWeight: '800', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>{kpi.value}</div>
+              <div style={{ fontSize: '1.6rem', fontWeight: '800', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>{kpi.value}</div>
             </div>
           ))}
         </div>
@@ -301,14 +301,14 @@ export default function PlatformBetaPortal() {
         {/* TAB CONTENT: DISPATCH BOARD */}
         {activeTab === 'dispatch' && (
           <div style={{
-            backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-            border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+            backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+            border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
             borderRadius: '18px',
             padding: '1.75rem',
             marginBottom: '2rem'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: '800', margin: 0, color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: '800', margin: 0, color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>
                 🚛 Fleet Cargo Dispatching & Real-time Waybills
               </h3>
             </div>
@@ -323,11 +323,11 @@ export default function PlatformBetaPortal() {
                 style={{
                   flex: 1,
                   minWidth: '220px',
-                  padding: '0.75rem 1.25rem',
+                  padding: '0.75rem 12px',
                   borderRadius: '12px',
-                  backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
-                  border: `1px solid ${isDarkMode ? '#334155' : '#CBD5E1'}`,
-                  color: isDarkMode ? '#F8FAFC' : '#0F172A',
+                  backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC',
+                  border: `1px solid ${isDarkMode ? '#133829' : '#CBD5E1'}`,
+                  color: isDarkMode ? '#ECFDF5' : '#0F172A',
                   fontWeight: '600'
                 }}
               />
@@ -337,9 +337,9 @@ export default function PlatformBetaPortal() {
                 style={{
                   padding: '0.75rem 1.25rem',
                   borderRadius: '12px',
-                  backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
-                  border: `1px solid ${isDarkMode ? '#334155' : '#CBD5E1'}`,
-                  color: isDarkMode ? '#F8FAFC' : '#0F172A',
+                  backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC',
+                  border: `1px solid ${isDarkMode ? '#133829' : '#CBD5E1'}`,
+                  color: isDarkMode ? '#ECFDF5' : '#0F172A',
                   fontWeight: '600'
                 }}
               >
@@ -372,7 +372,7 @@ export default function PlatformBetaPortal() {
             <div style={{ overflowX: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
                 <thead>
-                  <tr style={{ borderBottom: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`, textAlign: 'left', color: 'var(--text-muted)' }}>
+                  <tr style={{ borderBottom: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`, textAlign: 'left', color: 'var(--text-muted)' }}>
                     <th style={{ padding: '0.85rem 1rem' }}>WAYBILL ID</th>
                     <th style={{ padding: '0.85rem 1rem' }}>JENIS KARGO</th>
                     <th style={{ padding: '0.85rem 1rem' }}>RUTE PERJALANAN</th>
@@ -384,7 +384,7 @@ export default function PlatformBetaPortal() {
                 </thead>
                 <tbody>
                   {shipments.map((row, i) => (
-                    <tr key={i} style={{ borderBottom: `1px solid ${isDarkMode ? '#334155' : '#F1F5F9'}` }}>
+                    <tr key={i} style={{ borderBottom: `1px solid ${isDarkMode ? '#133829' : '#F1F5F9'}` }}>
                       <td style={{ padding: '0.9rem 1rem', fontWeight: '800', color: primaryColor }}>{row.id}</td>
                       <td style={{ padding: '0.9rem 1rem', fontWeight: '600' }}>{row.type}</td>
                       <td style={{ padding: '0.9rem 1rem' }}>{row.route}</td>
@@ -414,13 +414,13 @@ export default function PlatformBetaPortal() {
         {/* TAB CONTENT: COLD CHAIN TELEMETRY */}
         {activeTab === 'telemetry' && (
           <div style={{
-            backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-            border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+            backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+            border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
             borderRadius: '18px',
             padding: '1.75rem',
             marginBottom: '2rem'
           }}>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: '800', marginBottom: '1.25rem', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: '800', marginBottom: '1.25rem', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>
               🌡️ Real-Time Cold-Chain Sensor Telemetry
             </h3>
 
@@ -433,11 +433,11 @@ export default function PlatformBetaPortal() {
                 <div key={idx} style={{
                   padding: '1.5rem',
                   borderRadius: '16px',
-                  backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
-                  border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`
+                  backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC',
+                  border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-                    <span style={{ fontWeight: '800', fontSize: '1rem', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>{sensor.container}</span>
+                    <span style={{ fontWeight: '800', fontSize: '1rem', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>{sensor.container}</span>
                     <span style={{ padding: '0.2rem 0.6rem', borderRadius: '99px', backgroundColor: 'rgba(16, 185, 129, 0.15)', color: '#10B981', fontSize: '0.75rem', fontWeight: '700' }}>
                       ● {sensor.status}
                     </span>
@@ -453,16 +453,16 @@ export default function PlatformBetaPortal() {
         {/* TAB CONTENT: MANIFEST */}
         {activeTab === 'manifest' && (
           <div style={{
-            backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-            border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+            backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+            border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
             borderRadius: '18px',
             padding: '1.75rem',
             marginBottom: '2rem'
           }}>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: '800', marginBottom: '1rem', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: '800', marginBottom: '1rem', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>
               📄 Customs Clearance & Bill of Lading Manifest
             </h3>
-            <div style={{ padding: '2rem', textAlign: 'center', borderRadius: '12px', border: `2px dashed ${isDarkMode ? '#334155' : '#E2E8F0'}`, color: 'var(--text-muted)' }}>
+            <div style={{ padding: '2rem', textAlign: 'center', borderRadius: '12px', border: `2px dashed ${isDarkMode ? '#133829' : '#E2E8F0'}`, color: 'var(--text-muted)' }}>
               📋 <strong>Manifest Pabean Digital Terverifikasi</strong> (Semua dokumen disinkronkan ke pelabuhan tujuan).
             </div>
           </div>
@@ -471,19 +471,19 @@ export default function PlatformBetaPortal() {
         {/* TAB CONTENT: DRIVERS */}
         {activeTab === 'drivers' && (
           <div style={{
-            backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-            border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+            backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+            border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
             borderRadius: '18px',
             padding: '1.75rem',
             marginBottom: '2rem'
           }}>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: '800', marginBottom: '1.25rem', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: '800', marginBottom: '1.25rem', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>
               👨‍✈️ Driver Status & Fleet Duty Roster
             </h3>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
               {['Budi Santoso', 'Agus Wijaya', 'Rian Pratama', 'Dedi Kurniawan'].map((name, idx) => (
-                <div key={idx} style={{ padding: '1rem', borderRadius: '12px', backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC', border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}` }}>
-                  <div style={{ fontWeight: '800', fontSize: '0.95rem', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>👨‍✈️ {name}</div>
+                <div key={idx} style={{ padding: '1rem', borderRadius: '12px', backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC', border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}` }}>
+                  <div style={{ fontWeight: '800', fontSize: '0.95rem', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>👨‍✈️ {name}</div>
                   <div style={{ fontSize: '0.8rem', color: '#10B981', fontWeight: '700', marginTop: '0.25rem' }}>🟢 Active Duty (SIM B2 Umum Verified)</div>
                 </div>
               ))}

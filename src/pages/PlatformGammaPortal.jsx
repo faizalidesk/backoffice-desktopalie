@@ -75,8 +75,8 @@ export default function PlatformGammaPortal() {
     <div style={{
       minHeight: '100vh',
       width: '100vw',
-      backgroundColor: isDarkMode ? '#0F172A' : '#FAF9FC',
-      color: isDarkMode ? '#F8FAFC' : '#0F172A',
+      backgroundColor: isDarkMode ? '#05130E' : '#FAF9FC',
+      color: isDarkMode ? '#ECFDF5' : '#0F172A',
       fontFamily: "'Plus Jakarta Sans', -apple-system, sans-serif"
     }}>
       {/* STANDALONE PORTAL TOP HEADER */}
@@ -88,12 +88,12 @@ export default function PlatformGammaPortal() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        borderBottom: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`
+        borderBottom: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
           <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', textDecoration: 'none' }}>
             <DesktopalieMark size={26} style={{ color: primaryColor }} />
-            <span style={{ fontSize: '1rem', fontWeight: '800', color: isDarkMode ? '#F8FAFC' : '#0F172A', letterSpacing: '0.04em' }}>
+            <span style={{ fontSize: '1rem', fontWeight: '800', color: isDarkMode ? '#ECFDF5' : '#0F172A', letterSpacing: '0.04em' }}>
               DESKTOPALIE GAMMA PORTAL
             </span>
           </Link>
@@ -110,8 +110,8 @@ export default function PlatformGammaPortal() {
               width: '38px',
               height: '38px',
               borderRadius: '50%',
-              backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-              border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+              backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+              border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
               color: isDarkMode ? '#FBBF24' : '#0F172A',
               display: 'flex',
               alignItems: 'center',
@@ -144,9 +144,9 @@ export default function PlatformGammaPortal() {
               gap: '0.4rem',
               padding: '0.5rem 1rem',
               borderRadius: '10px',
-              backgroundColor: isDarkMode ? '#1E293B' : '#F1F5F9',
-              border: `1px solid ${isDarkMode ? '#334155' : '#CBD5E1'}`,
-              color: isDarkMode ? '#F8FAFC' : '#0F172A',
+              backgroundColor: isDarkMode ? '#091E16' : '#F1F5F9',
+              border: `1px solid ${isDarkMode ? '#133829' : '#CBD5E1'}`,
+              color: isDarkMode ? '#ECFDF5' : '#0F172A',
               fontWeight: '700',
               fontSize: '0.8rem',
               cursor: 'pointer'
@@ -166,11 +166,11 @@ export default function PlatformGammaPortal() {
           position: 'relative',
           borderRadius: '20px',
           overflow: 'hidden',
-          backgroundColor: '#0F172A',
+          backgroundColor: '#05130E',
           color: '#FFFFFF',
           padding: '2.25rem',
           marginBottom: '2rem',
-          boxShadow: '0 10px 30px rgba(15, 23, 42, 0.15)'
+          boxShadow: '0 10px 30px rgba(5, 19, 14, 0.25)'
         }}>
           <div style={{
             position: 'absolute',
@@ -179,7 +179,7 @@ export default function PlatformGammaPortal() {
             width: '600px',
             height: '400px',
             borderRadius: '50%',
-            background: `radial-gradient(circle, ${primaryColor}50 0%, rgba(15, 23, 42, 0) 70%)`,
+            background: `radial-gradient(circle, ${primaryColor}50 0%, rgba(5, 19, 14, 0) 70%)`,
             pointerEvents: 'none'
           }} />
 
@@ -275,8 +275,8 @@ export default function PlatformGammaPortal() {
             { label: 'Active Live Stream Viewers', value: '1,420 Streams', color: '#3B82F6', icon: <FiCheckCircle /> }
           ].map((kpi, idx) => (
             <div key={idx} style={{
-              backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-              border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+              backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+              border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
               borderRadius: '16px',
               padding: '1.5rem',
               boxShadow: '0 4px 16px rgba(0,0,0,0.04)'
@@ -285,7 +285,7 @@ export default function PlatformGammaPortal() {
                 <span style={{ fontSize: '0.775rem', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase' }}>{kpi.label}</span>
                 <span style={{ fontSize: '1.1rem', color: kpi.color }}>{kpi.icon}</span>
               </div>
-              <div style={{ fontSize: '1.6rem', fontWeight: '800', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>{kpi.value}</div>
+              <div style={{ fontSize: '1.6rem', fontWeight: '800', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>{kpi.value}</div>
             </div>
           ))}
         </div>
@@ -293,14 +293,14 @@ export default function PlatformGammaPortal() {
         {/* TAB CONTENT: TRANSCODE QUEUE */}
         {activeTab === 'queue' && (
           <div style={{
-            backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-            border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+            backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+            border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
             borderRadius: '18px',
             padding: '1.75rem',
             marginBottom: '2rem'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: '800', margin: 0, color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: '800', margin: 0, color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>
                 🎬 AI Transcode Job Manager & Render Queue
               </h3>
 
@@ -338,9 +338,9 @@ export default function PlatformGammaPortal() {
                   minWidth: '240px',
                   padding: '0.75rem 1.25rem',
                   borderRadius: '12px',
-                  backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
-                  border: `1px solid ${isDarkMode ? '#334155' : '#CBD5E1'}`,
-                  color: isDarkMode ? '#F8FAFC' : '#0F172A',
+                  backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC',
+                  border: `1px solid ${isDarkMode ? '#133829' : '#CBD5E1'}`,
+                  color: isDarkMode ? '#ECFDF5' : '#0F172A',
                   fontWeight: '600'
                 }}
               />
@@ -350,9 +350,9 @@ export default function PlatformGammaPortal() {
                 style={{
                   padding: '0.75rem 1.25rem',
                   borderRadius: '12px',
-                  backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
-                  border: `1px solid ${isDarkMode ? '#334155' : '#CBD5E1'}`,
-                  color: isDarkMode ? '#F8FAFC' : '#0F172A',
+                  backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC',
+                  border: `1px solid ${isDarkMode ? '#133829' : '#CBD5E1'}`,
+                  color: isDarkMode ? '#ECFDF5' : '#0F172A',
                   fontWeight: '600'
                 }}
               >
@@ -384,7 +384,7 @@ export default function PlatformGammaPortal() {
             <div style={{ overflowX: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
                 <thead>
-                  <tr style={{ borderBottom: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`, textAlign: 'left', color: 'var(--text-muted)' }}>
+                  <tr style={{ borderBottom: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`, textAlign: 'left', color: 'var(--text-muted)' }}>
                     <th style={{ padding: '0.85rem 1rem' }}>JUDUL FILE VIDEO</th>
                     <th style={{ padding: '0.85rem 1rem' }}>FORMAT INPUT</th>
                     <th style={{ padding: '0.85rem 1rem' }}>TARGET PRESET ENKODING</th>
@@ -394,7 +394,7 @@ export default function PlatformGammaPortal() {
                 </thead>
                 <tbody>
                   {queue.map((row, i) => (
-                    <tr key={i} style={{ borderBottom: `1px solid ${isDarkMode ? '#334155' : '#F1F5F9'}` }}>
+                    <tr key={i} style={{ borderBottom: `1px solid ${isDarkMode ? '#133829' : '#F1F5F9'}` }}>
                       <td style={{ padding: '0.9rem 1rem', fontWeight: '800', color: primaryColor }}>{row.title}</td>
                       <td style={{ padding: '0.9rem 1rem' }}>{row.input}</td>
                       <td style={{ padding: '0.9rem 1rem', fontWeight: '600' }}>{row.preset}</td>
@@ -429,13 +429,13 @@ export default function PlatformGammaPortal() {
         {/* TAB CONTENT: GPUS */}
         {activeTab === 'gpus' && (
           <div style={{
-            backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-            border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+            backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+            border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
             borderRadius: '18px',
             padding: '1.75rem',
             marginBottom: '2rem'
           }}>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: '800', marginBottom: '1.25rem', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: '800', marginBottom: '1.25rem', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>
               🖥️ Hardware GPU Transcoder Nodes
             </h3>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.25rem' }}>
@@ -444,8 +444,8 @@ export default function PlatformGammaPortal() {
                 { name: 'NVIDIA RTX 4090 Node 02', load: '82%', vram: '12.8 / 24 GB', temp: '68 °C', status: 'NVENC Active' },
                 { name: 'NVIDIA A100 Tensor Core', load: '45%', vram: '18.0 / 80 GB', temp: '54 °C', status: 'AV1 Hardware' }
               ].map((gpu, idx) => (
-                <div key={idx} style={{ padding: '1.5rem', borderRadius: '16px', backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC', border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}` }}>
-                  <div style={{ fontWeight: '800', fontSize: '1rem', color: isDarkMode ? '#F8FAFC' : '#0F172A', marginBottom: '0.5rem' }}>{gpu.name}</div>
+                <div key={idx} style={{ padding: '1.5rem', borderRadius: '16px', backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC', border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}` }}>
+                  <div style={{ fontWeight: '800', fontSize: '1rem', color: isDarkMode ? '#ECFDF5' : '#0F172A', marginBottom: '0.5rem' }}>{gpu.name}</div>
                   <div style={{ fontSize: '1.75rem', fontWeight: '800', color: primaryColor, marginBottom: '0.25rem' }}>{gpu.load}</div>
                   <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>VRAM: <strong>{gpu.vram}</strong> | Temp: <strong>{gpu.temp}</strong></div>
                 </div>

@@ -398,7 +398,7 @@ export default function Dashboard() {
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
                 <FiTruck style={{ color: primaryColor, fontSize: '1.25rem' }} />
-                <h3 style={{ fontSize: '1.1rem', fontWeight: '800', margin: 0, color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+                <h3 style={{ fontSize: '1.1rem', fontWeight: '800', margin: 0, color: 'var(--text-main)' }}>
                   Smart Logistics Cold-Chain Fleet Telemetry
                 </h3>
               </div>
@@ -408,7 +408,7 @@ export default function Dashboard() {
             <div style={{ overflowX: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
                 <thead>
-                  <tr style={{ borderBottom: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`, textAlign: 'left', color: 'var(--text-muted)' }}>
+                  <tr style={{ borderBottom: '1px solid var(--border-color)', textAlign: 'left', color: 'var(--text-muted)' }}>
                     <th style={{ padding: '0.75rem' }}>WAYBILL CONTAINER</th>
                     <th style={{ padding: '0.75rem' }}>CARGO TYPE</th>
                     <th style={{ padding: '0.75rem' }}>LOGISTICS ROUTE</th>
@@ -419,7 +419,7 @@ export default function Dashboard() {
                 </thead>
                 <tbody>
                   {betaWaybills.map(wb => (
-                    <tr key={wb.id} style={{ borderBottom: `1px solid ${isDarkMode ? '#334155' : '#F1F5F9'}` }}>
+                    <tr key={wb.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
                       <td style={{ padding: '0.75rem', fontWeight: '800', color: primaryColor }}>{wb.id}</td>
                       <td style={{ padding: '0.75rem', fontWeight: '600' }}>{wb.type}</td>
                       <td style={{ padding: '0.75rem' }}>{wb.route}</td>
@@ -443,7 +443,7 @@ export default function Dashboard() {
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
                 <FiFilm style={{ color: primaryColor, fontSize: '1.25rem' }} />
-                <h3 style={{ fontSize: '1.1rem', fontWeight: '800', margin: 0, color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+                <h3 style={{ fontSize: '1.1rem', fontWeight: '800', margin: 0, color: 'var(--text-main)' }}>
                   AI Video Transcoder Real-Time Render Queue
                 </h3>
               </div>
@@ -453,7 +453,7 @@ export default function Dashboard() {
             <div style={{ overflowX: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
                 <thead>
-                  <tr style={{ borderBottom: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`, textAlign: 'left', color: 'var(--text-muted)' }}>
+                  <tr style={{ borderBottom: '1px solid var(--border-color)', textAlign: 'left', color: 'var(--text-muted)' }}>
                     <th style={{ padding: '0.75rem' }}>JOB ID</th>
                     <th style={{ padding: '0.75rem' }}>FILE NAME</th>
                     <th style={{ padding: '0.75rem' }}>TARGET CODEC</th>
@@ -464,7 +464,7 @@ export default function Dashboard() {
                 </thead>
                 <tbody>
                   {gammaRenderJobs.map(job => (
-                    <tr key={job.id} style={{ borderBottom: `1px solid ${isDarkMode ? '#334155' : '#F1F5F9'}` }}>
+                    <tr key={job.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
                       <td style={{ padding: '0.75rem', fontWeight: '800', color: primaryColor }}>{job.id}</td>
                       <td style={{ padding: '0.75rem', fontWeight: '600' }}>{job.name}</td>
                       <td style={{ padding: '0.75rem' }}>{job.codec}</td>
@@ -495,7 +495,7 @@ export default function Dashboard() {
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
                 <FiServer style={{ color: primaryColor, fontSize: '1.25rem' }} />
-                <h3 style={{ fontSize: '1.1rem', fontWeight: '800', margin: 0, color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+                <h3 style={{ fontSize: '1.1rem', fontWeight: '800', margin: 0, color: 'var(--text-main)' }}>
                   Enterprise Cloud ERP Multi-Node Kubernetes Clusters
                 </h3>
               </div>
@@ -505,7 +505,7 @@ export default function Dashboard() {
             <div style={{ overflowX: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
                 <thead>
-                  <tr style={{ borderBottom: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`, textAlign: 'left', color: 'var(--text-muted)' }}>
+                  <tr style={{ borderBottom: '1px solid var(--border-color)', textAlign: 'left', color: 'var(--text-muted)' }}>
                     <th style={{ padding: '0.75rem' }}>NODE ID</th>
                     <th style={{ padding: '0.75rem' }}>REGION CLUSTER</th>
                     <th style={{ padding: '0.75rem' }}>CPU LOAD</th>
@@ -516,7 +516,7 @@ export default function Dashboard() {
                 </thead>
                 <tbody>
                   {deltaClusterNodes.map(node => (
-                    <tr key={node.id} style={{ borderBottom: `1px solid ${isDarkMode ? '#334155' : '#F1F5F9'}` }}>
+                    <tr key={node.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
                       <td style={{ padding: '0.75rem', fontWeight: '800', color: primaryColor }}>{node.id}</td>
                       <td style={{ padding: '0.75rem', fontWeight: '600' }}>{node.region}</td>
                       <td style={{ padding: '0.75rem', fontWeight: '700', color: '#F59E0B' }}>{node.cpu}</td>

@@ -16,8 +16,8 @@
 }
 
 .maintenance-landing[data-theme="dark"] {
-  background-color: #080C14;
-  color: #F8FAFC;
+  background-color: #05130E;
+  color: #ECFDF5;
 }
 
 .page-noise {
@@ -40,7 +40,7 @@
 }
 
 .maintenance-landing[data-theme="dark"] .site-header {
-  border-bottom-color: rgba(30, 41, 59, 0.8);
+  border-bottom-color: rgba(19, 56, 41, 0.8);
 }
 
 .maintenance-landing .header-inner {
@@ -109,8 +109,8 @@
 }
 
 .maintenance-landing[data-theme="dark"] .theme-button {
-  background-color: #1E293B;
-  border-color: #334155;
+  background-color: #091E16;
+  border-color: #133829;
   color: #FBBF24;
 }
 
@@ -269,7 +269,7 @@
 }
 
 .maintenance-landing[data-theme="dark"] .maint-hero-copy p {
-  color: #94A3B8;
+  color: #93C5AA;
 }
 
 /* Timer Box */
@@ -285,9 +285,9 @@
 }
 
 .maintenance-landing[data-theme="dark"] .maint-timer-box {
-  background-color: #1E293B;
-  border-color: #334155;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  background-color: #091E16;
+  border-color: #133829;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
 }
 
 .timer-tag {
@@ -357,9 +357,9 @@
 }
 
 .maintenance-landing[data-theme="dark"] .step-badge {
-  background-color: #1E293B;
-  border-color: #334155;
-  color: #94A3B8;
+  background-color: #091E16;
+  border-color: #133829;
+  color: #93C5AA;
 }
 
 .step-badge.done {
@@ -369,17 +369,17 @@
 }
 
 .step-badge.active {
-  background-color: rgba(99, 102, 241, 0.1);
-  border-color: rgba(99, 102, 241, 0.3);
-  color: #6366F1;
+  background-color: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.4);
+  color: #10B981;
 }
 
 .pulse-circle {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background-color: #6366F1;
-  box-shadow: 0 0 8px #6366F1;
+  background-color: #10B981;
+  box-shadow: 0 0 8px #10B981;
 }
 
 /* Subscribe Card */
@@ -406,8 +406,8 @@
 }
 
 .maintenance-landing[data-theme="dark"] .sub-input-row {
-  background-color: #1E293B;
-  border-color: #334155;
+  background-color: #091E16;
+  border-color: #133829;
 }
 
 .sub-icon {
@@ -441,8 +441,8 @@
 }
 
 .maintenance-landing[data-theme="dark"] .sub-btn {
-  background-color: #F8FAFC;
-  color: #0F172A;
+  background-color: #10B981;
+  color: #05130E;
 }
 
 .sub-success {
@@ -478,8 +478,8 @@
 }
 
 .maintenance-landing[data-theme="dark"] .browser-window {
-  background-color: #0F172A;
-  border-color: #334155;
+  background-color: #05130E;
+  border-color: #133829;
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
 }
 
@@ -493,8 +493,8 @@
 }
 
 .maintenance-landing[data-theme="dark"] .browser-topbar {
-  background-color: #1E293B;
-  border-color: #334155;
+  background-color: #091E16;
+  border-color: #133829;
 }
 
 .browser-dots {
@@ -523,9 +523,9 @@
 }
 
 .maintenance-landing[data-theme="dark"] .browser-url {
-  background-color: #0F172A;
-  border-color: #334155;
-  color: #94A3B8;
+  background-color: #05130E;
+  border-color: #133829;
+  color: #93C5AA;
 }
 
 .browser-plus {
@@ -565,9 +565,9 @@
   gap: 0.35rem;
   padding: 0.2rem 0.65rem;
   border-radius: 6px;
-  background-color: rgba(99, 102, 241, 0.1);
-  color: #6366F1;
-  border: 1px solid rgba(99, 102, 241, 0.25);
+  background-color: rgba(16, 185, 129, 0.1);
+  color: #10B981;
+  border: 1px solid rgba(16, 185, 129, 0.25);
   font-size: 0.7rem;
   font-weight: 800;
   cursor: pointer;
@@ -587,7 +587,7 @@
 }
 
 .t-prefix {
-  color: #6366F1;
+  color: #10B981;
   font-weight: 800;
 }
 
@@ -607,14 +607,15 @@
   font-size: 0.75rem;
   font-weight: 700;
   font-family: 'JetBrains Mono', monospace;
-  color: #6366F1;
+  color: #10B981;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
   z-index: 20;
 }
 
 .maintenance-landing[data-theme="dark"] .floating-code {
-  background-color: #1E293B;
-  border-color: #334155;
+  background-color: #091E16;
+  border-color: #133829;
+  color: #34D399;
 }
 
 .floating-tag {
@@ -634,9 +635,9 @@
 }
 
 .maintenance-landing[data-theme="dark"] .floating-tag {
-  background-color: #1E293B;
-  border-color: #334155;
-  color: #F8FAFC;
+  background-color: #091E16;
+  border-color: #133829;
+  color: #ECFDF5;
 }
 
 /* Footer */
@@ -648,7 +649,7 @@
 }
 
 .maintenance-landing[data-theme="dark"] .site-footer {
-  border-top-color: #1E293B;
+  border-top-color: #133829;
 }
 
 .maintenance-landing .footer-inner {
@@ -693,14 +694,14 @@
 }
 
 .maintenance-landing[data-theme="dark"] .social-links a {
-  background-color: #1E293B;
-  border-color: #334155;
-  color: #94A3B8;
+  background-color: #091E16;
+  border-color: #133829;
+  color: #93C5AA;
 }
 
 .maintenance-landing .social-links a:hover {
-  color: #6366F1;
-  border-color: #6366F1;
+  color: #10B981;
+  border-color: #10B981;
 }
 
 

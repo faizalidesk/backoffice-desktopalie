@@ -148,7 +148,7 @@ export default function Header({ title = 'Dashboard Overview' }) {
     <header style={{
       height: '64px',
       borderBottom: '1px solid var(--border-color)',
-      backgroundColor: isDarkMode ? 'rgba(30, 41, 59, 0.85)' : 'rgba(255, 255, 255, 0.85)',
+      backgroundColor: isDarkMode ? 'rgba(9, 30, 22, 0.85)' : 'rgba(255, 255, 255, 0.85)',
       backdropFilter: 'blur(8px)',
       display: 'flex',
       alignItems: 'center',
@@ -213,8 +213,8 @@ export default function Header({ title = 'Dashboard Overview' }) {
               width: '38px',
               height: '38px',
               borderRadius: '50%',
-              backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-              border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+              backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+              border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
               color: 'var(--text-main)',
               display: 'flex',
               alignItems: 'center',
@@ -243,7 +243,7 @@ export default function Header({ title = 'Dashboard Overview' }) {
                 alignItems: 'center',
                 justifyContent: 'center',
                 boxShadow: '0 2px 6px rgba(239, 68, 68, 0.4)',
-                border: `2px solid ${isDarkMode ? '#1E293B' : '#FFFFFF'}`
+                border: `2px solid ${isDarkMode ? '#091E16' : '#FFFFFF'}`
               }}>
                 {unreadCount > 9 ? '9+' : unreadCount}
               </span>
@@ -257,10 +257,10 @@ export default function Header({ title = 'Dashboard Overview' }) {
               top: 'calc(100% + 8px)',
               right: 0,
               width: '340px',
-              backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-              border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+              backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+              border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
               borderRadius: '16px',
-              boxShadow: isDarkMode ? '0 20px 40px rgba(0,0,0,0.5)' : '0 15px 35px rgba(15, 23, 42, 0.12)',
+              boxShadow: isDarkMode ? '0 20px 40px rgba(0,0,0,0.6)' : '0 15px 35px rgba(15, 23, 42, 0.12)',
               overflow: 'hidden',
               zIndex: 999,
               display: 'flex',
@@ -270,11 +270,11 @@ export default function Header({ title = 'Dashboard Overview' }) {
               {/* Header section */}
               <div style={{
                 padding: '0.85rem 1rem',
-                borderBottom: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+                borderBottom: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC'
+                backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC'
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   <span style={{ fontWeight: '700', fontSize: '0.925rem', color: 'var(--text-main)' }}>
@@ -305,21 +305,23 @@ export default function Header({ title = 'Dashboard Overview' }) {
                       fontSize: '0.75rem',
                       fontWeight: '700',
                       cursor: 'pointer',
-                      padding: '0.2rem 0.4rem',
-                      borderRadius: '6px'
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.3rem'
                     }}
                   >
-                    {t('markAllAsRead')}
+                    <FiCheck />
+                    <span>{t('markAllAsRead')}</span>
                   </button>
                 )}
               </div>
 
-              {/* Tab Filters */}
+              {/* Notification Filter Subheader */}
               <div style={{
                 display: 'flex',
-                padding: '0.5rem 0.75rem 0.25rem 0.75rem',
-                gap: '0.5rem',
-                borderBottom: `1px solid ${isDarkMode ? '#334155' : '#F1F5F9'}`
+                padding: '0.5rem 0.85rem',
+                gap: '0.4rem',
+                borderBottom: `1px solid ${isDarkMode ? '#133829' : '#F1F5F9'}`,
               }}>
                 <button
                   type="button"
@@ -386,8 +388,8 @@ export default function Header({ title = 'Dashboard Overview' }) {
                         onClick={() => handleNotifClick(item)}
                         style={{
                           padding: '0.85rem 1rem',
-                          borderBottom: `1px solid ${isDarkMode ? '#334155' : '#F1F5F9'}`,
-                          backgroundColor: isUnread ? (isDarkMode ? 'rgba(59, 130, 246, 0.08)' : 'rgba(239, 246, 255, 0.7)') : 'transparent',
+                          borderBottom: `1px solid ${isDarkMode ? '#133829' : '#F1F5F9'}`,
+                          backgroundColor: isUnread ? (isDarkMode ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 246, 255, 0.7)') : 'transparent',
                           display: 'flex',
                           alignItems: 'flex-start',
                           gap: '0.75rem',
@@ -432,7 +434,7 @@ export default function Header({ title = 'Dashboard Overview' }) {
                           </div>
                           <p style={{
                             fontSize: '0.78rem',
-                            color: isDarkMode ? '#94A3B8' : '#64748B',
+                            color: isDarkMode ? '#93C5AA' : '#64748B',
                             margin: 0,
                             lineHeight: 1.4,
                             display: '-webkit-box',
@@ -476,8 +478,8 @@ export default function Header({ title = 'Dashboard Overview' }) {
               {notifications.length > 0 && (
                 <div style={{
                   padding: '0.6rem 1rem',
-                  borderTop: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
-                  backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
+                  borderTop: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
+                  backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC',
                   textAlign: 'center'
                 }}>
                   <button
@@ -486,7 +488,7 @@ export default function Header({ title = 'Dashboard Overview' }) {
                     style={{
                       background: 'none',
                       border: 'none',
-                      color: isDarkMode ? '#94A3B8' : '#64748B',
+                      color: isDarkMode ? '#93C5AA' : '#64748B',
                       fontSize: '0.75rem',
                       fontWeight: '700',
                       cursor: 'pointer'
@@ -511,8 +513,8 @@ export default function Header({ title = 'Dashboard Overview' }) {
               gap: '0.65rem',
               padding: '0.35rem 0.75rem',
               borderRadius: '99px',
-              backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-              border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+              backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+              border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
               color: 'var(--text-main)',
               cursor: 'pointer',
               boxShadow: '0 2px 6px rgba(0,0,0,0.05)',
@@ -559,10 +561,10 @@ export default function Header({ title = 'Dashboard Overview' }) {
               top: 'calc(100% + 8px)',
               right: 0,
               width: '270px',
-              backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-              border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+              backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+              border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
               borderRadius: '16px',
-              boxShadow: isDarkMode ? '0 20px 40px rgba(0,0,0,0.5)' : '0 15px 35px rgba(15, 23, 42, 0.12)',
+              boxShadow: isDarkMode ? '0 20px 40px rgba(0,0,0,0.6)' : '0 15px 35px rgba(15, 23, 42, 0.12)',
               padding: '0.75rem',
               zIndex: 999,
               display: 'flex',
@@ -573,7 +575,7 @@ export default function Header({ title = 'Dashboard Overview' }) {
               {/* Profile Header Info */}
               <div style={{
                 padding: '0.75rem',
-                backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
+                backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC',
                 borderRadius: '12px',
                 display: 'flex',
                 alignItems: 'center',
@@ -664,7 +666,7 @@ export default function Header({ title = 'Dashboard Overview' }) {
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '0.5rem',
-                backgroundColor: isDarkMode ? 'rgba(15, 23, 42, 0.4)' : '#F8FAFC'
+                backgroundColor: isDarkMode ? 'rgba(5, 19, 14, 0.6)' : '#F8FAFC'
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.78rem', fontWeight: '700', color: 'var(--text-muted)' }}>
                   <FiGlobe style={{ color: 'var(--primary)' }} />
@@ -794,25 +796,25 @@ export default function Header({ title = 'Dashboard Overview' }) {
           <div style={{
             width: '100%',
             maxWidth: '540px',
-            backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-            border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+            backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+            border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
             borderRadius: '20px',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.35)',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
             overflow: 'hidden',
             animation: 'fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
           }}>
             {/* Modal Header */}
             <div style={{
               padding: '1.25rem 1.5rem',
-              borderBottom: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+              borderBottom: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC'
+              backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC'
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
                 <FiBell style={{ color: 'var(--primary)', fontSize: '1.2rem' }} />
-                <span style={{ fontWeight: '800', fontSize: '1rem', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+                <span style={{ fontWeight: '800', fontSize: '1rem', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>
                   Detail & Rincian Notifikasi
                 </span>
               </div>
@@ -823,7 +825,7 @@ export default function Header({ title = 'Dashboard Overview' }) {
                 style={{
                   background: 'none',
                   border: 'none',
-                  color: isDarkMode ? '#94A3B8' : '#64748B',
+                  color: isDarkMode ? '#93C5AA' : '#64748B',
                   cursor: 'pointer',
                   fontSize: '1.25rem',
                   padding: '0.2rem',
@@ -882,7 +884,7 @@ export default function Header({ title = 'Dashboard Overview' }) {
                     <h2 style={{
                       fontSize: '1.25rem',
                       fontWeight: '800',
-                      color: isDarkMode ? '#F8FAFC' : '#0F172A',
+                      color: isDarkMode ? '#ECFDF5' : '#0F172A',
                       margin: '0 0 1rem 0',
                       lineHeight: 1.35
                     }}>
@@ -891,19 +893,19 @@ export default function Header({ title = 'Dashboard Overview' }) {
 
                     {/* Detailed Message Box */}
                     <div style={{
-                      backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
-                      border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+                      backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC',
+                      border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
                       borderRadius: '14px',
                       padding: '1.25rem',
                       marginBottom: '1.25rem'
                     }}>
-                      <div style={{ fontSize: '0.75rem', fontWeight: '700', color: isDarkMode ? '#94A3B8' : '#64748B', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      <div style={{ fontSize: '0.75rem', fontWeight: '700', color: isDarkMode ? '#93C5AA' : '#64748B', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                         Isi & Pembahasan Lengkap:
                       </div>
                       <p style={{
                         fontSize: '0.925rem',
                         lineHeight: 1.65,
-                        color: isDarkMode ? '#E2E8F0' : '#334155',
+                        color: isDarkMode ? '#ECFDF5' : '#334155',
                         margin: 0,
                         whiteSpace: 'pre-wrap'
                       }}>
@@ -917,7 +919,7 @@ export default function Header({ title = 'Dashboard Overview' }) {
                       alignItems: 'center',
                       gap: '0.5rem',
                       fontSize: '0.78rem',
-                      color: isDarkMode ? '#94A3B8' : '#64748B'
+                      color: isDarkMode ? '#93C5AA' : '#64748B'
                     }}>
                       <FiClock />
                       <span>Diterbitkan: <strong>{formatFullDateTime(selectedNotif.timestamp)}</strong></span>
@@ -930,8 +932,8 @@ export default function Header({ title = 'Dashboard Overview' }) {
             {/* Modal Footer Actions */}
             <div style={{
               padding: '1rem 1.75rem',
-              borderTop: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
-              backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
+              borderTop: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
+              backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'flex-end',
@@ -957,7 +959,7 @@ export default function Header({ title = 'Dashboard Overview' }) {
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '0.5rem',
-                    boxShadow: '0 4px 12px rgba(59, 130, 246, 0.35)'
+                    boxShadow: '0 4px 12px rgba(16, 185, 129, 0.35)'
                   }}
                 >
                   <span>Buka Modul / Halaman Target</span>
@@ -971,8 +973,8 @@ export default function Header({ title = 'Dashboard Overview' }) {
                 style={{
                   padding: '0.55rem 1.25rem',
                   borderRadius: '10px',
-                  backgroundColor: isDarkMode ? '#334155' : '#E2E8F0',
-                  color: isDarkMode ? '#F8FAFC' : '#0F172A',
+                  backgroundColor: isDarkMode ? '#133829' : '#E2E8F0',
+                  color: isDarkMode ? '#ECFDF5' : '#0F172A',
                   border: 'none',
                   fontWeight: '700',
                   fontSize: '0.85rem',

@@ -429,8 +429,8 @@ export default function MembershipManager() {
             { label: 'Active Sessions', value: members.length, color: '#F59E0B', icon: <FiCheckCircle /> }
           ].map((kpi, idx) => (
             <div key={idx} style={{
-              backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-              border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+              backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+              border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
               borderRadius: '16px',
               padding: '1.5rem',
               boxShadow: '0 4px 16px rgba(0,0,0,0.04)'
@@ -439,15 +439,15 @@ export default function MembershipManager() {
                 <span style={{ fontSize: '0.775rem', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase' }}>{kpi.label}</span>
                 <span style={{ fontSize: '1.1rem', color: kpi.color }}>{kpi.icon}</span>
               </div>
-              <div style={{ fontSize: '1.75rem', fontWeight: '800', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>{kpi.value}</div>
+              <div style={{ fontSize: '1.75rem', fontWeight: '800', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>{kpi.value}</div>
             </div>
           ))}
         </div>
 
         {/* CONTROLS BAR: SEARCH & PLATFORM FILTER TABS */}
         <div style={{
-          backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-          border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+          backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+          border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
           borderRadius: '18px',
           padding: '1.5rem',
           marginBottom: '2rem',
@@ -469,9 +469,9 @@ export default function MembershipManager() {
                   width: '100%',
                   padding: '0.75rem 1rem 0.75rem 2.75rem',
                   borderRadius: '12px',
-                  backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
-                  border: `1px solid ${isDarkMode ? '#334155' : '#CBD5E1'}`,
-                  color: isDarkMode ? '#F8FAFC' : '#0F172A',
+                  backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC',
+                  border: `1px solid ${isDarkMode ? '#133829' : '#CBD5E1'}`,
+                  color: isDarkMode ? '#ECFDF5' : '#0F172A',
                   fontSize: '0.9rem',
                   outline: 'none'
                 }}
@@ -493,9 +493,9 @@ export default function MembershipManager() {
                   style={{
                     padding: '0.6rem 1rem',
                     borderRadius: '10px',
-                    backgroundColor: activeFilter === tab.id ? '#3B82F6' : (isDarkMode ? '#0F172A' : '#F1F5F9'),
-                    color: activeFilter === tab.id ? '#FFFFFF' : (isDarkMode ? '#94A3B8' : '#64748B'),
-                    border: `1px solid ${activeFilter === tab.id ? '#3B82F6' : (isDarkMode ? '#334155' : '#E2E8F0')}`,
+                    backgroundColor: activeFilter === tab.id ? '#10B981' : (isDarkMode ? '#05130E' : '#F1F5F9'),
+                    color: activeFilter === tab.id ? '#FFFFFF' : (isDarkMode ? '#93C5AA' : '#64748B'),
+                    border: `1px solid ${activeFilter === tab.id ? '#10B981' : (isDarkMode ? '#133829' : '#E2E8F0')}`,
                     fontSize: '0.8rem',
                     fontWeight: '700',
                     cursor: 'pointer',
@@ -512,8 +512,8 @@ export default function MembershipManager() {
         {/* BULK ACTION TOOLBAR (WHEN MEMBERS ARE CHECKED/SELECTED) */}
         {selectedIds.length > 0 && (
           <div style={{
-            backgroundColor: isDarkMode ? '#0F172A' : '#EFF6FF',
-            border: `1.5px solid ${isDarkMode ? '#3B82F6' : '#93C5FD'}`,
+            backgroundColor: isDarkMode ? '#05130E' : '#EFF6FF',
+            border: `1.5px solid ${isDarkMode ? '#10B981' : '#93C5FD'}`,
             borderRadius: '16px',
             padding: '1rem 1.5rem',
             marginBottom: '1.5rem',
@@ -539,7 +539,7 @@ export default function MembershipManager() {
                 <FiCheckSquare />
                 <span>{selectedIds.length} AKUN TERPILIH</span>
               </div>
-              <span style={{ fontSize: '0.875rem', fontWeight: '600', color: isDarkMode ? '#94A3B8' : '#475569' }}>
+              <span style={{ fontSize: '0.875rem', fontWeight: '600', color: isDarkMode ? '#93C5AA' : '#475569' }}>
                 Pilih tindakan edit masal:
               </span>
             </div>
@@ -551,9 +551,9 @@ export default function MembershipManager() {
                 style={{
                   padding: '0.55rem 1rem',
                   borderRadius: '10px',
-                  backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-                  color: '#3B82F6',
-                  border: `1px solid ${isDarkMode ? '#334155' : '#CBD5E1'}`,
+                  backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+                  color: '#10B981',
+                  border: `1px solid ${isDarkMode ? '#133829' : '#CBD5E1'}`,
                   fontWeight: '700',
                   fontSize: '0.8rem',
                   cursor: 'pointer'
@@ -568,9 +568,9 @@ export default function MembershipManager() {
                 style={{
                   padding: '0.55rem 1rem',
                   borderRadius: '10px',
-                  backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-                  color: '#10B981',
-                  border: `1px solid ${isDarkMode ? '#334155' : '#CBD5E1'}`,
+                  backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+                  color: '#34D399',
+                  border: `1px solid ${isDarkMode ? '#133829' : '#CBD5E1'}`,
                   fontWeight: '700',
                   fontSize: '0.8rem',
                   cursor: 'pointer'
@@ -608,7 +608,7 @@ export default function MembershipManager() {
                   padding: '0.55rem 0.85rem',
                   borderRadius: '10px',
                   backgroundColor: 'transparent',
-                  color: isDarkMode ? '#94A3B8' : '#64748B',
+                  color: isDarkMode ? '#93C5AA' : '#64748B',
                   border: 'none',
                   fontWeight: '700',
                   fontSize: '0.8rem',
@@ -623,14 +623,14 @@ export default function MembershipManager() {
 
         {/* MEMBERS TABLE CARD */}
         <div style={{
-          backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-          border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+          backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+          border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
           borderRadius: '18px',
           padding: '1.75rem',
           boxShadow: '0 4px 16px rgba(0,0,0,0.04)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: '800', margin: 0, color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: '800', margin: 0, color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>
               📋 Daftar Anggota & Akun Pengguna ({filteredMembers.length})
             </h3>
           </div>
@@ -638,7 +638,7 @@ export default function MembershipManager() {
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
               <thead>
-                <tr style={{ borderBottom: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`, textAlign: 'left', color: 'var(--text-muted)' }}>
+                <tr style={{ borderBottom: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`, textAlign: 'left', color: 'var(--text-muted)' }}>
                   {/* SELECT ALL CHECKBOX COLUMN */}
                   <th style={{ padding: '0.85rem 1rem', width: '40px' }}>
                     <input
@@ -650,7 +650,7 @@ export default function MembershipManager() {
                         height: '18px',
                         borderRadius: '4px',
                         cursor: 'pointer',
-                        accentColor: '#3B82F6'
+                        accentColor: '#10B981'
                       }}
                       title="Pilih Semua Akun"
                     />
@@ -678,8 +678,8 @@ export default function MembershipManager() {
                       <tr 
                         key={row.id} 
                         style={{ 
-                          borderBottom: `1px solid ${isDarkMode ? '#334155' : '#F1F5F9'}`,
-                          backgroundColor: isChecked ? (isDarkMode ? 'rgba(59, 130, 246, 0.1)' : '#F0F9FF') : 'transparent',
+                          borderBottom: `1px solid ${isDarkMode ? '#133829' : '#F1F5F9'}`,
+                          backgroundColor: isChecked ? (isDarkMode ? 'rgba(16, 185, 129, 0.1)' : '#F0F9FF') : 'transparent',
                           transition: 'background-color 0.15s ease'
                         }}
                       >
@@ -694,7 +694,7 @@ export default function MembershipManager() {
                               height: '18px',
                               borderRadius: '4px',
                               cursor: 'pointer',
-                              accentColor: '#3B82F6'
+                              accentColor: '#10B981'
                             }}
                           />
                         </td>
@@ -705,10 +705,10 @@ export default function MembershipManager() {
                             <img
                               src={row.avatar_url}
                               alt="Avatar"
-                              style={{ width: '38px', height: '38px', borderRadius: '50%', objectFit: 'cover', border: '1.5px solid #3B82F6' }}
+                              style={{ width: '38px', height: '38px', borderRadius: '50%', objectFit: 'cover', border: '1.5px solid #10B981' }}
                             />
                             <div>
-                              <div style={{ fontWeight: '800', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>{row.full_name}</div>
+                              <div style={{ fontWeight: '800', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>{row.full_name}</div>
                               <div style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>ID: {row.id.slice(0, 12)}...</div>
                             </div>
                           </div>
@@ -725,8 +725,8 @@ export default function MembershipManager() {
                             gap: '0.35rem',
                             padding: '0.25rem 0.65rem',
                             borderRadius: '99px',
-                            backgroundColor: row.provider.includes('Google') ? 'rgba(234, 67, 53, 0.12)' : 'rgba(59, 130, 246, 0.12)',
-                            color: row.provider.includes('Google') ? '#EA4335' : '#3B82F6',
+                            backgroundColor: row.provider.includes('Google') ? 'rgba(234, 67, 53, 0.12)' : 'rgba(16, 185, 129, 0.12)',
+                            color: row.provider.includes('Google') ? '#EA4335' : '#10B981',
                             fontWeight: '700',
                             fontSize: '0.75rem'
                           }}>
@@ -740,8 +740,8 @@ export default function MembershipManager() {
                           <span style={{
                             padding: '0.25rem 0.65rem',
                             borderRadius: '99px',
-                            backgroundColor: row.platform === 'platform2' ? 'rgba(16, 185, 129, 0.15)' : (row.platform === 'platform3' ? 'rgba(139, 92, 246, 0.15)' : (row.platform === 'platform4' ? 'rgba(245, 158, 11, 0.15)' : 'rgba(59, 130, 246, 0.15)')),
-                            color: row.platform === 'platform2' ? '#10B981' : (row.platform === 'platform3' ? '#8B5CF6' : (row.platform === 'platform4' ? '#F59E0B' : '#3B82F6')),
+                            backgroundColor: row.platform === 'platform2' ? 'rgba(16, 185, 129, 0.15)' : (row.platform === 'platform3' ? 'rgba(139, 92, 246, 0.15)' : (row.platform === 'platform4' ? 'rgba(245, 158, 11, 0.15)' : 'rgba(16, 185, 129, 0.15)')),
+                            color: row.platform === 'platform2' ? '#10B981' : (row.platform === 'platform3' ? '#8B5CF6' : (row.platform === 'platform4' ? '#F59E0B' : '#10B981')),
                             fontWeight: '800',
                             fontSize: '0.75rem'
                           }}>
@@ -775,9 +775,9 @@ export default function MembershipManager() {
                               style={{
                                 padding: '0.45rem 0.65rem',
                                 borderRadius: '8px',
-                                backgroundColor: isDarkMode ? '#0F172A' : '#F1F5F9',
-                                border: `1px solid ${isDarkMode ? '#334155' : '#CBD5E1'}`,
-                                color: isDarkMode ? '#F8FAFC' : '#0F172A',
+                                backgroundColor: isDarkMode ? '#05130E' : '#F1F5F9',
+                                border: `1px solid ${isDarkMode ? '#133829' : '#CBD5E1'}`,
+                                color: isDarkMode ? '#ECFDF5' : '#0F172A',
                                 cursor: 'pointer'
                               }}
                               title="Detail Profil Pengguna"
@@ -830,8 +830,8 @@ export default function MembershipManager() {
             <div style={{
               width: '100%',
               maxWidth: '480px',
-              backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-              border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+              backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+              border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
               borderRadius: '24px',
               padding: '2rem',
               boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)',
@@ -858,9 +858,9 @@ export default function MembershipManager() {
                 <img
                   src={selectedMember.avatar_url}
                   alt="Avatar"
-                  style={{ width: '72px', height: '72px', borderRadius: '50%', objectFit: 'cover', border: '3px solid #3B82F6', margin: '0 auto 0.75rem auto' }}
+                  style={{ width: '72px', height: '72px', borderRadius: '50%', objectFit: 'cover', border: '3px solid #10B981', margin: '0 auto 0.75rem auto' }}
                 />
-                <h3 style={{ margin: '0 0 0.25rem 0', fontSize: '1.25rem', fontWeight: '800', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+                <h3 style={{ margin: '0 0 0.25rem 0', fontSize: '1.25rem', fontWeight: '800', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>
                   {selectedMember.full_name}
                 </h3>
                 <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.875rem' }}>{selectedMember.email}</p>
@@ -872,14 +872,14 @@ export default function MembershipManager() {
                 gap: '0.75rem',
                 padding: '1.25rem',
                 borderRadius: '16px',
-                backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
-                border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+                backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC',
+                border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
                 marginBottom: '1.5rem',
                 fontSize: '0.85rem'
               }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <span style={{ color: 'var(--text-muted)' }}>Platform Terdaftar:</span>
-                  <strong style={{ color: '#3B82F6' }}>{selectedMember.platformName}</strong>
+                  <strong style={{ color: '#10B981' }}>{selectedMember.platformName}</strong>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <span style={{ color: 'var(--text-muted)' }}>Metode Autentikasi:</span>

@@ -50,8 +50,8 @@ export default function PlatformDeltaPortal() {
     <div style={{
       minHeight: '100vh',
       width: '100vw',
-      backgroundColor: isDarkMode ? '#0F172A' : '#FAF9FC',
-      color: isDarkMode ? '#F8FAFC' : '#0F172A',
+      backgroundColor: isDarkMode ? '#05130E' : '#FAF9FC',
+      color: isDarkMode ? '#ECFDF5' : '#0F172A',
       fontFamily: "'Plus Jakarta Sans', -apple-system, sans-serif"
     }}>
       {/* STANDALONE PORTAL TOP HEADER */}
@@ -65,12 +65,12 @@ export default function PlatformDeltaPortal() {
         justifyContent: 'space-between',
         flexWrap: 'wrap',
         gap: '0.75rem',
-        borderBottom: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`
+        borderBottom: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
           <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', textDecoration: 'none' }}>
             <DesktopalieMark size={26} style={{ color: primaryColor }} />
-            <span style={{ fontSize: '1rem', fontWeight: '800', color: isDarkMode ? '#F8FAFC' : '#0F172A', letterSpacing: '0.04em' }}>
+            <span style={{ fontSize: '1rem', fontWeight: '800', color: isDarkMode ? '#ECFDF5' : '#0F172A', letterSpacing: '0.04em' }}>
               DESKTOPALIE DELTA PORTAL
             </span>
           </Link>
@@ -87,8 +87,8 @@ export default function PlatformDeltaPortal() {
               width: '38px',
               height: '38px',
               borderRadius: '50%',
-              backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-              border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+              backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+              border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
               color: isDarkMode ? '#FBBF24' : '#0F172A',
               display: 'flex',
               alignItems: 'center',
@@ -121,9 +121,9 @@ export default function PlatformDeltaPortal() {
               gap: '0.4rem',
               padding: '0.5rem 1rem',
               borderRadius: '10px',
-              backgroundColor: isDarkMode ? '#1E293B' : '#F1F5F9',
-              border: `1px solid ${isDarkMode ? '#334155' : '#CBD5E1'}`,
-              color: isDarkMode ? '#F8FAFC' : '#0F172A',
+              backgroundColor: isDarkMode ? '#091E16' : '#F1F5F9',
+              border: `1px solid ${isDarkMode ? '#133829' : '#CBD5E1'}`,
+              color: isDarkMode ? '#ECFDF5' : '#0F172A',
               fontWeight: '700',
               fontSize: '0.8rem',
               cursor: 'pointer'
@@ -143,11 +143,11 @@ export default function PlatformDeltaPortal() {
           position: 'relative',
           borderRadius: '20px',
           overflow: 'hidden',
-          backgroundColor: '#0F172A',
+          backgroundColor: '#05130E',
           color: '#FFFFFF',
           padding: '2.25rem',
           marginBottom: '2rem',
-          boxShadow: '0 10px 30px rgba(15, 23, 42, 0.15)'
+          boxShadow: '0 10px 30px rgba(5, 19, 14, 0.25)'
         }}>
           <div style={{
             position: 'absolute',
@@ -156,7 +156,7 @@ export default function PlatformDeltaPortal() {
             width: '600px',
             height: '400px',
             borderRadius: '50%',
-            background: `radial-gradient(circle, ${primaryColor}50 0%, rgba(15, 23, 42, 0) 70%)`,
+            background: `radial-gradient(circle, ${primaryColor}50 0%, rgba(5, 19, 14, 0) 70%)`,
             pointerEvents: 'none'
           }} />
 
@@ -252,8 +252,8 @@ export default function PlatformDeltaPortal() {
             { label: 'Average Edge Latency', value: '8 ms', color: '#8B5CF6', icon: <FiActivity /> }
           ].map((kpi, idx) => (
             <div key={idx} style={{
-              backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-              border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+              backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+              border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
               borderRadius: '16px',
               padding: '1.5rem',
               boxShadow: '0 4px 16px rgba(0,0,0,0.04)'
@@ -262,7 +262,7 @@ export default function PlatformDeltaPortal() {
                 <span style={{ fontSize: '0.775rem', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase' }}>{kpi.label}</span>
                 <span style={{ fontSize: '1.1rem', color: kpi.color }}>{kpi.icon}</span>
               </div>
-              <div style={{ fontSize: '1.6rem', fontWeight: '800', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>{kpi.value}</div>
+              <div style={{ fontSize: '1.6rem', fontWeight: '800', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>{kpi.value}</div>
             </div>
           ))}
         </div>
@@ -270,13 +270,13 @@ export default function PlatformDeltaPortal() {
         {/* TAB CONTENT: CLUSTERS */}
         {activeTab === 'clusters' && (
           <div style={{
-            backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-            border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+            backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+            border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
             borderRadius: '18px',
             padding: '1.75rem',
             marginBottom: '2rem'
           }}>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: '800', marginBottom: '1.25rem', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: '800', marginBottom: '1.25rem', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>
               🖥️ Multi-Node Cluster Telemetry & Microservices
             </h3>
 
@@ -289,11 +289,11 @@ export default function PlatformDeltaPortal() {
                 <div key={i} style={{
                   padding: '1.25rem',
                   borderRadius: '14px',
-                  backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
-                  border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`
+                  backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC',
+                  border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.65rem' }}>
-                    <div style={{ fontWeight: '800', fontSize: '0.9rem', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>{node.name}</div>
+                    <div style={{ fontWeight: '800', fontSize: '0.9rem', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>{node.name}</div>
                     <span style={{ padding: '0.2rem 0.5rem', borderRadius: '99px', backgroundColor: 'rgba(16, 185, 129, 0.15)', color: '#10B981', fontSize: '0.725rem', fontWeight: '700' }}>
                       ● {node.status}
                     </span>
@@ -313,19 +313,19 @@ export default function PlatformDeltaPortal() {
         {/* TAB CONTENT: FINANCE */}
         {activeTab === 'finance' && (
           <div style={{
-            backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-            border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+            backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+            border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
             borderRadius: '18px',
             padding: '1.75rem',
             marginBottom: '2rem'
           }}>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: '800', marginBottom: '1.25rem', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: '800', marginBottom: '1.25rem', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>
               💼 Enterprise ERP Purchase Orders & Ledger
             </h3>
             <div style={{ overflowX: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
                 <thead>
-                  <tr style={{ borderBottom: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`, textAlign: 'left', color: 'var(--text-muted)' }}>
+                  <tr style={{ borderBottom: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`, textAlign: 'left', color: 'var(--text-muted)' }}>
                     <th style={{ padding: '0.85rem 1rem' }}>INVOICE ID</th>
                     <th style={{ padding: '0.85rem 1rem' }}>VENDOR / PROVIDER</th>
                     <th style={{ padding: '0.85rem 1rem' }}>NOMINAL INVOICE</th>
@@ -335,7 +335,7 @@ export default function PlatformDeltaPortal() {
                 </thead>
                 <tbody>
                   {ledger.map((row, i) => (
-                    <tr key={i} style={{ borderBottom: `1px solid ${isDarkMode ? '#334155' : '#F1F5F9'}` }}>
+                    <tr key={i} style={{ borderBottom: `1px solid ${isDarkMode ? '#133829' : '#F1F5F9'}` }}>
                       <td style={{ padding: '0.9rem 1rem', fontWeight: '800', color: primaryColor }}>{row.id}</td>
                       <td style={{ padding: '0.9rem 1rem', fontWeight: '600' }}>{row.vendor}</td>
                       <td style={{ padding: '0.9rem 1rem', fontWeight: '800' }}>{row.amount}</td>

@@ -44,25 +44,51 @@ export const FlavorProvider = ({ children }) => {
     }
 
     // 2. Inject CSS Variables untuk Theme Flavor
-    if (activeFlavor?.theme) {
-      const root = document.documentElement;
+    const root = document.documentElement;
+    const isDark = root.getAttribute('data-theme') === 'dark' || localStorage.getItem('desktopalie_theme') === 'dark';
 
-      if (activeFlavor.theme.colorPrimary) {
-        root.style.setProperty('--primary', activeFlavor.theme.colorPrimary);
-        root.style.setProperty('--color-primary', activeFlavor.theme.colorPrimary);
+    if (isDark) {
+      if (flavorId === 'platform1') {
+        root.style.setProperty('--primary', '#10B981');
+        root.style.setProperty('--primary-hover', '#059669');
+        root.style.setProperty('--primary-light', 'rgba(16, 185, 129, 0.16)');
+        root.style.setProperty('--color-primary', '#10B981');
+        root.style.setProperty('--color-secondary', '#059669');
+        root.style.setProperty('--color-accent', '#34D399');
+      } else if (activeFlavor?.theme) {
+        if (activeFlavor.theme.colorPrimary) {
+          root.style.setProperty('--primary', activeFlavor.theme.colorPrimary);
+          root.style.setProperty('--color-primary', activeFlavor.theme.colorPrimary);
+        }
+        if (activeFlavor.theme.colorSecondary) {
+          root.style.setProperty('--primary-hover', activeFlavor.theme.colorSecondary);
+          root.style.setProperty('--color-secondary', activeFlavor.theme.colorSecondary);
+        }
+        if (activeFlavor.theme.accent) {
+          root.style.setProperty('--color-accent', activeFlavor.theme.accent);
+        }
       }
+      root.style.setProperty('--bg-sidebar', '#091E16');
+    } else {
+      if (activeFlavor?.theme) {
+        if (activeFlavor.theme.colorPrimary) {
+          root.style.setProperty('--primary', activeFlavor.theme.colorPrimary);
+          root.style.setProperty('--color-primary', activeFlavor.theme.colorPrimary);
+          root.style.setProperty('--primary-light', '#EEF2FF');
+        }
 
-      if (activeFlavor.theme.colorSecondary) {
-        root.style.setProperty('--primary-hover', activeFlavor.theme.colorSecondary);
-        root.style.setProperty('--color-secondary', activeFlavor.theme.colorSecondary);
-      }
+        if (activeFlavor.theme.colorSecondary) {
+          root.style.setProperty('--primary-hover', activeFlavor.theme.colorSecondary);
+          root.style.setProperty('--color-secondary', activeFlavor.theme.colorSecondary);
+        }
 
-      if (activeFlavor.theme.accent) {
-        root.style.setProperty('--color-accent', activeFlavor.theme.accent);
-      }
+        if (activeFlavor.theme.accent) {
+          root.style.setProperty('--color-accent', activeFlavor.theme.accent);
+        }
 
-      if (activeFlavor.theme.bgSidebar && activeFlavor.theme.bgSidebar !== 'default') {
-        root.style.setProperty('--bg-sidebar', activeFlavor.theme.bgSidebar);
+        if (activeFlavor.theme.bgSidebar && activeFlavor.theme.bgSidebar !== 'default') {
+          root.style.setProperty('--bg-sidebar', activeFlavor.theme.bgSidebar);
+        }
       }
     }
   }, [flavorId, activeFlavor]);

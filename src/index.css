@@ -29,22 +29,22 @@
 }
 
 [data-theme="dark"] {
-  --bg-main: #0B0F17;
-  --bg-sidebar: #151D2A;
-  --bg-card: #151D2A;
-  --bg-card-hover: #1E293B;
-  --border-color: #1E293B;
-  --border-highlight: #334155;
+  --bg-main: #05130E;
+  --bg-sidebar: #091E16;
+  --bg-card: #091E16;
+  --bg-card-hover: #0F2B20;
+  --border-color: #133829;
+  --border-highlight: #1B4F3B;
   
-  --primary: #818CF8;
-  --primary-hover: #6366F1;
-  --primary-light: rgba(99, 102, 241, 0.15);
+  --primary: #10B981;
+  --primary-hover: #059669;
+  --primary-light: rgba(16, 185, 129, 0.16);
   
-  --text-main: #F8FAFC;
-  --text-muted: #94A3B8;
-  --text-subtle: #64748B;
+  --text-main: #ECFDF5;
+  --text-muted: #93C5AA;
+  --text-subtle: #58836F;
 
-  --accent-violet: #C084FC;
+  --accent-violet: #34D399;
   --accent-teal: #2DD4BF;
   --accent-amber: #FBBF24;
   --accent-rose: #FB7185;

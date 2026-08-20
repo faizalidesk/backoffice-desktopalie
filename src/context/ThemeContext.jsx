@@ -12,6 +12,33 @@ export function ThemeProvider({ children }) {
     const theme = isDarkMode ? 'dark' : 'light';
     localStorage.setItem('desktopalie_theme', theme);
     document.documentElement.setAttribute('data-theme', theme);
+
+    const root = document.documentElement;
+    const currentFlavor = localStorage.getItem('desktopalie_flavor') || 'platform1';
+
+    if (isDarkMode) {
+      if (currentFlavor === 'platform1') {
+        root.style.setProperty('--primary', '#10B981');
+        root.style.setProperty('--primary-hover', '#059669');
+        root.style.setProperty('--primary-light', 'rgba(16, 185, 129, 0.16)');
+        root.style.setProperty('--color-primary', '#10B981');
+        root.style.setProperty('--color-secondary', '#059669');
+        root.style.setProperty('--color-accent', '#34D399');
+      }
+      root.style.setProperty('--bg-sidebar', '#091E16');
+    } else {
+      if (currentFlavor === 'platform1') {
+        root.style.setProperty('--primary', '#4F46E5');
+        root.style.setProperty('--primary-hover', '#4338CA');
+        root.style.setProperty('--primary-light', '#EEF2FF');
+        root.style.setProperty('--color-primary', '#4F46E5');
+        root.style.setProperty('--color-secondary', '#6366F1');
+        root.style.setProperty('--color-accent', '#818CF8');
+        root.style.setProperty('--bg-sidebar', '#FFFFFF');
+      } else {
+        root.style.setProperty('--bg-sidebar', '#FFFFFF');
+      }
+    }
   }, [isDarkMode]);
 
   const toggleTheme = () => {

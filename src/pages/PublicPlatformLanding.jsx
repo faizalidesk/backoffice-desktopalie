@@ -499,8 +499,8 @@ export default function PublicPlatformLanding() {
       return (
         <section className="public-section-padding">
           <div className="public-card-container" style={{
-            backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-            border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+            backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+            border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
             boxShadow: isDarkMode ? '0 20px 40px rgba(0,0,0,0.4)' : '0 12px 32px rgba(15, 23, 42, 0.08)'
           }}>
             <div className="public-widget-header">
@@ -508,7 +508,7 @@ export default function PublicPlatformLanding() {
                 <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: primaryColor, fontWeight: '700', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.25rem' }}>
                   <FiActivity /> Live Fleet & Cargo Telemetry
                 </div>
-                <h3 style={{ fontSize: '1.35rem', fontWeight: '800', margin: 0, color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+                <h3 style={{ fontSize: '1.35rem', fontWeight: '800', margin: 0, color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>
                   Smart Logistics Tracking Engine
                 </h3>
               </div>
@@ -527,9 +527,9 @@ export default function PublicPlatformLanding() {
                   flex: 1,
                   padding: '0.75rem 1.25rem',
                   borderRadius: '12px',
-                  backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
-                  border: `1px solid ${isDarkMode ? '#334155' : '#CBD5E1'}`,
-                  color: isDarkMode ? '#F8FAFC' : '#0F172A',
+                  backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC',
+                  border: `1px solid ${isDarkMode ? '#133829' : '#CBD5E1'}`,
+                  color: isDarkMode ? '#ECFDF5' : '#0F172A',
                   fontWeight: '600',
                   fontSize: '0.9rem'
                 }}
@@ -559,11 +559,11 @@ export default function PublicPlatformLanding() {
                 { step: '3. In-Transit Cargo', status: 'In Progress', time: 'Active Now' },
                 { step: '4. Destination Hub', status: 'Pending', time: 'ETA 14:00' }
               ].map((s, i) => (
-                <div key={i} style={{ padding: '1rem', borderRadius: '12px', backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC', border: `1px solid ${s.status === 'In Progress' ? primaryColor : (isDarkMode ? '#334155' : '#E2E8F0')}` }}>
+                <div key={i} style={{ padding: '1rem', borderRadius: '12px', backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC', border: `1px solid ${s.status === 'In Progress' ? primaryColor : (isDarkMode ? '#133829' : '#E2E8F0')}` }}>
                   <div style={{ fontSize: '0.75rem', fontWeight: '700', color: s.status === 'Completed' ? '#10B981' : (s.status === 'In Progress' ? primaryColor : 'var(--text-muted)') }}>
                     {s.status}
                   </div>
-                  <div style={{ fontWeight: '800', fontSize: '0.875rem', color: isDarkMode ? '#F8FAFC' : '#0F172A', marginTop: '0.2rem' }}>
+                  <div style={{ fontWeight: '800', fontSize: '0.875rem', color: isDarkMode ? '#ECFDF5' : '#0F172A', marginTop: '0.2rem' }}>
                     {s.step}
                   </div>
                   <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.15rem' }}>
@@ -574,7 +574,7 @@ export default function PublicPlatformLanding() {
             </div>
 
             {/* Live Container Telemetry Details */}
-            <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', paddingTop: '1rem', borderTop: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`, fontSize: '0.8rem', color: isDarkMode ? '#94A3B8' : '#64748B' }}>
+            <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', paddingTop: '1rem', borderTop: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`, fontSize: '0.8rem', color: isDarkMode ? '#93C5AA' : '#64748B' }}>
               <span>🌡️ Container Temp: <strong>4.2 °C (Cold Chain OK)</strong></span>
               <span>📍 Location: <strong>Tanjung Priok, Jakarta (S 6°6'12" E 106°53'45")</strong></span>
               <span>⚡ Carrier Speed: <strong>45 km/h</strong></span>
@@ -589,8 +589,8 @@ export default function PublicPlatformLanding() {
       return (
         <section className="public-section-padding">
           <div className="public-card-container" style={{
-            backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-            border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+            backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+            border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
             boxShadow: isDarkMode ? '0 20px 40px rgba(0,0,0,0.4)' : '0 12px 32px rgba(15, 23, 42, 0.08)'
           }}>
             <div className="public-widget-header">
@@ -598,7 +598,7 @@ export default function PublicPlatformLanding() {
                 <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: primaryColor, fontWeight: '700', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.25rem' }}>
                   <FiZap /> Real-Time Transcode Telemetry
                 </div>
-                <h3 style={{ fontSize: '1.35rem', fontWeight: '800', margin: 0, color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+                <h3 style={{ fontSize: '1.35rem', fontWeight: '800', margin: 0, color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>
                   AI Multi-Format Video Encoding Engine
                 </h3>
               </div>
@@ -609,7 +609,7 @@ export default function PublicPlatformLanding() {
 
             {/* Live Transcode Gauges */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1.25rem', marginBottom: '1.5rem' }}>
-              <div style={{ padding: '1.25rem', borderRadius: '14px', backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC', border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}` }}>
+              <div style={{ padding: '1.25rem', borderRadius: '14px', backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC', border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}` }}>
                 <div style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--text-muted)' }}>GPU UTILIZATION</div>
                 <div style={{ fontSize: '1.75rem', fontWeight: '800', color: primaryColor, marginTop: '0.25rem' }}>68%</div>
                 <div style={{ height: '6px', width: '100%', backgroundColor: `${primaryColor}25`, borderRadius: '99px', marginTop: '0.5rem', overflow: 'hidden' }}>
@@ -617,13 +617,13 @@ export default function PublicPlatformLanding() {
                 </div>
               </div>
 
-              <div style={{ padding: '1.25rem', borderRadius: '14px', backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC', border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}` }}>
+              <div style={{ padding: '1.25rem', borderRadius: '14px', backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC', border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}` }}>
                 <div style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--text-muted)' }}>BITRATE STREAM</div>
                 <div style={{ fontSize: '1.75rem', fontWeight: '800', color: '#10B981', marginTop: '0.25rem' }}>14.8 Mbps</div>
                 <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>4K H.265 / AV1 Adaptive</div>
               </div>
 
-              <div style={{ padding: '1.25rem', borderRadius: '14px', backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC', border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}` }}>
+              <div style={{ padding: '1.25rem', borderRadius: '14px', backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC', border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}` }}>
                 <div style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--text-muted)' }}>TRANSCODE SPEED</div>
                 <div style={{ fontSize: '1.75rem', fontWeight: '800', color: '#F59E0B', marginTop: '0.25rem' }}>4.2x FPS</div>
                 <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>250 FPS Real-time Render</div>
@@ -633,7 +633,7 @@ export default function PublicPlatformLanding() {
             {/* Preset Output Badges */}
             <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
               {['4K 2160p H.265', '1080p 60fps H.264', '720p HD WebM', 'Audio AAC 320kbps'].map((preset, i) => (
-                <span key={i} style={{ padding: '0.4rem 0.85rem', borderRadius: '8px', backgroundColor: isDarkMode ? '#0F172A' : '#F1F5F9', border: `1px solid ${isDarkMode ? '#334155' : '#CBD5E1'}`, fontSize: '0.8rem', fontWeight: '700', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+                <span key={i} style={{ padding: '0.4rem 0.85rem', borderRadius: '8px', backgroundColor: isDarkMode ? '#05130E' : '#F1F5F9', border: `1px solid ${isDarkMode ? '#133829' : '#CBD5E1'}`, fontSize: '0.8rem', fontWeight: '700', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>
                   🎬 {preset}
                 </span>
               ))}
@@ -648,8 +648,8 @@ export default function PublicPlatformLanding() {
       return (
         <section className="public-section-padding">
           <div className="public-card-container" style={{
-            backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-            border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+            backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+            border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
             boxShadow: isDarkMode ? '0 20px 40px rgba(0,0,0,0.4)' : '0 12px 32px rgba(15, 23, 42, 0.08)'
           }}>
             <div className="public-widget-header">
@@ -657,7 +657,7 @@ export default function PublicPlatformLanding() {
                 <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: primaryColor, fontWeight: '700', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.25rem' }}>
                   <FiShield /> Multi-Node Cluster Telemetry
                 </div>
-                <h3 style={{ fontSize: '1.35rem', fontWeight: '800', margin: 0, color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+                <h3 style={{ fontSize: '1.35rem', fontWeight: '800', margin: 0, color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>
                   Enterprise Cloud Infrastructure Monitor
                 </h3>
               </div>
@@ -673,9 +673,9 @@ export default function PublicPlatformLanding() {
                 { name: 'Cluster Node 02 (Singapore)', status: 'Healthy', load: '45%', latency: '14ms' },
                 { name: 'Cluster Node 03 (Tokyo)', status: 'Healthy', load: '28%', latency: '35ms' }
               ].map((node, i) => (
-                <div key={i} style={{ padding: '1.25rem', borderRadius: '14px', backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC', border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}` }}>
+                <div key={i} style={{ padding: '1.25rem', borderRadius: '14px', backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC', border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}` }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                    <span style={{ fontSize: '0.8rem', fontWeight: '800', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>{node.name}</span>
+                    <span style={{ fontSize: '0.8rem', fontWeight: '800', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>{node.name}</span>
                     <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#10B981' }} />
                   </div>
                   <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Load: <strong>{node.load}</strong> | Latency: <strong>{node.latency}</strong></div>
@@ -686,7 +686,7 @@ export default function PublicPlatformLanding() {
               ))}
             </div>
 
-            <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', paddingTop: '1rem', borderTop: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`, fontSize: '0.8rem', color: isDarkMode ? '#94A3B8' : '#64748B' }}>
+            <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', paddingTop: '1rem', borderTop: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`, fontSize: '0.8rem', color: isDarkMode ? '#93C5AA' : '#64748B' }}>
               <span>⚙️ Active Microservices: <strong>24 / 24 Healthy</strong></span>
               <span>💾 DB Connections: <strong>38 / 100 Active</strong></span>
               <span>🔐 SSL TLS 1.3: <strong>Valid (256-bit AES)</strong></span>
@@ -700,8 +700,8 @@ export default function PublicPlatformLanding() {
     return (
       <section className="public-section-padding">
         <div className="public-card-container" style={{
-          backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-          border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+          backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+          border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
           boxShadow: isDarkMode ? '0 20px 40px rgba(0,0,0,0.4)' : '0 12px 32px rgba(15, 23, 42, 0.08)'
         }}>
           <div className="public-widget-header">
@@ -709,7 +709,7 @@ export default function PublicPlatformLanding() {
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: primaryColor, fontWeight: '700', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.25rem' }}>
                 <FiGlobe /> Developer Workspace & System Telemetry
               </div>
-              <h3 style={{ fontSize: '1.35rem', fontWeight: '800', margin: 0, color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+              <h3 style={{ fontSize: '1.35rem', fontWeight: '800', margin: 0, color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>
                 Desktopalie Core Ecosystem Status
               </h3>
             </div>
@@ -719,19 +719,19 @@ export default function PublicPlatformLanding() {
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1.25rem', marginBottom: '1.5rem' }}>
-            <div style={{ padding: '1.25rem', borderRadius: '14px', backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC', border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}` }}>
+            <div style={{ padding: '1.25rem', borderRadius: '14px', backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC', border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}` }}>
               <div style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--text-muted)' }}>BUILD ENGINE</div>
               <div style={{ fontSize: '1.5rem', fontWeight: '800', color: primaryColor, marginTop: '0.25rem' }}>Vite 6.4</div>
               <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>React 19 Core</div>
             </div>
 
-            <div style={{ padding: '1.25rem', borderRadius: '14px', backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC', border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}` }}>
+            <div style={{ padding: '1.25rem', borderRadius: '14px', backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC', border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}` }}>
               <div style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--text-muted)' }}>DATABASE ENGINE</div>
               <div style={{ fontSize: '1.5rem', fontWeight: '800', color: '#10B981', marginTop: '0.25rem' }}>Supabase DB</div>
               <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>PostgreSQL + RLS Enabled</div>
             </div>
 
-            <div style={{ padding: '1.25rem', borderRadius: '14px', backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC', border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}` }}>
+            <div style={{ padding: '1.25rem', borderRadius: '14px', backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC', border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}` }}>
               <div style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--text-muted)' }}>EDGE LATENCY</div>
               <div style={{ fontSize: '1.5rem', fontWeight: '800', color: '#F59E0B', marginTop: '0.25rem' }}>12 ms</div>
               <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>Asia-Pacific Edge CDN</div>
@@ -740,7 +740,7 @@ export default function PublicPlatformLanding() {
 
           <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
             {['ReactJS', 'Vite', 'Supabase', 'PostgreSQL', 'Tailwind', 'Antigravity CLI'].map((tech, i) => (
-              <span key={i} style={{ padding: '0.4rem 0.85rem', borderRadius: '8px', backgroundColor: isDarkMode ? '#0F172A' : '#F1F5F9', border: `1px solid ${isDarkMode ? '#334155' : '#CBD5E1'}`, fontSize: '0.8rem', fontWeight: '700', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+              <span key={i} style={{ padding: '0.4rem 0.85rem', borderRadius: '8px', backgroundColor: isDarkMode ? '#05130E' : '#F1F5F9', border: `1px solid ${isDarkMode ? '#133829' : '#CBD5E1'}`, fontSize: '0.8rem', fontWeight: '700', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>
                 ⚡ {tech}
               </span>
             ))}
@@ -758,8 +758,8 @@ export default function PublicPlatformLanding() {
     return (
       <section id="login-section" className="public-section-padding">
         <div className="public-direct-login-box" style={{
-          backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-          border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+          backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+          border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
           boxShadow: isDarkMode ? '0 20px 40px rgba(0,0,0,0.4)' : '0 12px 32px rgba(15, 23, 42, 0.08)',
         }}>
           {/* Accent Line */}
@@ -779,10 +779,10 @@ export default function PublicPlatformLanding() {
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: primaryColor, fontWeight: '700', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>
                 <FiLock /> Direct Platform Portal Authentication
               </div>
-              <h2 style={{ fontSize: '1.75rem', fontWeight: '800', margin: '0 0 0.75rem 0', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+              <h2 style={{ fontSize: '1.75rem', fontWeight: '800', margin: '0 0 0.75rem 0', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>
                 Masuk ke Workspace Portal {activeFlavor?.name}
               </h2>
-              <p style={{ color: isDarkMode ? '#94A3B8' : '#64748B', fontSize: '0.95rem', margin: 0, lineHeight: '1.6', maxWidth: '540px' }}>
+              <p style={{ color: isDarkMode ? '#93C5AA' : '#64748B', fontSize: '0.95rem', margin: 0, lineHeight: '1.6', maxWidth: '540px' }}>
                 Akses langsung ke ruang kerja khusus {activeFlavor?.shortName}. Silakan login menggunakan akun Google terverifikasi atau kredensial email administrator Anda.
               </p>
             </div>
@@ -793,8 +793,8 @@ export default function PublicPlatformLanding() {
                 <div style={{
                   padding: '1.75rem',
                   borderRadius: '16px',
-                  backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
-                  border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+                  backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC',
+                  border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
                   textAlign: 'center'
                 }}>
                   <div style={{ width: '64px', height: '64px', borderRadius: '50%', margin: '0 auto 1rem auto', overflow: 'hidden', border: `3px solid ${primaryColor}` }}>
@@ -804,7 +804,7 @@ export default function PublicPlatformLanding() {
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />
                   </div>
-                  <h4 style={{ margin: '0 0 0.25rem 0', fontSize: '1.1rem', fontWeight: '800', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+                  <h4 style={{ margin: '0 0 0.25rem 0', fontSize: '1.1rem', fontWeight: '800', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>
                     {user.user_metadata?.full_name || user.email}
                   </h4>
                   <div style={{ fontSize: '0.8rem', color: '#10B981', fontWeight: '700', marginBottom: '1.25rem' }}>
@@ -842,8 +842,8 @@ export default function PublicPlatformLanding() {
                         padding: '0.65rem',
                         borderRadius: '10px',
                         backgroundColor: 'transparent',
-                        border: `1px solid ${isDarkMode ? '#334155' : '#CBD5E1'}`,
-                        color: isDarkMode ? '#94A3B8' : '#64748B',
+                        border: `1px solid ${isDarkMode ? '#133829' : '#CBD5E1'}`,
+                        color: isDarkMode ? '#93C5AA' : '#64748B',
                         fontWeight: '700',
                         fontSize: '0.8rem',
                         cursor: 'pointer'
@@ -857,8 +857,8 @@ export default function PublicPlatformLanding() {
                 <div style={{
                   padding: '1.75rem',
                   borderRadius: '16px',
-                  backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
-                  border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`
+                  backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC',
+                  border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`
                 }}>
                   {/* Google Login Button */}
                   <button
@@ -869,9 +869,9 @@ export default function PublicPlatformLanding() {
                       width: '100%',
                       padding: '0.85rem',
                       borderRadius: '12px',
-                      backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-                      color: isDarkMode ? '#F8FAFC' : '#0F172A',
-                      border: `1px solid ${isDarkMode ? '#334155' : '#CBD5E1'}`,
+                      backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+                      color: isDarkMode ? '#ECFDF5' : '#0F172A',
+                      border: `1px solid ${isDarkMode ? '#133829' : '#CBD5E1'}`,
                       fontWeight: '700',
                       fontSize: '0.9rem',
                       display: 'flex',
@@ -888,9 +888,9 @@ export default function PublicPlatformLanding() {
                   </button>
 
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem', color: 'var(--text-muted)' }}>
-                    <div style={{ flex: 1, height: '1px', backgroundColor: isDarkMode ? '#334155' : '#E2E8F0' }} />
+                    <div style={{ flex: 1, height: '1px', backgroundColor: isDarkMode ? '#133829' : '#E2E8F0' }} />
                     <span style={{ fontSize: '0.7rem', fontWeight: '700', textTransform: 'uppercase' }}>atau login portal</span>
-                    <div style={{ flex: 1, height: '1px', backgroundColor: isDarkMode ? '#334155' : '#E2E8F0' }} />
+                    <div style={{ flex: 1, height: '1px', backgroundColor: isDarkMode ? '#133829' : '#E2E8F0' }} />
                   </div>
 
                   <button
@@ -931,8 +931,8 @@ export default function PublicPlatformLanding() {
     <div style={{
       minHeight: '100vh',
       width: '100vw',
-      backgroundColor: isDarkMode ? '#0F172A' : '#FAF9FC',
-      color: isDarkMode ? '#F8FAFC' : '#0F172A',
+      backgroundColor: isDarkMode ? '#05130E' : '#FAF9FC',
+      color: isDarkMode ? '#ECFDF5' : '#0F172A',
       fontFamily: "'Plus Jakarta Sans', -apple-system, sans-serif",
       position: 'relative',
       overflowX: 'hidden',
@@ -948,7 +948,7 @@ export default function PublicPlatformLanding() {
         width: '800px',
         height: '600px',
         borderRadius: '50%',
-        background: `radial-gradient(circle, ${primaryColor}22 0%, rgba(15, 23, 42, 0) 70%)`,
+        background: `radial-gradient(circle, ${primaryColor}22 0%, rgba(5, 19, 14, 0) 70%)`,
         pointerEvents: 'none'
       }} />
 
@@ -956,8 +956,8 @@ export default function PublicPlatformLanding() {
       <header className="public-header">
         {/* Left Brand Logo matching screenshot */}
         <div className="public-brand">
-          <DesktopalieMark size={24} className="public-brand-mark" style={{ color: isDarkMode ? '#F8FAFC' : '#0F172A' }} />
-          <span className="public-brand-title" style={{ color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+          <DesktopalieMark size={24} className="public-brand-mark" style={{ color: isDarkMode ? '#ECFDF5' : '#0F172A' }} />
+          <span className="public-brand-title" style={{ color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>
             {activeFlavor?.logoText || 'DESKTOPALIE'}
           </span>
         </div>
@@ -969,7 +969,7 @@ export default function PublicPlatformLanding() {
               key={idx}
               href={item.path}
               style={{
-                color: isDarkMode ? '#94A3B8' : '#475569',
+                color: isDarkMode ? '#93C5AA' : '#475569',
                 fontSize: '0.875rem',
                 fontWeight: '600',
                 textDecoration: 'none',
@@ -989,8 +989,8 @@ export default function PublicPlatformLanding() {
             className="public-theme-btn"
             title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
             style={{
-              backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-              border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+              backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+              border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
               color: isDarkMode ? '#FBBF24' : '#0F172A',
             }}
           >
@@ -1053,14 +1053,14 @@ export default function PublicPlatformLanding() {
 
         {/* Main Title */}
         <h1 className="public-hero-title" style={{
-          color: isDarkMode ? '#F8FAFC' : '#0F172A'
+          color: isDarkMode ? '#ECFDF5' : '#0F172A'
         }}>
           {settings?.hero_title || activeFlavor?.name}
         </h1>
 
         {/* Subtitle Description */}
         <p className="public-hero-desc" style={{
-          color: isDarkMode ? '#94A3B8' : '#64748B',
+          color: isDarkMode ? '#93C5AA' : '#64748B',
         }}>
           {settings?.hero_description || activeFlavor?.description}
         </p>
@@ -1096,9 +1096,9 @@ export default function PublicPlatformLanding() {
               style={{
                 padding: '0.875rem 2rem',
                 borderRadius: '99px',
-                backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-                color: isDarkMode ? '#F8FAFC' : '#0F172A',
-                border: `1.5px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+                backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+                color: isDarkMode ? '#ECFDF5' : '#0F172A',
+                border: `1.5px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
                 fontWeight: '700',
                 fontSize: '0.95rem',
                 cursor: 'pointer',
@@ -1118,9 +1118,9 @@ export default function PublicPlatformLanding() {
             style={{
               padding: '0.875rem 2rem',
               borderRadius: '99px',
-              backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-              color: isDarkMode ? '#F8FAFC' : '#0F172A',
-              border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+              backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+              color: isDarkMode ? '#ECFDF5' : '#0F172A',
+              border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
               fontWeight: '600',
               fontSize: '0.95rem',
               textDecoration: 'none',
@@ -1135,7 +1135,7 @@ export default function PublicPlatformLanding() {
 
         {/* Footnote Note */}
         {settings?.hero_note && (
-          <p style={{ fontSize: '0.825rem', color: isDarkMode ? '#64748B' : '#94A3B8', fontStyle: 'italic' }}>
+          <p style={{ fontSize: '0.825rem', color: isDarkMode ? '#58836F' : '#94A3B8', fontStyle: 'italic' }}>
             💡 {settings.hero_note}
           </p>
         )}
@@ -1149,8 +1149,8 @@ export default function PublicPlatformLanding() {
           gap: '1.25rem'
         }}>
           <div style={{
-            backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-            border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+            backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+            border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
             borderRadius: '16px',
             padding: '1.75rem 1.25rem',
             textAlign: 'center',
@@ -1159,14 +1159,14 @@ export default function PublicPlatformLanding() {
             <div style={{ fontSize: '2.25rem', fontWeight: '800', color: primaryColor, marginBottom: '0.25rem' }}>
               {settings?.stat_1_value || '100+'}
             </div>
-            <div style={{ fontSize: '0.875rem', fontWeight: '600', color: isDarkMode ? '#94A3B8' : '#64748B' }}>
+            <div style={{ fontSize: '0.875rem', fontWeight: '600', color: isDarkMode ? '#93C5AA' : '#64748B' }}>
               {settings?.stat_1_label || 'Aktifitas Terhubung'}
             </div>
           </div>
 
           <div style={{
-            backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-            border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+            backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+            border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
             borderRadius: '16px',
             padding: '1.75rem 1.25rem',
             textAlign: 'center',
@@ -1175,14 +1175,14 @@ export default function PublicPlatformLanding() {
             <div style={{ fontSize: '2.25rem', fontWeight: '800', color: primaryColor, marginBottom: '0.25rem' }}>
               {settings?.stat_2_value || '99.9%'}
             </div>
-            <div style={{ fontSize: '0.875rem', fontWeight: '600', color: isDarkMode ? '#94A3B8' : '#64748B' }}>
+            <div style={{ fontSize: '0.875rem', fontWeight: '600', color: isDarkMode ? '#93C5AA' : '#64748B' }}>
               {settings?.stat_2_label || 'Sistem Uptime Reliability'}
             </div>
           </div>
 
           <div style={{
-            backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-            border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+            backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+            border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
             borderRadius: '16px',
             padding: '1.75rem 1.25rem',
             textAlign: 'center',
@@ -1191,7 +1191,7 @@ export default function PublicPlatformLanding() {
             <div style={{ fontSize: '2.25rem', fontWeight: '800', color: primaryColor, marginBottom: '0.25rem' }}>
               {settings?.stat_3_value || '24/7'}
             </div>
-            <div style={{ fontSize: '0.875rem', fontWeight: '600', color: isDarkMode ? '#94A3B8' : '#64748B' }}>
+            <div style={{ fontSize: '0.875rem', fontWeight: '600', color: isDarkMode ? '#93C5AA' : '#64748B' }}>
               {settings?.stat_3_label || 'Monitoring Real-time'}
             </div>
           </div>
@@ -1204,10 +1204,10 @@ export default function PublicPlatformLanding() {
       {/* FEATURED PROJECTS SHOWCASE */}
       <section id="projects" className="public-section-padding">
         <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-          <h2 style={{ fontSize: '2rem', fontWeight: '800', marginBottom: '0.75rem', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+          <h2 style={{ fontSize: '2rem', fontWeight: '800', marginBottom: '0.75rem', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>
             Project & Modul {activeFlavor?.shortName}
           </h2>
-          <p style={{ color: isDarkMode ? '#94A3B8' : '#64748B', fontSize: '0.95rem', maxWidth: '580px', margin: '0 auto' }}>
+          <p style={{ color: isDarkMode ? '#93C5AA' : '#64748B', fontSize: '0.95rem', maxWidth: '580px', margin: '0 auto' }}>
             Inisiatif dan proyek unggulan yang sedang berjalan di workspace platform ini.
           </p>
         </div>
@@ -1219,8 +1219,8 @@ export default function PublicPlatformLanding() {
         }}>
           {dummyProjects.map(proj => (
             <div key={proj.id} style={{
-              backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-              border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+              backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+              border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
               borderRadius: '16px',
               padding: '1.5rem 1.25rem',
               display: 'flex',
@@ -1241,21 +1241,21 @@ export default function PublicPlatformLanding() {
                   }}>
                     {proj.type}
                   </span>
-                  <span style={{ fontSize: '0.75rem', color: isDarkMode ? '#94A3B8' : '#64748B', fontWeight: '600' }}>
+                  <span style={{ fontSize: '0.75rem', color: isDarkMode ? '#93C5AA' : '#64748B', fontWeight: '600' }}>
                     {proj.status}
                   </span>
                 </div>
-                <h3 style={{ fontSize: '1.15rem', fontWeight: '700', marginBottom: '0.5rem', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+                <h3 style={{ fontSize: '1.15rem', fontWeight: '700', marginBottom: '0.5rem', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>
                   {proj.title}
                 </h3>
               </div>
 
-              <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: `1px solid ${isDarkMode ? '#334155' : '#F1F5F9'}` }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', marginBottom: '0.35rem', color: isDarkMode ? '#94A3B8' : '#64748B' }}>
+              <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: `1px solid ${isDarkMode ? '#133829' : '#F1F5F9'}` }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', marginBottom: '0.35rem', color: isDarkMode ? '#93C5AA' : '#64748B' }}>
                   <span>Progres Fitur</span>
                   <span>{proj.progress}%</span>
                 </div>
-                <div style={{ width: '100%', height: '6px', backgroundColor: isDarkMode ? '#334155' : '#E2E8F0', borderRadius: '99px', overflow: 'hidden' }}>
+                <div style={{ width: '100%', height: '6px', backgroundColor: isDarkMode ? '#133829' : '#E2E8F0', borderRadius: '99px', overflow: 'hidden' }}>
                   <div style={{ width: `${proj.progress}%`, height: '100%', backgroundColor: primaryColor, borderRadius: '99px' }} />
                 </div>
               </div>
@@ -1267,21 +1267,21 @@ export default function PublicPlatformLanding() {
       {/* ABOUT SECTION */}
       <section id="about" className="public-section-padding">
         <div className="public-about-box" style={{
-          backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-          border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+          backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+          border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
           borderRadius: '24px',
           boxShadow: '0 8px 30px rgba(0,0,0,0.06)'
         }}>
-          <h2 style={{ fontSize: '1.85rem', fontWeight: '800', marginBottom: '0.85rem', color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
+          <h2 style={{ fontSize: '1.85rem', fontWeight: '800', marginBottom: '0.85rem', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>
             {settings?.about_title || 'Tentang Platform'}
           </h2>
           <p style={{ fontSize: '1.05rem', fontWeight: '600', color: primaryColor, lineHeight: '1.6', marginBottom: '1.15rem' }}>
             {settings?.about_large_copy}
           </p>
-          <p style={{ fontSize: '0.925rem', color: isDarkMode ? '#94A3B8' : '#64748B', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+          <p style={{ fontSize: '0.925rem', color: isDarkMode ? '#93C5AA' : '#64748B', lineHeight: '1.7', marginBottom: '1.5rem' }}>
             {settings?.about_description}
           </p>
-          <div style={{ fontSize: '0.85rem', fontWeight: '700', color: isDarkMode ? '#CBD5E1' : '#475569' }}>
+          <div style={{ fontSize: '0.85rem', fontWeight: '700', color: isDarkMode ? '#ECFDF5' : '#475569' }}>
             📍 {settings?.about_location || 'Operating Globally'}
           </div>
         </div>
@@ -1289,8 +1289,8 @@ export default function PublicPlatformLanding() {
 
       {/* MODERN MULTI-COLUMN HIGH-END FOOTER */}
       <footer id="contact" className="public-footer" style={{
-        borderTop: `1px solid ${isDarkMode ? '#1E293B' : '#E2E8F0'}`,
-        backgroundColor: isDarkMode ? '#090D16' : '#F1F5F9',
+        borderTop: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
+        backgroundColor: isDarkMode ? '#05130E' : '#F1F5F9',
         position: 'relative',
         overflow: 'hidden'
       }}>
@@ -1320,9 +1320,9 @@ export default function PublicPlatformLanding() {
             {/* COLUMN 1: BRANDING & SYSTEM STATUS */}
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
-                <DesktopalieMark size={34} style={{ color: isDarkMode ? '#F8FAFC' : '#0F172A' }} />
+                <DesktopalieMark size={34} style={{ color: isDarkMode ? '#ECFDF5' : '#0F172A' }} />
                 <div>
-                  <span style={{ fontSize: '1.15rem', fontWeight: '800', letterSpacing: '0.04em', color: isDarkMode ? '#F8FAFC' : '#0F172A', display: 'block', lineHeight: 1 }}>
+                  <span style={{ fontSize: '1.15rem', fontWeight: '800', letterSpacing: '0.04em', color: isDarkMode ? '#ECFDF5' : '#0F172A', display: 'block', lineHeight: 1 }}>
                     {activeFlavor?.logoText || 'DESKTOPALIE'}
                   </span>
                   <span style={{ fontSize: '0.7rem', color: primaryColor, fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
@@ -1334,7 +1334,7 @@ export default function PublicPlatformLanding() {
               <p style={{
                 fontSize: '0.875rem',
                 lineHeight: '1.65',
-                color: isDarkMode ? '#94A3B8' : '#64748B',
+                color: isDarkMode ? '#93C5AA' : '#64748B',
                 marginBottom: '1.5rem',
                 maxWidth: '300px'
               }}>
@@ -1348,20 +1348,20 @@ export default function PublicPlatformLanding() {
                 gap: '0.5rem',
                 padding: '0.35rem 0.75rem',
                 borderRadius: '99px',
-                backgroundColor: isDarkMode ? 'rgba(34, 197, 94, 0.12)' : 'rgba(22, 163, 74, 0.1)',
-                border: `1px solid ${isDarkMode ? 'rgba(34, 197, 94, 0.3)' : 'rgba(22, 163, 74, 0.2)'}`,
+                backgroundColor: isDarkMode ? 'rgba(16, 185, 129, 0.12)' : 'rgba(22, 163, 74, 0.1)',
+                border: `1px solid ${isDarkMode ? 'rgba(16, 185, 129, 0.3)' : 'rgba(22, 163, 74, 0.2)'}`,
                 fontSize: '0.75rem',
                 fontWeight: '700',
-                color: isDarkMode ? '#4ADE80' : '#16A34A'
+                color: isDarkMode ? '#34D399' : '#16A34A'
               }}>
-                <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#22C55E', boxShadow: '0 0 8px #22C55E' }} />
+                <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#10B981', boxShadow: '0 0 8px #10B981' }} />
                 <span>Ekosistem System Operational</span>
               </div>
             </div>
 
             {/* COLUMN 2: QUICK NAVIGATION */}
             <div>
-              <h4 style={{ fontSize: '0.9rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.08em', color: isDarkMode ? '#F8FAFC' : '#0F172A', marginBottom: '1.25rem' }}>
+              <h4 style={{ fontSize: '0.9rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.08em', color: isDarkMode ? '#ECFDF5' : '#0F172A', marginBottom: '1.25rem' }}>
                 Navigasi Platform
               </h4>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.875rem' }}>
@@ -1370,13 +1370,13 @@ export default function PublicPlatformLanding() {
                     <a
                       href={link.path}
                       style={{
-                        color: isDarkMode ? '#94A3B8' : '#64748B',
+                        color: isDarkMode ? '#93C5AA' : '#64748B',
                         textDecoration: 'none',
                         transition: 'color 0.15s ease',
                         fontWeight: '500'
                       }}
                       onMouseOver={(e) => e.currentTarget.style.color = primaryColor}
-                      onMouseOut={(e) => e.currentTarget.style.color = isDarkMode ? '#94A3B8' : '#64748B'}
+                      onMouseOut={(e) => e.currentTarget.style.color = isDarkMode ? '#93C5AA' : '#64748B'}
                     >
                       {link.label}
                     </a>
@@ -1387,7 +1387,7 @@ export default function PublicPlatformLanding() {
 
             {/* COLUMN 3: EKOSISTEM SUB-PLATFORM */}
             <div>
-              <h4 style={{ fontSize: '0.9rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.08em', color: isDarkMode ? '#F8FAFC' : '#0F172A', marginBottom: '1.25rem' }}>
+              <h4 style={{ fontSize: '0.9rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.08em', color: isDarkMode ? '#ECFDF5' : '#0F172A', marginBottom: '1.25rem' }}>
                 Ekosistem Sub-Platform
               </h4>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
@@ -1398,13 +1398,13 @@ export default function PublicPlatformLanding() {
                       display: 'flex',
                       alignItems: 'center',
                       gap: '0.5rem',
-                      color: isDarkMode ? '#94A3B8' : '#64748B',
+                      color: isDarkMode ? '#93C5AA' : '#64748B',
                       textDecoration: 'none',
                       fontSize: '0.825rem',
                       fontWeight: '600'
                     }}
                   >
-                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#4f46e5' }} />
+                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#10B981' }} />
                     <span>Desktopalie Main Core</span>
                   </a>
                 </li>
@@ -1415,13 +1415,13 @@ export default function PublicPlatformLanding() {
                       display: 'flex',
                       alignItems: 'center',
                       gap: '0.5rem',
-                      color: isDarkMode ? '#94A3B8' : '#64748B',
+                      color: isDarkMode ? '#93C5AA' : '#64748B',
                       textDecoration: 'none',
                       fontSize: '0.825rem',
                       fontWeight: '600'
                     }}
                   >
-                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#059669' }} />
+                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#10B981' }} />
                     <span>Platform Beta (Logistics)</span>
                   </a>
                 </li>
@@ -1432,13 +1432,13 @@ export default function PublicPlatformLanding() {
                       display: 'flex',
                       alignItems: 'center',
                       gap: '0.5rem',
-                      color: isDarkMode ? '#94A3B8' : '#64748B',
+                      color: isDarkMode ? '#93C5AA' : '#64748B',
                       textDecoration: 'none',
                       fontSize: '0.825rem',
                       fontWeight: '600'
                     }}
                   >
-                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#0284c7' }} />
+                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#8B5CF6' }} />
                     <span>Platform Gamma (Streaming)</span>
                   </a>
                 </li>
@@ -1449,13 +1449,13 @@ export default function PublicPlatformLanding() {
                       display: 'flex',
                       alignItems: 'center',
                       gap: '0.5rem',
-                      color: isDarkMode ? '#94A3B8' : '#64748B',
+                      color: isDarkMode ? '#93C5AA' : '#64748B',
                       textDecoration: 'none',
                       fontSize: '0.825rem',
                       fontWeight: '600'
                     }}
                   >
-                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#d97706' }} />
+                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#F59E0B' }} />
                     <span>Platform Delta (Enterprise ERP)</span>
                   </a>
                 </li>
@@ -1464,16 +1464,16 @@ export default function PublicPlatformLanding() {
 
             {/* COLUMN 4: CONTACT & SOCIAL HANDLES */}
             <div>
-              <h4 style={{ fontSize: '0.9rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.08em', color: isDarkMode ? '#F8FAFC' : '#0F172A', marginBottom: '1.25rem' }}>
+              <h4 style={{ fontSize: '0.9rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.08em', color: isDarkMode ? '#ECFDF5' : '#0F172A', marginBottom: '1.25rem' }}>
                 Kontak & Komunitas
               </h4>
-              <p style={{ fontSize: '0.85rem', color: isDarkMode ? '#94A3B8' : '#64748B', marginBottom: '1rem' }}>
+              <p style={{ fontSize: '0.85rem', color: isDarkMode ? '#93C5AA' : '#64748B', marginBottom: '1rem' }}>
                 {settings?.contact_title || 'Punya pertanyaan atau butuh integrasi custom?'}
               </p>
 
               <div style={{
-                backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-                border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+                backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+                border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
                 borderRadius: '12px',
                 padding: '0.75rem 1rem',
                 fontSize: '0.85rem',
@@ -1495,12 +1495,12 @@ export default function PublicPlatformLanding() {
                       width: '38px',
                       height: '38px',
                       borderRadius: '50%',
-                      backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-                      border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+                      backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+                      border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      color: isDarkMode ? '#F8FAFC' : '#0F172A',
+                      color: isDarkMode ? '#ECFDF5' : '#0F172A',
                       fontSize: '1.1rem',
                       transition: 'all 0.15s ease'
                     }}
@@ -1517,12 +1517,12 @@ export default function PublicPlatformLanding() {
                       width: '38px',
                       height: '38px',
                       borderRadius: '50%',
-                      backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-                      border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+                      backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+                      border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      color: isDarkMode ? '#F8FAFC' : '#0F172A',
+                      color: isDarkMode ? '#ECFDF5' : '#0F172A',
                       fontSize: '1.1rem',
                       transition: 'all 0.15s ease'
                     }}
@@ -1539,12 +1539,12 @@ export default function PublicPlatformLanding() {
                       width: '38px',
                       height: '38px',
                       borderRadius: '50%',
-                      backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-                      border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+                      backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+                      border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      color: isDarkMode ? '#F8FAFC' : '#0F172A',
+                      color: isDarkMode ? '#ECFDF5' : '#0F172A',
                       fontSize: '1.1rem',
                       transition: 'all 0.15s ease'
                     }}
@@ -1559,7 +1559,7 @@ export default function PublicPlatformLanding() {
 
           {/* BOTTOM BAR: COPYRIGHT & COMPLIANCE */}
           <div style={{
-            borderTop: `1px solid ${isDarkMode ? '#1E293B' : '#E2E8F0'}`,
+            borderTop: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
             paddingTop: '2rem',
             display: 'flex',
             flexWrap: 'wrap',
@@ -1567,7 +1567,7 @@ export default function PublicPlatformLanding() {
             justifyContent: 'space-between',
             gap: '1rem',
             fontSize: '0.775rem',
-            color: isDarkMode ? '#64748B' : '#94A3B8'
+            color: isDarkMode ? '#58836F' : '#94A3B8'
           }}>
             <div>
               © {new Date().getFullYear()} <strong>{activeFlavor?.name}</strong>. Hak Cipta Dilindungi. Powered by Desktopalie Core Engine.

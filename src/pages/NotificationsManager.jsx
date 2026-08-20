@@ -232,7 +232,7 @@ export default function NotificationsManager() {
           justifyContent: 'space-between',
           flexWrap: 'wrap',
           gap: '1rem',
-          backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
+          backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
           border: '1px solid var(--border-color)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
@@ -252,7 +252,7 @@ export default function NotificationsManager() {
                 fontSize: '0.78rem',
                 fontWeight: '700',
                 border: 'none',
-                backgroundColor: viewPlatformFilter === 'active_flavor' ? 'var(--primary)' : (isDarkMode ? '#334155' : '#F1F5F9'),
+                backgroundColor: viewPlatformFilter === 'active_flavor' ? 'var(--primary)' : (isDarkMode ? '#133829' : '#F1F5F9'),
                 color: viewPlatformFilter === 'active_flavor' ? '#FFFFFF' : 'var(--text-muted)',
                 cursor: 'pointer'
               }}
@@ -269,7 +269,7 @@ export default function NotificationsManager() {
                 fontSize: '0.78rem',
                 fontWeight: '700',
                 border: 'none',
-                backgroundColor: viewPlatformFilter === 'all_platforms' ? '#F43F5E' : (isDarkMode ? '#334155' : '#F1F5F9'),
+                backgroundColor: viewPlatformFilter === 'all_platforms' ? '#F43F5E' : (isDarkMode ? '#133829' : '#F1F5F9'),
                 color: viewPlatformFilter === 'all_platforms' ? '#FFFFFF' : 'var(--text-muted)',
                 cursor: 'pointer'
               }}
@@ -286,7 +286,7 @@ export default function NotificationsManager() {
                 fontSize: '0.78rem',
                 fontWeight: '700',
                 border: 'none',
-                backgroundColor: viewPlatformFilter === 'platform1' ? '#3B82F6' : (isDarkMode ? '#334155' : '#F1F5F9'),
+                backgroundColor: viewPlatformFilter === 'platform1' ? '#10B981' : (isDarkMode ? '#133829' : '#F1F5F9'),
                 color: viewPlatformFilter === 'platform1' ? '#FFFFFF' : 'var(--text-muted)',
                 cursor: 'pointer'
               }}
@@ -303,7 +303,7 @@ export default function NotificationsManager() {
                 fontSize: '0.78rem',
                 fontWeight: '700',
                 border: 'none',
-                backgroundColor: viewPlatformFilter === 'platform2' ? '#10B981' : (isDarkMode ? '#334155' : '#F1F5F9'),
+                backgroundColor: viewPlatformFilter === 'platform2' ? '#10B981' : (isDarkMode ? '#133829' : '#F1F5F9'),
                 color: viewPlatformFilter === 'platform2' ? '#FFFFFF' : 'var(--text-muted)',
                 cursor: 'pointer'
               }}
@@ -320,7 +320,7 @@ export default function NotificationsManager() {
                 fontSize: '0.78rem',
                 fontWeight: '700',
                 border: 'none',
-                backgroundColor: viewPlatformFilter === 'platform3' ? '#8B5CF6' : (isDarkMode ? '#334155' : '#F1F5F9'),
+                backgroundColor: viewPlatformFilter === 'platform3' ? '#8B5CF6' : (isDarkMode ? '#133829' : '#F1F5F9'),
                 color: viewPlatformFilter === 'platform3' ? '#FFFFFF' : 'var(--text-muted)',
                 cursor: 'pointer'
               }}
@@ -337,7 +337,7 @@ export default function NotificationsManager() {
                 fontSize: '0.78rem',
                 fontWeight: '700',
                 border: 'none',
-                backgroundColor: viewPlatformFilter === 'platform4' ? '#F59E0B' : (isDarkMode ? '#334155' : '#F1F5F9'),
+                backgroundColor: viewPlatformFilter === 'platform4' ? '#F59E0B' : (isDarkMode ? '#133829' : '#F1F5F9'),
                 color: viewPlatformFilter === 'platform4' ? '#FFFFFF' : 'var(--text-muted)',
                 cursor: 'pointer'
               }}
@@ -481,7 +481,7 @@ export default function NotificationsManager() {
                   fontSize: '0.8rem',
                   fontWeight: '700',
                   border: 'none',
-                  backgroundColor: filterType === tab.id ? 'var(--primary)' : (isDarkMode ? '#334155' : '#F1F5F9'),
+                  backgroundColor: filterType === tab.id ? 'var(--primary)' : (isDarkMode ? '#133829' : '#F1F5F9'),
                   color: filterType === tab.id ? '#FFFFFF' : 'var(--text-muted)',
                   cursor: 'pointer',
                   transition: 'all 0.15s ease'
@@ -509,7 +509,7 @@ export default function NotificationsManager() {
                   padding: '0.4rem 0.75rem 0.4rem 2.2rem',
                   borderRadius: '99px',
                   border: '1px solid var(--border-color)',
-                  backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
+                  backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
                   color: 'var(--text-main)',
                   fontSize: '0.825rem',
                   outline: 'none',
@@ -577,8 +577,8 @@ export default function NotificationsManager() {
                     alignItems: 'flex-start',
                     gap: '1.1rem',
                     backgroundColor: isUnread 
-                      ? (isDarkMode ? 'rgba(59, 130, 246, 0.08)' : 'rgba(239, 246, 255, 0.85)')
-                      : (isDarkMode ? '#1E293B' : '#FFFFFF'),
+                      ? (isDarkMode ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 246, 255, 0.85)')
+                      : (isDarkMode ? '#091E16' : '#FFFFFF'),
                     borderLeft: `4px solid ${iconColor}`,
                     transition: 'all 0.15s ease'
                   }}
@@ -646,7 +646,7 @@ export default function NotificationsManager() {
 
                     <p style={{
                       fontSize: '0.875rem',
-                      color: isDarkMode ? '#CBD5E1' : '#475569',
+                      color: isDarkMode ? '#93C5AA' : '#475569',
                       margin: '0 0 0.85rem 0',
                       lineHeight: 1.5
                     }}>
@@ -899,7 +899,7 @@ export default function NotificationsManager() {
               </h2>
 
               <div style={{
-                backgroundColor: isDarkMode ? '#0F172A' : '#F8FAFC',
+                backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC',
                 border: '1px solid var(--border-color)',
                 borderRadius: '14px',
                 padding: '1.25rem'
@@ -910,7 +910,7 @@ export default function NotificationsManager() {
                 <p style={{
                   fontSize: '0.925rem',
                   lineHeight: 1.65,
-                  color: isDarkMode ? '#CBD5E1' : '#334155',
+                  color: isDarkMode ? '#ECFDF5' : '#334155',
                   margin: 0,
                   whiteSpace: 'pre-wrap'
                 }}>
