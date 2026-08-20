@@ -36,13 +36,18 @@ export const AGENT_TOOLS = [
 
 // Rich Context Knowledge Base for Desktopalie Backoffice Ecosystem
 const BACKOFFICE_SYSTEM_PROMPT = `
-Anda adalah Desktop-Agentic, asisten AI resmi di platform Desktopalie Backoffice (back.desktopalie.my.id).
+Anda adalah Desktop-Agentic, asisten AI resmi berteknologi Google Gemini 2.0 Flash di platform Desktopalie Backoffice (back.desktopalie.my.id).
 
 IDENTITAS SISTEM & PENGEMBANG:
 - Pemilik & Developer: Faiz Ali (Full-stack Engineer & AI Practitioner).
 - Domain Utama: https://desktopalie.my.id (Website Portofolio & Showcases).
 - Backoffice Domain: https://back.desktopalie.my.id (Pusat Kendali Administrasi & Operasional).
-- Teknologi: React 19, Vite, Supabase PostgreSQL, Vercel Serverless Functions, Obsidian Vault Sync.
+- Teknologi: React 19, Vite, Tailwind CSS + shadcn/ui, Supabase PostgreSQL, Vercel Serverless, Obsidian Vault Sync.
+
+GAYA KOMUNIKASI:
+- Ramah, luwes, solutif, dan asik diajak diskusi layaknya rekan kerja/pair programmer pribadi.
+- Peka dan cepat tangkap konteks pertanyaan maupun instruksi coding/manajemen sistem.
+- To-the-point, jelas, dan terstruktur rapi.
 
 MODUL UTAMA BACKOFFICE:
 1. Kanban To-Do Manager: Pengelolaan tugas harian dengan subtasks, prioritas, dan kategori (Jira/Notion style).
@@ -51,11 +56,6 @@ MODUL UTAMA BACKOFFICE:
 4. Obsidian Bi-directional Sync: Sinkronisasi 30+ dokumen markdown lokal dengan database Supabase.
 5. Desktop-Agentic: Agen AI otonom untuk otomatisasi eksekusi database, audit CSP, dan pembuatan tugas.
 6. Telemetry & Security: Pemantauan kesehatan sistem, verifikasi Content Security Policy (CSP), dan performa.
-
-PANDUAN GAYA PENULISAN:
-- Tuliskan jawaban dalam format paragraf yang mengalir rapi dan poin-poin sederhana yang bersih (- atau penomoran).
-- JANGAN menggunakan banyak emoji, icon dekoratif, atau tanda yang berlebihan di setiap baris.
-- Utamakan kejelasan, keterbacaan, ketepatan konteks, dan bahasa Indonesia yang profesional serta bersahabat.
 `;
 
 export const agenticAiService = {
@@ -70,16 +70,32 @@ export const agenticAiService = {
     localStorage.setItem('desktopalie_gemini_api_key', key.trim());
   },
 
-  // Call Google Gemini 1.5 Flash via Secure Backend Serverless API or Direct
-  async callGeminiApi(prompt, customSystem = '') {
+  // Get active Gemini model
+  getModel() {
+    return localStorage.getItem('desktopalie_gemini_model') || 'gemini-2.0-flash';
+  },
+
+  // Set active Gemini model
+  setModel(modelName) {
+    localStorage.setItem('desktopalie_gemini_model', modelName);
+  },
+
+  // Call Google Gemini 2.0 Flash via Secure Backend Serverless API or Direct
+  async callGeminiApi(prompt, conversationHistory = [], customSystem = '') {
     const finalSystem = customSystem || BACKOFFICE_SYSTEM_PROMPT;
+    const currentModel = this.getModel();
 
     // 1. First try secure Backend Serverless Route (/api/gemini)
     try {
       const backendResponse = await fetch('/api/gemini', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt, systemInstruction: finalSystem })
+        body: JSON.stringify({ 
+          prompt, 
+          messages: conversationHistory,
+          systemInstruction: finalSystem,
+          model: currentModel
+        })
       });
 
       if (backendResponse.ok) {
@@ -94,29 +110,57 @@ export const agenticAiService = {
     const apiKey = this.getApiKey();
     if (!apiKey) return null;
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${currentModel}:generateContent?key=${apiKey}`;
     
-    const body = {
-      contents: [
+    // Format messages into Google GenAI parts
+    let contents = [];
+    if (conversationHistory && conversationHistory.length > 0) {
+      contents = conversationHistory.map(m => ({
+        role: m.sender === 'user' ? 'user' : 'model',
+        parts: [{ text: m.text }]
+      }));
+      if (prompt) {
+        contents.push({
+          role: 'user',
+          parts: [{ text: prompt }]
+        });
+      }
+    } else {
+      contents = [
         {
           role: 'user',
           parts: [{ text: prompt }]
         }
-      ],
+      ];
+    }
+
+    const body = {
+      contents,
       generationConfig: {
-        temperature: 0.4,
-        maxOutputTokens: 1200
+        temperature: 0.5,
+        maxOutputTokens: 1500,
+        topP: 0.95
       },
       systemInstruction: {
         parts: [{ text: finalSystem }]
       }
     };
 
-    const response = await fetch(url, {
+    let response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body)
     });
+
+    // Fallback to gemini-1.5-flash if 2.0 has quota/region limits
+    if (!response.ok && currentModel !== 'gemini-1.5-flash') {
+      const fallbackUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+      response = await fetch(fallbackUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+    }
 
     if (!response.ok) {
       const errData = await response.json().catch(() => ({}));
@@ -132,12 +176,12 @@ export const agenticAiService = {
   getLocalKnowledgeAnswer(text) {
     // Topic: What is Desktopalie Backoffice?
     if (text.includes('backoffice') || text.includes('desktopalie') || text.includes('aplikasi ini') || text.includes('sistem ini')) {
-      return `Desktopalie Backoffice (back.desktopalie.my.id) adalah pusat kendali dan sistem manajemen internal terpadu untuk platform Faiz Ali (desktopalie.my.id). Sistem ini dirancang untuk mengelola seluruh aspek operasional, dokumentasi arsitektur, dan alur kerja pengembangan aplikasi dalam satu tempat.\n\nFitur dan modul utama yang tersedia meliputi:\n- To-Do Kanban Board: Pengelolaan tugas harian dengan subtask dan prioritas ala Jira atau Notion.\n- Projects & Experiments Manager: Manajemen portofolio proyek perangkat lunak dan arsitektur kode.\n- Documentation & Master PRD: Pengelolaan dokumen Product Requirement Document dan SOP teknis.\n- Obsidian Vault Sync: Sinkronisasi dua arah antara catatan markdown lokal dengan database Supabase.\n- Desktop-Agentic: Asisten AI otonom untuk otomatisasi eksekusi sistem dan pembaruan dokumen.\n- Security & Telemetry: Pemantauan keamanan Content Security Policy (CSP) dan metrik kesehatan infrastruktur.\n\nApakah ada modul tertentu yang ingin Anda diskusikan atau gunakan sekarang?`;
+      return `Desktopalie Backoffice (back.desktopalie.my.id) adalah pusat kendali dan sistem manajemen internal terpadu untuk platform Faiz Ali (desktopalie.my.id).\n\nFitur dan modul utama yang tersedia meliputi:\n- To-Do Kanban Board: Pengelolaan tugas harian dengan subtask dan prioritas ala Jira atau Notion.\n- Projects & Experiments Manager: Manajemen portofolio proyek perangkat lunak dan arsitektur kode.\n- Documentation & Master PRD: Pengelolaan dokumen Product Requirement Document dan SOP teknis.\n- Obsidian Vault Sync: Sinkronisasi dua arah antara catatan markdown lokal dengan database Supabase.\n- Desktop-Agentic: Asisten AI otonom berteknologi Google Gemini 2.0 Flash untuk otomatisasi eksekusi sistem dan pembaruan dokumen.\n- Security & Telemetry: Pemantauan keamanan Content Security Policy (CSP) dan metrik kesehatan infrastruktur.\n\nApakah ada modul tertentu yang ingin Anda diskusikan atau gunakan sekarang?`;
     }
 
     // Topic: Who is Faiz Ali?
     if (text.includes('faiz ali') || text.includes('pembuat') || text.includes('creator') || text.includes('developer')) {
-      return `Faiz Ali adalah Software Engineer dan pengembang utama dari ekosistem Desktopalie (desktopalie.my.id).\n\nBeliau merancang platform ini dengan arsitektur modern (React 19, Supabase PostgreSQL, Obsidian Knowledge Graph, dan Agentic AI) untuk menyatukan portofolio, dokumentasi riset, dan sistem manajemen tugas dalam satu ekosistem yang terpadu.`;
+      return `Faiz Ali adalah Software Engineer dan pengembang utama dari ekosistem Desktopalie (desktopalie.my.id).\n\nBeliau merancang platform ini dengan arsitektur modern (React 19, Supabase PostgreSQL, Obsidian Knowledge Graph, dan Agentic AI Google Gemini) untuk menyatukan portofolio, dokumentasi riset, dan sistem manajemen tugas dalam satu ekosistem yang terpadu.`;
     }
 
     // Topic: What is Obsidian / Knowledge Graph?
@@ -149,7 +193,7 @@ export const agenticAiService = {
   },
 
   // Autonomous Agent Execution Router
-  async processUserIntent(userInput) {
+  async processUserIntent(userInput, conversationHistory = []) {
     const text = userInput.toLowerCase().trim();
     const thoughts = [];
     let toolExecuted = null;
@@ -159,7 +203,7 @@ export const agenticAiService = {
     // Intent 0: Friendly Greetings (Hi / Halo / Hello / Pagi / Malam)
     if (text === 'hi' || text === 'halo' || text === 'hello' || text === 'hey' || text === 'p' || text.includes('selamat pagi') || text.includes('selamat sore') || text.includes('selamat malam')) {
       thoughts.push('👋 [Agent Reasoning] Menyapa pengguna dengan santun...');
-      responseText = `Halo, selamat datang di Desktopalie Backoffice. Saya adalah Desktop-Agentic, asisten AI internal Anda.\n\nSaya dapat membantu Anda mengeksekusi berbagai tugas otomatis:\n- Update PRD: Memperbarui dokumen Product Requirement Document di database.\n- Buat Tugas: Menambahkan tugas baru ke papan To-Do Kanban.\n- Sinkronkan Obsidian: Menyelaraskan catatan dokumentasi dengan Obsidian Vault.\n- Cek Telemetri: Menampilkan ringkasan status kesehatan dan data proyek.\n- Buat Dokumentasi: Menulis catatan arsitektur sistem baru.\n\nApa yang ingin Anda kerjakan hari ini?`;
+      responseText = `Halo! Selamat datang di Desktopalie Backoffice. Saya adalah Desktop-Agentic (Powered by Google Gemini 2.0 Flash), siap bantu oprek dan kelola project Anda hari ini. 🚀\n\nBeberapa tugas otomatis yang bisa langsung saya eksekusi:\n- Update PRD: Memperbarui dokumen Product Requirement Document di database.\n- Buat Tugas: Menambahkan tugas baru ke papan To-Do Kanban.\n- Sinkronkan Obsidian: Menyelaraskan catatan dokumentasi dengan Obsidian Vault.\n- Cek Telemetri: Menampilkan ringkasan status kesehatan dan data proyek.\n- Buat Dokumentasi: Menulis catatan arsitektur sistem baru.\n\nApa yang ingin kita kerjakan sekarang?`;
     }
     // Intent 1: Update PRD (Product Requirement Document)
     else if (text.includes('update prd') || text.includes('perbarui prd') || text.includes('ubah prd') || text.includes('tambah prd') || text.includes('edit prd') || (text.includes('prd') && (text.includes('tambah') || text.includes('update')))) {
@@ -174,14 +218,14 @@ export const agenticAiService = {
         
         let newContent = '';
         if (prdDoc) {
-          newContent = `${prdDoc.content || ''}\n\n### ✦ Update PRD (${timestamp})\n- Catatan Pembaruan: ${updateNote}\n- Otoritas: Desktop-Agentic Autonomous Engine\n- Status: Live & Integrated with Supabase + Obsidian Vault.`;
+          newContent = `${prdDoc.content || ''}\n\n### ✦ Update PRD (${timestamp})\n- Catatan Pembaruan: ${updateNote}\n- Otoritas: Desktop-Agentic (Gemini 2.0 Engine)\n- Status: Live & Integrated with Supabase + Obsidian Vault.`;
           await backofficeService.updateDoc(prdDoc.id, { content: newContent });
         } else {
           prdDoc = await backofficeService.createDoc({
             title: '00 - Backoffice PRD (Product Requirement Document)',
             folder: '02 - Backoffice',
             slug: '00-backoffice-prd',
-            author: 'Desktop-Agentic',
+            author: 'Desktop-Agentic (Gemini 2.0)',
             content: `# 00 - Backoffice PRD (Product Requirement Document)\n\n## Ringkasan Sistem\nDokumen master PRD ini dikelola secara otonom oleh Desktop-Agentic.\n\n### Update PRD (${timestamp})\n- Catatan Pembaruan: ${updateNote}`
           });
         }
@@ -189,7 +233,7 @@ export const agenticAiService = {
         toolExecuted = 'update_prd';
         resultPayload = { docId: prdDoc.id, title: prdDoc.title };
         thoughts.push(`✅ [Tool Output] PRD Document "${prdDoc.title}" berhasil diperbarui!`);
-        responseText = `Dokumen Product Requirement Document (PRD) telah berhasil diperbarui di database:\n\n- Dokumen: ${prdDoc.title}\n- Catatan Pembaruan: ${updateNote}\n- Status: Tersimpan di Supabase dan siap disinkronkan ke Obsidian Vault.\n\nApakah ada bagian lain dari PRD yang ingin Anda tambahkan?`;
+        responseText = `Dokumen Product Requirement Document (PRD) telah berhasil diperbarui di database:\n\n- Dokumen: ${prdDoc.title}\n- Catatan Pembaruan: ${updateNote}\n- Status: Tersimpan di Supabase dan siap disinkronkan ke Obsidian Vault.\n\nAda bagian lain dari PRD yang mau ditambahkan lagi?`;
       } catch (err) {
         thoughts.push(`❌ [Tool Error] Gagal memperbarui PRD: ${err.message}`);
         responseText = `Terjadi kendala saat memperbarui PRD: ${err.message}.`;
@@ -204,7 +248,7 @@ export const agenticAiService = {
 
       const taskData = {
         title: title.charAt(0).toUpperCase() + title.slice(1),
-        description: `Dibuat secara otomatis oleh Desktop-Agentic pada ${new Date().toLocaleString('id-ID')}.\n\nInstruksi:\n- Verifikasi dan pengujian komponen.`,
+        description: `Dibuat secara otomatis oleh Desktop-Agentic (Gemini 2.0) pada ${new Date().toLocaleString('id-ID')}.\n\nInstruksi:\n- Verifikasi dan pengujian komponen.`,
         priority: text.includes('tinggi') || text.includes('high') ? 'High' : (text.includes('rendah') || text.includes('low') ? 'Low' : 'Medium'),
         category: text.includes('qa') ? 'QA Checklist' : (text.includes('dev') ? 'Engineering' : 'Research'),
         status: text.includes('selesai') || text.includes('done') ? 'Done' : (text.includes('jalan') || text.includes('progress') ? 'Inprogress' : 'Not started'),
@@ -221,12 +265,15 @@ export const agenticAiService = {
         thoughts.push(`✅ [Tool Output] Tool create_task berhasil dieksekusi! ID: ${created.id}`);
         
         try {
-          const geminiResponse = await this.callGeminiApi(`User meminta membuat tugas: "${userInput}". Tugas berhasil dibuat dengan ID: ${created.id}, Judul: "${created.title}", Status: "${created.status}", Prioritas: "${created.priority}". Buat respons konfirmasi yang rapi dalam Bahasa Indonesia dengan format paragraf pengantar dan poin-poin detail tanpa emoji berlebihan.`);
+          const geminiResponse = await this.callGeminiApi(
+            `User meminta membuat tugas: "${userInput}". Tugas berhasil dibuat dengan ID: ${created.id}, Judul: "${created.title}", Status: "${created.status}", Prioritas: "${created.priority}". Buat respons konfirmasi yang ramah dan to-the-point dalam Bahasa Indonesia dengan format ringkas.`,
+            conversationHistory
+          );
           if (geminiResponse) responseText = geminiResponse;
         } catch (e) {}
         
         if (!responseText) {
-          responseText = `Tugas baru telah berhasil dibuat dan ditambahkan ke papan To-Do Board:\n\n- Judul: ${created.title}\n- Status: ${created.status}\n- Prioritas: ${created.priority}\n- Kategori: ${created.category}\n\nTugas ini sudah tersimpan dan siap dikerjakan. Apakah ada hal lain yang perlu dipersiapkan?`;
+          responseText = `Tugas baru berhasil dibuat dan masuk ke papan To-Do Kanban:\n\n- Judul: ${created.title}\n- Status: ${created.status}\n- Prioritas: ${created.priority}\n- Kategori: ${created.category}\n\nTugas siap dikerjakan. Ada lagi yang mau ditambahkan?`;
         }
       } catch (err) {
         thoughts.push(`❌ [Tool Error] Gagal mengeksekusi create_task: ${err.message}`);
@@ -241,7 +288,7 @@ export const agenticAiService = {
         toolExecuted = 'sync_obsidian_vault';
         resultPayload = { count: docs.length };
         thoughts.push(`✅ [Tool Output] Tool sync_obsidian_vault selesai! Total ${docs.length} dokumen tersinkron.`);
-        responseText = `Sinkronisasi data dengan Obsidian Vault telah berhasil diselesaikan.\n\nSebanyak ${docs.length} catatan dokumentasi dan PRD saat ini telah selaras dengan database Backoffice. Seluruh file siap dibuka melalui aplikasi Obsidian lokal.`;
+        responseText = `Sinkronisasi data dengan Obsidian Vault telah selesai dijalankan.\n\nSebanyak ${docs.length} catatan dokumentasi & PRD saat ini selaras dengan database Backoffice dan siap diakses di aplikasi Obsidian lokal Anda.`;
       } catch (err) {
         thoughts.push(`❌ [Tool Error] ${err.message}`);
         responseText = `Sinkronisasi Obsidian mengalami kendala: ${err.message}.`;
@@ -257,8 +304,8 @@ export const agenticAiService = {
         title: docTitle.charAt(0).toUpperCase() + docTitle.slice(1),
         folder: '02 - Backoffice',
         slug: docTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-        author: 'Desktop-Agentic',
-        content: `# ${docTitle}\n\nCatatan dokumentasi ini dibuat secara otomatis oleh Desktop-Agentic.\n\nRingkasan Sistem:\n- Waktu Pembuatan: ${new Date().toISOString()}\n- Dikelola oleh: Desktop-Agentic Action Router.`
+        author: 'Desktop-Agentic (Gemini 2.0)',
+        content: `# ${docTitle}\n\nCatatan dokumentasi ini dibuat secara otomatis oleh Desktop-Agentic (Gemini 2.0).\n\nRingkasan Sistem:\n- Waktu Pembuatan: ${new Date().toISOString()}\n- Dikelola oleh: Desktop-Agentic Action Router.`
       };
 
       try {
@@ -266,7 +313,7 @@ export const agenticAiService = {
         toolExecuted = 'create_documentation';
         resultPayload = createdDoc;
         thoughts.push(`✅ [Tool Output] Tool create_documentation berhasil dieksekusi! ID: ${createdDoc.id}`);
-        responseText = `Dokumentasi baru "${createdDoc.title}" telah berhasil dibuat.\n\nCatatan ini otomatis tersimpan di menu System Documentation Manager dan siap disinkronkan ke Obsidian Vault.`;
+        responseText = `Dokumentasi baru "${createdDoc.title}" telah berhasil dibuat.\n\nCatatan ini otomatis tersimpan di System Documentation Manager dan siap disinkronkan ke Obsidian Vault.`;
       } catch (err) {
         thoughts.push(`❌ [Tool Error] ${err.message}`);
         responseText = `Gagal membuat dokumentasi: ${err.message}`;
@@ -284,23 +331,23 @@ export const agenticAiService = {
         toolExecuted = 'get_telemetry_report';
         resultPayload = { todos: todos.length, projects: projects.length, docs: docs.length };
         thoughts.push('✅ [Tool Output] Telemetri berhasil dikumpulkan.');
-        responseText = `Berikut adalah ringkasan laporan telemetri sistem Backoffice saat ini:\n\n- Total Tugas Kanban: ${todos.length} item\n- Portofolio Proyek Aktif: ${projects.length} proyek\n- Dokumen Dokumentasi & PRD: ${docs.length} dokumen\n- Status Infrastruktur: 100% Beroperasi normal di Vercel Global Network\n\nSeluruh layanan berjalan stabil. Ada data spesifik lain yang ingin Anda periksa?`;
+        responseText = `Berikut ringkasan telemetri sistem Backoffice saat ini:\n\n- Total Tugas Kanban: ${todos.length} item\n- Portofolio Proyek Aktif: ${projects.length} proyek\n- Dokumen & PRD: ${docs.length} dokumen\n- Status Infrastruktur: 100% Beroperasi normal di Vercel Global Edge\n\nSeluruh layanan berjalan stabil. Mau cek data lainnya?`;
       } catch (err) {
         thoughts.push(`❌ [Tool Error] ${err.message}`);
         responseText = `Gagal mengumpulkan telemetri: ${err.message}`;
       }
     }
-    // General Questions / Conversational Queries (Gemini AI + Local Knowledge Base)
+    // General Questions / Conversational Queries (Gemini 2.0 Flash AI + Local Knowledge Base)
     else {
-      // 1. Try Google Gemini AI Inference with full system context
+      // 1. Try Google Gemini 2.0 Flash Inference with full multi-turn conversation context
       try {
-        thoughts.push('🧠 [Gemini Inference] Memproses pertanyaan mendalam dengan Google Gemini 1.5 Flash...');
-        const geminiOutput = await this.callGeminiApi(userInput);
+        thoughts.push('🧠 [Gemini 2.0 Inference] Memproses pertanyaan dengan Google Gemini 2.0 Flash...');
+        const geminiOutput = await this.callGeminiApi(userInput, conversationHistory);
         if (geminiOutput && geminiOutput.trim()) {
           responseText = geminiOutput;
         }
       } catch (err) {
-        thoughts.push(`⚠️ [Gemini API Note] ${err.message}`);
+        thoughts.push(`⚠️ [Gemini 2.0 Note] ${err.message}`);
       }
 
       // 2. If Gemini didn't return (e.g. offline/no key), consult smart local knowledge base
@@ -311,7 +358,7 @@ export const agenticAiService = {
           responseText = localAnswer;
         } else {
           thoughts.push('💡 [General Response] Memformulasikan tanggapan bantuan Desktop-Agentic...');
-          responseText = `Mengenai pertanyaan Anda tentang "${userInput}":\n\nSaya dapat membantu Anda berdiskusi seputar arsitektur sistem, pemrograman, manajemen portofolio, maupun manajemen tugas.\n\nBeberapa aksi otomatis yang dapat langsung saya jalankan meliputi:\n- Update PRD: Memperbarui dokumen spesifikasi produk di database.\n- Buat Tugas: Menambahkan tugas baru ke papan Kanban To-Do.\n- Sinkronkan Obsidian: Menyelaraskan catatan dokumentasi dengan Obsidian Vault.\n- Cek Telemetri: Menampilkan status kesehatan dan ringkasan sistem.\n\nApakah ada hal tertentu yang ingin kita mulai sekarang?`;
+          responseText = `Mengenai pertanyaan Anda tentang "${userInput}":\n\nSaya siap bantu diskusi seputar arsitektur sistem, pemrograman, optimasi proyek, maupun manajemen tugas.\n\nBeberapa tugas otomatis yang bisa langsung dijalankan:\n- Update PRD: Memperbarui dokumen spesifikasi produk di database.\n- Buat Tugas: Menambahkan tugas baru ke Kanban To-Do.\n- Sinkronkan Obsidian: Menyelaraskan catatan dokumentasi dengan Obsidian Vault.\n- Cek Telemetri: Menampilkan status kesehatan dan ringkasan sistem.\n\nAda bagian yang mau langsung kita oprek sekarang?`;
         }
       }
     }

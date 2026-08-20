@@ -13,24 +13,44 @@ export default async function handler(req, res) {
     });
   }
 
-  const { prompt, systemInstruction } = req.body || {};
+  const { prompt, messages = [], systemInstruction, model = 'gemini-2.0-flash' } = req.body || {};
 
-  if (!prompt) {
-    return res.status(400).json({ error: 'Prompt is required.' });
+  if (!prompt && (!messages || messages.length === 0)) {
+    return res.status(400).json({ error: 'Prompt or messages history is required.' });
   }
 
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+  // Primary model endpoint (Gemini 2.0 Flash - latest Google GenAI model)
+  const targetModel = model || 'gemini-2.0-flash';
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${targetModel}:generateContent?key=${apiKey}`;
 
-  const requestBody = {
-    contents: [
+  // Build contents array supporting multi-turn conversation or single prompt
+  let contents = [];
+  if (messages && messages.length > 0) {
+    contents = messages.map(m => ({
+      role: m.sender === 'user' ? 'user' : 'model',
+      parts: [{ text: m.text }]
+    }));
+    if (prompt) {
+      contents.push({
+        role: 'user',
+        parts: [{ text: prompt }]
+      });
+    }
+  } else {
+    contents = [
       {
         role: 'user',
         parts: [{ text: prompt }]
       }
-    ],
+    ];
+  }
+
+  const requestBody = {
+    contents,
     generationConfig: {
-      temperature: 0.4,
-      maxOutputTokens: 1000
+      temperature: 0.5,
+      maxOutputTokens: 1500,
+      topP: 0.95
     }
   };
 
@@ -41,16 +61,26 @@ export default async function handler(req, res) {
   }
 
   try {
-    const response = await fetch(url, {
+    let response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(requestBody)
     });
 
+    // Fallback to gemini-1.5-flash if 2.0 encounters regional or specific quota issue
+    if (!response.ok && targetModel !== 'gemini-1.5-flash') {
+      const fallbackUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+      response = await fetch(fallbackUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestBody)
+      });
+    }
+
     if (!response.ok) {
       const errData = await response.json().catch(() => ({}));
       return res.status(response.status).json({ 
-        error: errData.error?.message || `Google API error: ${response.status}` 
+        error: errData.error?.message || `Google Gemini API error: ${response.status}` 
       });
     }
 
@@ -58,8 +88,13 @@ export default async function handler(req, res) {
     const candidate = data.candidates?.[0];
     const text = candidate?.content?.parts?.[0]?.text || '';
 
-    return res.status(200).json({ text });
+    return res.status(200).json({ 
+      text,
+      model: targetModel,
+      usage: data.usageMetadata || null
+    });
   } catch (error) {
     return res.status(500).json({ error: error.message || 'Internal Server Error' });
   }
 }
+
