@@ -30,6 +30,8 @@ export default function AgenticAiDrawer() {
 
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [speakingIndex, setSpeakingIndex] = useState(null);
 
   // Chat messages with persistent session storage
   const [messages, setMessages] = useState(() => {
@@ -38,6 +40,7 @@ export default function AgenticAiDrawer() {
   });
 
   const chatEndRef = useRef(null);
+  const recognitionRef = useRef(null);
 
   // Save messages to persistent history on change
   useEffect(() => {
@@ -118,9 +121,6 @@ export default function AgenticAiDrawer() {
   };
 
   // Google Voice Speech-to-Text (Voice Command)
-  const [isListening, setIsListening] = useState(false);
-  const recognitionRef = useRef(null);
-
   const toggleSpeechRecognition = () => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
@@ -169,8 +169,6 @@ export default function AgenticAiDrawer() {
   };
 
   // Google Voice Text-to-Speech (Audio Playback)
-  const [speakingIndex, setSpeakingIndex] = useState(null);
-
   const toggleSpeak = (text, index) => {
     if (!('speechSynthesis' in window)) {
       alert('Browser Anda tidak mendukung Speech Synthesis Audio.');

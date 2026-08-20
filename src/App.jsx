@@ -33,6 +33,7 @@ import NotificationsManager from './pages/NotificationsManager';
 import TransactionsManager from './pages/TransactionsManager';
 
 import AgenticAiDrawer from './components/AgenticAiDrawer';
+import ErrorBoundary from './components/ErrorBoundary';
 
 // HOOK TO CHECK PLATFORM MAINTENANCE STATUS
 function usePlatformMaintenance(targetFlavorId) {
@@ -270,66 +271,68 @@ function RootRoute() {
 
 export default function App() {
   return (
-    <FlavorProvider>
-      <ThemeProvider>
-        <LanguageProvider>
-          <AuthProvider>
-            <DesktopOnlyGuard>
-              <Router>
-                <Toaster 
-                  position="top-right" 
-                  toastOptions={{
-                    style: {
-                      background: 'var(--bg-card)',
-                      color: 'var(--text-main)',
-                      border: '1px solid var(--border-color)',
-                      borderRadius: 'var(--radius-sm)'
-                    }
-                  }} 
-                />
-                <Routes>
-                  {/* ROOT ROUTE */}
-                  <Route path="/" element={<RootRoute />} />
+    <ErrorBoundary>
+      <FlavorProvider>
+        <ThemeProvider>
+          <LanguageProvider>
+            <AuthProvider>
+              <DesktopOnlyGuard>
+                <Router>
+                  <Toaster 
+                    position="top-right" 
+                    toastOptions={{
+                      style: {
+                        background: 'var(--bg-card)',
+                        color: 'var(--text-main)',
+                        border: '1px solid var(--border-color)',
+                        borderRadius: 'var(--radius-sm)'
+                      }
+                    }} 
+                  />
+                  <Routes>
+                    {/* ROOT ROUTE */}
+                    <Route path="/" element={<RootRoute />} />
 
-                  {/* SMART CLEAN ROUTES FOR ALL PLATFORMS */}
-                  <Route path="/login" element={<LoginRoute />} />
-                  <Route path="/portal" element={<PortalRoute />} />
+                    {/* SMART CLEAN ROUTES FOR ALL PLATFORMS */}
+                    <Route path="/login" element={<LoginRoute />} />
+                    <Route path="/portal" element={<PortalRoute />} />
 
-                  {/* SUB-PATH ALIAS ROUTES FOR COMPATIBILITY (WITH STRICT MAINTENANCE GUARD) */}
-                  <Route path="/beta/login" element={<LoginRoute targetFlavor="platform2" />} />
-                  <Route path="/gamma/login" element={<LoginRoute targetFlavor="platform3" />} />
-                  <Route path="/delta/login" element={<LoginRoute targetFlavor="platform4" />} />
-                  <Route path="/platform/:platformName/login" element={<LoginRoute />} />
+                    {/* SUB-PATH ALIAS ROUTES FOR COMPATIBILITY (WITH STRICT MAINTENANCE GUARD) */}
+                    <Route path="/beta/login" element={<LoginRoute targetFlavor="platform2" />} />
+                    <Route path="/gamma/login" element={<LoginRoute targetFlavor="platform3" />} />
+                    <Route path="/delta/login" element={<LoginRoute targetFlavor="platform4" />} />
+                    <Route path="/platform/:platformName/login" element={<LoginRoute />} />
 
-                  <Route path="/beta/portal" element={<PortalRoute />} />
-                  <Route path="/gamma/portal" element={<PortalRoute />} />
-                  <Route path="/delta/portal" element={<PortalRoute />} />
+                    <Route path="/beta/portal" element={<PortalRoute />} />
+                    <Route path="/gamma/portal" element={<PortalRoute />} />
+                    <Route path="/delta/portal" element={<PortalRoute />} />
 
-                  {/* AUTH & MAIN BACKOFFICE ROUTES */}
-                  <Route path="/register" element={<Register />} />
+                    {/* AUTH & MAIN BACKOFFICE ROUTES */}
+                    <Route path="/register" element={<Register />} />
 
-                  <Route path="/dashboard" element={<ProtectedLayout><DashboardRoute /></ProtectedLayout>} />
-                  <Route path="/workspaces" element={<ProtectedLayout><PlatformWorkspacesManager /></ProtectedLayout>} />
-                  <Route path="/notifications" element={<ProtectedLayout><NotificationsManager /></ProtectedLayout>} />
-                  <Route path="/members" element={<ProtectedLayout><MembershipManager /></ProtectedLayout>} />
-                  <Route path="/transactions" element={<ProtectedLayout><TransactionsManager /></ProtectedLayout>} />
-                  <Route path="/todos" element={<ProtectedLayout><TodoListManager /></ProtectedLayout>} />
-                  <Route path="/documentation" element={<ProtectedLayout><DocumentationManager /></ProtectedLayout>} />
-                  <Route path="/landing-manager" element={<ProtectedLayout><LandingPageManager /></ProtectedLayout>} />
-                  <Route path="/projects" element={<ProtectedLayout><ProjectsManager /></ProtectedLayout>} />
-                  <Route path="/experiments" element={<ProtectedLayout><ExperimentsManager /></ProtectedLayout>} />
-                  <Route path="/notes" element={<ProtectedLayout><NotesManager /></ProtectedLayout>} />
-                  <Route path="/bookmarks" element={<ProtectedLayout><BookmarksManager /></ProtectedLayout>} />
-                  <Route path="/maintenance" element={<ProtectedLayout><MaintenanceManager /></ProtectedLayout>} />
-                  <Route path="/profile" element={<ProtectedLayout><ProfileSettings /></ProtectedLayout>} />
+                    <Route path="/dashboard" element={<ProtectedLayout><DashboardRoute /></ProtectedLayout>} />
+                    <Route path="/workspaces" element={<ProtectedLayout><PlatformWorkspacesManager /></ProtectedLayout>} />
+                    <Route path="/notifications" element={<ProtectedLayout><NotificationsManager /></ProtectedLayout>} />
+                    <Route path="/members" element={<ProtectedLayout><MembershipManager /></ProtectedLayout>} />
+                    <Route path="/transactions" element={<ProtectedLayout><TransactionsManager /></ProtectedLayout>} />
+                    <Route path="/todos" element={<ProtectedLayout><TodoListManager /></ProtectedLayout>} />
+                    <Route path="/documentation" element={<ProtectedLayout><DocumentationManager /></ProtectedLayout>} />
+                    <Route path="/landing-manager" element={<ProtectedLayout><LandingPageManager /></ProtectedLayout>} />
+                    <Route path="/projects" element={<ProtectedLayout><ProjectsManager /></ProtectedLayout>} />
+                    <Route path="/experiments" element={<ProtectedLayout><ExperimentsManager /></ProtectedLayout>} />
+                    <Route path="/notes" element={<ProtectedLayout><NotesManager /></ProtectedLayout>} />
+                    <Route path="/bookmarks" element={<ProtectedLayout><BookmarksManager /></ProtectedLayout>} />
+                    <Route path="/maintenance" element={<ProtectedLayout><MaintenanceManager /></ProtectedLayout>} />
+                    <Route path="/profile" element={<ProtectedLayout><ProfileSettings /></ProtectedLayout>} />
 
-                  <Route path="*" element={<Navigate to="/" replace />} />
-                </Routes>
-              </Router>
-            </DesktopOnlyGuard>
-          </AuthProvider>
-        </LanguageProvider>
-      </ThemeProvider>
-    </FlavorProvider>
+                    <Route path="*" element={<Navigate to="/" replace />} />
+                  </Routes>
+                </Router>
+              </DesktopOnlyGuard>
+            </AuthProvider>
+          </LanguageProvider>
+        </ThemeProvider>
+      </FlavorProvider>
+    </ErrorBoundary>
   );
 }

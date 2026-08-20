@@ -78,17 +78,33 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-      if (session?.user) {
-        syncUserToMembershipRegistry(session.user);
+    let resolved = false;
+    // Safety fallback: Ensure loading never hangs if network / supabase delay
+    const timer = setTimeout(() => {
+      if (!resolved) {
+        setLoading(false);
       }
-    });
+    }, 2500);
+
+    supabase.auth.getSession()
+      .then(({ data: { session } }) => {
+        resolved = true;
+        setSession(session);
+        setUser(session?.user ?? null);
+        setLoading(false);
+        if (session?.user) {
+          syncUserToMembershipRegistry(session.user);
+        }
+      })
+      .catch((err) => {
+        resolved = true;
+        console.warn('Auth getSession exception:', err);
+        setLoading(false);
+      });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (_event, session) => {
+        resolved = true;
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
@@ -98,7 +114,10 @@ export const AuthProvider = ({ children }) => {
       }
     );
 
-    return () => subscription.unsubscribe();
+    return () => {
+      clearTimeout(timer);
+      if (subscription?.unsubscribe) subscription.unsubscribe();
+    };
   }, []);
 
   const signInWithGoogle = async (customRedirectPath = '') => {
