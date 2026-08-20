@@ -217,11 +217,11 @@ export default function Sidebar() {
 
     return (
       <div key={category.id} style={{ marginBottom: '0.35rem' }}>
-        {/* Category Header Button (Accordion Trigger) */}
+        {/* Category Header Button (Accordion Trigger - Borderless with Click Animation) */}
         <button
           type="button"
           onClick={() => toggleCategory(category.id)}
-          className={`sidebar-category-btn ${hasActiveChild ? 'has-active' : ''}`}
+          className={`sidebar-category-btn ${hasActiveChild ? 'has-active' : ''} ${isCategoryOpen ? 'is-open' : ''}`}
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -230,12 +230,14 @@ export default function Sidebar() {
             padding: '0.65rem 0.85rem',
             borderRadius: 'var(--radius-sm)',
             backgroundColor: isCategoryOpen ? 'var(--bg-sidebar-hover)' : 'transparent',
-            border: `1px solid ${hasActiveChild ? 'var(--border-sidebar)' : 'transparent'}`,
+            border: 'none',
+            outline: 'none',
+            boxShadow: 'none',
             color: hasActiveChild ? '#FFFFFF' : 'var(--text-sidebar-main)',
             fontSize: '0.825rem',
             fontWeight: '700',
             cursor: 'pointer',
-            transition: 'all 0.2s ease',
+            transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
             textAlign: 'left'
           }}
         >
@@ -243,7 +245,7 @@ export default function Sidebar() {
             <CategoryIcon style={{ 
               fontSize: '1.1rem', 
               flexShrink: 0, 
-              color: hasActiveChild ? 'var(--accent-violet, #818CF8)' : 'var(--text-sidebar-muted)' 
+              color: hasActiveChild ? '#FFFFFF' : 'var(--text-sidebar-muted)' 
             }} />
             <span style={{ 
               whiteSpace: 'nowrap', 
@@ -466,11 +468,11 @@ export default function Sidebar() {
             transition: 'all 0.15s ease'
           }}
         >
-          <option value="platform1" style={{ background: '#1E1B4B', color: '#FFFFFF' }}>
+          <option value="platform1" style={{ background: 'var(--bg-sidebar)', color: '#FFFFFF' }}>
             🏠 Desktopalie Main
           </option>
           {subPlatformFlavors?.map((f) => (
-            <option key={f.id} value={f.id} style={{ background: '#1E1B4B', color: '#FFFFFF' }}>
+            <option key={f.id} value={f.id} style={{ background: 'var(--bg-sidebar)', color: '#FFFFFF' }}>
               ⚡ Platform {f.shortName}
             </option>
           ))}
@@ -770,11 +772,11 @@ export default function Sidebar() {
               transition: 'all 0.15s ease'
             }}
           >
-            <option value="platform1" style={{ background: '#1E1B4B', color: '#FFFFFF' }}>
+            <option value="platform1" style={{ background: 'var(--bg-sidebar)', color: '#FFFFFF' }}>
               🏠 Desktopalie Main
             </option>
             {subPlatformFlavors?.map((f) => (
-              <option key={f.id} value={f.id} style={{ background: '#1E1B4B', color: '#FFFFFF' }}>
+              <option key={f.id} value={f.id} style={{ background: 'var(--bg-sidebar)', color: '#FFFFFF' }}>
                 ⚡ Platform {f.shortName}
               </option>
             ))}

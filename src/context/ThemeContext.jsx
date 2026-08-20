@@ -29,15 +29,15 @@ export function ThemeProvider({ children }) {
       root.style.setProperty('--bg-main', '#05130E');
     } else {
       if (currentFlavor === 'platform1') {
-        root.style.setProperty('--primary', '#4F46E5');
-        root.style.setProperty('--primary-hover', '#4338CA');
-        root.style.setProperty('--primary-light', '#EEF2FF');
-        root.style.setProperty('--color-primary', '#4F46E5');
-        root.style.setProperty('--color-secondary', '#6366F1');
-        root.style.setProperty('--color-accent', '#818CF8');
+        root.style.setProperty('--primary', '#2563EB');
+        root.style.setProperty('--primary-hover', '#1D4ED8');
+        root.style.setProperty('--primary-light', '#EFF6FF');
+        root.style.setProperty('--color-primary', '#2563EB');
+        root.style.setProperty('--color-secondary', '#3B82F6');
+        root.style.setProperty('--color-accent', '#60A5FA');
       }
-      root.style.setProperty('--bg-sidebar', '#1E1B4B');
-      root.style.setProperty('--bg-main', '#F5F3FF');
+      root.style.setProperty('--bg-sidebar', '#0F3574');
+      root.style.setProperty('--bg-main', '#F0F6FF');
     }
   }, [isDarkMode]);
 
