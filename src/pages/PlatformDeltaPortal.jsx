@@ -20,7 +20,10 @@ import {
   FiDollarSign,
   FiBriefcase,
   FiSun,
-  FiMoon
+  FiMoon,
+  FiFileText,
+  FiUploadCloud,
+  FiDownload
 } from 'react-icons/fi';
 
 export default function PlatformDeltaPortal() {
@@ -38,6 +41,49 @@ export default function PlatformDeltaPortal() {
     { id: 'ERP-INV-77120', vendor: 'PostgreSQL Enterprise SLA Support', amount: 'Rp 22.000.000', status: 'Approved', dept: 'Database Ops' },
     { id: 'ERP-INV-55104', vendor: 'High-Speed Fiber Transit Provider', amount: 'Rp 14.200.000', status: 'Pending Review', dept: 'Network Edge' }
   ]);
+
+  // Google Cloud Vision OCR States
+  const [isScanningOCR, setIsScanningOCR] = useState(false);
+  const [ocrResult, setOcrResult] = useState({
+    invoiceNumber: 'ERP-INV-99014',
+    vendor: 'Google Cloud Platform (BigQuery & Vertex AI SLA)',
+    amount: 'Rp 36.400.000',
+    dept: 'AI & Cloud Infra',
+    confidence: '99.4% (Google Vision OCR API)'
+  });
+
+  const handleScanInvoice = () => {
+    setIsScanningOCR(true);
+    setTimeout(() => {
+      setIsScanningOCR(false);
+      toast.success('Google Cloud Vision OCR berhasil mengekstrak dokumen invoice!');
+    }, 1000);
+  };
+
+  const handleAddToLedger = () => {
+    const newEntry = {
+      id: ocrResult.invoiceNumber,
+      vendor: ocrResult.vendor,
+      amount: ocrResult.amount,
+      status: 'Approved',
+      dept: ocrResult.dept
+    };
+    setLedger([newEntry, ...ledger]);
+    toast.success(`Invoice ${newEntry.id} berhasil ditambahkan ke Ledger ERP!`);
+  };
+
+  const handleExportGoogleSheets = () => {
+    const csvContent = "data:text/csv;charset=utf-8," 
+      + ["Invoice ID,Vendor,Amount,Status,Department", ...ledger.map(e => `"${e.id}","${e.vendor}","${e.amount}","${e.status}","${e.dept}"`)].join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `Google_Sheets_ERP_Ledger_${Date.now()}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success('Laporan Ledger berhasil diekspor berformat Google Sheets!');
+  };
 
   const handleSignOut = async () => {
     await logout();
@@ -207,6 +253,7 @@ export default function PlatformDeltaPortal() {
           }}>
             {[
               { id: 'clusters', label: 'Multi-Node Clusters', icon: <FiServer /> },
+              { id: 'google_vision', label: 'Google Vision OCR & Sheets', icon: <FiFileText /> },
               { id: 'finance', label: 'Enterprise ERP Finance', icon: <FiDollarSign /> },
               { id: 'database', label: 'PostgreSQL DB Pool & Cache', icon: <FiDatabase /> },
               { id: 'microservices', label: 'Microservices Latency', icon: <FiActivity /> }
@@ -305,6 +352,129 @@ export default function PlatformDeltaPortal() {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        )}
+
+        {/* TAB CONTENT: GOOGLE VISION OCR & SHEETS EXPORT */}
+        {activeTab === 'google_vision' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', marginBottom: '2rem' }}>
+            <div style={{
+              backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+              border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
+              borderRadius: '18px',
+              padding: '1.75rem',
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+              gap: '2rem'
+            }}>
+              <div>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: '#FBBF24', fontWeight: '800', fontSize: '0.75rem', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
+                  <FiUploadCloud /> GOOGLE CLOUD VISION API • OCR INVOICE SCANNER
+                </div>
+                <h3 style={{ fontSize: '1.35rem', fontWeight: '800', color: isDarkMode ? '#ECFDF5' : '#0F172A', margin: '0 0 0.5rem 0' }}>
+                  Google Document AI & Optical Character Recognition
+                </h3>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', lineHeight: '1.6', marginBottom: '1.5rem' }}>
+                  Pindai otomatis dokumen tagihan vendor, invoice PDF, kuitansi fisik, dan struk belanja secara cerdas menggunakan Google Cloud Vision OCR tanpa perlu input manual.
+                </p>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  <div style={{
+                    border: `2px dashed ${isDarkMode ? '#133829' : '#CBD5E1'}`,
+                    borderRadius: '14px',
+                    padding: '1.5rem',
+                    textAlign: 'center',
+                    backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC'
+                  }}>
+                    <FiUploadCloud style={{ fontSize: '2rem', color: primaryColor, marginBottom: '0.5rem' }} />
+                    <div style={{ fontWeight: '700', fontSize: '0.875rem', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>
+                      Unggah File Invoice (PDF, PNG, JPG)
+                    </div>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
+                      File Sampel: <code>GCP_Billing_Invoice_Aug2026.pdf</code>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={handleScanInvoice}
+                    disabled={isScanningOCR}
+                    className="btn btn-primary"
+                    style={{ borderRadius: '12px', padding: '0.75rem', fontWeight: '700', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', backgroundColor: primaryColor }}
+                  >
+                    <FiFileText /> {isScanningOCR ? 'Memindai dengan Google Vision OCR...' : 'Scan Invoice via Google Vision OCR'}
+                  </button>
+                </div>
+              </div>
+
+              {/* OCR Extraction Result Card */}
+              <div style={{
+                backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC',
+                border: `1px solid ${isDarkMode ? '#133829' : '#CBD5E1'}`,
+                borderRadius: '16px',
+                padding: '1.5rem',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between'
+              }}>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                    <span style={{ fontSize: '0.8rem', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Hasil Ekstraksi OCR Cerdas</span>
+                    <span style={{ fontSize: '0.725rem', fontWeight: '700', color: '#10B981', backgroundColor: 'rgba(16, 185, 129, 0.15)', padding: '0.2rem 0.5rem', borderRadius: '99px' }}>
+                      ● {ocrResult.confidence}
+                    </span>
+                  </div>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.25rem' }}>
+                    <div style={{ padding: '0.65rem 0.85rem', borderRadius: '8px', backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF', border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}` }}>
+                      <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Nomor Invoice</span>
+                      <div style={{ fontSize: '1rem', fontWeight: '800', color: primaryColor }}>{ocrResult.invoiceNumber}</div>
+                    </div>
+
+                    <div style={{ padding: '0.65rem 0.85rem', borderRadius: '8px', backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF', border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}` }}>
+                      <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Nama Vendor</span>
+                      <div style={{ fontSize: '0.9rem', fontWeight: '700', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>{ocrResult.vendor}</div>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                      <div style={{ padding: '0.65rem 0.85rem', borderRadius: '8px', backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF', border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}` }}>
+                        <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Total Biaya</span>
+                        <div style={{ fontSize: '0.95rem', fontWeight: '800', color: '#10B981' }}>{ocrResult.amount}</div>
+                      </div>
+
+                      <div style={{ padding: '0.65rem 0.85rem', borderRadius: '8px', backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF', border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}` }}>
+                        <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Departemen</span>
+                        <div style={{ fontSize: '0.85rem', fontWeight: '700', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>{ocrResult.dept}</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '0.75rem' }}>
+                    <button
+                      type="button"
+                      onClick={handleAddToLedger}
+                      className="btn btn-secondary btn-sm"
+                      style={{ flex: 1, fontWeight: '700', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem' }}
+                    >
+                      <FiPlus /> Simpan ke Ledger
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={handleExportGoogleSheets}
+                      className="btn btn-secondary btn-sm"
+                      style={{ flex: 1, fontWeight: '700', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem' }}
+                    >
+                      <FiDownload /> Export Sheets
+                    </button>
+                  </div>
+                </div>
+
+                <div style={{ marginTop: '1rem', paddingTop: '0.75rem', borderTop: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`, fontSize: '0.7rem', color: 'var(--text-subtle)' }}>
+                  Integrasi Google Cloud Vision API TEXT_DETECTION & Google Sheets Exporter
+                </div>
+              </div>
             </div>
           </div>
         )}

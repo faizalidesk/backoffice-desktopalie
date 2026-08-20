@@ -630,10 +630,10 @@ export default function TransactionTable({
           <button
             onClick={() => handleExportCSV()}
             className="btn btn-secondary"
-            title="Unduh data dalam format CSV"
+            title="Unduh data dalam format CSV untuk Google Sheets & Excel"
           >
             <FiDownload />
-            <span>Ekspor CSV</span>
+            <span>Ekspor Google Sheets</span>
           </button>
 
           {allowNewTransaction && (

@@ -7,7 +7,11 @@ import {
   FiPlus,
   FiCpu,
   FiZap,
-  FiTrash2
+  FiTrash2,
+  FiMic,
+  FiMicOff,
+  FiVolume2,
+  FiVolumeX
 } from 'react-icons/fi';
 
 const DEFAULT_GREETING = {
@@ -105,6 +109,89 @@ export default function AgenticAiDrawer() {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Google Voice Speech-to-Text (Voice Command)
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef(null);
+
+  const toggleSpeechRecognition = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert('Browser Anda tidak mendukung Google Speech Recognition. Gunakan Google Chrome atau Edge.');
+      return;
+    }
+
+    if (isListening) {
+      recognitionRef.current?.stop();
+      setIsListening(false);
+      return;
+    }
+
+    try {
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'id-ID';
+      recognition.continuous = false;
+      recognition.interimResults = false;
+
+      recognition.onstart = () => {
+        setIsListening(true);
+      };
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        if (transcript) {
+          setInput(prev => (prev ? `${prev} ${transcript}` : transcript));
+        }
+      };
+
+      recognition.onerror = (event) => {
+        console.warn('Speech recognition error:', event.error);
+        setIsListening(false);
+      };
+
+      recognition.onend = () => {
+        setIsListening(false);
+      };
+
+      recognitionRef.current = recognition;
+      recognition.start();
+    } catch (e) {
+      console.error('Speech recognition exception:', e);
+      setIsListening(false);
+    }
+  };
+
+  // Google Voice Text-to-Speech (Audio Playback)
+  const [speakingIndex, setSpeakingIndex] = useState(null);
+
+  const toggleSpeak = (text, index) => {
+    if (!('speechSynthesis' in window)) {
+      alert('Browser Anda tidak mendukung Speech Synthesis Audio.');
+      return;
+    }
+
+    if (speakingIndex === index) {
+      window.speechSynthesis.cancel();
+      setSpeakingIndex(null);
+      return;
+    }
+
+    window.speechSynthesis.cancel();
+    const cleanText = text.replace(/[*#_`]/g, '');
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    utterance.lang = 'id-ID';
+    utterance.rate = 1.05;
+
+    utterance.onend = () => {
+      setSpeakingIndex(null);
+    };
+    utterance.onerror = () => {
+      setSpeakingIndex(null);
+    };
+
+    setSpeakingIndex(index);
+    window.speechSynthesis.speak(utterance);
   };
 
   return (
@@ -312,6 +399,7 @@ export default function AgenticAiDrawer() {
 
             {/* Message Bubble */}
             <div style={{
+              position: 'relative',
               padding: '12px 15px',
               borderRadius: msg.sender === 'user' ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
               backgroundColor: msg.sender === 'user' ? 'var(--primary)' : 'var(--bg-main)',
@@ -323,6 +411,32 @@ export default function AgenticAiDrawer() {
               boxShadow: msg.sender === 'user' ? '0 2px 8px rgba(37, 99, 235, 0.2)' : 'none'
             }}>
               {msg.text}
+
+              {/* Text-to-Speech audio button for AI replies */}
+              {msg.sender === 'ai' && (
+                <button
+                  type="button"
+                  onClick={() => toggleSpeak(msg.text, idx)}
+                  title={speakingIndex === idx ? 'Hentikan Suara' : 'Dengarkan Jawaban AI (Google TTS)'}
+                  style={{
+                    position: 'absolute',
+                    bottom: '6px',
+                    right: '6px',
+                    background: 'transparent',
+                    border: 'none',
+                    color: speakingIndex === idx ? '#10B981' : 'var(--text-muted)',
+                    cursor: 'pointer',
+                    padding: '3px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: '4px',
+                    opacity: 0.8
+                  }}
+                >
+                  {speakingIndex === idx ? <FiVolumeX size={13} /> : <FiVolume2 size={13} />}
+                </button>
+              )}
             </div>
           </div>
         ))}
@@ -416,11 +530,36 @@ export default function AgenticAiDrawer() {
             type="text"
             className="form-control"
             style={{ fontSize: '0.84rem', borderRadius: '8px', padding: '8px 12px', height: '38px' }}
-            placeholder="Tanyakan kode atau perintahkan Desktop-Agentic..."
+            placeholder={isListening ? 'Mendengarkan suara Anda...' : 'Tanyakan kode atau perintah suara...'}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             disabled={loading}
           />
+
+          {/* Voice Microphone (Google Speech-to-Text) Button */}
+          <button
+            type="button"
+            onClick={toggleSpeechRecognition}
+            title={isListening ? 'Hentikan Mikrofon' : 'Gunakan Perintah Suara (Google Speech STT)'}
+            style={{
+              width: '38px',
+              height: '38px',
+              padding: 0,
+              borderRadius: '8px',
+              flexShrink: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: isListening ? '#EF4444' : 'var(--bg-card-hover, #F1F5F9)',
+              color: isListening ? '#FFFFFF' : 'var(--text-main)',
+              border: `1px solid ${isListening ? '#DC2626' : 'var(--border-color)'}`,
+              cursor: 'pointer',
+              transition: 'all 0.15s ease'
+            }}
+          >
+            {isListening ? <FiMicOff size={16} /> : <FiMic size={16} />}
+          </button>
+
           <button
             type="submit"
             className="btn btn-primary"

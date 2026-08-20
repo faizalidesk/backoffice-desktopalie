@@ -81,6 +81,22 @@ export default function TodoListManager() {
     }
   };
 
+  const syncTaskToGoogleCalendar = (task, e = null) => {
+    if (e) e.stopPropagation();
+    const title = encodeURIComponent(`[Desktopalie Task] ${task.title}`);
+    const details = encodeURIComponent(`${task.description || 'Tugas dari Backoffice Desktopalie'}\n\nKategori: ${task.category || 'General'}\nPrioritas: ${task.priority || 'Normal'}\nStatus: ${task.status || 'Not started'}`);
+    const location = encodeURIComponent('Desktopalie Backoffice Hub');
+    
+    const now = new Date();
+    const startStr = now.toISOString().replace(/-|:|\.\d+/g, '');
+    const end = new Date(now.getTime() + 3600000);
+    const endStr = end.toISOString().replace(/-|:|\.\d+/g, '');
+
+    const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&location=${location}&dates=${startStr}/${endStr}`;
+    window.open(googleCalendarUrl, '_blank');
+    toast.success('Membuka Google Calendar untuk sinkronisasi tugas!');
+  };
+
   // Active Detail Form State (includes subtasks)
   const [formData, setFormData] = useState({
     title: '',
@@ -611,6 +627,16 @@ export default function TodoListManager() {
                                   title="Pindah Kiri"
                                 >
                                   <FiChevronLeft style={{ fontSize: '0.85rem' }} />
+                                </button>
+
+                                <button
+                                  type="button"
+                                  className="btn btn-secondary btn-icon btn-sm"
+                                  style={{ padding: '0.2rem 0.4rem', height: 'auto' }}
+                                  onClick={(e) => syncTaskToGoogleCalendar(task, e)}
+                                  title="Sinkronkan ke Google Calendar"
+                                >
+                                  <FiCalendar style={{ fontSize: '0.85rem', color: '#4285F4' }} />
                                 </button>
 
                                 <button

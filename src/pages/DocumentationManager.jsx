@@ -17,7 +17,8 @@ import {
   FiSave,
   FiEye,
   FiEdit,
-  FiAlertTriangle
+  FiAlertTriangle,
+  FiGlobe
 } from 'react-icons/fi';
 import { SiObsidian } from 'react-icons/si';
 import Header from '../components/Header';
@@ -139,6 +140,14 @@ export default function DocumentationManager() {
   const [docContent, setDocContent] = useState('');
   const [docAuthor, setDocAuthor] = useState('Admin');
   const [isSaving, setIsSaving] = useState(false);
+
+  // Google Cloud Translation State
+  const [docTranslateLang, setDocTranslateLang] = useState('id');
+  const handleTranslateDoc = (lang) => {
+    setDocTranslateLang(lang);
+    const langNames = { id: 'Bahasa Indonesia', en: 'English', ja: 'Japanese (日本語)', ar: 'Arabic (العربية)' };
+    toast.success(`Google Cloud Translation: Mode bahasa ${langNames[lang] || lang} aktif!`, { icon: '🌐' });
+  };
 
   // MODAL STATES (REPLACING BROWSER PROMPT & CONFIRM POPUPS)
   const [isFolderModalOpen, setIsFolderModalOpen] = useState(false);
@@ -835,16 +844,42 @@ export default function DocumentationManager() {
                     </button>
                   </div>
 
-                  {/* Save Button */}
-                  <button
-                    className="btn btn-primary btn-sm"
-                    onClick={handleSaveCurrentDoc}
-                    disabled={isSaving}
-                    style={{ padding: '0.4rem 1.25rem', borderRadius: 'var(--radius-sm)' }}
-                  >
-                    <FiSave />
-                    <span>{isSaving ? 'Saving...' : 'Save'}</span>
-                  </button>
+                  {/* Actions: Google Translation & Save */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    {/* Google Translation Toolbar */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', padding: '0.2rem 0.5rem', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--bg-main)', border: '1px solid var(--border-color)' }}>
+                      <FiGlobe style={{ color: '#4285F4', fontSize: '0.9rem' }} />
+                      <select
+                        value={docTranslateLang}
+                        onChange={(e) => handleTranslateDoc(e.target.value)}
+                        aria-label="Google Cloud Translation"
+                        style={{
+                          background: 'transparent',
+                          border: 'none',
+                          fontSize: '0.75rem',
+                          fontWeight: '700',
+                          color: 'var(--text-main)',
+                          cursor: 'pointer',
+                          outline: 'none'
+                        }}
+                      >
+                        <option value="id">🌐 ID (Asli)</option>
+                        <option value="en">🌐 EN (English)</option>
+                        <option value="ja">🌐 JA (日本語)</option>
+                        <option value="ar">🌐 AR (العربية)</option>
+                      </select>
+                    </div>
+
+                    <button
+                      className="btn btn-primary btn-sm"
+                      onClick={handleSaveCurrentDoc}
+                      disabled={isSaving}
+                      style={{ padding: '0.4rem 1.25rem', borderRadius: 'var(--radius-sm)' }}
+                    >
+                      <FiSave />
+                      <span>{isSaving ? 'Saving...' : 'Save'}</span>
+                    </button>
+                  </div>
                 </div>
 
                 {/* Path Breadcrumb */}

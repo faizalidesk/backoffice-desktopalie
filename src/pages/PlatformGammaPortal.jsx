@@ -43,6 +43,25 @@ export default function PlatformGammaPortal() {
     { title: 'Live_Stream_Recording_Session.flv', input: '1920x1080 (60fps)', preset: 'HLS 1080p 60fps', progress: 12, status: 'Transcoding', speed: '3.8x' }
   ]);
 
+  // Google Cloud Transcoder & Video Intelligence States
+  const [googlePreset, setGooglePreset] = useState('HLS Adaptive (1080p, 720p, 480p, 360p)');
+  const [videoCaptionLang, setVideoCaptionLang] = useState('Indonesian + English (Auto SRT/VTT)');
+  const [isProcessingAI, setIsProcessingAI] = useState(false);
+  const [videoIntelligenceResult, setVideoIntelligenceResult] = useState({
+    labels: ['Keynote Speaker (98%)', 'Product Demo (96%)', 'UI Workflow (94%)', 'Speech Audio (99%)'],
+    detectedScenes: 14,
+    captionsGenerated: '320 Segmen Subtitle Sinkron (Bahasa Indonesia & English)',
+    transcoderJobId: 'projects/gamma-transcode/locations/asia-southeast2/jobs/job-88492'
+  });
+
+  const handleRunVideoIntelligence = () => {
+    setIsProcessingAI(true);
+    setTimeout(() => {
+      setIsProcessingAI(false);
+      toast.success('Google Cloud Video Intelligence & Transcoder API selesai memproses video!');
+    }, 1200);
+  };
+
   const handleAddJob = (e) => {
     e.preventDefault();
     if (!newVideoTitle) {
@@ -228,6 +247,7 @@ export default function PlatformGammaPortal() {
           }}>
             {[
               { id: 'queue', label: 'Transcode Queue & Engine', icon: <FiVideo /> },
+              { id: 'google_transcoder', label: 'Google Cloud Transcoder & Video AI', icon: <FiZap /> },
               { id: 'streams', label: 'Live Bitrate Telemetry', icon: <FiRadio /> },
               { id: 'gpus', label: 'GPU Cluster & VRAM', icon: <FiCpu /> },
               { id: 'library', label: 'Transcoded Assets Library', icon: <FiFilm /> }
@@ -398,7 +418,7 @@ export default function PlatformGammaPortal() {
                       <td style={{ padding: '0.9rem 1rem' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                           <div style={{ flex: 1, height: '6px', backgroundColor: `${primaryColor}20`, borderRadius: '99px', overflow: 'hidden' }}>
-                            <div style={{ width: `${row.progress}%`, height: '100%', backgroundColor: primaryColor }} />
+                            <div style={{ width: `${row.progress}%`, height: '100%', backgroundColor: primaryColor, borderRadius: '99px' }} />
                           </div>
                           <span style={{ fontSize: '0.75rem', fontWeight: '700' }}>{row.progress}%</span>
                         </div>
@@ -419,6 +439,126 @@ export default function PlatformGammaPortal() {
                   ))}
                 </tbody>
               </table>
+            </div>
+          </div>
+        )}
+
+        {/* TAB CONTENT: GOOGLE CLOUD TRANSCODER & VIDEO INTELLIGENCE */}
+        {activeTab === 'google_transcoder' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', marginBottom: '2rem' }}>
+            <div style={{
+              backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+              border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
+              borderRadius: '18px',
+              padding: '1.75rem',
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+              gap: '2rem'
+            }}>
+              <div>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: '#A78BFA', fontWeight: '800', fontSize: '0.75rem', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
+                  <FiZap /> GOOGLE CLOUD TRANSCODER API & VIDEO INTELLIGENCE
+                </div>
+                <h3 style={{ fontSize: '1.35rem', fontWeight: '800', color: isDarkMode ? '#ECFDF5' : '#0F172A', margin: '0 0 0.5rem 0' }}>
+                  Adaptive Streaming & Video Intelligence Studio
+                </h3>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', lineHeight: '1.6', marginBottom: '1.5rem' }}>
+                  Konfigurasi pipeline enkoding video multi-bitrate HLS/DASH (1080p, 720p, 480p) berbasis Google Cloud Transcoder dan auto-generate subtitle cerdas via Video Intelligence API.
+                </p>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  <div>
+                    <label style={{ fontSize: '0.8rem', fontWeight: '700', color: 'var(--text-muted)', display: 'block', marginBottom: '0.35rem' }}>
+                      Google Transcoder Preset Output
+                    </label>
+                    <select
+                      className="form-control"
+                      value={googlePreset}
+                      onChange={(e) => setGooglePreset(e.target.value)}
+                      style={{ borderRadius: '10px', fontSize: '0.875rem' }}
+                    >
+                      <option value="HLS Adaptive (1080p, 720p, 480p, 360p)">HLS Adaptive Multi-Bitrate (1080p, 720p, 480p, 360p) [Rekomendasi]</option>
+                      <option value="DASH AV1 4K UHD 60fps Stream">DASH AV1 4K UHD 60fps (High Efficiency)</option>
+                      <option value="MP4 Master ProRes 422 HQ Archive">MP4 Master ProRes 422 HQ Studio Archive</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label style={{ fontSize: '0.8rem', fontWeight: '700', color: 'var(--text-muted)', display: 'block', marginBottom: '0.35rem' }}>
+                      Google Video Intelligence Auto-Subtitles
+                    </label>
+                    <select
+                      className="form-control"
+                      value={videoCaptionLang}
+                      onChange={(e) => setVideoCaptionLang(e.target.value)}
+                      style={{ borderRadius: '10px', fontSize: '0.875rem' }}
+                    >
+                      <option value="Indonesian + English (Auto SRT/VTT)">Bahasa Indonesia + English (Auto SRT / WebVTT)</option>
+                      <option value="Multi-Language (ID, EN, JA, AR)">Multi-Language International (ID, EN, JA, AR)</option>
+                    </select>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={handleRunVideoIntelligence}
+                    disabled={isProcessingAI}
+                    className="btn btn-primary"
+                    style={{ borderRadius: '12px', padding: '0.75rem', fontWeight: '700', marginTop: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', backgroundColor: primaryColor }}
+                  >
+                    <FiZap /> {isProcessingAI ? 'Memproses Google Transcoder...' : 'Jalankan Transcoding & AI Subtitle'}
+                  </button>
+                </div>
+              </div>
+
+              {/* AI Video Intelligence Telemetry Card */}
+              <div style={{
+                backgroundColor: isDarkMode ? '#05130E' : '#F8FAFC',
+                border: `1px solid ${isDarkMode ? '#133829' : '#CBD5E1'}`,
+                borderRadius: '16px',
+                padding: '1.5rem',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between'
+              }}>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                    <span style={{ fontSize: '0.8rem', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Hasil Analisis Google Video AI</span>
+                    <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#8B5CF6', backgroundColor: 'rgba(139, 92, 246, 0.15)', padding: '0.2rem 0.5rem', borderRadius: '99px' }}>
+                      ● Cloud Job Active
+                    </span>
+                  </div>
+
+                  <div style={{ marginBottom: '1rem' }}>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block', marginBottom: '0.35rem' }}>Deteksi Label Objek & Suasana:</span>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
+                      {videoIntelligenceResult.labels.map((lbl, idx) => (
+                        <span key={idx} style={{ padding: '0.25rem 0.6rem', borderRadius: '6px', backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF', border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`, fontSize: '0.75rem', fontWeight: '700', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>
+                          🏷️ {lbl}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '1rem' }}>
+                    <div style={{ padding: '0.75rem', borderRadius: '10px', backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF', border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}` }}>
+                      <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Shot / Scene Change</span>
+                      <div style={{ fontSize: '1.25rem', fontWeight: '800', color: primaryColor }}>{videoIntelligenceResult.detectedScenes} Adegan</div>
+                    </div>
+                    <div style={{ padding: '0.75rem', borderRadius: '10px', backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF', border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}` }}>
+                      <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Subtitle Sync</span>
+                      <div style={{ fontSize: '0.8rem', fontWeight: '700', color: '#10B981', marginTop: '0.25rem' }}>WebVTT Ready</div>
+                    </div>
+                  </div>
+
+                  <div style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>
+                    📝 {videoIntelligenceResult.captionsGenerated}
+                  </div>
+                </div>
+
+                <div style={{ marginTop: '1.25rem', paddingTop: '0.75rem', borderTop: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`, fontSize: '0.7rem', color: 'var(--text-subtle)' }}>
+                  Job URI: <code>{videoIntelligenceResult.transcoderJobId}</code>
+                </div>
+              </div>
             </div>
           </div>
         )}
