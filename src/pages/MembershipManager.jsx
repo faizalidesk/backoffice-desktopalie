@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
@@ -24,7 +25,8 @@ import {
   FiX,
   FiCheckSquare,
   FiEdit,
-  FiUser
+  FiUser,
+  FiExternalLink
 } from 'react-icons/fi';
 import { FaGoogle } from 'react-icons/fa';
 
@@ -701,14 +703,20 @@ export default function MembershipManager() {
 
                         {/* User Info */}
                         <td style={{ padding: '0.9rem 1rem' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                          <div 
+                            onClick={() => setSelectedMember(row)}
+                            style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer' }}
+                            title="Klik untuk melihat profil"
+                          >
                             <img
                               src={row.avatar_url}
                               alt="Avatar"
                               style={{ width: '38px', height: '38px', borderRadius: '50%', objectFit: 'cover', border: '1.5px solid #10B981' }}
                             />
                             <div>
-                              <div style={{ fontWeight: '800', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>{row.full_name}</div>
+                              <div style={{ fontWeight: '800', color: isDarkMode ? '#ECFDF5' : '#0F172A', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                                <span>{row.full_name}</span>
+                              </div>
                               <div style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>ID: {row.id.slice(0, 12)}...</div>
                             </div>
                           </div>
@@ -778,12 +786,33 @@ export default function MembershipManager() {
                                 backgroundColor: isDarkMode ? '#05130E' : '#F1F5F9',
                                 border: `1px solid ${isDarkMode ? '#133829' : '#CBD5E1'}`,
                                 color: isDarkMode ? '#ECFDF5' : '#0F172A',
-                                cursor: 'pointer'
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
                               }}
                               title="Detail Profil Pengguna"
                             >
                               <FiEye />
                             </button>
+
+                            <Link
+                              to="/profile"
+                              style={{
+                                padding: '0.45rem 0.65rem',
+                                borderRadius: '8px',
+                                backgroundColor: 'rgba(59, 130, 246, 0.12)',
+                                border: '1px solid rgba(59, 130, 246, 0.25)',
+                                color: '#3B82F6',
+                                textDecoration: 'none',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                              }}
+                              title="Go to Profile (Buka Pengaturan Profil)"
+                            >
+                              <FiUser />
+                            </Link>
 
                             <button
                               type="button"
@@ -794,7 +823,10 @@ export default function MembershipManager() {
                                 backgroundColor: 'rgba(239, 68, 68, 0.12)',
                                 border: 'none',
                                 color: '#EF4444',
-                                cursor: 'pointer'
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
                               }}
                               title="Hapus Pengguna"
                             >
@@ -858,7 +890,7 @@ export default function MembershipManager() {
                 <img
                   src={selectedMember.avatar_url}
                   alt="Avatar"
-                  style={{ width: '72px', height: '72px', borderRadius: '50%', objectFit: 'cover', border: '3px solid #10B981', margin: '0 auto 0.75rem auto' }}
+                  style={{ width: '76px', height: '76px', borderRadius: '50%', objectFit: 'cover', border: '3px solid #10B981', margin: '0 auto 0.75rem auto' }}
                 />
                 <h3 style={{ margin: '0 0 0.25rem 0', fontSize: '1.25rem', fontWeight: '800', color: isDarkMode ? '#ECFDF5' : '#0F172A' }}>
                   {selectedMember.full_name}
@@ -895,22 +927,49 @@ export default function MembershipManager() {
                 </div>
               </div>
 
-              <button
-                type="button"
-                onClick={() => setSelectedMember(null)}
-                style={{
-                  width: '100%',
-                  padding: '0.75rem',
-                  borderRadius: '12px',
-                  backgroundColor: '#3B82F6',
-                  color: '#FFFFFF',
-                  border: 'none',
-                  fontWeight: '800',
-                  cursor: 'pointer'
-                }}
-              >
-                Tutup Profil
-              </button>
+              {/* ACTION BUTTONS: GO TO PROFILE & CLOSE */}
+              <div style={{ display: 'flex', gap: '0.75rem' }}>
+                <Link
+                  to="/profile"
+                  style={{
+                    flex: 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.5rem',
+                    padding: '0.75rem',
+                    borderRadius: '12px',
+                    backgroundColor: '#3B82F6',
+                    color: '#FFFFFF',
+                    border: 'none',
+                    fontWeight: '800',
+                    textDecoration: 'none',
+                    cursor: 'pointer',
+                    fontSize: '0.9rem'
+                  }}
+                >
+                  <FiUser />
+                  <span>Go to Profile</span>
+                  <FiExternalLink style={{ fontSize: '0.85rem' }} />
+                </Link>
+
+                <button
+                  type="button"
+                  onClick={() => setSelectedMember(null)}
+                  style={{
+                    padding: '0.75rem 1.25rem',
+                    borderRadius: '12px',
+                    backgroundColor: isDarkMode ? '#0F172A' : '#F1F5F9',
+                    color: 'var(--text-main)',
+                    border: `1px solid ${isDarkMode ? '#334155' : '#E2E8F0'}`,
+                    fontWeight: '700',
+                    cursor: 'pointer',
+                    fontSize: '0.9rem'
+                  }}
+                >
+                  Tutup
+                </button>
+              </div>
             </div>
           </div>
         )}
