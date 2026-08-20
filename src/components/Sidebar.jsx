@@ -41,7 +41,7 @@ export default function Sidebar() {
   const { user } = useAuth();
   const { t } = useLanguage();
   const location = useLocation();
-  const { flavor, flavorId, isMainDesktopalie } = useFlavor();
+  const { flavor, flavorId, isMainDesktopalie, switchFlavor } = useFlavor();
   const [searchQuery, setSearchQuery] = useState('');
   const [unreadCount, setUnreadCount] = useState(() => notificationService.getUnreadCount());
 
@@ -146,6 +146,7 @@ export default function Sidebar() {
     : [
         { id: 'portal', label: `Portal ${flavor?.shortName || ''}`.trim(), path: '/portal', solidIcon: HiBolt, outlineIcon: HiOutlineBolt },
         { id: 'dashboard', label: 'Dashboard', path: '/dashboard', solidIcon: HiHome, outlineIcon: HiOutlineHome },
+        { id: 'workspaces', label: 'Workspaces', path: '/workspaces', solidIcon: HiSquares2X2, outlineIcon: HiOutlineSquares2X2 },
         { id: 'projects', label: 'Proyek', path: '/projects', solidIcon: HiFolder, outlineIcon: HiOutlineFolder },
         { id: 'todos', label: 'Tugas', path: '/todos', solidIcon: HiClipboardDocumentCheck, outlineIcon: HiOutlineClipboardDocumentCheck },
         { id: 'notes', label: 'Catatan', path: '/notes', solidIcon: HiPencilSquare, outlineIcon: HiOutlinePencilSquare },
@@ -296,6 +297,33 @@ export default function Sidebar() {
 
   const renderNavContent = (isMobileView = false) => (
     <>
+      {/* PLATFORM WORKSPACE SWITCHER */}
+      <div style={{ marginBottom: '0.75rem' }}>
+        <select
+          value={flavorId}
+          onChange={(e) => switchFlavor(e.target.value)}
+          aria-label="Pilih Platform Workspace"
+          style={{
+            width: '100%',
+            padding: '0.45rem 0.65rem',
+            borderRadius: 'var(--radius-sm)',
+            border: '1px solid var(--border-sidebar)',
+            backgroundColor: 'var(--bg-sidebar-hover)',
+            color: 'var(--text-sidebar-main)',
+            fontSize: '0.78rem',
+            fontWeight: '700',
+            cursor: 'pointer',
+            outline: 'none',
+            transition: 'border-color 0.15s ease'
+          }}
+        >
+          <option value="platform1">💎 Platform 1 (Main Alpha)</option>
+          <option value="platform2">🚀 Platform 2 (Beta Logistics)</option>
+          <option value="platform3">⚡ Platform 3 (Gamma Video)</option>
+          <option value="platform4">🛡️ Platform 4 (Delta Financial)</option>
+        </select>
+      </div>
+
       {/* SEARCH INPUT */}
       <div style={{ position: 'relative', marginBottom: '0.85rem', display: 'flex', alignItems: 'center' }}>
         <HiMagnifyingGlass style={{ position: 'absolute', left: '0.75rem', color: 'var(--text-sidebar-muted)', fontSize: '1rem', pointerEvents: 'none' }} />

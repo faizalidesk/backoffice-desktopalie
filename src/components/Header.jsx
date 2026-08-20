@@ -58,7 +58,7 @@ export default function Header({ title = 'Dashboard Overview' }) {
   const { user, logout } = useAuth();
   const { isDarkMode, toggleTheme } = useTheme();
   const { language, setLanguage, t } = useLanguage();
-  const { activeFlavor, flavorId } = useFlavor();
+  const { activeFlavor, flavorId, switchFlavor } = useFlavor();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   const [notifFilter, setNotifFilter] = useState('all');
@@ -188,6 +188,32 @@ export default function Header({ title = 'Dashboard Overview' }) {
           }} />
           <FiActivity style={{ fontSize: '0.85rem' }} />
           <span>Supabase Connected</span>
+        </div>
+
+        {/* PLATFORM WORKSPACE SWITCHER DROPDOWN */}
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <select
+            value={flavorId}
+            onChange={(e) => switchFlavor(e.target.value)}
+            aria-label="Pilih Platform Workspace"
+            style={{
+              padding: '0.35rem 0.65rem',
+              borderRadius: 'var(--radius-sm)',
+              backgroundColor: isDarkMode ? '#091E16' : '#FFFFFF',
+              border: `1px solid ${isDarkMode ? '#133829' : '#E2E8F0'}`,
+              color: 'var(--text-main)',
+              fontSize: '0.78rem',
+              fontWeight: '700',
+              cursor: 'pointer',
+              outline: 'none',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
+            }}
+          >
+            <option value="platform1">💎 Platform 1: Alpha (Main Backoffice)</option>
+            <option value="platform2">🚀 Platform 2: Beta Logistics</option>
+            <option value="platform3">⚡ Platform 3: Gamma Video</option>
+            <option value="platform4">🛡️ Platform 4: Delta Financial ERP</option>
+          </select>
         </div>
 
         {/* View Main Website Button */}
