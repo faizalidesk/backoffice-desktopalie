@@ -11,8 +11,16 @@ import {
   FiX,
   FiZap,
   FiChevronDown,
-  FiChevronRight
+  FiChevronRight,
+  FiTrash2,
+  FiDatabase,
+  FiBookOpen
 } from 'react-icons/fi';
+
+const DEFAULT_GREETING = {
+  sender: 'ai',
+  text: 'Halo! Selamat datang di Desktopalie Backoffice. Saya adalah Desktop-Agentic (Powered by DeepSeek-V3 & DeepSeek-R1), siap bantu oprek coding, analisis arsitektur, dan eksekusi tugas otomatis Anda hari ini. 🚀\n\n🧠 Saya sudah terhubung dengan Live Database Supabase & Obsidian Knowledge RAG:\n- Live Context: Membaca status tugas in-progress dan proyek aktif secara instan.\n- Autonomous Actions: Bisa otomatis buat task Kanban, update PRD, dan sinkronkan Obsidian.\n- Deep Reasoning: DeepSeek-R1 siap menganalisis logika & kode kompleks dengan Chain-of-Thought.\n\nApa yang ingin kita diskusikan atau eksekusi sekarang?'
+};
 
 export default function AgenticAiDrawer() {
   const { isDarkMode } = useTheme();
@@ -31,14 +39,20 @@ export default function AgenticAiDrawer() {
   const [savedSuccess, setSavedSuccess] = useState(false);
   const [expandedReasoning, setExpandedReasoning] = useState({});
 
-  const [messages, setMessages] = useState([
-    {
-      sender: 'ai',
-      text: 'Halo! Selamat datang di Desktopalie Backoffice. Saya adalah Desktop-Agentic (Powered by DeepSeek-V3 & DeepSeek-R1), siap bantu oprek coding, analisis arsitektur, dan eksekusi tugas otomatis Anda hari ini. 🚀\n\nBeberapa tugas otomatis yang bisa langsung saya eksekusi:\n- Update PRD: Memperbarui dokumen Product Requirement Document di database.\n- Buat Tugas: Menambahkan tugas baru ke papan To-Do Kanban.\n- Sinkronkan Obsidian: Menyelaraskan catatan dokumentasi dengan Obsidian Vault.\n- Cek Telemetri: Menampilkan ringkasan status kesehatan dan data proyek.\n- Buat Dokumentasi: Menulis catatan arsitektur sistem baru.\n\nApa yang ingin kita kerjakan sekarang?'
-    }
-  ]);
+  // Chat messages with persistent session storage
+  const [messages, setMessages] = useState(() => {
+    const history = agenticAiService.getChatHistory();
+    return (history && history.length > 0) ? history : [DEFAULT_GREETING];
+  });
 
   const chatEndRef = useRef(null);
+
+  // Save messages to persistent history on change
+  useEffect(() => {
+    if (messages.length > 0) {
+      agenticAiService.saveChatHistory(messages);
+    }
+  }, [messages]);
 
   const toggleCollapse = () => {
     setIsCollapsed(prev => {
@@ -51,12 +65,17 @@ export default function AgenticAiDrawer() {
 
   const handleResetChat = () => {
     const modelLabel = selectedModel === 'deepseek-reasoner' ? 'DeepSeek-R1' : 'DeepSeek-V3';
-    setMessages([
-      {
-        sender: 'ai',
-        text: `Halo, sesi baru telah dimulai bersama Desktop-Agentic (${modelLabel}).\n\nApa yang ingin Anda analisis atau eksekusi sekarang?`
-      }
-    ]);
+    const newSessionGreeting = {
+      sender: 'ai',
+      text: `Halo, sesi baru telah dimulai bersama Desktop-Agentic (${modelLabel}) dengan Live Context & RAG aktif.\n\nApa yang ingin Anda analisis atau eksekusi sekarang?`
+    };
+    setMessages([newSessionGreeting]);
+    agenticAiService.saveChatHistory([newSessionGreeting]);
+  };
+
+  const handleClearHistory = () => {
+    agenticAiService.clearChatHistory();
+    setMessages([DEFAULT_GREETING]);
   };
 
   const handleSaveSettings = (e) => {
@@ -223,7 +242,7 @@ export default function AgenticAiDrawer() {
           </div>
         </div>
 
-        {/* Header Action Buttons: Settings, Reset '+' and Close '[|]' */}
+        {/* Header Action Buttons: Settings, Reset '+', Clear, and Close '[|]' */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
           <button
             type="button"
@@ -262,6 +281,26 @@ export default function AgenticAiDrawer() {
             onMouseOut={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
           >
             <FiPlus size={18} />
+          </button>
+
+          <button
+            type="button"
+            onClick={handleClearHistory}
+            title="Hapus Riwayat Chat"
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'var(--text-muted)',
+              cursor: 'pointer',
+              padding: '6px',
+              display: 'flex',
+              alignItems: 'center',
+              borderRadius: '4px'
+            }}
+            onMouseOver={(e) => e.currentTarget.style.color = '#EF4444'}
+            onMouseOut={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
+          >
+            <FiTrash2 size={15} />
           </button>
 
           <button
@@ -355,6 +394,28 @@ export default function AgenticAiDrawer() {
                 outline: 'none'
               }}
             />
+          </div>
+
+          {/* INTELLIGENCE FEATURES BADGES IN SETTINGS */}
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '4px',
+            padding: '6px 8px',
+            backgroundColor: 'var(--bg-card)',
+            borderRadius: '6px',
+            border: '1px solid var(--border-color)',
+            fontSize: '0.68rem',
+            color: 'var(--text-muted)'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+              <FiDatabase style={{ color: '#10B981' }} />
+              <span><strong>Live Context:</strong> Real-time Supabase Database Sync</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+              <FiBookOpen style={{ color: '#3B82F6' }} />
+              <span><strong>Obsidian RAG:</strong> Semantic Search di 30+ Dokumen & PRD</span>
+            </div>
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '6px', marginTop: '2px' }}>
@@ -489,7 +550,7 @@ export default function AgenticAiDrawer() {
             gap: '8px'
           }}>
             <FiRefreshCw className="spin" style={{ color: 'var(--primary)' }} />
-            <span>Desktop-Agentic (DeepSeek) sedang berpikir...</span>
+            <span>Desktop-Agentic sedang memproses dengan Live Context & RAG...</span>
           </div>
         )}
         <div ref={chatEndRef} />
@@ -564,7 +625,7 @@ export default function AgenticAiDrawer() {
             type="text"
             className="form-control"
             style={{ fontSize: '0.84rem', borderRadius: '8px', padding: '8px 12px', height: '38px' }}
-            placeholder="Ketik instruksi untuk Desktop-Agentic (DeepSeek)..."
+            placeholder="Tanyakan kode atau perintahkan Desktop-Agentic..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
             disabled={loading}
@@ -589,7 +650,7 @@ export default function AgenticAiDrawer() {
           color: 'var(--text-muted)'
         }}>
           <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10B981' }} />
-          <span>Powered by <strong style={{ color: 'var(--text-main)', fontWeight: '600' }}>DeepSeek-V3 / R1</strong> & Autonomous Engine</span>
+          <span>Powered by <strong style={{ color: 'var(--text-main)', fontWeight: '600' }}>DeepSeek-V3 / R1</strong> • Live Context & Obsidian RAG</span>
         </div>
       </div>
     </aside>
